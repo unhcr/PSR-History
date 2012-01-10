@@ -1,0 +1,363 @@
+create or replace package MESSAGE is
+--
+-- -------------------------------------------------------------------------------------------------
+--
+--  Package MESSAGE
+--  Procedures for maintenance of system messages and their associated components.
+--
+--  Change History:
+--  05-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--
+-- -------------------------------------------------------------------------------------------------
+--
+  sModule varchar2(30) := 'MESSAGE';
+  sVersion varchar2(10) := 'D0.1';
+--
+-- ----------------------------------------
+-- INSERT_COMPONENT
+-- ----------------------------------------
+--
+-- Create new component record.
+--
+-- Parameters:
+--  psCODE - Component code (mandatory).
+--  psLANG_CODE - Language code for the language of the textual description (mandatory).
+--  psDescription - Textual description of component (mandatory).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of components (optional).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the component is currently available for use
+--    (optional, defaults to database default Y).
+--
+  procedure INSERT_COMPONENT
+   (psCODE in COMPONENTS.CODE%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psDescription in varchar2,
+    pnDISPLAY_SEQ in COMPONENTS.DISPLAY_SEQ%type := null,
+    psACTIVE_FLAG in COMPONENTS.ACTIVE_FLAG%type := null);
+--
+-- ----------------------------------------
+-- UPDATE_COMPONENT
+-- ----------------------------------------
+--
+-- Update a component record.
+--
+-- Parameters:
+--  psCODE - Code of component to be updated (mandatory).
+--  psLANG_CODE - Language code for the textual description (optional, must be specified if
+--    psDescription is specified).
+--  psDescription - Textual description of component (optional: if null, the description is not
+--    updated).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of components (optional, if not
+--    specified, the display sequence is not updated; if null is specified, the display sequence is
+--    set to null).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the component is currently available for use
+--    (optional: if not specified or null, the active flag is not updated).
+--
+  procedure UPDATE_COMPONENT
+   (psCODE in COMPONENTS.CODE%type,
+    psLANG_CODE in LANGUAGES.CODE%type := null,
+    psDescription in varchar2 := null,
+    pnDISPLAY_SEQ in COMPONENTS.DISPLAY_SEQ%type := -1e6,
+    psACTIVE_FLAG in COMPONENTS.ACTIVE_FLAG%type := null);
+--
+-- ----------------------------------------
+-- ADD_COMP_DESCRIPTION
+-- ----------------------------------------
+--
+-- Add a description in a given language to a component record.
+--
+-- Parameters:
+--  psCODE - Code of component to which description is to be added (mandatory).
+--  psLANG_CODE - Language code of the description to be added (mandatory).
+--  psDescription - Textual description of component (mandatory).
+--
+  procedure ADD_COMP_DESCRIPTION
+   (psCODE in COMPONENTS.CODE%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psDescription in varchar2);
+--
+-- ----------------------------------------
+-- REMOVE_COMP_DESCRIPTION
+-- ----------------------------------------
+--
+-- Remove a description in a given language from a component record. Note that it is not possible to
+--  remove the last language variant of the description.
+--
+-- Parameters:
+--  psCODE - Code of component from which description is to be removed (mandatory).
+--  psLANG_CODE - Language code of the description to be removed (mandatory).
+--
+  procedure REMOVE_COMP_DESCRIPTION
+   (psCODE in COMPONENTS.CODE%type,
+    psLANG_CODE in LANGUAGES.CODE%type);
+--
+-- ----------------------------------------
+-- ADD_COMP_TEXT
+-- ----------------------------------------
+--
+-- Add a general text message in a given language to a component record.
+--
+-- Parameters:
+--  psCODE - Code of component to which text message is to be added (mandatory).
+--  psTXTT_CODE - Type of text message (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  psLANG_CODE - Language code of the text message to be added (mandatory).
+--  psText - Text message associated with component (mandatory).
+--
+  procedure ADD_COMP_TEXT
+   (psCODE in COMPONENTS.CODE%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psText in varchar2);
+--
+-- ----------------------------------------
+-- UPDATE_COMP_TEXT
+-- ----------------------------------------
+--
+-- Update a general text message in a given language for a component record.
+--
+-- Parameters:
+--  psCODE - Code of component to which text message is to be added (mandatory).
+--  psTXTT_CODE - Type of text message (mandatory).
+--  pnSEQ_NBR - Text item sequence number (mandatory).
+--  psLANG_CODE - Language code of the text message to be updated (mandatory).
+--  psText - Text message associated with component (mandatory).
+--
+  procedure UPDATE_COMP_TEXT
+   (psCODE in COMPONENTS.CODE%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psText in varchar2);
+--
+-- ----------------------------------------
+-- REMOVE_COMP_TEXT
+-- ----------------------------------------
+--
+-- Remove a general text messages from a component record. The following cases arise:
+-- 1. All text of the given type is deleted for the given component (only psCODE and psTXTT_CODE are
+--    specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given combination of component code, text type and
+--    text item sequence number (psCODE, psTXTT_CODE and pnSEQ_NBR are specified, psLANG_CODE is
+--    not). This action fails if this is the last text item for this text type and the text type is
+--    mandatory.
+-- 3. A single language variant is deleted (psCODE, psTXTT_CODE, pnSEQ_NBR and psLANG_CODE are all
+--    specified). This action fails if this is the last language variant of the last text item for
+--    this text type and the text type is mandatory.
+--
+-- Parameters:
+--  psCODE - Code of component from which text message is to be removed (mandatory).
+--  psTXTT_CODE - Type of text message (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code of the text message to be removed (optional).
+--
+  procedure REMOVE_COMP_TEXT
+   (psCODE in COMPONENTS.CODE%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
+    psLANG_CODE in LANGUAGES.CODE%type := null);
+--
+-- ----------------------------------------
+-- DELETE_COMPONENT
+-- ----------------------------------------
+--
+-- Delete a component record.
+--
+-- Parameters:
+--  psCODE - Code of component to be deleted (mandatory).
+--
+  procedure DELETE_COMPONENT
+   (psCODE in COMPONENTS.CODE%type);
+--
+-- ----------------------------------------
+-- INSERT_MESSAGE
+-- ----------------------------------------
+--
+-- Create new message record.
+--
+-- Parameters:
+--  psCOMP_CODE - Component code (mandatory).
+--  pnSEQ_NBR - Sequence number of new message (optional: if null, a new one is generated and
+--    returned).
+--  psLANG_CODE - Language code for the language of the message (mandatory).
+--  psMessage - Message text (mandatory).
+--  psSEVERITY - Severity of event associated with message: E - Error, W - Warning or
+--    I - Information (optional, defaults to database default E).
+--
+  procedure INSERT_MESSAGE
+   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
+    pnSEQ_NBR in out MESSAGES.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psMessage in varchar2,
+    psSEVERITY in MESSAGES.SEVERITY%type := null);
+--
+-- ----------------------------------------
+-- UPDATE_MESSAGE
+-- ----------------------------------------
+--
+-- Update a message record.
+--
+-- Parameters:
+--  psCOMP_CODE - Component code of message to be updated (mandatory).
+--  pnSEQ_NBR - Sequence number of message to be updated (mandatory).
+--  psLANG_CODE - Language code of the message (optional, must be specified if psMessage is
+--    specified).
+--  psMessage - Message text (optional: if null, the message is not updated).
+--  psSEVERITY - Severity of event associated with message: E - Error, W - Warning or
+--    I - Information (optional: if not specified or null, the severity is not updated).
+--
+  procedure UPDATE_MESSAGE
+   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
+    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type := null,
+    psMessage in varchar2 := null,
+    psSEVERITY in MESSAGES.SEVERITY%type := null);
+--
+-- ----------------------------------------
+-- ADD_MSG_MESSAGE
+-- ----------------------------------------
+--
+-- Add a new language variant of a message.
+--
+-- Parameters:
+--  psCOMP_CODE - Component code of message to which variant is to be added (mandatory).
+--  pnSEQ_NBR - Sequence number of message to which variant is to be added (mandatory).
+--  psLANG_CODE - Language code of the variant to be added (mandatory).
+--  psMessage - Message text (mandatory).
+--
+  procedure ADD_MSG_MESSAGE
+   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
+    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psMessage in varchar2);
+--
+-- ----------------------------------------
+-- REMOVE_MSG_MESSAGE
+-- ----------------------------------------
+--
+-- Remove a variant in a given language from a message. Note that it is not possible to remove the
+--  last language variant of the message.
+--
+-- Parameters:
+--  psCOMP_CODE - Component code of message from which variant is to be removed (mandatory).
+--  pnSEQ_NBR - Sequence number of message from which variant is to be removed (mandatory).
+--  psLANG_CODE - Language code of the variant to be removed (mandatory).
+--
+  procedure REMOVE_MSG_MESSAGE
+   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
+    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type);
+--
+-- ----------------------------------------
+-- ADD_MSG_TEXT
+-- ----------------------------------------
+--
+-- Add a general text message in a given language to a message record.
+--
+-- Parameters:
+--  psCOMP_CODE - Component code of message to which text message is to be added (mandatory).
+--  pnSEQ_NBR - Sequence number of message to which text message is to be added (mandatory).
+--  psTXTT_CODE - Type of text message (mandatory).
+--  pnTXI_SEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and
+--    returned).
+--  psLANG_CODE - Language code of the text message to be added (mandatory).
+--  psText - Text message associated with message (mandatory).
+--
+  procedure ADD_MSG_TEXT
+   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
+    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnTXI_SEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psText in varchar2);
+--
+-- ----------------------------------------
+-- UPDATE_MSG_TEXT
+-- ----------------------------------------
+--
+-- Update a general text message in a given language for a message record.
+--
+-- Parameters:
+--  psCOMP_CODE - Component code of message whose text message is to be updated (mandatory).
+--  pnSEQ_NBR - Sequence number of message whose text message is to be updated (mandatory).
+--  psTXTT_CODE - Type of text message (mandatory).
+--  pnTXI_SEQ_NBR - Text item sequence number (mandatory).
+--  psLANG_CODE - Language code of the text message to be updated (mandatory).
+--  psText - Text message associated with message (mandatory).
+--
+  procedure UPDATE_MSG_TEXT
+   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
+    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnTXI_SEQ_NBR in TEXT_ITEMS.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psText in varchar2);
+--
+-- ----------------------------------------
+-- REMOVE_MSG_TEXT
+-- ----------------------------------------
+--
+-- Remove a general text message from a message record. The following cases arise:
+-- 1. All text of the given type is deleted for the given language (only psCODE and psTXTT_CODE are
+--    specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given combination of language code, text type and
+--    text item sequence number (psCODE, psTXTT_CODE and pnTXI_SEQ_NBR are specified, psLANG_CODE is
+--    not). This action fails if this is the last text item for this text type and the text type is
+--    mandatory.
+-- 3. A single language variant is deleted (psCODE, psTXTT_CODE, pnTXI_SEQ_NBR and psLANG_CODE are
+--    all specified). This action fails if this is the last language variant of the last text item
+--    for this text type and the text type is mandatory.
+--
+-- Parameters:
+--  psCOMP_CODE - Component code of message from which text message is to be removed (mandatory).
+--  pnSEQ_NBR - Sequence number of message from which text message is to be removed (mandatory).
+--  psTXTT_CODE - Type of text message (mandatory).
+--  pnTXI_SEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code of the text message to be removed (optional).
+--
+  procedure REMOVE_MSG_TEXT
+   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
+    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnTXI_SEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
+    psLANG_CODE in LANGUAGES.CODE%type := null);
+--
+-- ----------------------------------------
+-- DELETE_MESSAGE
+-- ----------------------------------------
+--
+-- Delete a message record.
+--
+-- Parameters:
+--  psCOMP_CODE - Component code of message to be deleted (mandatory).
+--  pnSEQ_NBR - Sequence number of message to be deleted (mandatory).
+--
+  procedure DELETE_MESSAGE
+   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
+    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type);
+--
+-- ----------------------------------------
+-- DISPLAY_MESSAGE
+-- ----------------------------------------
+--
+-- Display a message.
+--
+-- Parameters:
+--  psCOMP_CODE - Component code of message to be displayed (mandatory).
+--  pnSEQ_NBR - Sequence number of message to be displayed (mandatory).
+--  psLANG_CODE - Language code of message to be displayed (optional).
+--  psEnglishMessage - Message text (optional: if specified, it is checked against the English
+--    message text for the message with the given component code and sequence number).
+--  psSEVERITY - Severity of event associated with message: E - Error, W - Warning or
+--    I - Information (optional: if not specified the severity stored in the MESSAGES table is
+--    used).
+--
+  procedure DISPLAY_MESSAGE
+   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
+    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psEnglishMessage in varchar2 := null,
+    psSEVERITY in MESSAGES.SEVERITY%type := null);
+--
+end MESSAGE;
+/

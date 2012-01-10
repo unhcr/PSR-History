@@ -1,0 +1,99 @@
+create or replace package TEXT is
+--
+-- -------------------------------------------------------------------------------------------------
+--
+--  Package TEXT
+--  Procedures for maintenance of the text tables.
+--
+--  Change History:
+--  09-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--
+-- -------------------------------------------------------------------------------------------------
+--
+  sModule varchar2(30) := 'TEXT';
+  sVersion varchar2(10) := 'D0.1';
+--
+-- ----------------------------------------
+-- INSERT_TEXT
+-- ----------------------------------------
+--
+-- Add new text message. The following cases arise:
+-- 1. A new language variant is created for an existing text identifier, text type and text item
+--    sequence number (both pnTXT_ID and pnSEQ_NBR are specified).
+-- 2. The first text item is created for a new combination of text type and text item sequence
+--    number for an existing text identifier (pnTXT_ID is specified, pnSEQ_NBR is not and its new
+--    value is returned). This may be the first or subsequent instance of a particular text type for
+--    this text identifier. Multiple instances of some types of text can be prohibited.
+-- 3. The first text item for a new text identifier is created (neither pnTXT_ID nor pnSEQ_NBR are
+--    specified and the new values of both are returned).
+--
+-- Parameters:
+--  pnTXT_ID - Text identifier (optional: if null, a new one is allocated and returned).
+--  psTAB_ALIAS - Alias of table with which the text message is associated (optional if pnTXT_ID is
+--    specified but if specified it must be consistent with existing association of pnTXT_ID).
+--  psTXTT_CODE - Type of text message (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned,
+--    must be null if pnTXT_ID is not specified).
+--  psLANG_CODE - Language code (mandatory).
+--  psTEXT - Text message (mandatory).
+--
+  procedure INSERT_TEXT
+   (pnTXT_ID in out TEXT_HEADERS.ID%type,
+    psTAB_ALIAS in TEXT_HEADERS.TAB_ALIAS%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psTEXT in varchar2);
+--
+--
+-- ----------------------------------------
+-- UPDATE_TEXT
+-- ----------------------------------------
+--
+-- Update existing text message.
+--
+-- Parameters:
+--  pnTXT_ID - Text identifier (mandatory).
+--  psTXTT_CODE - Type of text message (mandatory).
+--  pnSEQ_NBR - Text item sequence number (mandatory).
+--  psLANG_CODE - Language code (mandatory).
+--  psTEXT - Text message (mandatory).
+--
+  procedure UPDATE_TEXT
+   (pnTXT_ID in TEXT_ITEMS.TXT_ID%type,
+    psTXTT_CODE in TEXT_ITEMS.TXTT_CODE%type,
+    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type,
+    psLANG_CODE in TEXT_ITEMS.LANG_CODE%type,
+    psTEXT in varchar2);
+--
+--
+-- ----------------------------------------
+-- DELETE_TEXT
+-- ----------------------------------------
+--
+-- Delete existing text message or messages. The following cases arise:
+-- 1. All text is deleted for the given text identifier (only pnTXT_ID is specified).
+-- 2. All text of the given type is deleted for the text identifier (only pnTXT_ID and psTXTT_CODE
+--    are specified). This action fails if the text type is mandatory.
+-- 3. All language variants are deleted for the given combination of text identifier, text type and
+--    text item sequence number (pnTXT_ID, psTXTT_CODE and pnSEQ_NBR are specified, psLANG_CODE is
+--    not). This action fails if this is the last text item for this text type and the text type is
+--    mandatory.
+-- 4. A single language variant is deleted (pnTXT_ID, psTXTT_CODE, pnSEQ_NBR and psLANG_CODE are all
+--    specified). This action fails if this is the last language variant of the last text item for
+--    this text type and the text type is mandatory.
+--
+-- Parameters:
+--  pnTXT_ID - Text identifier (mandatory).
+--  psTXTT_CODE - Type of text message (optional if pnSEQ_NBR and psLANG_CODE are not specified).
+--  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code (optional).
+--
+  procedure DELETE_TEXT
+   (pnTXT_ID in TEXT_HEADERS.ID%type,
+    psTXTT_CODE in TEXT_TYPE_HEADERS.TXTT_CODE%type := null,
+    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
+    psLANG_CODE in TEXT_ITEMS.LANG_CODE%type := null);
+--
+end TEXT;
+/

@@ -1,0 +1,84 @@
+create or replace package PLS_UTILITY is
+--
+-- -------------------------------------------------------------------------------------------------
+--
+--  Package PLS_UTILITY
+--  Procedures of general use in other packages (tracing and logging).
+--
+--  Change History:
+--  21-Dec-2011 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--
+-- -------------------------------------------------------------------------------------------------
+--
+  sModule varchar2(30) := 'PLS_UTILITY';
+  sVersion varchar2(10) := 'D0.1';
+--
+--
+-- Set module name.
+--
+  procedure START_MODULE
+   (psModuleName in varchar2,
+    psContext in varchar2 := null);
+--
+-- Restore calling module name.
+--
+  procedure END_MODULE;
+--
+-- Output trace information.
+--
+  procedure TRACE_POINT
+   (psTracePoint in varchar2);
+--
+  procedure TRACE_POINT
+   (psTracePoint in varchar2,
+    psContext in varchar2);
+--
+-- Set tracing context.
+--
+  procedure TRACE_CONTEXT
+   (psContext in varchar2);
+--
+-- Raise tracing exception.
+--
+  procedure TRACE_EXCEPTION;
+--
+-- Enable or disable backtrace.
+--
+  procedure ENABLE_BACKTRACE;
+--
+  procedure DISABLE_BACKTRACE;
+--
+-- Enable or disable tracing (with optional filtering parameter).
+--
+  procedure ENABLE_TRACE
+   (psMatchString in varchar2 := null);
+--
+  procedure DISABLE_TRACE;
+--
+-- Open a log file, optionally appending to an existing file.
+--
+  procedure OPEN_LOG
+   (psFileName in varchar2,
+    pbAppend boolean := false);
+--
+-- Close the log file.
+--
+  procedure CLOSE_LOG;
+--
+-- Write a line to the log file.
+--
+  procedure LOG
+   (psMessage in varchar2);
+--
+-- Record the start of a timed operation in the log file.
+--
+  procedure START_OPERATION
+   (psOperation in varchar2);
+--
+-- Record the end of the active timed operation in the log file with optional additional message.
+--
+  procedure END_OPERATION
+   (psMessage in varchar2 := null);
+--
+end PLS_UTILITY;
+/
