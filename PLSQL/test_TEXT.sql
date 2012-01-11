@@ -10,9 +10,7 @@ var SEQ_NBR number
 var SEQ_NBR1 number
 var SEQ_NBR2 number
 
--- execute TEXT_ITEM.INSERT_TEXT_ITEM('INACT', 'en', 'Inactive', null, 'N');
-execute :TXT_ID := null; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, 'TXTT', 'DESCR', :SEQ_NBR, 'en', 'Inactive');
-insert into TEXT_TYPES (CODE, ACTIVE_FLAG, TXT_ID) values ('INACT', 'N', :TXT_ID);
+execute TEXT_TYPE.INSERT_TEXT_TYPE('INACT', 'en', 'Inactive', null, 'N');
 
 set echo on serveroutput on feedback off
 
@@ -48,13 +46,13 @@ execute :TXT_ID := null; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, 'LANG', 'XX
 -- Inactive text type
 execute :TXT_ID := null; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, 'LANG', 'INACT', :SEQ_NBR, 'en', 'English note'); &eh
 
--- Text of this type not allowed for this table
+-- Integrity constraint (PSRD.FK_TTH_TTP) violated - parent key not found
 execute :TXT_ID := null; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, 'LANG', 'MSG', :SEQ_NBR, 'en', 'English message'); &eh
 
 -- Unknown text identifier
 execute :TXT_ID := 9999999; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, null, 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
 
--- Text of this type not allowed for this table
+-- Integrity constraint (PSRD.FK_TTH_TTP) violated - parent key not found
 execute :TXT_ID := :TXT_ID1; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, 'LANG', 'MSG', :SEQ_NBR, 'en', 'English message'); &eh
 
 -- Wrong table for this text identifier
