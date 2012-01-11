@@ -62,11 +62,7 @@ create or replace package body TEXT is
     -- Create new TEXT_TYPE_HEADERS row, ensuring required text type is active.
     --
       begin
-        select TXTT.ACTIVE_FLAG
-        into sActive
-        from TEXT_TYPES TXTT
-        where TXTT.CODE = psTXTT_CODE
-        for update;
+        select ACTIVE_FLAG into sActive from TEXT_TYPES where CODE = psTXTT_CODE for update;
       exception
         when NO_DATA_FOUND
         then MESSAGE.DISPLAY_MESSAGE('TXT', 4, 'en', 'Unknown text type');
@@ -135,8 +131,16 @@ create or replace package body TEXT is
         --
           pnSEQ_NBR := 1;
         --
-        elsif sMULTI_INSTANCE = 'N'
-        then MESSAGE.DISPLAY_MESSAGE('TXT', 9, 'en', 'Only one text item of this type allowed');
+        else
+          select MULTI_INSTANCE
+          into sMULTI_INSTANCE
+          from TEXT_TYPE_PROPERTIES
+          where TXTT_CODE = psTXTT_CODE
+          and TAB_ALIAS = sTAB_ALIAS;
+        --
+          if sMULTI_INSTANCE = 'N'
+          then MESSAGE.DISPLAY_MESSAGE('TXT', 9, 'en', 'Only one text item of this type allowed');
+          end if;
         end if;
       else
       --
