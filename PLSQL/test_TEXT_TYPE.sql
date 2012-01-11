@@ -32,13 +32,13 @@ execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'xx', 'Text type description'); &eh
 -- Inactive text language
 execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'la', 'Text type description'); &eh
 
--- Text type already exists
+-- unique constraint (PSRD.PK_TXTT) violated
 execute TEXT_TYPE.INSERT_TEXT_TYPE('TST1', 'en', 'Text type description'); &eh
 
--- Value larger than specified precision allowed for this column
+-- value larger than specified precision allowed for this column
 execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'en', 'Text type description', 1e6); &eh
 
--- Active flag must be Y or N
+-- check constraint (PSRD.CH_TXTT_ACTIVE_FLAG) violated
 execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'en', 'Text type description', null, 'X'); &eh
 
 -- Update text types
@@ -67,7 +67,7 @@ execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', 'xx', 'Text type description'); &eh
 -- Inactive description language
 execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', 'la', 'Text type description'); &eh
 
--- Text type does not exist
+-- no data found
 execute TEXT_TYPE.UPDATE_TEXT_TYPE('XXX', 'en', 'Text type description'); &eh
 
 -- Description language must be specified
@@ -79,10 +79,10 @@ execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1'); &eh
 -- Text type does not exist
 execute TEXT_TYPE.UPDATE_TEXT_TYPE('XXX', pnDISPLAY_SEQ => 1); &eh
 
--- Value larger than specified precision allowed for this column
+-- value larger than specified precision allowed for this column
 execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', pnDISPLAY_SEQ => 1e6); &eh
 
--- Active flag must be Y or N
+-- check constraint (PSRD.CH_TXTT_ACTIVE_FLAG) violated
 execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', psACTIVE_FLAG => 'X'); &eh
 
 -- Add text type descriptions
@@ -102,7 +102,7 @@ execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('TST1', 'xx', 'Text'); &eh
 -- Inactive text language
 execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('TST1', 'la', 'Latin Text'); &eh
 
--- Text type does not exist
+-- no data found
 execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('XXX', 'en', 'Component'); &eh
 
 -- Text message already exists
@@ -117,7 +117,7 @@ execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('TST1', 'ru', ''); &eh
 -- Error cases
 -- -----------
 
--- Text type does not exist
+-- no data found
 execute TEXT_TYPE.REMOVE_TXTT_DESCRIPTION('XXX', 'fr'); &eh
 
 -- Cannot delete last mandatory text item
@@ -139,10 +139,8 @@ execute TEXT_TYPE.REMOVE_TXTT_DESCRIPTION('TST1', 'fr'); &eh
 
 variable SEQ_NBR number
 execute TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
-print SEQ_NBR
 execute TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 execute :SEQ_NBR := null; TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'es', 'New Spanish note'); &eh
-print SEQ_NBR
 
 -- Error cases
 -- -----------
@@ -153,7 +151,7 @@ execute :SEQ_NBR := null; TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'xx'
 -- Inactive text language
 execute :SEQ_NBR := null; TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
 
--- Text type does not exist
+-- no data found
 execute :SEQ_NBR := null; TEXT_TYPE.ADD_TXTT_TEXT('XXX', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Unknown text type
@@ -184,7 +182,7 @@ execute TEXT_TYPE.UPDATE_TXTT_TEXT('TST1', 'NOTE', 2, 'es', rpad('Updated Spanis
 -- Error cases
 -- -----------
 
--- Text type does not exist
+-- no data found
 execute TEXT_TYPE.UPDATE_TXTT_TEXT('XXX', 'NOTE', 1, 'fr', 'Updated note'); &eh
 
 -- Text item does not exist
@@ -205,7 +203,7 @@ execute TEXT_TYPE.UPDATE_TXTT_TEXT('TST1', 'NOTE', 1, 'fr', ''); &eh
 -- Error cases
 -- -----------
 
--- Text type does not exist
+-- no data found
 execute TEXT_TYPE.REMOVE_TXTT_TEXT('XXX', 'NOTE', 1, 'en'); &eh
 
 -- Text type must be specified
@@ -272,16 +270,16 @@ execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST4', 'TXTT', psMULTI_INSTANCE => '
 -- Error cases
 -- -----------
 
--- Text type does not exist
+-- integrity constraint (PSRD.FK_TTP_TXTT) violated - parent key not found
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST9', 'TXTT'); &eh
 
--- Text type does not exist
+-- integrity constraint (PSRD.FK_TTP_TAB) violated - parent key not found
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST1', 'XXX'); &eh
 
--- Text type does not exist
+-- check constraint (PSRD.CH_TTP_MANDATORY) violated
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST1', 'TXTT', 'X'); &eh
 
--- Text type does not exist
+-- check constraint (PSRD.CH_TTP_MULTI_INSTANCE) violated
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST1', 'TXTT', null, 'X'); &eh
 
 spool off
