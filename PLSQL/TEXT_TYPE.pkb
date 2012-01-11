@@ -13,7 +13,7 @@ create or replace package body TEXT_TYPE is
     psLANG_CODE in LANGUAGES.CODE%type,
     psDescription in varchar2,
     pnDISPLAY_SEQ in TEXT_TYPES.DISPLAY_SEQ%type := null,
-    psACTIVE_FLAG in TEXT_TYPES.ACTIVE_FLAG%type := null)
+    psACTIVE_FLAG in TEXT_TYPES.ACTIVE_FLAG%type := 'Y')
   is
     nTXT_ID TEXT_HEADERS.ID%type;
     nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type;
@@ -25,14 +25,8 @@ create or replace package body TEXT_TYPE is
   --
     TEXT.INSERT_TEXT(nTXT_ID, 'LANG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    if psACTIVE_FLAG is null
-    then
-      insert into TEXT_TYPES (CODE, DISPLAY_SEQ, TXT_ID)
-      values (psCODE, pnDISPLAY_SEQ, nTXT_ID);
-    else
-      insert into TEXT_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
-      values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
-    end if;
+    insert into TEXT_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
+    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -77,12 +71,7 @@ create or replace package body TEXT_TYPE is
       then MESSAGE.DISPLAY_MESSAGE('TXTT', 3, 'en', 'Inactive description language');
       end if;
     --
-      begin
-        select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
-      exception
-        when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('TXTT', 4, 'en', 'Text type does not exist');
-      end;
+      select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
     --
       TEXT.UPDATE_TEXT(nTXT_ID, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
     --
@@ -174,12 +163,7 @@ create or replace package body TEXT_TYPE is
                                to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
                                to_char(length(psText)) || ':' || psText);
   --
-    begin
-      select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
-    exception
-      when NO_DATA_FOUND
-      then MESSAGE.DISPLAY_MESSAGE('TXTT', 4, 'en', 'Text type does not exist');
-    end;
+    select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
   --
     TEXT.INSERT_TEXT(nTXT_ID, null, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
   --
@@ -207,12 +191,7 @@ create or replace package body TEXT_TYPE is
                                to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
                                to_char(length(psText)) || ':' || psText);
   --
-    begin
-      select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
-    exception
-      when NO_DATA_FOUND
-      then MESSAGE.DISPLAY_MESSAGE('TXTT', 4, 'en', 'Text type does not exist');
-    end;
+    select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
   --
     TEXT.UPDATE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
   --
@@ -238,12 +217,7 @@ create or replace package body TEXT_TYPE is
                              psCODE || '~' || psTXTT_CODE || '~' ||
                                to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    begin
-      select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
-    exception
-      when NO_DATA_FOUND
-      then MESSAGE.DISPLAY_MESSAGE('TXTT', 4, 'en', 'Text type does not exist');
-    end;
+    select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
   --
     if psTXTT_CODE is null
     then MESSAGE.DISPLAY_MESSAGE('TXTT', 7, 'en', 'Text type must be specified');
@@ -264,23 +238,17 @@ create or replace package body TEXT_TYPE is
   procedure DELETE_TEXT_TYPE
    (psCODE in TEXT_TYPES.CODE%type)
   is
+    nTXT_ID TEXT_HEADERS.ID%type;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_TEXT_TYPE', psCODE);
   --
-    begin
-      delete from TEXT_TYPES where CODE = psCODE;
-    exception
-      when others
-      then
-        if sqlcode = -2292  -- Integrity constraint violated - child record found
-        then MESSAGE.DISPLAY_MESSAGE('TXTT', 8, 'en', 'Text type still in use');
-        else raise;
-        end if;
-    end;
+    delete from TEXT_TYPES where CODE = psCODE returning TXT_ID into nTXT_ID;
   --
     if sql%rowcount = 0
     then MESSAGE.DISPLAY_MESSAGE('TXTT', 4, 'en', 'Text type does not exist');
     end if;
+  --
+    TEXT.DELETE_TEXT(nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -333,9 +301,7 @@ create or replace package body TEXT_TYPE is
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_TEXT_TYPE_PROPERTIES',
                              psTXTT_CODE || '~' || psTAB_ALIAS);
   --
-    delete from TEXT_TYPE_PROPERTIES
-    where TXTT_CODE = psTXTT_CODE
-    and TAB_ALIAS = psTAB_ALIAS;
+    delete from TEXT_TYPE_PROPERTIES where TXTT_CODE = psTXTT_CODE and TAB_ALIAS = psTAB_ALIAS;
   --
     if sql%rowcount = 0
     then MESSAGE.DISPLAY_MESSAGE('TXTT', 9, 'en', 'Text type property does not exist');
