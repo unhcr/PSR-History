@@ -6,7 +6,7 @@ create or replace package MESSAGE is
 --  Procedures for maintenance of system messages and their associated components.
 --
 --  Change History:
---  05-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  12-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -25,14 +25,14 @@ create or replace package MESSAGE is
 --  psDescription - Textual description of component (mandatory).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of components (optional).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the component is currently available for use
---    (optional, defaults to database default Y).
+--    (optional, defaults to Y).
 --
   procedure INSERT_COMPONENT
    (psCODE in COMPONENTS.CODE%type,
     psLANG_CODE in LANGUAGES.CODE%type,
     psDescription in varchar2,
     pnDISPLAY_SEQ in COMPONENTS.DISPLAY_SEQ%type := null,
-    psACTIVE_FLAG in COMPONENTS.ACTIVE_FLAG%type := null);
+    psACTIVE_FLAG in COMPONENTS.ACTIVE_FLAG%type := 'Y');
 --
 -- ----------------------------------------
 -- UPDATE_COMPONENT
@@ -181,15 +181,15 @@ create or replace package MESSAGE is
 --    returned).
 --  psLANG_CODE - Language code for the language of the message (mandatory).
 --  psMessage - Message text (mandatory).
---  psSEVERITY - Severity of event associated with message: E - Error, W - Warning or
---    I - Information (optional, defaults to database default E).
+--  psSEVERITY - Severity of event associated with message: S - System, E - Error, W - Warning or
+--    I - Information (optional, defaults to E).
 --
   procedure INSERT_MESSAGE
    (psCOMP_CODE in MESSAGES.COMP_CODE%type,
     pnSEQ_NBR in out MESSAGES.SEQ_NBR%type,
     psLANG_CODE in LANGUAGES.CODE%type,
     psMessage in varchar2,
-    psSEVERITY in MESSAGES.SEVERITY%type := null);
+    psSEVERITY in MESSAGES.SEVERITY%type := 'E');
 --
 -- ----------------------------------------
 -- UPDATE_MESSAGE
@@ -203,7 +203,7 @@ create or replace package MESSAGE is
 --  psLANG_CODE - Language code of the message (optional, must be specified if psMessage is
 --    specified).
 --  psMessage - Message text (optional: if null, the message is not updated).
---  psSEVERITY - Severity of event associated with message: E - Error, W - Warning or
+--  psSEVERITY - Severity of event associated with message: S - System, E - Error, W - Warning or
 --    I - Information (optional: if not specified or null, the severity is not updated).
 --
   procedure UPDATE_MESSAGE
