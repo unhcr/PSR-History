@@ -13,7 +13,7 @@ create or replace package body LANGUAGE is
     psLANG_CODE in LANGUAGES.CODE%type,
     psDescription in varchar2,
     pnDISPLAY_SEQ in LANGUAGES.DISPLAY_SEQ%type := null,
-    psACTIVE_FLAG in LANGUAGES.ACTIVE_FLAG%type := null)
+    psACTIVE_FLAG in LANGUAGES.ACTIVE_FLAG%type := 'Y')
   is
     sActive varchar2(1);
     nTXT_ID TEXT_HEADERS.ID%type;
@@ -26,26 +26,8 @@ create or replace package body LANGUAGE is
   --
     TEXT.INSERT_TEXT(nTXT_ID, 'LANG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    begin
-      if psACTIVE_FLAG is null
-      then
-        insert into LANGUAGES (CODE, DISPLAY_SEQ, TXT_ID)
-        values (psCODE, pnDISPLAY_SEQ, nTXT_ID);
-      else
-        insert into LANGUAGES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
-        values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
-      end if;
-    exception
-      when DUP_VAL_ON_INDEX
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'en', 'Language already exists');
-    --
-      when others
-      then if sqlcode = -2290
-          and sqlerrm like '%CH_LANG_ACTIVE_FLAG%'
-        then MESSAGE.DISPLAY_MESSAGE('LANG', 2, 'en', 'Active flag must be Y or N');
-        else raise;
-        end if;
-    end;
+    insert into LANGUAGES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
+    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -75,10 +57,6 @@ create or replace package body LANGUAGE is
   --
     if psDescription is not null
     then
-      if psLANG_CODE is null
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 3, 'en', 'Description language must be specified');
-      end if;
-    --
       begin
         select ACTIVE_FLAG into sActive from LANGUAGES where CODE = psLANG_CODE;
       exception
@@ -90,12 +68,7 @@ create or replace package body LANGUAGE is
       then MESSAGE.DISPLAY_MESSAGE('LANG', 5, 'en', 'Inactive description language');
       end if;
     --
-      begin
-        select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
-      exception
-        when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('LANG', 6, 'en', 'Language does not exist');
-      end;
+      select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
     --
       TEXT.UPDATE_TEXT(nTXT_ID, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
     --
@@ -109,23 +82,14 @@ create or replace package body LANGUAGE is
     if nvl(pnDISPLAY_SEQ, 0) != -1e6
       or psACTIVE_FLAG is not null
     then
-      begin
-        update LANGUAGES
-        set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
-          ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG)
-        where CODE = psCODE;
-      --
-        if sql%rowcount = 0
-        then MESSAGE.DISPLAY_MESSAGE('LANG', 6, 'en', 'Language does not exist');
-        end if;
-      exception
-        when others
-        then if sqlcode = -2290
-            and sqlerrm like '%CH_LANG_ACTIVE_FLAG%'
-          then MESSAGE.DISPLAY_MESSAGE('LANG', 2, 'en', 'Active flag must be Y or N');
-          else raise;
-          end if;
-      end;
+      update LANGUAGES
+      set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
+        ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG)
+      where CODE = psCODE;
+    --
+      if sql%rowcount = 0
+      then MESSAGE.DISPLAY_MESSAGE('LANG', 6, 'en', 'Language does not exist');
+      end if;
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -196,12 +160,7 @@ create or replace package body LANGUAGE is
                                to_char(pnTXI_SEQ_NBR) || '~' || psLANG_CODE || '~' ||
                                to_char(length(psText)) || ':' || psText);
   --
-    begin
-      select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
-    exception
-      when NO_DATA_FOUND
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 6, 'en', 'Language does not exist');
-    end;
+    select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
   --
     TEXT.INSERT_TEXT(nTXT_ID, null, psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE, psText);
   --
@@ -229,12 +188,7 @@ create or replace package body LANGUAGE is
                                to_char(pnTXI_SEQ_NBR) || '~' || psLANG_CODE || '~' ||
                                to_char(length(psText)) || ':' || psText);
   --
-    begin
-      select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
-    exception
-      when NO_DATA_FOUND
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 6, 'en', 'Language does not exist');
-    end;
+    select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
   --
     TEXT.UPDATE_TEXT(nTXT_ID, psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE, psText);
   --
@@ -260,12 +214,7 @@ create or replace package body LANGUAGE is
                              psCODE || '~' || psTXTT_CODE || '~' ||
                                to_char(pnTXI_SEQ_NBR) || '~' || psLANG_CODE);
   --
-    begin
-      select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
-    exception
-      when NO_DATA_FOUND
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 6, 'en', 'Language does not exist');
-    end;
+    select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
   --
     if psTXTT_CODE is null
     then MESSAGE.DISPLAY_MESSAGE('LANG', 9, 'en', 'Text type must be specified');
@@ -286,23 +235,17 @@ create or replace package body LANGUAGE is
   procedure DELETE_LANGUAGE
    (psCODE in LANGUAGES.CODE%type)
   is
+    nTXT_ID TEXT_HEADERS.ID%type;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_LANGUAGE', psCODE);
   --
-    begin
-      delete from LANGUAGES where CODE = psCODE;
-    exception
-      when others
-      then
-        if sqlcode = -2292  -- Integrity constraint violated - child record found
-        then MESSAGE.DISPLAY_MESSAGE('LANG', 10, 'en', 'Language still in use');
-        else raise;
-        end if;
-    end;
+    delete from LANGUAGES where CODE = psCODE returning TXT_ID into nTXT_ID;
   --
     if sql%rowcount = 0
     then MESSAGE.DISPLAY_MESSAGE('LANG', 6, 'en', 'Language does not exist');
     end if;
+  --
+    TEXT.DELETE_TEXT(nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
