@@ -6,7 +6,7 @@ create or replace package TEXT is
 --  Procedures for maintenance of the text tables.
 --
 --  Change History:
---  09-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  12-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
