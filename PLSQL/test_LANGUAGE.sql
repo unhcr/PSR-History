@@ -23,7 +23,7 @@ execute LANGUAGE.INSERT_LANGUAGE('frm', 'en', 'Middle French', psACTIVE_FLAG => 
 -- Error cases
 -- -----------
 
--- Text message must be specified
+-- check constraint (PSR.CH_TXI_TEXT) violated
 execute LANGUAGE.INSERT_LANGUAGE('de', 'en', ''); &eh
 
 -- Unknown text language
@@ -32,16 +32,16 @@ execute LANGUAGE.INSERT_LANGUAGE('de', 'xx', 'German'); &eh
 -- Inactive text language
 execute LANGUAGE.INSERT_LANGUAGE('de', 'la', 'German'); &eh
 
--- Language already exists
+-- unique constraint (PSR.PK_LANG) violated
 execute LANGUAGE.INSERT_LANGUAGE('en', 'en', 'English'); &eh
 
--- Value larger than specified precision allowed for this column
+-- value larger than specified precision allowed for this column
 execute LANGUAGE.INSERT_LANGUAGE('gr', 'en', 'Greek', 1e6); &eh
 
--- Active flag must be Y or N
+-- check constraint (PSR.CH_LANG_ACTIVE_FLAG) violated
 execute LANGUAGE.INSERT_LANGUAGE('gr', 'en', 'Greek', null, 'X'); &eh
 
--- Value too large for column ...
+-- value too large for column "PSR"."LANGUAGES"."ACTIVE_FLAG" (actual: 2, maximum: 1)
 execute LANGUAGE.INSERT_LANGUAGE('gr', 'en', 'Greek', null, 'YY'); &eh
 
 -- Update languages
@@ -70,10 +70,10 @@ execute LANGUAGE.UPDATE_LANGUAGE('de', 'xx', 'German'); &eh
 -- Inactive description language
 execute LANGUAGE.UPDATE_LANGUAGE('de', 'la', 'German'); &eh
 
--- Language does not exist
+-- no data found
 execute LANGUAGE.UPDATE_LANGUAGE('xx', 'en', 'Unknown'); &eh
 
--- Description language must be specified
+-- Unknown description language
 execute LANGUAGE.UPDATE_LANGUAGE('de', null, 'German'); &eh
 
 -- Nothing to be updated
@@ -82,13 +82,13 @@ execute LANGUAGE.UPDATE_LANGUAGE('de'); &eh
 -- Language does not exist
 execute LANGUAGE.UPDATE_LANGUAGE('xx', pnDISPLAY_SEQ => 1); &eh
 
--- Value larger than specified precision allowed for this column
+-- value larger than specified precision allowed for this column
 execute LANGUAGE.UPDATE_LANGUAGE('de', pnDISPLAY_SEQ => 1e6); &eh
 
--- Active flag must be Y or N
+-- check constraint (PSR.CH_LANG_ACTIVE_FLAG) violated
 execute LANGUAGE.UPDATE_LANGUAGE('de', psACTIVE_FLAG => 'X'); &eh
 
--- Value too large for column ...
+-- value too large for column "PSR"."LANGUAGES"."ACTIVE_FLAG" (actual: 2, maximum: 1)
 execute LANGUAGE.UPDATE_LANGUAGE('de', psACTIVE_FLAG => 'YY'); &eh
 
 -- Add language descriptions
@@ -108,13 +108,13 @@ execute LANGUAGE.ADD_LANG_DESCRIPTION('de', 'xx', 'German'); &eh
 -- Inactive text language
 execute LANGUAGE.ADD_LANG_DESCRIPTION('de', 'la', 'Latin German'); &eh
 
--- Language does not exist
+-- no data found
 execute LANGUAGE.ADD_LANG_DESCRIPTION('xx', 'en', 'Language'); &eh
 
--- Text message already exists
+-- unique constraint (PSR.PK_TXI) violated
 execute LANGUAGE.ADD_LANG_DESCRIPTION('de', 'fr', 'Allemand'); &eh
 
--- Text message must be specified
+-- check constraint (PSR.CH_TXI_TEXT) violated
 execute LANGUAGE.ADD_LANG_DESCRIPTION('de', 'ru', ''); &eh
 
 -- Remove language descriptions
@@ -123,7 +123,7 @@ execute LANGUAGE.ADD_LANG_DESCRIPTION('de', 'ru', ''); &eh
 -- Error cases
 -- -----------
 
--- Language does not exist
+-- no data found
 execute LANGUAGE.REMOVE_LANG_DESCRIPTION('xx', 'fr'); &eh
 
 -- Cannot delete last mandatory text item
@@ -145,10 +145,8 @@ execute LANGUAGE.REMOVE_LANG_DESCRIPTION('de', 'fr'); &eh
 
 variable SEQ_NBR number
 execute LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
-print SEQ_NBR
 execute LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 execute :SEQ_NBR := null; LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'es', 'New Spanish note'); &eh
-print SEQ_NBR
 
 -- Error cases
 -- -----------
@@ -159,7 +157,7 @@ execute :SEQ_NBR := null; LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'xx', '
 -- Inactive text language
 execute :SEQ_NBR := null; LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
 
--- Language does not exist
+-- no data found
 execute :SEQ_NBR := null; LANGUAGE.ADD_LANG_TEXT('xx', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Unknown text type
@@ -174,7 +172,7 @@ execute :SEQ_NBR := 1; LANGUAGE.ADD_LANG_TEXT('it', 'NOTE', :SEQ_NBR, 'fr', 'Fre
 -- Text item sequence number greater than current maximum
 execute :SEQ_NBR := 9; LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
--- Text message must be specified
+-- check constraint (PSR.CH_TXI_TEXT) violated
 execute :SEQ_NBR := null; LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'en', ''); &eh
 
 -- Update language text
@@ -190,7 +188,7 @@ execute LANGUAGE.UPDATE_LANG_TEXT('de', 'NOTE', 2, 'es', rpad('Updated Spanish n
 -- Error cases
 -- -----------
 
--- Language does not exist
+-- no data found
 execute LANGUAGE.UPDATE_LANG_TEXT('xx', 'NOTE', 1, 'fr', 'Updated note'); &eh
 
 -- Text item does not exist
@@ -211,7 +209,7 @@ execute LANGUAGE.UPDATE_LANG_TEXT('de', 'NOTE', 1, 'fr', ''); &eh
 -- Error cases
 -- -----------
 
--- Language does not exist
+-- no data found
 execute LANGUAGE.REMOVE_LANG_TEXT('xx', 'NOTE', 1, 'en'); &eh
 
 -- Text type must be specified
@@ -251,7 +249,7 @@ execute LANGUAGE.REMOVE_LANG_TEXT('de', 'NOTE'); &eh
 -- Error cases
 -- -----------
 
--- Language still in use
+-- integrity constraint (PSR.FK_TXI_LANG) violated - child record found
 execute LANGUAGE.DELETE_LANGUAGE('en'); &eh
 
 -- Language does not exist

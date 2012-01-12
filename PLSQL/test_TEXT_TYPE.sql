@@ -23,7 +23,7 @@ execute TEXT_TYPE.INSERT_TEXT_TYPE('TST6', 'en', 'Test 6', psACTIVE_FLAG => 'N')
 -- Error cases
 -- -----------
 
--- Text message must be specified
+-- check constraint (PSR.CH_TXI_TEXT) violated
 execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'en', ''); &eh
 
 -- Unknown text language
@@ -32,13 +32,13 @@ execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'xx', 'Text type description'); &eh
 -- Inactive text language
 execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'la', 'Text type description'); &eh
 
--- unique constraint (PSRD.PK_TXTT) violated
+-- unique constraint (PSR.PK_TXTT) violated
 execute TEXT_TYPE.INSERT_TEXT_TYPE('TST1', 'en', 'Text type description'); &eh
 
 -- value larger than specified precision allowed for this column
 execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'en', 'Text type description', 1e6); &eh
 
--- check constraint (PSRD.CH_TXTT_ACTIVE_FLAG) violated
+-- check constraint (PSR.CH_TXTT_ACTIVE_FLAG) violated
 execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'en', 'Text type description', null, 'X'); &eh
 
 -- Update text types
@@ -70,7 +70,7 @@ execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', 'la', 'Text type description'); &eh
 -- no data found
 execute TEXT_TYPE.UPDATE_TEXT_TYPE('XXX', 'en', 'Text type description'); &eh
 
--- Description language must be specified
+-- Unknown description language
 execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', null, 'Text type description'); &eh
 
 -- Nothing to be updated
@@ -82,7 +82,7 @@ execute TEXT_TYPE.UPDATE_TEXT_TYPE('XXX', pnDISPLAY_SEQ => 1); &eh
 -- value larger than specified precision allowed for this column
 execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', pnDISPLAY_SEQ => 1e6); &eh
 
--- check constraint (PSRD.CH_TXTT_ACTIVE_FLAG) violated
+-- check constraint (PSR.CH_TXTT_ACTIVE_FLAG) violated
 execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', psACTIVE_FLAG => 'X'); &eh
 
 -- Add text type descriptions
@@ -105,10 +105,10 @@ execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('TST1', 'la', 'Latin Text'); &eh
 -- no data found
 execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('XXX', 'en', 'Component'); &eh
 
--- Text message already exists
+-- unique constraint (PSR.PK_TXI) violated
 execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('TST1', 'fr', 'Texte'); &eh
 
--- Text message must be specified
+-- check constraint (PSR.CH_TXI_TEXT) violated
 execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('TST1', 'ru', ''); &eh
 
 -- Remove text type descriptions
@@ -166,7 +166,7 @@ execute :SEQ_NBR := 1; TEXT_TYPE.ADD_TXTT_TEXT('TST2', 'NOTE', :SEQ_NBR, 'fr', '
 -- Text item sequence number greater than current maximum
 execute :SEQ_NBR := 9; TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
--- Text message must be specified
+-- check constraint (PSR.CH_TXI_TEXT) violated
 execute :SEQ_NBR := null; TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'en', ''); &eh
 
 -- Update text type text
@@ -194,7 +194,7 @@ execute TEXT_TYPE.UPDATE_TXTT_TEXT('TST1', 'NOTE', 9, 'fr', 'Updated note'); &eh
 -- Text item does not exist
 execute TEXT_TYPE.UPDATE_TXTT_TEXT('TST1', 'NOTE', 1, 'xx', 'Updated note'); &eh
 
--- Text message must be specified
+-- check constraint (PSR.CH_TXI_TEXT) violated
 execute TEXT_TYPE.UPDATE_TXTT_TEXT('TST1', 'NOTE', 1, 'fr', ''); &eh
 
 -- Remove text type text
@@ -270,16 +270,16 @@ execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST4', 'TXTT', psMULTI_INSTANCE => '
 -- Error cases
 -- -----------
 
--- integrity constraint (PSRD.FK_TTP_TXTT) violated - parent key not found
+-- integrity constraint (PSR.FK_TTP_TXTT) violated - parent key not found
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST9', 'TXTT'); &eh
 
--- integrity constraint (PSRD.FK_TTP_TAB) violated - parent key not found
+-- integrity constraint (PSR.FK_TTP_TAB) violated - parent key not found
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST1', 'XXX'); &eh
 
--- check constraint (PSRD.CH_TTP_MANDATORY) violated
+-- check constraint (PSR.CH_TTP_MANDATORY) violated
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST1', 'TXTT', 'X'); &eh
 
--- check constraint (PSRD.CH_TTP_MULTI_INSTANCE) violated
+-- check constraint (PSR.CH_TTP_MULTI_INSTANCE) violated
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST1', 'TXTT', null, 'X'); &eh
 
 spool off
