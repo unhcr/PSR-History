@@ -31,13 +31,13 @@ execute :TXT_ID := null; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, 'LANG', 'DE
 -- Error cases
 -- -----------
 
--- Either text identifier or table alias must be specified
+-- cannot insert NULL into ("PSR"."TEXT_HEADERS"."TAB_ALIAS")
 execute :TXT_ID := null; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, null, 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
 
 -- Cannot specify a text item sequence number without a text identifier
 execute :TXT_ID := null; :SEQ_NBR := 1; TEXT.INSERT_TEXT(:TXT_ID, 'LANG', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
 
--- Unknown table alias
+-- integrity constraint (PSR.FK_TXT_TAB) violated - parent key not found
 execute :TXT_ID := null; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, 'XXXX', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
 
 -- Unknown text type
@@ -46,13 +46,13 @@ execute :TXT_ID := null; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, 'LANG', 'XX
 -- Inactive text type
 execute :TXT_ID := null; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, 'LANG', 'INACT', :SEQ_NBR, 'en', 'English note'); &eh
 
--- Integrity constraint (PSRD.FK_TTH_TTP) violated - parent key not found
+-- integrity constraint (PSR.FK_TTH_TTP) violated - parent key not found
 execute :TXT_ID := null; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, 'LANG', 'MSG', :SEQ_NBR, 'en', 'English message'); &eh
 
 -- Unknown text identifier
 execute :TXT_ID := 9999999; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, null, 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
 
--- Integrity constraint (PSRD.FK_TTH_TTP) violated - parent key not found
+-- integrity constraint (PSR.FK_TTH_TTP) violated - parent key not found
 execute :TXT_ID := :TXT_ID1; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, 'LANG', 'MSG', :SEQ_NBR, 'en', 'English message'); &eh
 
 -- Wrong table for this text identifier
@@ -79,10 +79,10 @@ execute :TXT_ID := :TXT_ID1; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, null, '
 -- Inactive text language
 execute :TXT_ID := :TXT_ID1; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, null, 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
 
--- Text message already exists
+-- unique constraint (PSR.PK_TXI) violated
 execute :TXT_ID := :TXT_ID1; :SEQ_NBR := :SEQ_NBR1; TEXT.INSERT_TEXT(:TXT_ID, 'LANG', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
 
--- Text message must be specified
+-- check constraint (PSR.CH_TXI_TEXT) violated
 execute :TXT_ID := null; :SEQ_NBR := null; TEXT.INSERT_TEXT(:TXT_ID, 'LANG', 'NOTE', :SEQ_NBR, 'en', ''); &eh
 
 -- Update text
@@ -111,7 +111,7 @@ execute TEXT.UPDATE_TEXT(:TXT_ID1, 'NOTE', 9999, 'en', 'English note'); &eh
 -- Text item does not exist
 execute TEXT.UPDATE_TEXT(:TXT_ID1, 'NOTE', :SEQ_NBR1, 'de', 'German note'); &eh
 
--- Text message must be specified
+-- check constraint (PSR.CH_TXI_TEXT) violated
 execute TEXT.UPDATE_TEXT(:TXT_ID1, 'NOTE', :SEQ_NBR1, 'en', ''); &eh
 
 -- Delete text
