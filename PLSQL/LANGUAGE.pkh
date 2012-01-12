@@ -6,7 +6,7 @@ create or replace package LANGUAGE is
 --  Procedures for maintenance of text languages.
 --
 --  Change History:
---  04-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  12-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -27,14 +27,14 @@ create or replace package LANGUAGE is
 --  psDescription - Textual description of language (mandatory).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of languages (optional).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the language is currently available for use
---    (optional, defaults to database default Y).
+--    (optional, defaults to Y).
 --
   procedure INSERT_LANGUAGE
    (psCODE in LANGUAGES.CODE%type,
     psLANG_CODE in LANGUAGES.CODE%type,
     psDescription in varchar2,
     pnDISPLAY_SEQ in LANGUAGES.DISPLAY_SEQ%type := null,
-    psACTIVE_FLAG in LANGUAGES.ACTIVE_FLAG%type := null);
+    psACTIVE_FLAG in LANGUAGES.ACTIVE_FLAG%type := 'Y');
 --
 -- ----------------------------------------
 -- UPDATE_LANGUAGE
