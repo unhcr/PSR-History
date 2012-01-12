@@ -31,28 +31,15 @@ create or replace package body TEXT is
     --
     -- Text is to be created for a new entity.
     --
-      if psTAB_ALIAS is null
-      then MESSAGE.DISPLAY_MESSAGE('TXT', 1, 'en', 'Either text identifier or table alias must be specified');
-      end if;
-    --
       if pnSEQ_NBR is not null
       then MESSAGE.DISPLAY_MESSAGE('TXT', 2, 'en', 'Cannot specify a text item sequence number without a text identifier');
       end if;
     --
     -- Create new TEXT_HEADERS row.
     --
-      begin
-        insert into TEXT_HEADERS (TAB_ALIAS)
-        values (psTAB_ALIAS)
-        returning ID into pnTXT_ID;
-      exception
-        when others
-        then
-          if sqlcode = -2291  -- Integrity constraint violated - parent key not found
-          then MESSAGE.DISPLAY_MESSAGE('TXT', 3, 'en', 'Unknown table alias');
-          else raise;
-          end if;
-      end;
+      insert into TEXT_HEADERS (ID, TAB_ALIAS)
+      values (TXT_SEQ.nextval, psTAB_ALIAS)
+      returning ID into pnTXT_ID;
     --
       PLS_UTILITY.TRACE_POINT('Inserted TEXT_HEADERS',
                               to_char(pnTXT_ID) || '~' || psTAB_ALIAS || '~' || psTXTT_CODE || '~' ||
@@ -80,12 +67,10 @@ create or replace package body TEXT is
       pnSEQ_NBR := 1;
     --
     else
-      begin
-        select TAB_ALIAS into sTAB_ALIAS from TEXT_HEADERS TXT where TXT.ID = pnTXT_ID;
-      exception
-        when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('TXT', 7, 'en', 'Unknown text identifier');
-      end;
+    --
+    -- Text already exists for this entity.
+    --
+      select TAB_ALIAS into sTAB_ALIAS from TEXT_HEADERS TXT where TXT.ID = pnTXT_ID;
     --
       if sTAB_ALIAS != psTAB_ALIAS
       then MESSAGE.DISPLAY_MESSAGE('TXT', 8, 'en', 'Wrong table for this text identifier');
@@ -177,27 +162,14 @@ create or replace package body TEXT is
     then MESSAGE.DISPLAY_MESSAGE('TXT', 13, 'en', 'Inactive text language');
     end if;
   --
-    begin
-      if length(psTEXT) <= 1000
-      then
-        insert into TEXT_ITEMS (TXT_ID, TXTT_CODE, SEQ_NBR, LANG_CODE, TEXT)
-        values (pnTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psTEXT);
-      else
-        insert into TEXT_ITEMS (TXT_ID, TXTT_CODE, SEQ_NBR, LANG_CODE, LONG_TEXT)
-        values (pnTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psTEXT);
-      end if;
-    exception
-      when DUP_VAL_ON_INDEX
-      then MESSAGE.DISPLAY_MESSAGE('TXT', 14, 'en', 'Text message already exists');
-    --
-      when others
-      then
-        if sqlcode = -2290  -- Check constraint violated
-          and sqlerrm like '%CH_TXI_TEXT%'
-        then MESSAGE.DISPLAY_MESSAGE('TXT', 15, 'en', 'Text message must be specified');
-        else raise;
-        end if;
-    end;
+    insert into TEXT_ITEMS
+     (TXT_ID, TXTT_CODE, SEQ_NBR, LANG_CODE,
+      TEXT,
+      LONG_TEXT)
+    values
+     (pnTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE,
+      case when length(psTEXT) <= 1000 then psTEXT end,
+      case when length(psTEXT) > 1000 then psTEXT end);
   --
     PLS_UTILITY.TRACE_POINT('Inserted TEXT_ITEMS',
                             to_char(pnTXT_ID) || '~' || psTAB_ALIAS || '~' || psTXTT_CODE || '~' ||
@@ -227,32 +199,13 @@ create or replace package body TEXT is
                                to_char(pnSEQ_NBR) || '~' || psLANG_CODE|| '~' ||
                                to_char(length(psTEXT)) || ':' || psTEXT);
   --
-    begin
-      if length(psTEXT) <= 1000
-      then
-        update TEXT_ITEMS
-        set TEXT = psTEXT, LONG_TEXT = null
-        where TXT_ID = pnTXT_ID
-        and TXTT_CODE = psTXTT_CODE
-        and SEQ_NBR = pnSEQ_NBR
-        and LANG_CODE = psLANG_CODE;
-      else
-        update TEXT_ITEMS
-        set TEXT = null, LONG_TEXT = psTEXT
-        where TXT_ID = pnTXT_ID
-        and TXTT_CODE = psTXTT_CODE
-        and SEQ_NBR = pnSEQ_NBR
-        and LANG_CODE = psLANG_CODE;
-      end if;
-    exception
-      when others
-      then
-        if sqlcode = -2290  -- Check constraint violated
-          and sqlerrm like '%CH_TXI_TEXT%'
-        then MESSAGE.DISPLAY_MESSAGE('TXT', 15, 'en', 'Text message must be specified');
-        else raise;
-        end if;
-    end;
+    update TEXT_ITEMS
+    set TEXT = case when length(psTEXT) <= 1000 then psTEXT end,
+      LONG_TEXT = case when length(psTEXT) > 1000 then psTEXT end
+    where TXT_ID = pnTXT_ID
+    and TXTT_CODE = psTXTT_CODE
+    and SEQ_NBR = pnSEQ_NBR
+    and LANG_CODE = psLANG_CODE;
   --
     if sql%rowcount = 0
     then MESSAGE.DISPLAY_MESSAGE('TXT', 16, 'en', 'Text item does not exist');
