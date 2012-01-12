@@ -56,10 +56,6 @@ create or replace package body TEXT_TYPE is
   --
     if psDescription is not null
     then
-      if psLANG_CODE is null
-      then MESSAGE.DISPLAY_MESSAGE('TXTT', 1, 'en', 'Description language must be specified');
-      end if;
-    --
       begin
         select ACTIVE_FLAG into sActive from LANGUAGES where CODE = psLANG_CODE;
       exception
