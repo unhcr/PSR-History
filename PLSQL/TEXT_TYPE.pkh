@@ -94,14 +94,14 @@ create or replace package TEXT_TYPE is
 -- ADD_TXTT_TEXT
 -- ----------------------------------------
 --
--- Add a general text message in a given language to a text type record.
+-- Add a general text item in a given language to a text type record.
 --
 -- Parameters:
---  psCODE - Code of text type to which text message is to be added (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psCODE - Code of text type to which text item is to be added (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
---  psLANG_CODE - Language code of the text message to be added (mandatory).
---  psText - Text message associated with text type (mandatory).
+--  psLANG_CODE - Language code of the text item to be added (mandatory).
+--  psText - Text associated with text type (mandatory).
 --
   procedure ADD_TXTT_TEXT
    (psCODE in TEXT_TYPES.CODE%type,
@@ -114,14 +114,14 @@ create or replace package TEXT_TYPE is
 -- UPDATE_TXTT_TEXT
 -- ----------------------------------------
 --
--- Update a general text message in a given language for a text type record.
+-- Update a general text item in a given language for a text type record.
 --
 -- Parameters:
---  psCODE - Code of text type to which text message is to be added (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psCODE - Code of text type to which text item is to be added (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (mandatory).
---  psLANG_CODE - Language code of the text message to be updated (mandatory).
---  psText - Text message associated with text type (mandatory).
+--  psLANG_CODE - Language code of the text item to be updated (mandatory).
+--  psText - Text associated with text type (mandatory).
 --
   procedure UPDATE_TXTT_TEXT
    (psCODE in TEXT_TYPES.CODE%type,
@@ -134,7 +134,7 @@ create or replace package TEXT_TYPE is
 -- REMOVE_TXTT_TEXT
 -- ----------------------------------------
 --
--- Remove a general text messages from a text type record. The following cases arise:
+-- Remove a general text item from a text type record. The following cases arise:
 -- 1. All text of the given type is deleted for the given text type (only psCODE and psTXTT_CODE are
 --    specified). This action fails if the text type is mandatory.
 -- 2. All language variants are deleted for the given combination of text type code, text type and
@@ -146,10 +146,10 @@ create or replace package TEXT_TYPE is
 --    this text type and the text type is mandatory.
 --
 -- Parameters:
---  psCODE - Code of text type from which text message is to be removed (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psCODE - Code of text type from which text item is to be removed (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
---  psLANG_CODE - Language code of the text message to be removed (optional).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_TXTT_TEXT
    (psCODE in TEXT_TYPES.CODE%type,
@@ -205,45 +205,26 @@ create or replace package TEXT_TYPE is
   procedure REMOVE_TEXT_TYPE_PROPERTIES
    (psTXTT_CODE in TEXT_TYPE_PROPERTIES.TXTT_CODE%type,
     psTAB_ALIAS in TEXT_TYPE_PROPERTIES.TAB_ALIAS%type);
-/*
 --
 -- ----------------------------------------
--- ADD_TXP_TEXT
+-- SET_TXP_TEXT
 -- ----------------------------------------
 --
--- Add a general text message in a given language to a text type record.
+-- Add or update a general text item in a given language to a text type properties record.
 --
 -- Parameters:
---  psCODE - Code of text type to which text message is to be added (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psTXTT_CODE - Code of text type (mandatory).
+--  psTAB_ALIAS - Table alias (mandatory).
+--  psTXTT_CODE_TEXT - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
---  psLANG_CODE - Language code of the text message to be added (mandatory).
---  psText - Text message associated with text type (mandatory).
+--  psLANG_CODE - Language code of the text item to be added or updated (mandatory).
+--  psText - Text associated with text type (mandatory).
 --
-  procedure ADD_TXTT_TEXT
-   (psCODE in TEXT_TYPES.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
+  procedure SET_TXP_TEXT
+   (psTXTT_CODE in TEXT_TYPE_PROPERTIES.TXTT_CODE%type,
+    psTAB_ALIAS in TEXT_TYPE_PROPERTIES.TAB_ALIAS%type,
+    psTXTT_CODE_TEXT in TEXT_TYPES.CODE%type,
     pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2);
---
--- ----------------------------------------
--- UPDATE_TXP_TEXT
--- ----------------------------------------
---
--- Update a general text message in a given language for a text type record.
---
--- Parameters:
---  psCODE - Code of text type to which text message is to be added (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
---  pnSEQ_NBR - Text item sequence number (mandatory).
---  psLANG_CODE - Language code of the text message to be updated (mandatory).
---  psText - Text message associated with text type (mandatory).
---
-  procedure UPDATE_TXTT_TEXT
-   (psCODE in TEXT_TYPES.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type,
     psLANG_CODE in LANGUAGES.CODE%type,
     psText in varchar2);
 --
@@ -251,29 +232,33 @@ create or replace package TEXT_TYPE is
 -- REMOVE_TXP_TEXT
 -- ----------------------------------------
 --
--- Remove a general text messages from a text type record. The following cases arise:
--- 1. All text of the given type is deleted for the given text type (only psCODE and psTXTT_CODE are
---    specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of text type code, text type and
---    text item sequence number (psCODE, psTXTT_CODE and pnSEQ_NBR are specified, psLANG_CODE is
---    not). This action fails if this is the last text item for this text type and the text type is
+-- Remove a general text item from a text type properties record. The following cases arise:
+-- 1. All text of the given type is deleted for the given text type property (only psTXTT_CODE,
+--    psTAB_ALIAS and psTXTT_CODE_TEXT are specified). This action fails if the text type is
 --    mandatory.
--- 3. A single language variant is deleted (psCODE, psTXTT_CODE, pnSEQ_NBR and psLANG_CODE are all
---    specified). This action fails if this is the last language variant of the last text item for
---    this text type and the text type is mandatory.
+-- 2. All language variants are deleted for the given combination of text type property, text type
+--    and text item sequence number (psTXTT_CODE, psTAB_ALIAS, psTXTT_CODE_TEXT and pnSEQ_NBR are
+--    specified, psLANG_CODE is not). This action fails if this is the last text item for this text
+--    type and the text type is mandatory.
+-- 3. A single language variant is deleted (psTXTT_CODE, psTAB_ALIAS, psTXTT_CODE_TEXT, pnSEQ_NBR
+--    and psLANG_CODE are all specified). This action fails if this is the last language variant of
+--    the last text item for this text type and the text type is mandatory.
+-- Note that this procedure does not fail if there is no text associated with the given text type
+-- properties record.
 --
 -- Parameters:
---  psCODE - Code of text type from which text message is to be removed (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psTXTT_CODE - Code of text type (mandatory).
+--  psTAB_ALIAS - Table alias (mandatory).
+--  psTXTT_CODE_TEXT - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
---  psLANG_CODE - Language code of the text message to be removed (optional).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
 --
-  procedure REMOVE_TXTT_TEXT
-   (psCODE in TEXT_TYPES.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
+  procedure REMOVE_TXP_TEXT
+   (psTXTT_CODE in TEXT_TYPE_PROPERTIES.TXTT_CODE%type,
+    psTAB_ALIAS in TEXT_TYPE_PROPERTIES.TAB_ALIAS%type,
+    psTXTT_CODE_TEXT in TEXT_TYPES.CODE%type,
     pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
     psLANG_CODE in LANGUAGES.CODE%type := null);
-*/
 --
 end TEXT_TYPE;
 /
