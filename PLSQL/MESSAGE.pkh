@@ -94,14 +94,14 @@ create or replace package MESSAGE is
 -- ADD_COMP_TEXT
 -- ----------------------------------------
 --
--- Add a general text message in a given language to a component record.
+-- Add a general text item in a given language to a component record.
 --
 -- Parameters:
---  psCODE - Code of component to which text message is to be added (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psCODE - Code of component to which text item is to be added (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
---  psLANG_CODE - Language code of the text message to be added (mandatory).
---  psText - Text message associated with component (mandatory).
+--  psLANG_CODE - Language code of the text item to be added (mandatory).
+--  psText - Text associated with component (mandatory).
 --
   procedure ADD_COMP_TEXT
    (psCODE in COMPONENTS.CODE%type,
@@ -114,14 +114,14 @@ create or replace package MESSAGE is
 -- UPDATE_COMP_TEXT
 -- ----------------------------------------
 --
--- Update a general text message in a given language for a component record.
+-- Update a general text item in a given language for a component record.
 --
 -- Parameters:
---  psCODE - Code of component to which text message is to be added (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psCODE - Code of component to which text item is to be added (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (mandatory).
---  psLANG_CODE - Language code of the text message to be updated (mandatory).
---  psText - Text message associated with component (mandatory).
+--  psLANG_CODE - Language code of the text item to be updated (mandatory).
+--  psText - Text associated with component (mandatory).
 --
   procedure UPDATE_COMP_TEXT
    (psCODE in COMPONENTS.CODE%type,
@@ -134,7 +134,7 @@ create or replace package MESSAGE is
 -- REMOVE_COMP_TEXT
 -- ----------------------------------------
 --
--- Remove a general text messages from a component record. The following cases arise:
+-- Remove a general text item from a component record. The following cases arise:
 -- 1. All text of the given type is deleted for the given component (only psCODE and psTXTT_CODE are
 --    specified). This action fails if the text type is mandatory.
 -- 2. All language variants are deleted for the given combination of component code, text type and
@@ -146,10 +146,10 @@ create or replace package MESSAGE is
 --    this text type and the text type is mandatory.
 --
 -- Parameters:
---  psCODE - Code of component from which text message is to be removed (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psCODE - Code of component from which text item is to be removed (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
---  psLANG_CODE - Language code of the text message to be removed (optional).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_COMP_TEXT
    (psCODE in COMPONENTS.CODE%type,
@@ -252,16 +252,16 @@ create or replace package MESSAGE is
 -- ADD_MSG_TEXT
 -- ----------------------------------------
 --
--- Add a general text message in a given language to a message record.
+-- Add a general text item in a given language to a message record.
 --
 -- Parameters:
---  psCOMP_CODE - Component code of message to which text message is to be added (mandatory).
---  pnSEQ_NBR - Sequence number of message to which text message is to be added (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psCOMP_CODE - Component code of message to which text item is to be added (mandatory).
+--  pnSEQ_NBR - Sequence number of message to which text item is to be added (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
 --  pnTXI_SEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and
 --    returned).
---  psLANG_CODE - Language code of the text message to be added (mandatory).
---  psText - Text message associated with message (mandatory).
+--  psLANG_CODE - Language code of the text item to be added (mandatory).
+--  psText - Text associated with message (mandatory).
 --
   procedure ADD_MSG_TEXT
    (psCOMP_CODE in MESSAGES.COMP_CODE%type,
@@ -275,15 +275,15 @@ create or replace package MESSAGE is
 -- UPDATE_MSG_TEXT
 -- ----------------------------------------
 --
--- Update a general text message in a given language for a message record.
+-- Update a general text item in a given language for a message record.
 --
 -- Parameters:
---  psCOMP_CODE - Component code of message whose text message is to be updated (mandatory).
---  pnSEQ_NBR - Sequence number of message whose text message is to be updated (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psCOMP_CODE - Component code of message whose text item is to be updated (mandatory).
+--  pnSEQ_NBR - Sequence number of message whose text item is to be updated (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
 --  pnTXI_SEQ_NBR - Text item sequence number (mandatory).
---  psLANG_CODE - Language code of the text message to be updated (mandatory).
---  psText - Text message associated with message (mandatory).
+--  psLANG_CODE - Language code of the text item to be updated (mandatory).
+--  psText - Text associated with message (mandatory).
 --
   procedure UPDATE_MSG_TEXT
    (psCOMP_CODE in MESSAGES.COMP_CODE%type,
@@ -297,7 +297,7 @@ create or replace package MESSAGE is
 -- REMOVE_MSG_TEXT
 -- ----------------------------------------
 --
--- Remove a general text message from a message record. The following cases arise:
+-- Remove a general text item from a message record. The following cases arise:
 -- 1. All text of the given type is deleted for the given language (only psCODE and psTXTT_CODE are
 --    specified). This action fails if the text type is mandatory.
 -- 2. All language variants are deleted for the given combination of language code, text type and
@@ -309,11 +309,11 @@ create or replace package MESSAGE is
 --    for this text type and the text type is mandatory.
 --
 -- Parameters:
---  psCOMP_CODE - Component code of message from which text message is to be removed (mandatory).
---  pnSEQ_NBR - Sequence number of message from which text message is to be removed (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psCOMP_CODE - Component code of message from which text item is to be removed (mandatory).
+--  pnSEQ_NBR - Sequence number of message from which text item is to be removed (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
 --  pnTXI_SEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
---  psLANG_CODE - Language code of the text message to be removed (optional).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_MSG_TEXT
    (psCOMP_CODE in MESSAGES.COMP_CODE%type,

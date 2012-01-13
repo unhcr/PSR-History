@@ -96,15 +96,15 @@ create or replace package LANGUAGE is
 -- ADD_LANG_TEXT
 -- ----------------------------------------
 --
--- Add a general text message in a given language to a language record.
+-- Add a general text item in a given language to a language record.
 --
 -- Parameters:
---  psCODE - Code of language to which text message is to be added (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psCODE - Code of language to which text item is to be added (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
 --  pnTXI_SEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and
 --    returned).
---  psLANG_CODE - Language code of the text message to be added (mandatory).
---  psText - Text message associated with language (mandatory).
+--  psLANG_CODE - Language code of the text item to be added (mandatory).
+--  psText - Text associated with language (mandatory).
 --
   procedure ADD_LANG_TEXT
    (psCODE in LANGUAGES.CODE%type,
@@ -117,14 +117,14 @@ create or replace package LANGUAGE is
 -- UPDATE_LANG_TEXT
 -- ----------------------------------------
 --
--- Update a general text message in a given language for a language record.
+-- Update a general text item in a given language for a language record.
 --
 -- Parameters:
---  psCODE - Code of language whose text message is to be updated (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psCODE - Code of language whose text item is to be updated (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
 --  pnTXI_SEQ_NBR - Text item sequence number (mandatory).
---  psLANG_CODE - Language code of the text message to be updated (mandatory).
---  psText - Text message associated with language (mandatory).
+--  psLANG_CODE - Language code of the text item to be updated (mandatory).
+--  psText - Text associated with language (mandatory).
 --
   procedure UPDATE_LANG_TEXT
    (psCODE in LANGUAGES.CODE%type,
@@ -137,7 +137,7 @@ create or replace package LANGUAGE is
 -- REMOVE_LANG_TEXT
 -- ----------------------------------------
 --
--- Remove a general text message from a language record. The following cases arise:
+-- Remove a general text item from a language record. The following cases arise:
 -- 1. All text of the given type is deleted for the given language (only psCODE and psTXTT_CODE are
 --    specified). This action fails if the text type is mandatory.
 -- 2. All language variants are deleted for the given combination of language code, text type and
@@ -149,10 +149,10 @@ create or replace package LANGUAGE is
 --    for this text type and the text type is mandatory.
 --
 -- Parameters:
---  psCODE - Code of language from which text message is to be removed (mandatory).
---  psTXTT_CODE - Type of text message (mandatory).
+--  psCODE - Code of language from which text item is to be removed (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
 --  pnTXI_SEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
---  psLANG_CODE - Language code of the text message to be removed (optional).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_LANG_TEXT
    (psCODE in LANGUAGES.CODE%type,
