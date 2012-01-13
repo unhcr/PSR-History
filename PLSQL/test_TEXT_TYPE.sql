@@ -282,6 +282,76 @@ execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST1', 'TXTT', 'X'); &eh
 -- check constraint (PSR.CH_TTP_MULTI_INSTANCE) violated
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST1', 'TXTT', null, 'X'); &eh
 
+-- Set text type properties text
+-- =============================
+
+-- Success cases
+-- -------------
+
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NBR, 'en', 'Initial English note'); &eh
+execute TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NBR, 'es', 'New Spanish note'); &eh
+execute :SEQ_NBR := 1; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NBR, 'en', 'Updated English note'); &eh
+
+-- Error cases
+-- -----------
+
+-- no data found
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST9', 'TXTT', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
+
+-- no data found
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'XXXX', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
+
+-- Unknown text type
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'XXX', :SEQ_NBR, 'en', 'English note'); &eh
+
+-- Text item sequence number greater than current maximum
+execute :SEQ_NBR := 9; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
+
+-- Unknown text language
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NBR, 'xx', 'Unknown note'); &eh
+
+-- Inactive text language
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
+
+-- integrity constraint (PSR.FK_TTH_TTP) violated - parent key not found
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'MSG', :SEQ_NBR, 'en', 'English message'); &eh
+
+-- check constraint (PSR.CH_TXI_TEXT) violated
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NBR, 'en', ''); &eh
+
+-- Remove text type properties text
+-- ================================
+
+-- Error cases
+-- -----------
+
+-- no data found
+execute TEXT_TYPE.REMOVE_TXP_TEXT('TST9', 'TXTT', 'NOTE'); &eh
+
+-- no data found
+execute TEXT_TYPE.REMOVE_TXP_TEXT('TST1', 'XXXX', 'NOTE'); &eh
+
+-- No text to delete
+execute TEXT_TYPE.REMOVE_TXP_TEXT('TST1', 'TXTT', 'XXXX'); &eh
+
+-- No text to delete
+execute TEXT_TYPE.REMOVE_TXP_TEXT('TST1', 'TXTT', 'NOTE', 9); &eh
+
+-- No text to delete
+execute TEXT_TYPE.REMOVE_TXP_TEXT('TST1', 'TXTT', 'NOTE', 1, 'xx'); &eh
+
+-- Text type must be specified
+execute TEXT_TYPE.REMOVE_TXP_TEXT('TST1', 'TXTT', null); &eh
+
+-- Success cases
+-- -------------
+
+execute TEXT_TYPE.REMOVE_TXP_TEXT('TST1', 'TXTT', 'NOTE', 1, 'en'); &eh
+execute TEXT_TYPE.REMOVE_TXP_TEXT('TST1', 'TXTT', 'NOTE', 1); &eh
+execute TEXT_TYPE.REMOVE_TXP_TEXT('TST1', 'TXTT', 'NOTE'); &eh
+execute TEXT_TYPE.REMOVE_TXP_TEXT('TST2', 'TXTT', 'NOTE', 1, 'en'); &eh
+
 spool off
 
 set echo off serveroutput off feedback on
