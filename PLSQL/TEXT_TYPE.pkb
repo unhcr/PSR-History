@@ -23,7 +23,7 @@ create or replace package body TEXT_TYPE is
                                psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
                                to_char(length(psDescription)) || ':' || psDescription);
   --
-    TEXT.INSERT_TEXT(nTXT_ID, 'LANG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    TEXT.SET_TEXT(nTXT_ID, 'TXTT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
     insert into TEXT_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
     values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
@@ -69,7 +69,7 @@ create or replace package body TEXT_TYPE is
     --
       select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
     --
-      TEXT.UPDATE_TEXT(nTXT_ID, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      TEXT.SET_TEXT(nTXT_ID, 'TXTT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
     --
     elsif psLANG_CODE is not null
     then MESSAGE.DISPLAY_MESSAGE('TXTT', 5, 'en', 'Description language cannot be specified without description text');
@@ -98,27 +98,52 @@ create or replace package body TEXT_TYPE is
   end UPDATE_TEXT_TYPE;
 --
 -- ----------------------------------------
--- ADD_TXTT_DESCRIPTION
+-- DELETE_TEXT_TYPE
 -- ----------------------------------------
 --
-  procedure ADD_TXTT_DESCRIPTION
+  procedure DELETE_TEXT_TYPE
+   (psCODE in TEXT_TYPES.CODE%type)
+  is
+    nTXT_ID TEXT_HEADERS.ID%type;
+  begin
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_TEXT_TYPE', psCODE);
+  --
+    delete from TEXT_TYPES where CODE = psCODE returning TXT_ID into nTXT_ID;
+  --
+    if sql%rowcount = 0
+    then MESSAGE.DISPLAY_MESSAGE('TXTT', 4, 'en', 'Text type does not exist');
+    end if;
+  --
+    TEXT.DELETE_TEXT(nTXT_ID);
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.TRACE_EXCEPTION;
+  end DELETE_TEXT_TYPE;
+--
+-- ----------------------------------------
+-- SET_TXTT_DESCRIPTION
+-- ----------------------------------------
+--
+  procedure SET_TXTT_DESCRIPTION
    (psCODE in TEXT_TYPES.CODE%type,
     psLANG_CODE in LANGUAGES.CODE%type,
     psDescription in varchar2)
   is
     nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.ADD_TXTT_DESCRIPTION',
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_TXTT_DESCRIPTION',
                              psCODE || '~' || psLANG_CODE || '~' ||
                                to_char(length(psDescription)) || ':' || psDescription);
   --
-    ADD_TXTT_TEXT(psCODE, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    SET_TXTT_TEXT(psCODE, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
-  end ADD_TXTT_DESCRIPTION;
+  end SET_TXTT_DESCRIPTION;
 --
 -- ----------------------------------------
 -- REMOVE_TXTT_DESCRIPTION
@@ -141,10 +166,10 @@ create or replace package body TEXT_TYPE is
   end REMOVE_TXTT_DESCRIPTION;
 --
 -- ----------------------------------------
--- ADD_TXTT_TEXT
+-- SET_TXTT_TEXT
 -- ----------------------------------------
 --
-  procedure ADD_TXTT_TEXT
+  procedure SET_TXTT_TEXT
    (psCODE in TEXT_TYPES.CODE%type,
     psTXTT_CODE in TEXT_TYPES.CODE%type,
     pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
@@ -154,48 +179,20 @@ create or replace package body TEXT_TYPE is
     sActive varchar2(1);
     nTXT_ID TEXT_HEADERS.ID%type;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.ADD_TXTT_TEXT',
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_TXTT_TEXT',
                              psCODE || '~' || psTXTT_CODE || '~' ||
                                to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
                                to_char(length(psText)) || ':' || psText);
   --
     select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
   --
-    TEXT.INSERT_TEXT(nTXT_ID, null, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+    TEXT.SET_TEXT(nTXT_ID, null, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
-  end ADD_TXTT_TEXT;
---
--- ----------------------------------------
--- UPDATE_TXTT_TEXT
--- ----------------------------------------
---
-  procedure UPDATE_TXTT_TEXT
-   (psCODE in TEXT_TYPES.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2)
-  is
-    nTXT_ID TEXT_HEADERS.ID%type;
-  begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.UPDATE_TXTT_TEXT',
-                             psCODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psText)) || ':' || psText);
-  --
-    select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
-  --
-    TEXT.UPDATE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
-  --
-    PLS_UTILITY.END_MODULE;
-  exception
-    when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
-  end UPDATE_TXTT_TEXT;
+  end SET_TXTT_TEXT;
 --
 -- ----------------------------------------
 -- REMOVE_TXTT_TEXT
@@ -226,31 +223,6 @@ create or replace package body TEXT_TYPE is
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_TXTT_TEXT;
---
--- ----------------------------------------
--- DELETE_TEXT_TYPE
--- ----------------------------------------
---
-  procedure DELETE_TEXT_TYPE
-   (psCODE in TEXT_TYPES.CODE%type)
-  is
-    nTXT_ID TEXT_HEADERS.ID%type;
-  begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_TEXT_TYPE', psCODE);
-  --
-    delete from TEXT_TYPES where CODE = psCODE returning TXT_ID into nTXT_ID;
-  --
-    if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('TXTT', 4, 'en', 'Text type does not exist');
-    end if;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID);
-  --
-    PLS_UTILITY.END_MODULE;
-  exception
-    when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
-  end DELETE_TEXT_TYPE;
 --
 -- ----------------------------------------
 -- SET_TEXT_TYPE_PROPERTIES
