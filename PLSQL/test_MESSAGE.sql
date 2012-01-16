@@ -3,7 +3,9 @@
 
 define eh = "exception when others then dbms_output.put_line(substr(sqlerrm, case when sqlcode = -20009 then 12 else 1 end))"
 
-set echo on serveroutput on feedback off
+set echo on serveroutput on feedback off recsepchar "."
+
+column LONG_TEXT format A150
 
 spool test_MESSAGE.log
 
@@ -20,10 +22,19 @@ execute MESSAGE.INSERT_COMPONENT('TST4', 'en', 'Test 4', 999, 'N'); &eh
 execute MESSAGE.INSERT_COMPONENT('TST5', 'en', 'Test 5', pnDISPLAY_SEQ => 2); &eh
 execute MESSAGE.INSERT_COMPONENT('TST6', 'en', 'Test 6', psACTIVE_FLAG => 'N'); &eh
 
+select COMP.CODE, COMP.DISPLAY_SEQ, COMP.ACTIVE_FLAG, COMP.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from COMPONENTS COMP
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = COMP.TXT_ID
+where COMP.CODE like 'TST%'
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Error cases
 -- -----------
 
--- check constraint (PSR.CH_TXI_TEXT) violated
+-- Text must be specified
 execute MESSAGE.INSERT_COMPONENT('TST7', 'en', ''); &eh
 
 -- Unknown text language
@@ -55,6 +66,15 @@ execute MESSAGE.UPDATE_COMPONENT('TST1', pnDISPLAY_SEQ => 2); &eh
 execute MESSAGE.UPDATE_COMPONENT('TST1', psACTIVE_FLAG => 'Y'); &eh
 execute MESSAGE.UPDATE_COMPONENT('TST1', pnDISPLAY_SEQ => null); &eh
 
+select COMP.CODE, COMP.DISPLAY_SEQ, COMP.ACTIVE_FLAG, COMP.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from COMPONENTS COMP
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = COMP.TXT_ID
+where COMP.CODE = 'TST1'
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Error cases
 -- -----------
 
@@ -85,31 +105,38 @@ execute MESSAGE.UPDATE_COMPONENT('TST1', pnDISPLAY_SEQ => 1e6); &eh
 -- check constraint (PSR.CH_COMP_ACTIVE_FLAG) violated
 execute MESSAGE.UPDATE_COMPONENT('TST1', psACTIVE_FLAG => 'X'); &eh
 
--- Add component descriptions
+-- Set component descriptions
 -- ==========================
 
 -- Success cases
 -- -------------
 
-execute MESSAGE.ADD_COMP_DESCRIPTION('TST1', 'fr', 'Texte'); &eh
+execute MESSAGE.SET_COMP_DESCRIPTION('TST1', 'fr', 'Text'); &eh
+execute MESSAGE.SET_COMP_DESCRIPTION('TST1', 'fr', 'Texte'); &eh
+
+select COMP.CODE, COMP.DISPLAY_SEQ, COMP.ACTIVE_FLAG, COMP.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from COMPONENTS COMP
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = COMP.TXT_ID
+where COMP.CODE = 'TST1'
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
 
 -- Error cases
 -- -----------
 
 -- Unknown text language
-execute MESSAGE.ADD_COMP_DESCRIPTION('TST1', 'xx', 'Text'); &eh
+execute MESSAGE.SET_COMP_DESCRIPTION('TST1', 'xx', 'Text'); &eh
 
 -- Inactive text language
-execute MESSAGE.ADD_COMP_DESCRIPTION('TST1', 'la', 'Latin Text'); &eh
+execute MESSAGE.SET_COMP_DESCRIPTION('TST1', 'la', 'Latin Text'); &eh
 
 -- no data found
-execute MESSAGE.ADD_COMP_DESCRIPTION('XXX', 'en', 'Component'); &eh
+execute MESSAGE.SET_COMP_DESCRIPTION('XXX', 'en', 'Component'); &eh
 
--- unique constraint (PSR.PK_TXI) violated
-execute MESSAGE.ADD_COMP_DESCRIPTION('TST1', 'fr', 'Texte'); &eh
-
--- check constraint (PSR.CH_TXI_TEXT) violated
-execute MESSAGE.ADD_COMP_DESCRIPTION('TST1', 'ru', ''); &eh
+-- Text must be specified
+execute MESSAGE.SET_COMP_DESCRIPTION('TST1', 'ru', ''); &eh
 
 -- Remove component descriptions
 -- =============================
@@ -131,71 +158,79 @@ execute MESSAGE.REMOVE_COMP_DESCRIPTION('TST1', 'xx'); &eh
 
 execute MESSAGE.REMOVE_COMP_DESCRIPTION('TST1', 'fr'); &eh
 
--- Add component text
+select COMP.CODE, COMP.DISPLAY_SEQ, COMP.ACTIVE_FLAG, COMP.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from COMPONENTS COMP
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = COMP.TXT_ID
+where COMP.CODE = 'TST1'
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
+-- Set component text
 -- ==================
 
 -- Success cases
 -- -------------
 
 variable SEQ_NBR number
-execute MESSAGE.ADD_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
-execute MESSAGE.ADD_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
-execute :SEQ_NBR := null; MESSAGE.ADD_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'es', 'New Spanish note'); &eh
+execute MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
+execute MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'es', 'New Spanish note'); &eh
+execute :SEQ_NBR := 1; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'Updated French note'); &eh
+execute :SEQ_NBR := 2; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'es', 'Updated Spanish note'); &eh
+execute :SEQ_NBR := 2; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'es', rpad('Updated Spanish note ', 1001, unistr('\00F1'))); &eh
+
+select COMP.CODE, COMP.DISPLAY_SEQ, COMP.ACTIVE_FLAG, COMP.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from COMPONENTS COMP
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = COMP.TXT_ID
+where COMP.CODE = 'TST1'
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
 
 -- Error cases
 -- -----------
 
 -- Unknown text language
-execute :SEQ_NBR := null; MESSAGE.ADD_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'xx', 'Unknown note'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'xx', 'Unknown note'); &eh
 
 -- Inactive text language
-execute :SEQ_NBR := null; MESSAGE.ADD_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
 
 -- no data found
-execute :SEQ_NBR := null; MESSAGE.ADD_COMP_TEXT('XXX', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('XXX', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Unknown text type
-execute :SEQ_NBR := null; MESSAGE.ADD_COMP_TEXT('TST1', 'XXXX', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('TST1', 'XXXX', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Only one text item of this type allowed
-execute :SEQ_NBR := null; MESSAGE.ADD_COMP_TEXT('TST1', 'DESCR', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('TST1', 'DESCR', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- No existing text of this type
-execute :SEQ_NBR := 1; MESSAGE.ADD_COMP_TEXT('TST2', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := 1; MESSAGE.SET_COMP_TEXT('TST2', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Text item sequence number greater than current maximum
-execute :SEQ_NBR := 9; MESSAGE.ADD_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := 9; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
--- check constraint (PSR.CH_TXI_TEXT) violated
-execute :SEQ_NBR := null; MESSAGE.ADD_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'en', ''); &eh
-
--- Update component text
--- =====================
-
--- Success cases
--- -------------
-
-execute MESSAGE.UPDATE_COMP_TEXT('TST1', 'NOTE', 1, 'fr', 'Updated French note'); &eh
-execute MESSAGE.UPDATE_COMP_TEXT('TST1', 'NOTE', 2, 'es', 'Updated Spanish note'); &eh
-execute MESSAGE.UPDATE_COMP_TEXT('TST1', 'NOTE', 2, 'es', rpad('Updated Spanish note ', 1001, unistr('\00F1'))); &eh
-
--- Error cases
--- -----------
+-- Text must be specified
+execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'en', ''); &eh
 
 -- no data found
-execute MESSAGE.UPDATE_COMP_TEXT('XXX', 'NOTE', 1, 'fr', 'Updated note'); &eh
+execute :SEQ_NBR := 1; MESSAGE.SET_COMP_TEXT('XXX', 'NOTE', :SEQ_NBR, 'fr', 'Updated note'); &eh
 
--- Text item does not exist
-execute MESSAGE.UPDATE_COMP_TEXT('TST1', 'XXXX', 1, 'fr', 'Updated note'); &eh
+-- Unknown text type
+execute :SEQ_NBR := 1; MESSAGE.SET_COMP_TEXT('TST1', 'XXXX', :SEQ_NBR, 'fr', 'Updated note'); &eh
 
--- Text item does not exist
-execute MESSAGE.UPDATE_COMP_TEXT('TST1', 'NOTE', 9, 'fr', 'Updated note'); &eh
+-- Text item sequence number greater than current maximum
+execute :SEQ_NBR := 9; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'Updated note'); &eh
 
--- Text item does not exist
-execute MESSAGE.UPDATE_COMP_TEXT('TST1', 'NOTE', 1, 'xx', 'Updated note'); &eh
+-- Unknown text language
+execute :SEQ_NBR := 1; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'xx', 'Updated note'); &eh
 
--- check constraint (PSR.CH_TXI_TEXT) violated
-execute MESSAGE.UPDATE_COMP_TEXT('TST1', 'NOTE', 1, 'fr', ''); &eh
+-- Text must be specified
+execute :SEQ_NBR := 1; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', ''); &eh
 
 -- Remove component text
 -- =====================
@@ -209,7 +244,7 @@ execute MESSAGE.REMOVE_COMP_TEXT('XXX', 'NOTE', 1, 'en'); &eh
 -- Text type must be specified
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', null); &eh
 
--- No text to delete
+-- no data found
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', 'XXXX', 1, 'en'); &eh
 
 -- No text to delete
@@ -237,6 +272,15 @@ execute MESSAGE.REMOVE_COMP_TEXT('TST1', 'NOTE', 1, 'en'); &eh
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', 'NOTE', 1); &eh
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', 'NOTE'); &eh
 
+select COMP.CODE, COMP.DISPLAY_SEQ, COMP.ACTIVE_FLAG, COMP.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from COMPONENTS COMP
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = COMP.TXT_ID
+where COMP.CODE = 'TST1'
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Delete components
 -- =================
 
@@ -250,6 +294,15 @@ execute MESSAGE.DELETE_COMPONENT('XXX'); &eh
 -- -------------
 
 execute MESSAGE.DELETE_COMPONENT('TST6'); &eh
+
+select COMP.CODE, COMP.DISPLAY_SEQ, COMP.ACTIVE_FLAG, COMP.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from COMPONENTS COMP
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = COMP.TXT_ID
+where COMP.CODE like 'TST%'
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
 
 
 -- Insert messages
@@ -267,10 +320,19 @@ execute :SEQ_NBR := null; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', rpad('E
 execute MESSAGE.DELETE_MESSAGE('TST1', 2); &eh
 execute :SEQ_NBR := 2; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message 2a'); &eh
 
+select MSG.COMP_CODE, MSG.SEQ_NBR, MSG.SEVERITY, MSG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from MESSAGES MSG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = MSG.TXT_ID
+where MSG.COMP_CODE like 'TST%'
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Error cases
 -- -----------
 
--- check constraint (PSR.CH_TXI_TEXT) violated
+-- Text must be specified
 execute :SEQ_NBR := null; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', ''); &eh
 
 -- Unknown text language
@@ -308,6 +370,15 @@ execute MESSAGE.UPDATE_MESSAGE('TST1', 1, null, null, 'I'); &eh
 execute MESSAGE.UPDATE_MESSAGE('TST1', 1, psLANG_CODE => 'en', psMessage => 'Error message'); &eh
 execute MESSAGE.UPDATE_MESSAGE('TST1', 1, psSEVERITY => 'E'); &eh
 
+select MSG.COMP_CODE, MSG.SEQ_NBR, MSG.SEVERITY, MSG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from MESSAGES MSG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = MSG.TXT_ID
+where MSG.COMP_CODE like 'TST%'
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Error cases
 -- -----------
 
@@ -344,34 +415,41 @@ execute MESSAGE.UPDATE_MESSAGE('TST1', 9, psSEVERITY => 'E'); &eh
 -- check constraint (PSR.CH_MSG_SEVERITY) violated
 execute MESSAGE.UPDATE_MESSAGE('TST1', 1, psSEVERITY => 'X'); &eh
 
--- Add message variants
+-- Set message variants
 -- ====================
 
 -- Success cases
 -- -------------
 
-execute MESSAGE.ADD_MSG_MESSAGE('TST1', 1, 'fr', unistr('Message fran\00E7ais')); &eh
+execute MESSAGE.SET_MSG_MESSAGE('TST1', 1, 'fr', unistr('Message fran\00E7ais')); &eh
+execute MESSAGE.SET_MSG_MESSAGE('TST1', 1, 'fr', unistr('Error message fran\00E7ais')); &eh
+
+select MSG.COMP_CODE, MSG.SEQ_NBR, MSG.SEVERITY, MSG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from MESSAGES MSG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = MSG.TXT_ID
+where MSG.COMP_CODE like 'TST%'
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
 
 -- Error cases
 -- -----------
 
 -- Unknown text language
-execute MESSAGE.ADD_MSG_MESSAGE('TST1', 1, 'xx', 'Error message'); &eh
+execute MESSAGE.SET_MSG_MESSAGE('TST1', 1, 'xx', 'Error message'); &eh
 
 -- Inactive text language
-execute MESSAGE.ADD_MSG_MESSAGE('TST1', 1, 'la', 'Latin error message'); &eh
+execute MESSAGE.SET_MSG_MESSAGE('TST1', 1, 'la', 'Latin error message'); &eh
 
 -- no data found
-execute MESSAGE.ADD_MSG_MESSAGE('XXX', 1, 'en', 'Error message'); &eh
+execute MESSAGE.SET_MSG_MESSAGE('XXX', 1, 'en', 'Error message'); &eh
 
 -- no data found
-execute MESSAGE.ADD_MSG_MESSAGE('TST1', 9, 'en', 'Error message'); &eh
+execute MESSAGE.SET_MSG_MESSAGE('TST1', 9, 'en', 'Error message'); &eh
 
--- unique constraint (PSR.PK_TXI) violated
-execute MESSAGE.ADD_MSG_MESSAGE('TST1', 1, 'fr', 'Error message'); &eh
-
--- check constraint (PSR.CH_TXI_TEXT) violated
-execute MESSAGE.ADD_MSG_MESSAGE('TST1', 1, 'ru', ''); &eh
+-- Text must be specified
+execute MESSAGE.SET_MSG_MESSAGE('TST1', 1, 'ru', ''); &eh
 
 -- Remove message variants
 -- =======================
@@ -396,77 +474,85 @@ execute MESSAGE.REMOVE_MSG_MESSAGE('TST2', 1, 'en'); &eh
 
 execute MESSAGE.REMOVE_MSG_MESSAGE('TST1', 1, 'fr'); &eh
 
--- Add message general text
+select MSG.COMP_CODE, MSG.SEQ_NBR, MSG.SEVERITY, MSG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from MESSAGES MSG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = MSG.TXT_ID
+where MSG.COMP_CODE like 'TST%'
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
+-- Set message general text
 -- ========================
 
 -- Success cases
 -- -------------
 
 variable TXI_SEQ_NBR number
-execute :TXI_SEQ_NBR := null; MESSAGE.ADD_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'en', 'English note'); &eh
-execute MESSAGE.ADD_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
-execute :TXI_SEQ_NBR := null; MESSAGE.ADD_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'es', 'New Spanish note'); &eh
+execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'en', 'English note'); &eh
+execute MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'es', 'New Spanish note'); &eh
+execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'Updated French note'); &eh
+execute :TXI_SEQ_NBR := 2; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'es', 'Updated Spanish note'); &eh
+execute :TXI_SEQ_NBR := 2; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'es', rpad('Updated Spanish note ', 1001, unistr('\00F1'))); &eh
+
+select MSG.COMP_CODE, MSG.SEQ_NBR, MSG.SEVERITY, MSG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from MESSAGES MSG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = MSG.TXT_ID
+where MSG.COMP_CODE like 'TST%'
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
 
 -- Error cases
 -- -----------
 
 -- Unknown text language
-execute :TXI_SEQ_NBR := null; MESSAGE.ADD_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'xx', 'Unknown note'); &eh
+execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'xx', 'Unknown note'); &eh
 
 -- Inactive text language
-execute :TXI_SEQ_NBR := null; MESSAGE.ADD_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'la', 'Latin note'); &eh
+execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'la', 'Latin note'); &eh
 
 -- no data found
-execute :TXI_SEQ_NBR := null; MESSAGE.ADD_MSG_TEXT('XXX', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('XXX', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
 
 -- no data found
-execute :TXI_SEQ_NBR := null; MESSAGE.ADD_MSG_TEXT('TST1', 9, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 9, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Unknown text type
-execute :TXI_SEQ_NBR := null; MESSAGE.ADD_MSG_TEXT('TST1', 1, 'XXXX', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 1, 'XXXX', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Only one text item of this type allowed
-execute :TXI_SEQ_NBR := null; MESSAGE.ADD_MSG_TEXT('TST1', 1, 'MSG', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 1, 'MSG', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
 
 -- No existing text of this type
-execute :TXI_SEQ_NBR := 1; MESSAGE.ADD_MSG_TEXT('TST2', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('TST2', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Text item sequence number greater than current maximum
-execute :TXI_SEQ_NBR := 9; MESSAGE.ADD_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+execute :TXI_SEQ_NBR := 9; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
 
--- check constraint (PSR.CH_TXI_TEXT) violated
-execute :TXI_SEQ_NBR := null; MESSAGE.ADD_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'en', ''); &eh
-
--- Update message general text
--- ===========================
-
--- Success cases
--- -------------
-
-execute MESSAGE.UPDATE_MSG_TEXT('TST1', 1, 'NOTE', 1, 'fr', 'Updated French note'); &eh
-execute MESSAGE.UPDATE_MSG_TEXT('TST1', 1, 'NOTE', 2, 'es', 'Updated Spanish note'); &eh
-execute MESSAGE.UPDATE_MSG_TEXT('TST1', 1, 'NOTE', 2, 'es', rpad('Updated Spanish note ', 1001, unistr('\00F1'))); &eh
-
--- Error cases
--- -----------
+-- Text must be specified
+execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'en', ''); &eh
 
 -- no data found
-execute MESSAGE.UPDATE_MSG_TEXT('XXX', 1, 'NOTE', 1, 'fr', 'Updated note'); &eh
+execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('XXX', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'Updated note'); &eh
 
 -- no data found
-execute MESSAGE.UPDATE_MSG_TEXT('TST1', 9, 'NOTE', 1, 'fr', 'Updated note'); &eh
+execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('TST1', 9, 'NOTE', :TXI_SEQ_NBR, 'fr', 'Updated note'); &eh
 
--- Text item does not exist
-execute MESSAGE.UPDATE_MSG_TEXT('TST1', 1, 'XXXX', 1, 'fr', 'Updated note'); &eh
+-- Unknown text type
+execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('TST1', 1, 'XXXX', :TXI_SEQ_NBR, 'fr', 'Updated note'); &eh
 
--- Text item does not exist
-execute MESSAGE.UPDATE_MSG_TEXT('TST1', 1, 'NOTE', 9, 'fr', 'Updated note'); &eh
+-- Text item sequence number greater than current maximum
+execute :TXI_SEQ_NBR := 9; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'Updated note'); &eh
 
--- Text item does not exist
-execute MESSAGE.UPDATE_MSG_TEXT('TST1', 1, 'NOTE', 1, 'xx', 'Updated note'); &eh
+-- Unknown text language
+execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'xx', 'Updated note'); &eh
 
--- check constraint (PSR.CH_TXI_TEXT) violated
-execute MESSAGE.UPDATE_MSG_TEXT('TST1', 1, 'NOTE', 1, 'fr', ''); &eh
+-- Text must be specified
+execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', ''); &eh
 
 -- Remove message general text
 -- ===========================
@@ -483,7 +569,7 @@ execute MESSAGE.REMOVE_MSG_TEXT('TST1', 9, 'NOTE', 1, 'en'); &eh
 -- Text type must be specified
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, null); &eh
 
--- No text to delete
+-- no data found
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, 'XXXX', 1, 'en'); &eh
 
 -- No text to delete
@@ -511,6 +597,15 @@ execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, 'NOTE', 1, 'en'); &eh
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, 'NOTE', 1); &eh
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, 'NOTE'); &eh
 
+select MSG.COMP_CODE, MSG.SEQ_NBR, MSG.SEVERITY, MSG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from MESSAGES MSG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = MSG.TXT_ID
+where MSG.COMP_CODE like 'TST%'
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Delete messages
 -- ===============
 
@@ -528,10 +623,21 @@ execute MESSAGE.DELETE_MESSAGE('TST1', 9); &eh
 
 execute MESSAGE.DELETE_MESSAGE('TST1', 1); &eh
 
+select MSG.COMP_CODE, MSG.SEQ_NBR, MSG.SEVERITY, MSG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from MESSAGES MSG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = MSG.TXT_ID
+where MSG.COMP_CODE like 'TST%'
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Display messages
 -- ================
 
 -- Success cases
+-- -------------
+
 execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'en'); &eh
 execute MESSAGE.DISPLAY_MESSAGE('TST1', 3, 'en', 'Error message 2'); &eh
 execute MESSAGE.DISPLAY_MESSAGE('TST1', 4, 'en', rpad('Error message 3 ', 1001, 'x'), 'W'); &eh
@@ -568,6 +674,8 @@ execute MESSAGE.DISPLAY_MESSAGE('TST2', 1, 'en', 'Error message'); &eh
 -- ** No preferred language message ** ** English message mismatch **
 execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'fr', 'Error message'); &eh
 
-spool off
-
 set echo off serveroutput off feedback on
+
+@check_orphan_TXT_ID
+
+spool off
