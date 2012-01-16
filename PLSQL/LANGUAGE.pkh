@@ -6,7 +6,7 @@ create or replace package LANGUAGE is
 --  Procedures for maintenance of text languages.
 --
 --  Change History:
---  12-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  16-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -62,17 +62,29 @@ create or replace package LANGUAGE is
     psACTIVE_FLAG in LANGUAGES.ACTIVE_FLAG%type := null);
 --
 -- ----------------------------------------
--- ADD_LANG_DESCRIPTION
+-- DELETE_LANGUAGE
 -- ----------------------------------------
 --
--- Add a description in a given language to a language record.
+-- Delete a language record.
 --
 -- Parameters:
---  psCODE - Code of language to which description is to be added (mandatory).
---  psLANG_CODE - Language code of the description to be added (mandatory).
+--  psCODE - Code of language to be deleted (mandatory).
+--
+  procedure DELETE_LANGUAGE
+   (psCODE in LANGUAGES.CODE%type);
+--
+-- ----------------------------------------
+-- SET_LANG_DESCRIPTION
+-- ----------------------------------------
+--
+-- Add a description in a given language to a language record, or update an existing description.
+--
+-- Parameters:
+--  psCODE - Code of language for which description is to be added or updated (mandatory).
+--  psLANG_CODE - Language code of the description to be added or updated (mandatory).
 --  psDescription - Textual description of language (mandatory).
 --
-  procedure ADD_LANG_DESCRIPTION
+  procedure SET_LANG_DESCRIPTION
    (psCODE in LANGUAGES.CODE%type,
     psLANG_CODE in LANGUAGES.CODE%type,
     psDescription in varchar2);
@@ -93,43 +105,24 @@ create or replace package LANGUAGE is
     psLANG_CODE in LANGUAGES.CODE%type);
 --
 -- ----------------------------------------
--- ADD_LANG_TEXT
+-- SET_LANG_TEXT
 -- ----------------------------------------
 --
--- Add a general text item in a given language to a language record.
+-- Add a general text item in a given language to a language record, or update an existing text
+--  item.
 --
 -- Parameters:
---  psCODE - Code of language to which text item is to be added (mandatory).
+--  psCODE - Code of language for which text item is to be added or updated (mandatory).
 --  psTXTT_CODE - Type of text item (mandatory).
 --  pnTXI_SEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and
 --    returned).
 --  psLANG_CODE - Language code of the text item to be added (mandatory).
 --  psText - Text associated with language (mandatory).
 --
-  procedure ADD_LANG_TEXT
+  procedure SET_LANG_TEXT
    (psCODE in LANGUAGES.CODE%type,
     psTXTT_CODE in TEXT_TYPES.CODE%type,
     pnTXI_SEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2);
---
--- ----------------------------------------
--- UPDATE_LANG_TEXT
--- ----------------------------------------
---
--- Update a general text item in a given language for a language record.
---
--- Parameters:
---  psCODE - Code of language whose text item is to be updated (mandatory).
---  psTXTT_CODE - Type of text item (mandatory).
---  pnTXI_SEQ_NBR - Text item sequence number (mandatory).
---  psLANG_CODE - Language code of the text item to be updated (mandatory).
---  psText - Text associated with language (mandatory).
---
-  procedure UPDATE_LANG_TEXT
-   (psCODE in LANGUAGES.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnTXI_SEQ_NBR in TEXT_ITEMS.SEQ_NBR%type,
     psLANG_CODE in LANGUAGES.CODE%type,
     psText in varchar2);
 --
@@ -159,18 +152,6 @@ create or replace package LANGUAGE is
     psTXTT_CODE in TEXT_TYPES.CODE%type,
     pnTXI_SEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
     psLANG_CODE in LANGUAGES.CODE%type := null);
---
--- ----------------------------------------
--- DELETE_LANGUAGE
--- ----------------------------------------
---
--- Delete a language record.
---
--- Parameters:
---  psCODE - Code of language to be deleted (mandatory).
---
-  procedure DELETE_LANGUAGE
-   (psCODE in LANGUAGES.CODE%type);
 --
 end LANGUAGE;
 /
