@@ -3,7 +3,9 @@
 
 define eh = "exception when others then dbms_output.put_line(substr(sqlerrm, case when sqlcode = -20009 then 12 else 1 end))"
 
-set echo on serveroutput on feedback off
+set echo on serveroutput on feedback off recsepchar "."
+
+column LONG_TEXT format A150
 
 spool test_TEXT_TYPE.log
 
@@ -20,10 +22,19 @@ execute TEXT_TYPE.INSERT_TEXT_TYPE('TST4', 'en', 'Test 4', 999, 'N'); &eh
 execute TEXT_TYPE.INSERT_TEXT_TYPE('TST5', 'en', 'Test 5', pnDISPLAY_SEQ => 2); &eh
 execute TEXT_TYPE.INSERT_TEXT_TYPE('TST6', 'en', 'Test 6', psACTIVE_FLAG => 'N'); &eh
 
+select TXTT.CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from TEXT_TYPES TXTT
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = TXTT.TXT_ID
+where TXTT.CODE like 'TST%'
+order by TXTT.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Error cases
 -- -----------
 
--- check constraint (PSR.CH_TXI_TEXT) violated
+-- Text must be specified
 execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'en', ''); &eh
 
 -- Unknown text language
@@ -55,6 +66,15 @@ execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', pnDISPLAY_SEQ => 2); &eh
 execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', psACTIVE_FLAG => 'Y'); &eh
 execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', pnDISPLAY_SEQ => null); &eh
 
+select TXTT.CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from TEXT_TYPES TXTT
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = TXTT.TXT_ID
+where TXTT.CODE = 'TST1'
+order by TXTT.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Error cases
 -- -----------
 
@@ -85,31 +105,38 @@ execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', pnDISPLAY_SEQ => 1e6); &eh
 -- check constraint (PSR.CH_TXTT_ACTIVE_FLAG) violated
 execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', psACTIVE_FLAG => 'X'); &eh
 
--- Add text type descriptions
+-- Set text type descriptions
 -- ==========================
 
 -- Success cases
 -- -------------
 
-execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('TST1', 'fr', 'Texte'); &eh
+execute TEXT_TYPE.SET_TXTT_DESCRIPTION('TST1', 'fr', 'Text'); &eh
+execute TEXT_TYPE.SET_TXTT_DESCRIPTION('TST1', 'fr', 'Texte'); &eh
+
+select TXTT.CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from TEXT_TYPES TXTT
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = TXTT.TXT_ID
+where TXTT.CODE = 'TST1'
+order by TXTT.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
 
 -- Error cases
 -- -----------
 
 -- Unknown text language
-execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('TST1', 'xx', 'Text'); &eh
+execute TEXT_TYPE.SET_TXTT_DESCRIPTION('TST1', 'xx', 'Text'); &eh
 
 -- Inactive text language
-execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('TST1', 'la', 'Latin Text'); &eh
+execute TEXT_TYPE.SET_TXTT_DESCRIPTION('TST1', 'la', 'Latin Text'); &eh
 
 -- no data found
-execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('XXX', 'en', 'Component'); &eh
+execute TEXT_TYPE.SET_TXTT_DESCRIPTION('XXX', 'en', 'Component'); &eh
 
--- unique constraint (PSR.PK_TXI) violated
-execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('TST1', 'fr', 'Texte'); &eh
-
--- check constraint (PSR.CH_TXI_TEXT) violated
-execute TEXT_TYPE.ADD_TXTT_DESCRIPTION('TST1', 'ru', ''); &eh
+-- Text must be specified
+execute TEXT_TYPE.SET_TXTT_DESCRIPTION('TST1', 'ru', ''); &eh
 
 -- Remove text type descriptions
 -- =============================
@@ -131,71 +158,79 @@ execute TEXT_TYPE.REMOVE_TXTT_DESCRIPTION('TST1', 'xx'); &eh
 
 execute TEXT_TYPE.REMOVE_TXTT_DESCRIPTION('TST1', 'fr'); &eh
 
--- Add text type text
+select TXTT.CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from TEXT_TYPES TXTT
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = TXTT.TXT_ID
+where TXTT.CODE = 'TST1'
+order by TXTT.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
+-- Set text type text
 -- ==================
 
 -- Success cases
 -- -------------
 
 variable SEQ_NBR number
-execute TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
-execute TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
-execute :SEQ_NBR := null; TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'es', 'New Spanish note'); &eh
+execute TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
+execute TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'es', 'New Spanish note'); &eh
+execute :SEQ_NBR := 1; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'Updated French note'); &eh
+execute :SEQ_NBR := 2; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'es', 'Updated Spanish note'); &eh
+execute :SEQ_NBR := 2; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'es', rpad('Updated Spanish note ', 1001, unistr('\00F1'))); &eh
+
+select TXTT.CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from TEXT_TYPES TXTT
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = TXTT.TXT_ID
+where TXTT.CODE = 'TST1'
+order by TXTT.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
 
 -- Error cases
 -- -----------
 
 -- Unknown text language
-execute :SEQ_NBR := null; TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'xx', 'Unknown note'); &eh
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'xx', 'Unknown note'); &eh
 
 -- Inactive text language
-execute :SEQ_NBR := null; TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
 
 -- no data found
-execute :SEQ_NBR := null; TEXT_TYPE.ADD_TXTT_TEXT('XXX', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXTT_TEXT('XXX', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Unknown text type
-execute :SEQ_NBR := null; TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'XXXX', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'XXXX', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Only one text item of this type allowed
-execute :SEQ_NBR := null; TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'DESCR', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'DESCR', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- No existing text of this type
-execute :SEQ_NBR := 1; TEXT_TYPE.ADD_TXTT_TEXT('TST2', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := 1; TEXT_TYPE.SET_TXTT_TEXT('TST2', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Text item sequence number greater than current maximum
-execute :SEQ_NBR := 9; TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := 9; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
--- check constraint (PSR.CH_TXI_TEXT) violated
-execute :SEQ_NBR := null; TEXT_TYPE.ADD_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'en', ''); &eh
-
--- Update text type text
--- =====================
-
--- Success cases
--- -------------
-
-execute TEXT_TYPE.UPDATE_TXTT_TEXT('TST1', 'NOTE', 1, 'fr', 'Updated French note'); &eh
-execute TEXT_TYPE.UPDATE_TXTT_TEXT('TST1', 'NOTE', 2, 'es', 'Updated Spanish note'); &eh
-execute TEXT_TYPE.UPDATE_TXTT_TEXT('TST1', 'NOTE', 2, 'es', rpad('Updated Spanish note ', 1001, unistr('\00F1'))); &eh
-
--- Error cases
--- -----------
+-- Text must be specified
+execute :SEQ_NBR := null; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'en', ''); &eh
 
 -- no data found
-execute TEXT_TYPE.UPDATE_TXTT_TEXT('XXX', 'NOTE', 1, 'fr', 'Updated note'); &eh
+execute :SEQ_NBR := 1; TEXT_TYPE.SET_TXTT_TEXT('XXX', 'NOTE', :SEQ_NBR, 'fr', 'Updated note'); &eh
 
--- Text item does not exist
-execute TEXT_TYPE.UPDATE_TXTT_TEXT('TST1', 'XXXX', 1, 'fr', 'Updated note'); &eh
+-- Unknown text type
+execute :SEQ_NBR := 1; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'XXXX', :SEQ_NBR, 'fr', 'Updated note'); &eh
 
--- Text item does not exist
-execute TEXT_TYPE.UPDATE_TXTT_TEXT('TST1', 'NOTE', 9, 'fr', 'Updated note'); &eh
+-- Text item sequence number greater than current maximum
+execute :SEQ_NBR := 9; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'Updated note'); &eh
 
--- Text item does not exist
-execute TEXT_TYPE.UPDATE_TXTT_TEXT('TST1', 'NOTE', 1, 'xx', 'Updated note'); &eh
+-- Unknown text language
+execute :SEQ_NBR := 1; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'xx', 'Updated note'); &eh
 
--- check constraint (PSR.CH_TXI_TEXT) violated
-execute TEXT_TYPE.UPDATE_TXTT_TEXT('TST1', 'NOTE', 1, 'fr', ''); &eh
+-- Text must be specified
+execute :SEQ_NBR := 1; TEXT_TYPE.SET_TXTT_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', ''); &eh
 
 -- Remove text type text
 -- =====================
@@ -209,7 +244,7 @@ execute TEXT_TYPE.REMOVE_TXTT_TEXT('XXX', 'NOTE', 1, 'en'); &eh
 -- Text type must be specified
 execute TEXT_TYPE.REMOVE_TXTT_TEXT('TST1', null); &eh
 
--- No text to delete
+-- no data found
 execute TEXT_TYPE.REMOVE_TXTT_TEXT('TST1', 'XXXX', 1, 'en'); &eh
 
 -- No text to delete
@@ -237,6 +272,15 @@ execute TEXT_TYPE.REMOVE_TXTT_TEXT('TST1', 'NOTE', 1, 'en'); &eh
 execute TEXT_TYPE.REMOVE_TXTT_TEXT('TST1', 'NOTE', 1); &eh
 execute TEXT_TYPE.REMOVE_TXTT_TEXT('TST1', 'NOTE'); &eh
 
+select TXTT.CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from TEXT_TYPES TXTT
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = TXTT.TXT_ID
+where TXTT.CODE = 'TST1'
+order by TXTT.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Delete text types
 -- =================
 
@@ -250,6 +294,15 @@ execute TEXT_TYPE.DELETE_TEXT_TYPE('XXX'); &eh
 -- -------------
 
 execute TEXT_TYPE.DELETE_TEXT_TYPE('TST6'); &eh
+
+select TXTT.CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from TEXT_TYPES TXTT
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = TXTT.TXT_ID
+where TXTT.CODE like 'TST%'
+order by TXTT.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
 
 -- Set text type properties
 -- ========================
@@ -267,6 +320,15 @@ execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST2', 'TXTT', 'N'); &eh
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST3', 'TXTT', null, 'Y'); &eh
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST4', 'TXTT', psMULTI_INSTANCE => 'Y'); &eh
 
+select TXP.TXTT_CODE, TXP.TAB_ALIAS, TXP.MANDATORY, TXP.MULTI_INSTANCE, TXP.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from TEXT_TYPE_PROPERTIES TXP
+left outer join TEXT_ITEMS TXI
+  on TXI.TXT_ID = TXP.TXT_ID
+where TXP.TXTT_CODE like 'TST%'
+order by TXP.TXTT_CODE, TXP.TAB_ALIAS, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Error cases
 -- -----------
 
@@ -282,6 +344,38 @@ execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST1', 'TXTT', 'X'); &eh
 -- check constraint (PSR.CH_TTP_MULTI_INSTANCE) violated
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('TST1', 'TXTT', null, 'X'); &eh
 
+-- Remove text type properties
+-- ===========================
+
+-- Error cases
+-- -----------
+
+-- Text type property does not exist
+execute TEXT_TYPE.REMOVE_TEXT_TYPE_PROPERTIES('XXX', 'TXTT'); &eh
+
+-- Text type property does not exist
+execute TEXT_TYPE.REMOVE_TEXT_TYPE_PROPERTIES('TST1', 'XXX'); &eh
+
+-- Text type property does not exist
+execute TEXT_TYPE.REMOVE_TEXT_TYPE_PROPERTIES('TST1', 'TXT'); &eh
+
+-- Text type property does not exist
+execute TEXT_TYPE.REMOVE_TEXT_TYPE_PROPERTIES('TST5', 'TXTT'); &eh
+
+-- Success cases
+-- -------------
+
+execute TEXT_TYPE.REMOVE_TEXT_TYPE_PROPERTIES('TST4', 'TXTT'); &eh
+
+select TXP.TXTT_CODE, TXP.TAB_ALIAS, TXP.MANDATORY, TXP.MULTI_INSTANCE, TXP.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from TEXT_TYPE_PROPERTIES TXP
+left outer join TEXT_ITEMS TXI
+  on TXI.TXT_ID = TXP.TXT_ID
+where TXP.TXTT_CODE like 'TST%'
+order by TXP.TXTT_CODE, TXP.TAB_ALIAS, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Set text type properties text
 -- =============================
 
@@ -292,6 +386,20 @@ execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NB
 execute TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NBR, 'es', 'New Spanish note'); &eh
 execute :SEQ_NBR := 1; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NBR, 'en', 'Updated English note'); &eh
+
+select TXP.TXTT_CODE, TXP.TAB_ALIAS, TXP.MANDATORY, TXP.MULTI_INSTANCE, TXP.TXT_ID,
+  TXT.TAB_ALIAS, TTH.TXTT_CODE, TTH.TXI_SEQ_NBR_MAX,
+  TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from TEXT_TYPE_PROPERTIES TXP
+left outer join TEXT_HEADERS TXT
+  on TXT.ID = TXP.TXT_ID
+left outer join TEXT_TYPE_HEADERS TTH
+  on TTH.TXT_ID = TXT.ID
+left outer join TEXT_ITEMS TXI
+  on TXI.TXT_ID = TTH.TXT_ID
+where TXP.TXTT_CODE like 'TST%'
+order by TXP.TXTT_CODE, TXP.TAB_ALIAS, TTH.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
 
 -- Error cases
 -- -----------
@@ -317,7 +425,7 @@ execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NB
 -- integrity constraint (PSR.FK_TTH_TTP) violated - parent key not found
 execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'MSG', :SEQ_NBR, 'en', 'English message'); &eh
 
--- check constraint (PSR.CH_TXI_TEXT) violated
+-- Text must be specified
 execute :SEQ_NBR := null; TEXT_TYPE.SET_TXP_TEXT('TST1', 'TXTT', 'NOTE', :SEQ_NBR, 'en', ''); &eh
 
 -- Remove text type properties text
@@ -332,7 +440,7 @@ execute TEXT_TYPE.REMOVE_TXP_TEXT('TST9', 'TXTT', 'NOTE'); &eh
 -- no data found
 execute TEXT_TYPE.REMOVE_TXP_TEXT('TST1', 'XXXX', 'NOTE'); &eh
 
--- No text to delete
+-- no data found
 execute TEXT_TYPE.REMOVE_TXP_TEXT('TST1', 'TXTT', 'XXXX'); &eh
 
 -- No text to delete
@@ -352,6 +460,22 @@ execute TEXT_TYPE.REMOVE_TXP_TEXT('TST1', 'TXTT', 'NOTE', 1); &eh
 execute TEXT_TYPE.REMOVE_TXP_TEXT('TST1', 'TXTT', 'NOTE'); &eh
 execute TEXT_TYPE.REMOVE_TXP_TEXT('TST2', 'TXTT', 'NOTE', 1, 'en'); &eh
 
-spool off
+select TXP.TXTT_CODE, TXP.TAB_ALIAS, TXP.MANDATORY, TXP.MULTI_INSTANCE, TXP.TXT_ID,
+  TXT.TAB_ALIAS, TTH.TXTT_CODE, TTH.TXI_SEQ_NBR_MAX,
+  TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from TEXT_TYPE_PROPERTIES TXP
+left outer join TEXT_HEADERS TXT
+  on TXT.ID = TXP.TXT_ID
+left outer join TEXT_TYPE_HEADERS TTH
+  on TTH.TXT_ID = TXT.ID
+left outer join TEXT_ITEMS TXI
+  on TXI.TXT_ID = TTH.TXT_ID
+where TXP.TXTT_CODE like 'TST%'
+order by TXP.TXTT_CODE, TXP.TAB_ALIAS, TTH.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
 
-set echo off serveroutput off feedback on
+set echo off serveroutput off feedback on recsepchar " "
+
+@check_orphan_TXT_ID
+
+spool off
