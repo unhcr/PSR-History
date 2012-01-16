@@ -24,7 +24,7 @@ create or replace package body MESSAGE is
                                psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
                                to_char(length(psDescription)) || ':' || psDescription);
   --
-    TEXT.INSERT_TEXT(nTXT_ID, 'LANG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    TEXT.SET_TEXT(nTXT_ID, 'COMP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
     insert into COMPONENTS (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
     values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
@@ -70,7 +70,7 @@ create or replace package body MESSAGE is
     --
       select TXT_ID into nTXT_ID from COMPONENTS where CODE = psCODE;
     --
-      TEXT.UPDATE_TEXT(nTXT_ID, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      TEXT.SET_TEXT(nTXT_ID, 'COMP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
     --
     elsif psLANG_CODE is not null
     then MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'en', 'Description language cannot be specified without description text');
@@ -99,27 +99,52 @@ create or replace package body MESSAGE is
   end UPDATE_COMPONENT;
 --
 -- ----------------------------------------
--- ADD_COMP_DESCRIPTION
+-- DELETE_COMPONENT
 -- ----------------------------------------
 --
-  procedure ADD_COMP_DESCRIPTION
+  procedure DELETE_COMPONENT
+   (psCODE in COMPONENTS.CODE%type)
+  is
+    nTXT_ID TEXT_HEADERS.ID%type;
+  begin
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_COMPONENT', psCODE);
+  --
+    delete from COMPONENTS where CODE = psCODE returning TXT_ID into nTXT_ID;
+  --
+    if sql%rowcount = 0
+    then MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'en', 'Component does not exist');
+    end if;
+  --
+    TEXT.DELETE_TEXT(nTXT_ID);
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.TRACE_EXCEPTION;
+  end DELETE_COMPONENT;
+--
+-- ----------------------------------------
+-- SET_COMP_DESCRIPTION
+-- ----------------------------------------
+--
+  procedure SET_COMP_DESCRIPTION
    (psCODE in COMPONENTS.CODE%type,
     psLANG_CODE in LANGUAGES.CODE%type,
     psDescription in varchar2)
   is
     nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.ADD_COMP_DESCRIPTION',
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_COMP_DESCRIPTION',
                              psCODE || '~' || psLANG_CODE || '~' ||
                                to_char(length(psDescription)) || ':' || psDescription);
   --
-    ADD_COMP_TEXT(psCODE, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    SET_COMP_TEXT(psCODE, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
-  end ADD_COMP_DESCRIPTION;
+  end SET_COMP_DESCRIPTION;
 --
 -- ----------------------------------------
 -- REMOVE_COMP_DESCRIPTION
@@ -142,10 +167,10 @@ create or replace package body MESSAGE is
   end REMOVE_COMP_DESCRIPTION;
 --
 -- ----------------------------------------
--- ADD_COMP_TEXT
+-- SET_COMP_TEXT
 -- ----------------------------------------
 --
-  procedure ADD_COMP_TEXT
+  procedure SET_COMP_TEXT
    (psCODE in COMPONENTS.CODE%type,
     psTXTT_CODE in TEXT_TYPES.CODE%type,
     pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
@@ -155,48 +180,20 @@ create or replace package body MESSAGE is
     sActive varchar2(1);
     nTXT_ID TEXT_HEADERS.ID%type;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.ADD_COMP_TEXT',
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_COMP_TEXT',
                              psCODE || '~' || psTXTT_CODE || '~' ||
                                to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
                                to_char(length(psText)) || ':' || psText);
   --
     select TXT_ID into nTXT_ID from COMPONENTS where CODE = psCODE;
   --
-    TEXT.INSERT_TEXT(nTXT_ID, null, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+    TEXT.SET_TEXT(nTXT_ID, null, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
-  end ADD_COMP_TEXT;
---
--- ----------------------------------------
--- UPDATE_COMP_TEXT
--- ----------------------------------------
---
-  procedure UPDATE_COMP_TEXT
-   (psCODE in COMPONENTS.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2)
-  is
-    nTXT_ID TEXT_HEADERS.ID%type;
-  begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.UPDATE_COMP_TEXT',
-                             psCODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psText)) || ':' || psText);
-  --
-    select TXT_ID into nTXT_ID from COMPONENTS where CODE = psCODE;
-  --
-    TEXT.UPDATE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
-  --
-    PLS_UTILITY.END_MODULE;
-  exception
-    when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
-  end UPDATE_COMP_TEXT;
+  end SET_COMP_TEXT;
 --
 -- ----------------------------------------
 -- REMOVE_COMP_TEXT
@@ -229,31 +226,6 @@ create or replace package body MESSAGE is
   end REMOVE_COMP_TEXT;
 --
 -- ----------------------------------------
--- DELETE_COMPONENT
--- ----------------------------------------
---
-  procedure DELETE_COMPONENT
-   (psCODE in COMPONENTS.CODE%type)
-  is
-    nTXT_ID TEXT_HEADERS.ID%type;
-  begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_COMPONENT', psCODE);
-  --
-    delete from COMPONENTS where CODE = psCODE returning TXT_ID into nTXT_ID;
-  --
-    if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'en', 'Component does not exist');
-    end if;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID);
-  --
-    PLS_UTILITY.END_MODULE;
-  exception
-    when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
-  end DELETE_COMPONENT;
---
--- ----------------------------------------
 -- INSERT_MESSAGE
 -- ----------------------------------------
 --
@@ -274,7 +246,7 @@ create or replace package body MESSAGE is
                                psSEVERITY || '~' || psLANG_CODE || '~' ||
                                to_char(length(psMessage)) || ':' || psMessage);
   --
-    TEXT.INSERT_TEXT(nTXT_ID, 'MSG', 'MSG', nTXI_SEQ_NBR, psLANG_CODE, psMessage);
+    TEXT.SET_TEXT(nTXT_ID, 'MSG', 'MSG', nTXI_SEQ_NBR, psLANG_CODE, psMessage);
   --
     if pnSEQ_NBR is null
     then
@@ -348,7 +320,7 @@ create or replace package body MESSAGE is
       where COMP_CODE = psCOMP_CODE
       and SEQ_NBR = pnSEQ_NBR;
     --
-      TEXT.UPDATE_TEXT(nTXT_ID, 'MSG', nTXI_SEQ_NBR, psLANG_CODE, psMessage);
+      TEXT.SET_TEXT(nTXT_ID, 'MSG', 'MSG', nTXI_SEQ_NBR, psLANG_CODE, psMessage);
     --
     elsif psLANG_CODE is not null
     then MESSAGE.DISPLAY_MESSAGE('MSG', 18, 'en', 'Message language cannot be specified without message text');
@@ -375,10 +347,40 @@ create or replace package body MESSAGE is
   end UPDATE_MESSAGE;
 --
 -- ----------------------------------------
--- ADD_MSG_MESSAGE
+-- DELETE_MESSAGE
 -- ----------------------------------------
 --
-  procedure ADD_MSG_MESSAGE
+  procedure DELETE_MESSAGE
+   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
+    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type)
+  is
+    nTXT_ID TEXT_HEADERS.ID%type;
+  begin
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_MESSAGE',
+                             psCOMP_CODE || '~' || pnSEQ_NBR);
+  --
+    delete from MESSAGES
+    where COMP_CODE = psCOMP_CODE
+    and SEQ_NBR = pnSEQ_NBR
+    returning TXT_ID into nTXT_ID;
+  --
+    if sql%rowcount = 0
+    then MESSAGE.DISPLAY_MESSAGE('MSG', 17, 'en', 'Message does not exist');
+    end if;
+  --
+    TEXT.DELETE_TEXT(nTXT_ID);
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.TRACE_EXCEPTION;
+  end DELETE_MESSAGE;
+--
+-- ----------------------------------------
+-- SET_MSG_MESSAGE
+-- ----------------------------------------
+--
+  procedure SET_MSG_MESSAGE
    (psCOMP_CODE in MESSAGES.COMP_CODE%type,
     pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
     psLANG_CODE in LANGUAGES.CODE%type,
@@ -386,17 +388,17 @@ create or replace package body MESSAGE is
   is
     nTXI_SEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.ADD_MSG_MESSAGE',
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_MSG_MESSAGE',
                              psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE ||
                                '~' || to_char(length(psMessage)) || ':' || psMessage);
   --
-    ADD_MSG_TEXT(psCOMP_CODE, pnSEQ_NBR, 'MSG', nTXI_SEQ_NBR, psLANG_CODE, psMessage);
+    SET_MSG_TEXT(psCOMP_CODE, pnSEQ_NBR, 'MSG', nTXI_SEQ_NBR, psLANG_CODE, psMessage);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
-  end ADD_MSG_MESSAGE;
+  end SET_MSG_MESSAGE;
 --
 -- ----------------------------------------
 -- REMOVE_MSG_MESSAGE
@@ -420,10 +422,10 @@ create or replace package body MESSAGE is
   end REMOVE_MSG_MESSAGE;
 --
 -- ----------------------------------------
--- ADD_MSG_TEXT
+-- SET_MSG_TEXT
 -- ----------------------------------------
 --
-  procedure ADD_MSG_TEXT
+  procedure SET_MSG_TEXT
    (psCOMP_CODE in MESSAGES.COMP_CODE%type,
     pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
     psTXTT_CODE in TEXT_TYPES.CODE%type,
@@ -434,49 +436,20 @@ create or replace package body MESSAGE is
     sActive varchar2(1);
     nTXT_ID TEXT_HEADERS.ID%type;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.ADD_MSG_TEXT',
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_MSG_TEXT',
                              psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psTXTT_CODE ||
                                '~' || to_char(pnTXI_SEQ_NBR) || '~' || psLANG_CODE || '~' ||
                                to_char(length(psText)) || ':' || psText);
   --
     select TXT_ID into nTXT_ID from MESSAGES where COMP_CODE = psCOMP_CODE and SEQ_NBR = pnSEQ_NBR;
   --
-    TEXT.INSERT_TEXT(nTXT_ID, null, psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE, psText);
+    TEXT.SET_TEXT(nTXT_ID, null, psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE, psText);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
-  end ADD_MSG_TEXT;
---
--- ----------------------------------------
--- UPDATE_MSG_TEXT
--- ----------------------------------------
---
-  procedure UPDATE_MSG_TEXT
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnTXI_SEQ_NBR in TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2)
-  is
-    nTXT_ID TEXT_HEADERS.ID%type;
-  begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.UPDATE_MSG_TEXT',
-                             psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psTXTT_CODE ||
-                               '~' || to_char(pnTXI_SEQ_NBR) || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psText)) || ':' || psText);
-  --
-    select TXT_ID into nTXT_ID from MESSAGES where COMP_CODE = psCOMP_CODE and SEQ_NBR = pnSEQ_NBR;
-  --
-    TEXT.UPDATE_TEXT(nTXT_ID, psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE, psText);
-  --
-    PLS_UTILITY.END_MODULE;
-  exception
-    when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
-  end UPDATE_MSG_TEXT;
+  end SET_MSG_TEXT;
 --
 -- ----------------------------------------
 -- REMOVE_MSG_TEXT
@@ -508,36 +481,6 @@ create or replace package body MESSAGE is
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_MSG_TEXT;
---
--- ----------------------------------------
--- DELETE_MESSAGE
--- ----------------------------------------
---
-  procedure DELETE_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type)
-  is
-    nTXT_ID TEXT_HEADERS.ID%type;
-  begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_MESSAGE',
-                             psCOMP_CODE || '~' || pnSEQ_NBR);
-  --
-    delete from MESSAGES
-    where COMP_CODE = psCOMP_CODE
-    and SEQ_NBR = pnSEQ_NBR
-    returning TXT_ID into nTXT_ID;
-  --
-    if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 17, 'en', 'Message does not exist');
-    end if;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID);
-  --
-    PLS_UTILITY.END_MODULE;
-  exception
-    when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
-  end DELETE_MESSAGE;
 --
 -- ----------------------------------------
 -- DISPLAY_MESSAGE
