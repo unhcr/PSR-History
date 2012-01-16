@@ -3,7 +3,9 @@
 
 define eh = "exception when others then dbms_output.put_line(substr(sqlerrm, case when sqlcode = -20009 then 12 else 1 end))"
 
-set echo on serveroutput on feedback off
+set echo on serveroutput on feedback off recsepchar "."
+
+column LONG_TEXT format A150
 
 spool test_LANGUAGE.log
 
@@ -20,10 +22,19 @@ execute LANGUAGE.INSERT_LANGUAGE('enm', 'en', 'Middle English', 999, 'N'); &eh
 execute LANGUAGE.INSERT_LANGUAGE('nl', 'en', 'Dutch', pnDISPLAY_SEQ => 2); &eh
 execute LANGUAGE.INSERT_LANGUAGE('frm', 'en', 'Middle French', psACTIVE_FLAG => 'N'); &eh
 
+select LANG.CODE, LANG.DISPLAY_SEQ, LANG.ACTIVE_FLAG, LANG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from LANGUAGES LANG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = LANG.TXT_ID
+where LANG.CODE in ('de', 'eo', 'it', 'enm', 'nl', 'frm')
+order by LANG.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Error cases
 -- -----------
 
--- check constraint (PSR.CH_TXI_TEXT) violated
+-- Text must be specified
 execute LANGUAGE.INSERT_LANGUAGE('de', 'en', ''); &eh
 
 -- Unknown text language
@@ -58,6 +69,15 @@ execute LANGUAGE.UPDATE_LANGUAGE('de', pnDISPLAY_SEQ => 2); &eh
 execute LANGUAGE.UPDATE_LANGUAGE('de', psACTIVE_FLAG => 'Y'); &eh
 execute LANGUAGE.UPDATE_LANGUAGE('de', pnDISPLAY_SEQ => null); &eh
 
+select LANG.CODE, LANG.DISPLAY_SEQ, LANG.ACTIVE_FLAG, LANG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from LANGUAGES LANG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = LANG.TXT_ID
+where LANG.CODE = 'de'
+order by LANG.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Error cases
 -- -----------
 
@@ -91,31 +111,38 @@ execute LANGUAGE.UPDATE_LANGUAGE('de', psACTIVE_FLAG => 'X'); &eh
 -- value too large for column "PSR"."LANGUAGES"."ACTIVE_FLAG" (actual: 2, maximum: 1)
 execute LANGUAGE.UPDATE_LANGUAGE('de', psACTIVE_FLAG => 'YY'); &eh
 
--- Add language descriptions
+-- Set language descriptions
 -- =========================
 
 -- Success cases
 -- -------------
 
-execute LANGUAGE.ADD_LANG_DESCRIPTION('de', 'fr', 'Allemand'); &eh
+execute LANGUAGE.SET_LANG_DESCRIPTION('de', 'fr', 'German'); &eh
+execute LANGUAGE.SET_LANG_DESCRIPTION('de', 'fr', 'Allemand'); &eh
+
+select LANG.CODE, LANG.DISPLAY_SEQ, LANG.ACTIVE_FLAG, LANG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from LANGUAGES LANG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = LANG.TXT_ID
+where LANG.CODE = 'de'
+order by LANG.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
 
 -- Error cases
 -- -----------
 
 -- Unknown text language
-execute LANGUAGE.ADD_LANG_DESCRIPTION('de', 'xx', 'German'); &eh
+execute LANGUAGE.SET_LANG_DESCRIPTION('de', 'xx', 'German'); &eh
 
 -- Inactive text language
-execute LANGUAGE.ADD_LANG_DESCRIPTION('de', 'la', 'Latin German'); &eh
+execute LANGUAGE.SET_LANG_DESCRIPTION('de', 'la', 'Latin German'); &eh
 
 -- no data found
-execute LANGUAGE.ADD_LANG_DESCRIPTION('xx', 'en', 'Language'); &eh
+execute LANGUAGE.SET_LANG_DESCRIPTION('xx', 'en', 'Language'); &eh
 
--- unique constraint (PSR.PK_TXI) violated
-execute LANGUAGE.ADD_LANG_DESCRIPTION('de', 'fr', 'Allemand'); &eh
-
--- check constraint (PSR.CH_TXI_TEXT) violated
-execute LANGUAGE.ADD_LANG_DESCRIPTION('de', 'ru', ''); &eh
+-- Text must be specified
+execute LANGUAGE.SET_LANG_DESCRIPTION('de', 'ru', ''); &eh
 
 -- Remove language descriptions
 -- ============================
@@ -137,71 +164,79 @@ execute LANGUAGE.REMOVE_LANG_DESCRIPTION('de', 'xx'); &eh
 
 execute LANGUAGE.REMOVE_LANG_DESCRIPTION('de', 'fr'); &eh
 
--- Add language text
+select LANG.CODE, LANG.DISPLAY_SEQ, LANG.ACTIVE_FLAG, LANG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from LANGUAGES LANG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = LANG.TXT_ID
+where LANG.CODE = 'de'
+order by LANG.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
+-- Set language text
 -- =================
 
 -- Success cases
 -- -------------
 
 variable SEQ_NBR number
-execute LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
-execute LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
-execute :SEQ_NBR := null; LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'es', 'New Spanish note'); &eh
+execute LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
+execute LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'es', 'New Spanish note'); &eh
+execute :SEQ_NBR := 1; LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'fr', 'Updated French note'); &eh
+execute :SEQ_NBR := 2; LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'es', 'Updated Spanish note'); &eh
+execute :SEQ_NBR := 2; LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'es', rpad('Updated Spanish note ', 1001, unistr('\00F1'))); &eh
+
+select LANG.CODE, LANG.DISPLAY_SEQ, LANG.ACTIVE_FLAG, LANG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from LANGUAGES LANG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = LANG.TXT_ID
+where LANG.CODE = 'de'
+order by LANG.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
 
 -- Error cases
 -- -----------
 
 -- Unknown text language
-execute :SEQ_NBR := null; LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'xx', 'Unknown note'); &eh
+execute :SEQ_NBR := null; LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'xx', 'Unknown note'); &eh
 
 -- Inactive text language
-execute :SEQ_NBR := null; LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
+execute :SEQ_NBR := null; LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
 
 -- no data found
-execute :SEQ_NBR := null; LANGUAGE.ADD_LANG_TEXT('xx', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; LANGUAGE.SET_LANG_TEXT('xx', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Unknown text type
-execute :SEQ_NBR := null; LANGUAGE.ADD_LANG_TEXT('de', 'XXXX', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; LANGUAGE.SET_LANG_TEXT('de', 'XXXX', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Only one text item of this type allowed
-execute :SEQ_NBR := null; LANGUAGE.ADD_LANG_TEXT('de', 'DESCR', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; LANGUAGE.SET_LANG_TEXT('de', 'DESCR', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- No existing text of this type
-execute :SEQ_NBR := 1; LANGUAGE.ADD_LANG_TEXT('it', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := 1; LANGUAGE.SET_LANG_TEXT('it', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
 -- Text item sequence number greater than current maximum
-execute :SEQ_NBR := 9; LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := 9; LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 
--- check constraint (PSR.CH_TXI_TEXT) violated
-execute :SEQ_NBR := null; LANGUAGE.ADD_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'en', ''); &eh
-
--- Update language text
--- ====================
-
--- Success cases
--- -------------
-
-execute LANGUAGE.UPDATE_LANG_TEXT('de', 'NOTE', 1, 'fr', 'Updated French note'); &eh
-execute LANGUAGE.UPDATE_LANG_TEXT('de', 'NOTE', 2, 'es', 'Updated Spanish note'); &eh
-execute LANGUAGE.UPDATE_LANG_TEXT('de', 'NOTE', 2, 'es', rpad('Updated Spanish note ', 1001, unistr('\00F1'))); &eh
-
--- Error cases
--- -----------
+-- Text must be specified
+execute :SEQ_NBR := null; LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'en', ''); &eh
 
 -- no data found
-execute LANGUAGE.UPDATE_LANG_TEXT('xx', 'NOTE', 1, 'fr', 'Updated note'); &eh
+execute :SEQ_NBR := 1; LANGUAGE.SET_LANG_TEXT('xx', 'NOTE', :SEQ_NBR, 'fr', 'Updated note'); &eh
 
--- Text item does not exist
-execute LANGUAGE.UPDATE_LANG_TEXT('de', 'XXXX', 1, 'fr', 'Updated note'); &eh
+-- Unknown text type
+execute :SEQ_NBR := 1; LANGUAGE.SET_LANG_TEXT('de', 'XXXX', :SEQ_NBR, 'fr', 'Updated note'); &eh
 
--- Text item does not exist
-execute LANGUAGE.UPDATE_LANG_TEXT('de', 'NOTE', 9, 'fr', 'Updated note'); &eh
+-- Text item sequence number greater than current maximum
+execute :SEQ_NBR := 9; LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'fr', 'Updated note'); &eh
 
--- Text item does not exist
-execute LANGUAGE.UPDATE_LANG_TEXT('de', 'NOTE', 1, 'xx', 'Updated note'); &eh
+-- Unknown text language
+execute :SEQ_NBR := 1; LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'xx', 'Updated note'); &eh
 
--- Text message must be specified
-execute LANGUAGE.UPDATE_LANG_TEXT('de', 'NOTE', 1, 'fr', ''); &eh
+-- Text must be specified
+execute :SEQ_NBR := 1; LANGUAGE.SET_LANG_TEXT('de', 'NOTE', :SEQ_NBR, 'fr', ''); &eh
 
 -- Remove language text
 -- ====================
@@ -215,7 +250,7 @@ execute LANGUAGE.REMOVE_LANG_TEXT('xx', 'NOTE', 1, 'en'); &eh
 -- Text type must be specified
 execute LANGUAGE.REMOVE_LANG_TEXT('de', null); &eh
 
--- No text to delete
+-- no data found
 execute LANGUAGE.REMOVE_LANG_TEXT('de', 'XXXX', 1, 'en'); &eh
 
 -- No text to delete
@@ -243,6 +278,15 @@ execute LANGUAGE.REMOVE_LANG_TEXT('de', 'NOTE', 1, 'en'); &eh
 execute LANGUAGE.REMOVE_LANG_TEXT('de', 'NOTE', 1); &eh
 execute LANGUAGE.REMOVE_LANG_TEXT('de', 'NOTE'); &eh
 
+select LANG.CODE, LANG.DISPLAY_SEQ, LANG.ACTIVE_FLAG, LANG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from LANGUAGES LANG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = LANG.TXT_ID
+where LANG.CODE = 'de'
+order by LANG.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
 -- Delete languages
 -- ================
 
@@ -260,6 +304,17 @@ execute LANGUAGE.DELETE_LANGUAGE('xx'); &eh
 
 execute LANGUAGE.DELETE_LANGUAGE('frm'); &eh
 
-set echo off serveroutput off feedback on
+select LANG.CODE, LANG.DISPLAY_SEQ, LANG.ACTIVE_FLAG, LANG.TXT_ID,
+  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
+from LANGUAGES LANG
+join TEXT_ITEMS TXI
+  on TXI.TXT_ID = LANG.TXT_ID
+where LANG.CODE in ('de', 'eo', 'it', 'enm', 'nl', 'frm')
+order by LANG.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
+/
+
+set echo off serveroutput off feedback on recsepchar " "
+
+@check_orphan_TXT_ID
 
 spool off
