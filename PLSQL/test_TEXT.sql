@@ -10,7 +10,7 @@ variable SEQ_NBR number
 variable SEQ_NBR1 number
 variable SEQ_NBR2 number
 
-execute TEXT_TYPE.INSERT_TEXT_TYPE('INACT', 'en', 'Inactive', null, 'N');
+execute TEXT_TYPE.SET_TEXT_TYPE('INACT', 'en', 'Inactive', null, 'N');
 
 set echo on serveroutput on feedback off recsepchar "."
 
