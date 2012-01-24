@@ -9,18 +9,26 @@ column LONG_TEXT format A150
 
 spool test_TEXT_TYPE.log
 
--- Insert text types
--- =================
+-- Set text types
+-- ==============
 
 -- Success cases
 -- -------------
 
-execute TEXT_TYPE.INSERT_TEXT_TYPE('TST1', 'en', 'Test 1'); &eh
-execute TEXT_TYPE.INSERT_TEXT_TYPE('TST2', 'en', 'Test 2', null, 'N'); &eh
-execute TEXT_TYPE.INSERT_TEXT_TYPE('TST3', 'en', 'Test 3', 1); &eh
-execute TEXT_TYPE.INSERT_TEXT_TYPE('TST4', 'en', 'Test 4', 999, 'N'); &eh
-execute TEXT_TYPE.INSERT_TEXT_TYPE('TST5', 'en', 'Test 5', pnDISPLAY_SEQ => 2); &eh
-execute TEXT_TYPE.INSERT_TEXT_TYPE('TST6', 'en', 'Test 6', psACTIVE_FLAG => 'N'); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', 'en', 'Test 1'); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST2', 'en', 'Test 2', null, 'N'); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST3', 'en', 'Test 3', 1); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST4', 'en', 'Test 4', 999, 'N'); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST5', 'en', 'Test 5', pnDISPLAY_SEQ => 2); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST6', 'en', 'Test 6', psACTIVE_FLAG => 'N'); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', 'en', 'Text!'); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', null, null, 1); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', null, null, null, 'N'); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', psLANG_CODE => 'en', psDescription => 'Text'); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', pnDISPLAY_SEQ => 2); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', psACTIVE_FLAG => 'Y'); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', pnDISPLAY_SEQ => null); &eh
+
 
 select TXTT.CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.TXT_ID,
   TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
@@ -34,76 +42,41 @@ order by TXTT.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
 -- Error cases
 -- -----------
 
--- Text must be specified
-execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'en', ''); &eh
-
--- Unknown text language
-execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'xx', 'Text type description'); &eh
-
--- Inactive text language
-execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'la', 'Text type description'); &eh
-
--- unique constraint (PSR.PK_TXTT) violated
-execute TEXT_TYPE.INSERT_TEXT_TYPE('TST1', 'en', 'Text type description'); &eh
-
--- value larger than specified precision allowed for this column
-execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'en', 'Text type description', 1e6); &eh
-
--- check constraint (PSR.CH_TXTT_ACTIVE_FLAG) violated
-execute TEXT_TYPE.INSERT_TEXT_TYPE('TST7', 'en', 'Text type description', null, 'X'); &eh
-
--- Update text types
--- =================
-
--- Success cases
--- -------------
-
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', 'en', 'Text!'); &eh
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', null, null, 1); &eh
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', null, null, null, 'N'); &eh
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', psLANG_CODE => 'en', psDescription => 'Text'); &eh
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', pnDISPLAY_SEQ => 2); &eh
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', psACTIVE_FLAG => 'Y'); &eh
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', pnDISPLAY_SEQ => null); &eh
-
-select TXTT.CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.TXT_ID,
-  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
-from TEXT_TYPES TXTT
-join TEXT_ITEMS TXI
-  on TXI.TXT_ID = TXTT.TXT_ID
-where TXTT.CODE = 'TST1'
-order by TXTT.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
-
--- Error cases
--- -----------
-
--- Description language cannot be specified without description text
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', 'en'); &eh
+-- Description must be specified for new text type
+execute TEXT_TYPE.SET_TEXT_TYPE('TST7', 'en', ''); &eh
 
 -- Unknown description language
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', 'xx', 'Text type description'); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST7', 'xx', 'Text type description'); &eh
 
 -- Inactive description language
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', 'la', 'Text type description'); &eh
-
--- no data found
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('XXX', 'en', 'Text type description'); &eh
-
--- Unknown description language
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', null, 'Text type description'); &eh
-
--- Nothing to be updated
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1'); &eh
-
--- Text type does not exist
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('XXX', pnDISPLAY_SEQ => 1); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST7', 'la', 'Text type description'); &eh
 
 -- value larger than specified precision allowed for this column
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', pnDISPLAY_SEQ => 1e6); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST7', 'en', 'Text type description', 1e6); &eh
 
 -- check constraint (PSR.CH_TXTT_ACTIVE_FLAG) violated
-execute TEXT_TYPE.UPDATE_TEXT_TYPE('TST1', psACTIVE_FLAG => 'X'); &eh
+execute TEXT_TYPE.SET_TEXT_TYPE('TST7', 'en', 'Text type description', null, 'X'); &eh
+
+-- Description language cannot be specified without description text
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', 'en'); &eh
+
+-- Unknown description language
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', 'xx', 'Text type description'); &eh
+
+-- Inactive description language
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', 'la', 'Text type description'); &eh
+
+-- Unknown description language
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', null, 'Text type description'); &eh
+
+-- Nothing to be updated
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1'); &eh
+
+-- value larger than specified precision allowed for this column
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', pnDISPLAY_SEQ => 1e6); &eh
+
+-- check constraint (PSR.CH_TXTT_ACTIVE_FLAG) violated
+execute TEXT_TYPE.SET_TEXT_TYPE('TST1', psACTIVE_FLAG => 'X'); &eh
 
 -- Set text type descriptions
 -- ==========================
