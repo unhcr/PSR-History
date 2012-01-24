@@ -9,18 +9,25 @@ column LONG_TEXT format A150
 
 spool test_MESSAGE.log
 
--- Insert components
--- =================
+-- Set components
+-- ==============
 
 -- Success cases
 -- -------------
 
-execute MESSAGE.INSERT_COMPONENT('TST1', 'en', 'Test 1'); &eh
-execute MESSAGE.INSERT_COMPONENT('TST2', 'en', 'Test 2', null, 'N'); &eh
-execute MESSAGE.INSERT_COMPONENT('TST3', 'en', 'Test 3', 1); &eh
-execute MESSAGE.INSERT_COMPONENT('TST4', 'en', 'Test 4', 999, 'N'); &eh
-execute MESSAGE.INSERT_COMPONENT('TST5', 'en', 'Test 5', pnDISPLAY_SEQ => 2); &eh
-execute MESSAGE.INSERT_COMPONENT('TST6', 'en', 'Test 6', psACTIVE_FLAG => 'N'); &eh
+execute MESSAGE.SET_COMPONENT('TST1', 'en', 'Test 1'); &eh
+execute MESSAGE.SET_COMPONENT('TST2', 'en', 'Test 2', null, 'N'); &eh
+execute MESSAGE.SET_COMPONENT('TST3', 'en', 'Test 3', 1); &eh
+execute MESSAGE.SET_COMPONENT('TST4', 'en', 'Test 4', 999, 'N'); &eh
+execute MESSAGE.SET_COMPONENT('TST5', 'en', 'Test 5', pnDISPLAY_SEQ => 2); &eh
+execute MESSAGE.SET_COMPONENT('TST6', 'en', 'Test 6', psACTIVE_FLAG => 'N'); &eh
+execute MESSAGE.SET_COMPONENT('TST1', 'en', 'Text!'); &eh
+execute MESSAGE.SET_COMPONENT('TST1', null, null, 1); &eh
+execute MESSAGE.SET_COMPONENT('TST1', null, null, null, 'N'); &eh
+execute MESSAGE.SET_COMPONENT('TST1', psLANG_CODE => 'en', psDescription => 'Text'); &eh
+execute MESSAGE.SET_COMPONENT('TST1', pnDISPLAY_SEQ => 2); &eh
+execute MESSAGE.SET_COMPONENT('TST1', psACTIVE_FLAG => 'Y'); &eh
+execute MESSAGE.SET_COMPONENT('TST1', pnDISPLAY_SEQ => null); &eh
 
 select COMP.CODE, COMP.DISPLAY_SEQ, COMP.ACTIVE_FLAG, COMP.TXT_ID,
   TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
@@ -34,76 +41,41 @@ order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
 -- Error cases
 -- -----------
 
--- Text must be specified
-execute MESSAGE.INSERT_COMPONENT('TST7', 'en', ''); &eh
-
--- Unknown text language
-execute MESSAGE.INSERT_COMPONENT('TST7', 'xx', 'Statistic Types'); &eh
-
--- Inactive text language
-execute MESSAGE.INSERT_COMPONENT('TST7', 'la', 'Statistic Types'); &eh
-
--- unique constraint (PSR.PK_COMP) violated
-execute MESSAGE.INSERT_COMPONENT('TST1', 'en', 'Text'); &eh
-
--- value larger than specified precision allowed for this column
-execute MESSAGE.INSERT_COMPONENT('TST7', 'en', 'Statistic Types', 1e6); &eh
-
--- check constraint (PSR.CH_COMP_ACTIVE_FLAG) violated
-execute MESSAGE.INSERT_COMPONENT('TST7', 'en', 'Statistic Types', null, 'X'); &eh
-
--- Update components
--- =================
-
--- Success cases
--- -------------
-
-execute MESSAGE.UPDATE_COMPONENT('TST1', 'en', 'Text!'); &eh
-execute MESSAGE.UPDATE_COMPONENT('TST1', null, null, 1); &eh
-execute MESSAGE.UPDATE_COMPONENT('TST1', null, null, null, 'N'); &eh
-execute MESSAGE.UPDATE_COMPONENT('TST1', psLANG_CODE => 'en', psDescription => 'Text'); &eh
-execute MESSAGE.UPDATE_COMPONENT('TST1', pnDISPLAY_SEQ => 2); &eh
-execute MESSAGE.UPDATE_COMPONENT('TST1', psACTIVE_FLAG => 'Y'); &eh
-execute MESSAGE.UPDATE_COMPONENT('TST1', pnDISPLAY_SEQ => null); &eh
-
-select COMP.CODE, COMP.DISPLAY_SEQ, COMP.ACTIVE_FLAG, COMP.TXT_ID,
-  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
-from COMPONENTS COMP
-join TEXT_ITEMS TXI
-  on TXI.TXT_ID = COMP.TXT_ID
-where COMP.CODE = 'TST1'
-order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
-
--- Error cases
--- -----------
-
--- Description language cannot be specified without description text
-execute MESSAGE.UPDATE_COMPONENT('TST1', 'en'); &eh
+-- Description must be specified for new component
+execute MESSAGE.SET_COMPONENT('TST7', 'en', ''); &eh
 
 -- Unknown description language
-execute MESSAGE.UPDATE_COMPONENT('TST1', 'xx', 'Text'); &eh
+execute MESSAGE.SET_COMPONENT('TST7', 'xx', 'Statistic Types'); &eh
 
 -- Inactive description language
-execute MESSAGE.UPDATE_COMPONENT('TST1', 'la', 'Text'); &eh
-
--- no data found
-execute MESSAGE.UPDATE_COMPONENT('XXX', 'en', 'Unknown'); &eh
-
--- Unknown description language
-execute MESSAGE.UPDATE_COMPONENT('TST1', null, 'Text'); &eh
-
--- Nothing to be updated
-execute MESSAGE.UPDATE_COMPONENT('TST1'); &eh
-
--- Component does not exist
-execute MESSAGE.UPDATE_COMPONENT('XXX', pnDISPLAY_SEQ => 1); &eh
+execute MESSAGE.SET_COMPONENT('TST7', 'la', 'Statistic Types'); &eh
 
 -- value larger than specified precision allowed for this column
-execute MESSAGE.UPDATE_COMPONENT('TST1', pnDISPLAY_SEQ => 1e6); &eh
+execute MESSAGE.SET_COMPONENT('TST7', 'en', 'Statistic Types', 1e6); &eh
 
 -- check constraint (PSR.CH_COMP_ACTIVE_FLAG) violated
-execute MESSAGE.UPDATE_COMPONENT('TST1', psACTIVE_FLAG => 'X'); &eh
+execute MESSAGE.SET_COMPONENT('TST7', 'en', 'Statistic Types', null, 'X'); &eh
+
+-- Description language cannot be specified without description text
+execute MESSAGE.SET_COMPONENT('TST1', 'en'); &eh
+
+-- Unknown description language
+execute MESSAGE.SET_COMPONENT('TST1', 'xx', 'Text'); &eh
+
+-- Inactive description language
+execute MESSAGE.SET_COMPONENT('TST1', 'la', 'Text'); &eh
+
+-- Unknown description language
+execute MESSAGE.SET_COMPONENT('TST1', null, 'Text'); &eh
+
+-- Nothing to be updated
+execute MESSAGE.SET_COMPONENT('TST1'); &eh
+
+-- value larger than specified precision allowed for this column
+execute MESSAGE.SET_COMPONENT('TST1', pnDISPLAY_SEQ => 1e6); &eh
+
+-- check constraint (PSR.CH_COMP_ACTIVE_FLAG) violated
+execute MESSAGE.SET_COMPONENT('TST1', psACTIVE_FLAG => 'X'); &eh
 
 -- Set component descriptions
 -- ==========================
@@ -305,20 +277,24 @@ order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
 /
 
 
--- Insert messages
--- ===============
+-- Set messages
+-- ============
 
 -- Success cases
 -- -------------
 
 variable SEQ_NBR number;
-execute :SEQ_NBR := null; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message'); &eh
-execute :SEQ_NBR := null; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', 'Warning message', 'W'); &eh
-execute :SEQ_NBR := null; MESSAGE.INSERT_MESSAGE('TST2', :SEQ_NBR, 'fr', unistr('Message fran\00E7ais'), psSEVERITY => 'I'); &eh
-execute :SEQ_NBR := null; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message 2'); &eh
-execute :SEQ_NBR := null; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', rpad('Error message 3 ', 1001, 'x')); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Warning message', 'W'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST2', :SEQ_NBR, 'fr', unistr('Message fran\00E7ais'), psSEVERITY => 'I'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message 2'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', rpad('Error message 3 ', 1001, 'x')); &eh
 execute MESSAGE.DELETE_MESSAGE('TST1', 2); &eh
-execute :SEQ_NBR := 2; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message 2a'); &eh
+execute :SEQ_NBR := 2; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message 2a'); &eh
+execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message!'); &eh
+execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, null, null, 'I'); &eh
+execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, psLANG_CODE => 'en', psMessage => 'Error message'); &eh
+execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, psSEVERITY => 'E'); &eh
 
 select MSG.COMP_CODE, MSG.SEQ_NBR, MSG.SEVERITY, MSG.TXT_ID,
   TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
@@ -332,88 +308,50 @@ order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
 -- Error cases
 -- -----------
 
--- Text must be specified
-execute :SEQ_NBR := null; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', ''); &eh
-
--- Unknown text language
-execute :SEQ_NBR := null; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'xx', 'Message'); &eh
-
--- Inactive text language
-execute :SEQ_NBR := null; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'la', 'Latin message'); &eh
-
--- unique constraint (PSR.PK_MSG) violated
-execute :SEQ_NBR := 1; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message', 'W'); &eh
-
--- Component does not exist
-execute :SEQ_NBR := null; MESSAGE.INSERT_MESSAGE('XXX', :SEQ_NBR, 'en', 'Error message'); &eh
-
--- no data found
-execute :SEQ_NBR := 1; MESSAGE.INSERT_MESSAGE('XXX', :SEQ_NBR, 'en', 'Error message'); &eh
-
--- Message sequence number greater than current maximum
-execute :SEQ_NBR := 9; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message'); &eh
-
--- unique constraint (PSR.PK_MSG) violated
-execute :SEQ_NBR := 1; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message'); &eh
-
--- check constraint (PSR.CH_MSG_SEVERITY) violated
-execute :SEQ_NBR := null; MESSAGE.INSERT_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message', 'X'); &eh
-
--- Update messages
--- ===============
-
--- Success cases
--- -------------
-
-execute MESSAGE.UPDATE_MESSAGE('TST1', 1, 'en', 'Error message!'); &eh
-execute MESSAGE.UPDATE_MESSAGE('TST1', 1, null, null, 'I'); &eh
-execute MESSAGE.UPDATE_MESSAGE('TST1', 1, psLANG_CODE => 'en', psMessage => 'Error message'); &eh
-execute MESSAGE.UPDATE_MESSAGE('TST1', 1, psSEVERITY => 'E'); &eh
-
-select MSG.COMP_CODE, MSG.SEQ_NBR, MSG.SEVERITY, MSG.TXT_ID,
-  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
-from MESSAGES MSG
-join TEXT_ITEMS TXI
-  on TXI.TXT_ID = MSG.TXT_ID
-where MSG.COMP_CODE like 'TST%'
-order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
-
--- Error cases
--- -----------
+-- Message text must be specified for new message
+execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', ''); &eh
 
 -- Unknown message language
-execute MESSAGE.UPDATE_MESSAGE('TST1', 1, null, 'Error message'); &eh
-
--- Unknown message language
-execute MESSAGE.UPDATE_MESSAGE('TST1', 1, 'xx', 'Error message'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'xx', 'Message'); &eh
 
 -- Inactive message language
-execute MESSAGE.UPDATE_MESSAGE('TST1', 1, 'la', 'Error message'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'la', 'Latin message'); &eh
+
+-- Component does not exist
+execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('XXX', :SEQ_NBR, 'en', 'Error message'); &eh
 
 -- no data found
-execute MESSAGE.UPDATE_MESSAGE('XXX', 1, 'en', 'Error message'); &eh
+execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('XXX', :SEQ_NBR, 'en', 'Error message'); &eh
 
--- no data found
-execute MESSAGE.UPDATE_MESSAGE('TST1', 9, 'en', 'Error message'); &eh
-
--- Text item does not exist
-execute MESSAGE.UPDATE_MESSAGE('TST1', 1, 'ru', 'Error message'); &eh
-
--- Message language cannot be specified without message text
-execute MESSAGE.UPDATE_MESSAGE('TST1', 1, 'en'); &eh
-
--- Nothing to be updated
-execute MESSAGE.UPDATE_MESSAGE('TST1', 1); &eh
-
--- Message does not exist
-execute MESSAGE.UPDATE_MESSAGE('TST4', 1, psSEVERITY => 'E'); &eh
-
--- Message does not exist
-execute MESSAGE.UPDATE_MESSAGE('TST1', 9, psSEVERITY => 'E'); &eh
+-- Message sequence number greater than current maximum
+execute :SEQ_NBR := 9; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message'); &eh
 
 -- check constraint (PSR.CH_MSG_SEVERITY) violated
-execute MESSAGE.UPDATE_MESSAGE('TST1', 1, psSEVERITY => 'X'); &eh
+execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message', 'X'); &eh
+
+-- Unknown message language
+execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, null, 'Error message'); &eh
+
+-- Unknown message language
+execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'xx', 'Error message'); &eh
+
+-- Inactive message language
+execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'la', 'Error message'); &eh
+
+-- no data found
+execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('XXX', :SEQ_NBR, 'en', 'Error message'); &eh
+
+-- Message sequence number greater than current maximum
+execute :SEQ_NBR := 9; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message'); &eh
+
+-- Message language cannot be specified without message text
+execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en'); &eh
+
+-- Nothing to be updated
+execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR); &eh
+
+-- check constraint (PSR.CH_MSG_SEVERITY) violated
+execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, psSEVERITY => 'X'); &eh
 
 -- Set message variants
 -- ====================
