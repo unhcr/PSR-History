@@ -5,58 +5,46 @@ create or replace package body MESSAGE is
 -- ========================================
 --
 -- ----------------------------------------
--- INSERT_COMPONENT
+-- SET_COMPONENT
 -- ----------------------------------------
 --
-  procedure INSERT_COMPONENT
-   (psCODE in COMPONENTS.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psDescription in varchar2,
-    pnDISPLAY_SEQ in COMPONENTS.DISPLAY_SEQ%type := null,
-    psACTIVE_FLAG in COMPONENTS.ACTIVE_FLAG%type := 'Y')
-  is
-    sActive varchar2(1);
-    nTXT_ID TEXT_HEADERS.ID%type;
-    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type;
-  begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.INSERT_COMPONENT',
-                             psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
-                               psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psDescription)) || ':' || psDescription);
-  --
-    TEXT.SET_TEXT(nTXT_ID, 'COMP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
-  --
-    insert into COMPONENTS (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
-    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
-  --
-    PLS_UTILITY.END_MODULE;
-  exception
-    when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
-  end INSERT_COMPONENT;
---
--- ----------------------------------------
--- UPDATE_COMPONENT
--- ----------------------------------------
---
-  procedure UPDATE_COMPONENT
+  procedure SET_COMPONENT
    (psCODE in COMPONENTS.CODE%type,
     psLANG_CODE in LANGUAGES.CODE%type := null,
     psDescription in varchar2 := null,
     pnDISPLAY_SEQ in COMPONENTS.DISPLAY_SEQ%type := -1e6,
     psACTIVE_FLAG in COMPONENTS.ACTIVE_FLAG%type := null)
   is
-    sActive varchar2(1);
     nTXT_ID TEXT_HEADERS.ID%type;
     nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
+    sActive varchar2(1);
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.UPDATE_COMPONENT',
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_COMPONENT',
                              psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
                                psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
                                to_char(length(psDescription)) || ':' || psDescription);
   --
-    if psDescription is not null
+  -- Check if component already exists.
+  --
+    begin
+      select TXT_ID into nTXT_ID from COMPONENTS where CODE = psCODE;
+    exception
+      when NO_DATA_FOUND
+      then nTXT_ID := null;
+        nSEQ_NBR := null;
+    end;
+  --
+    if psDescription is null
     then
+      if nTXT_ID is null
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 1, 'en', 'Description must be specified for new component');
+      elsif psLANG_CODE is not null
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 2, 'en', 'Description language cannot be specified without description text');
+      elsif pnDISPLAY_SEQ = -1e6
+        and psACTIVE_FLAG is null
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 3, 'en', 'Nothing to be updated');
+      end if;
+    else
       begin
         select ACTIVE_FLAG into sActive from LANGUAGES where CODE = psLANG_CODE;
       exception
@@ -68,35 +56,32 @@ create or replace package body MESSAGE is
       then MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'en', 'Inactive description language');
       end if;
     --
-      select TXT_ID into nTXT_ID from COMPONENTS where CODE = psCODE;
-    --
       TEXT.SET_TEXT(nTXT_ID, 'COMP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
-    --
-    elsif psLANG_CODE is not null
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'en', 'Description language cannot be specified without description text');
-    elsif pnDISPLAY_SEQ = -1e6
-      and psACTIVE_FLAG is null
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 8, 'en', 'Nothing to be updated');
     end if;
   --
-    if nvl(pnDISPLAY_SEQ, 0) != -1e6
-      or psACTIVE_FLAG is not null
-    then
-      update COMPONENTS
+    merge into COMPONENTS COMP
+    using
+     (select psCODE CODE from DUAL) INP
+    on (COMP.CODE = INP.CODE)
+    when matched then
+      update
       set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG)
-      where CODE = psCODE;
-    --
-      if sql%rowcount = 0
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'en', 'Component does not exist');
-      end if;
-    end if;
+      where nvl(pnDISPLAY_SEQ, 0) != -1e6
+        or psACTIVE_FLAG is not null
+    when not matched then
+      insert
+       (CODE, DISPLAY_SEQ, ACTIVE_FLAG,
+        TXT_ID)
+      values
+       (psCODE, case when pnDISPLAY_SEQ != -1e6 then pnDISPLAY_SEQ end, nvl(psACTIVE_FLAG, 'Y'),
+        nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
-  end UPDATE_COMPONENT;
+  end SET_COMPONENT;
 --
 -- ----------------------------------------
 -- DELETE_COMPONENT
@@ -214,7 +199,7 @@ create or replace package body MESSAGE is
     select TXT_ID into nTXT_ID from COMPONENTS where CODE = psCODE;
   --
     if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 9, 'en', 'Text type must be specified');
+    then MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'en', 'Text type must be specified');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
@@ -226,27 +211,63 @@ create or replace package body MESSAGE is
   end REMOVE_COMP_TEXT;
 --
 -- ----------------------------------------
--- INSERT_MESSAGE
+-- SET_MESSAGE
 -- ----------------------------------------
 --
-  procedure INSERT_MESSAGE
+  procedure SET_MESSAGE
    (psCOMP_CODE in MESSAGES.COMP_CODE%type,
     pnSEQ_NBR in out MESSAGES.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psMessage in varchar2,
-    psSEVERITY in MESSAGES.SEVERITY%type := 'E')
+    psLANG_CODE in LANGUAGES.CODE%type := null,
+    psMessage in varchar2 := null,
+    psSEVERITY in MESSAGES.SEVERITY%type := null)
   is
-    sActive varchar2(1);
     nTXT_ID TEXT_HEADERS.ID%type;
-    nTXI_SEQ_NBR TEXT_ITEMS.SEQ_NBR%type;
+    nTXI_SEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
+    sActive varchar2(1);
     nMSG_SEQ_NBR_MAX COMPONENTS.MSG_SEQ_NBR_MAX%type;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.INSERT_MESSAGE',
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_MESSAGE',
                              psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
                                psSEVERITY || '~' || psLANG_CODE || '~' ||
                                to_char(length(psMessage)) || ':' || psMessage);
   --
-    TEXT.SET_TEXT(nTXT_ID, 'MSG', 'MSG', nTXI_SEQ_NBR, psLANG_CODE, psMessage);
+  -- Check if message already exists.
+  --
+    begin
+      select TXT_ID
+      into nTXT_ID
+      from MESSAGES
+      where COMP_CODE = psCOMP_CODE
+      and SEQ_NBR = pnSEQ_NBR;
+    exception
+      when NO_DATA_FOUND
+      then nTXT_ID := null;
+        nTXI_SEQ_NBR := null;
+    end;
+  --
+    if psMessage is null
+    then
+      if nTXT_ID is null
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 8, 'en', 'Message text must be specified for new message');
+      elsif psLANG_CODE is not null
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 9, 'en', 'Message language cannot be specified without message text');
+      elsif psSEVERITY is null
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 3, 'en', 'Nothing to be updated');
+      end if;
+    else
+      begin
+        select ACTIVE_FLAG into sActive from LANGUAGES where CODE = psLANG_CODE;
+      exception
+        when NO_DATA_FOUND
+        then MESSAGE.DISPLAY_MESSAGE('MSG', 10, 'en', 'Unknown message language');
+      end;
+    --
+      if sActive = 'N'
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 11, 'en', 'Inactive message language');
+      end if;
+    --
+      TEXT.SET_TEXT(nTXT_ID, 'MSG', 'MSG', nTXI_SEQ_NBR, psLANG_CODE, psMessage);
+    end if;
   --
     if pnSEQ_NBR is null
     then
@@ -268,83 +289,27 @@ create or replace package body MESSAGE is
       select MSG_SEQ_NBR_MAX into nMSG_SEQ_NBR_MAX from COMPONENTS where CODE = psCOMP_CODE;
     --
       if pnSEQ_NBR > nMSG_SEQ_NBR_MAX
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 11, 'en', 'Message sequence number greater than current maximum');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 12, 'en', 'Message sequence number greater than current maximum');
       end if;
     end if;
   --
-    insert into MESSAGES (COMP_CODE, SEQ_NBR, SEVERITY, TXT_ID)
-    values (psCOMP_CODE, pnSEQ_NBR, psSEVERITY, nTXT_ID);
-  --
-    PLS_UTILITY.END_MODULE;
-  exception
-    when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
-  end INSERT_MESSAGE;
---
--- ----------------------------------------
--- UPDATE_MESSAGE
--- ----------------------------------------
---
-  procedure UPDATE_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type := null,
-    psMessage in varchar2 := null,
-    psSEVERITY in MESSAGES.SEVERITY%type := null)
-  is
-    sActive varchar2(1);
-    nTXT_ID TEXT_HEADERS.ID%type;
-    nTXI_SEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
-  begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.UPDATE_MESSAGE',
-                             psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
-                               psSEVERITY || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psMessage)) || ':' || psMessage);
-  --
-    if psMessage is not null
-    then
-      begin
-        select ACTIVE_FLAG into sActive from LANGUAGES where CODE = psLANG_CODE;
-      exception
-        when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('MSG', 15, 'en', 'Unknown message language');
-      end;
-    --
-      if sActive = 'N'
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 16, 'en', 'Inactive message language');
-      end if;
-    --
-      select TXT_ID
-      into nTXT_ID
-      from MESSAGES
-      where COMP_CODE = psCOMP_CODE
-      and SEQ_NBR = pnSEQ_NBR;
-    --
-      TEXT.SET_TEXT(nTXT_ID, 'MSG', 'MSG', nTXI_SEQ_NBR, psLANG_CODE, psMessage);
-    --
-    elsif psLANG_CODE is not null
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 18, 'en', 'Message language cannot be specified without message text');
-    elsif psSEVERITY is null
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 19, 'en', 'Nothing to be updated');
-    end if;
-  --
-    if psSEVERITY is not null
-    then
-      update MESSAGES
+    merge into MESSAGES MSG
+    using
+     (select psCOMP_CODE COMP_CODE, pnSEQ_NBR SEQ_NBR from DUAL) INP
+    on (MSG.COMP_CODE = INP.COMP_CODE and MSG.SEQ_NBR = INP.SEQ_NBR)
+    when matched then
+      update
       set SEVERITY = nvl(psSEVERITY, SEVERITY)
-      where COMP_CODE = psCOMP_CODE
-      and SEQ_NBR = pnSEQ_NBR;
-    --
-      if sql%rowcount = 0
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 17, 'en', 'Message does not exist');
-      end if;
-    end if;
+      where psSEVERITY is not null
+    when not matched then
+      insert (COMP_CODE, SEQ_NBR, SEVERITY, TXT_ID)
+      values (psCOMP_CODE, pnSEQ_NBR, nvl(psSEVERITY, 'E'), nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
-  end UPDATE_MESSAGE;
+  end SET_MESSAGE;
 --
 -- ----------------------------------------
 -- DELETE_MESSAGE
@@ -365,7 +330,7 @@ create or replace package body MESSAGE is
     returning TXT_ID into nTXT_ID;
   --
     if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 17, 'en', 'Message does not exist');
+    then MESSAGE.DISPLAY_MESSAGE('MSG', 13, 'en', 'Message does not exist');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID);
@@ -471,7 +436,7 @@ create or replace package body MESSAGE is
     select TXT_ID into nTXT_ID from MESSAGES where COMP_CODE = psCOMP_CODE and SEQ_NBR = pnSEQ_NBR;
   --
     if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 9, 'en', 'Text type must be specified');
+    then MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'en', 'Text type must be specified');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE);

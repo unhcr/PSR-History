@@ -6,7 +6,7 @@ create or replace package MESSAGE is
 --  Procedures for maintenance of system messages and their associated components.
 --
 --  Change History:
---  16-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  24-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -14,45 +14,24 @@ create or replace package MESSAGE is
   sVersion varchar2(10) := 'D0.1';
 --
 -- ----------------------------------------
--- INSERT_COMPONENT
+-- SET_COMPONENT
 -- ----------------------------------------
 --
--- Create new component record.
+-- Create a new component record or update an existing one.
 --
 -- Parameters:
---  psCODE - Component code (mandatory).
---  psLANG_CODE - Language code for the language of the textual description (mandatory).
---  psDescription - Textual description of component (mandatory).
---  pnDISPLAY_SEQ - Sequence number to control display ordering of components (optional).
+--  psCODE - Code of component (mandatory).
+--  psLANG_CODE - Language code for the textual description (optional when updating an existing
+--    language but must be specified if psDescription is specified).
+--  psDescription - Textual description of component (optional when updating an existing language;
+--    if not specified, the description is not updated).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of components (optional: if not
+--    specified, an existing display sequence is not updated and a new one is set to null; if null
+--    is specified, the display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the component is currently available for use
---    (optional, defaults to Y).
+--    (optional: if not specified, the existing value is not updated; a new value defaults to Y).
 --
-  procedure INSERT_COMPONENT
-   (psCODE in COMPONENTS.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psDescription in varchar2,
-    pnDISPLAY_SEQ in COMPONENTS.DISPLAY_SEQ%type := null,
-    psACTIVE_FLAG in COMPONENTS.ACTIVE_FLAG%type := 'Y');
---
--- ----------------------------------------
--- UPDATE_COMPONENT
--- ----------------------------------------
---
--- Update a component record.
---
--- Parameters:
---  psCODE - Code of component to be updated (mandatory).
---  psLANG_CODE - Language code for the textual description (optional, must be specified if
---    psDescription is specified).
---  psDescription - Textual description of component (optional: if null, the description is not
---    updated).
---  pnDISPLAY_SEQ - Sequence number to control display ordering of components (optional, if not
---    specified, the display sequence is not updated; if null is specified, the display sequence is
---    set to null).
---  psACTIVE_FLAG - Flag (Y/N) indicating whether the component is currently available for use
---    (optional: if not specified or null, the active flag is not updated).
---
-  procedure UPDATE_COMPONENT
+  procedure SET_COMPONENT
    (psCODE in COMPONENTS.CODE%type,
     psLANG_CODE in LANGUAGES.CODE%type := null,
     psDescription in varchar2 := null,
@@ -150,45 +129,25 @@ create or replace package MESSAGE is
     psLANG_CODE in LANGUAGES.CODE%type := null);
 --
 -- ----------------------------------------
--- INSERT_MESSAGE
+-- SET_MESSAGE
 -- ----------------------------------------
 --
--- Create new message record.
+-- Create a new message record or update an existing one.
 --
 -- Parameters:
---  psCOMP_CODE - Component code (mandatory).
---  pnSEQ_NBR - Sequence number of new message (optional: if null, a new one is generated and
---    returned).
---  psLANG_CODE - Language code for the language of the message (mandatory).
---  psMessage - Message text (mandatory).
+--  psCOMP_CODE - Component code of message (mandatory).
+--  pnSEQ_NBR - Sequence number of message (optional: if null, a new one is generated and returned).
+--  psLANG_CODE - Language code of the message (optional when updating an existing message but must
+--    be specified if psMessage is specified).
+--  psMessage - Message text (optional when updating an existing language; if not specified, the
+--    message is not updated).
 --  psSEVERITY - Severity of event associated with message: S - System, E - Error, W - Warning or
---    I - Information (optional, defaults to E).
+--    I - Information (optional: if not specified, the existing value is not updated; a new value
+--    defaults to E).
 --
-  procedure INSERT_MESSAGE
+  procedure SET_MESSAGE
    (psCOMP_CODE in MESSAGES.COMP_CODE%type,
     pnSEQ_NBR in out MESSAGES.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psMessage in varchar2,
-    psSEVERITY in MESSAGES.SEVERITY%type := 'E');
---
--- ----------------------------------------
--- UPDATE_MESSAGE
--- ----------------------------------------
---
--- Update a message record.
---
--- Parameters:
---  psCOMP_CODE - Component code of message to be updated (mandatory).
---  pnSEQ_NBR - Sequence number of message to be updated (mandatory).
---  psLANG_CODE - Language code of the message (optional, must be specified if psMessage is
---    specified).
---  psMessage - Message text (optional: if null, the message is not updated).
---  psSEVERITY - Severity of event associated with message: S - System, E - Error, W - Warning or
---    I - Information (optional: if not specified or null, the severity is not updated).
---
-  procedure UPDATE_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
     psLANG_CODE in LANGUAGES.CODE%type := null,
     psMessage in varchar2 := null,
     psSEVERITY in MESSAGES.SEVERITY%type := null);
