@@ -9,18 +9,25 @@ column LONG_TEXT format A150
 
 spool test_LANGUAGE.log
 
--- Insert languages
--- ================
+-- Set languages
+-- =============
 
 -- Success cases
 -- -------------
 
-execute LANGUAGE.INSERT_LANGUAGE('de', 'en', 'German'); &eh
-execute LANGUAGE.INSERT_LANGUAGE('eo', 'en', 'Esperanto', null, 'N'); &eh
-execute LANGUAGE.INSERT_LANGUAGE('it', 'en', 'Italian', 1); &eh
-execute LANGUAGE.INSERT_LANGUAGE('enm', 'en', 'Middle English', 999, 'N'); &eh
-execute LANGUAGE.INSERT_LANGUAGE('nl', 'en', 'Dutch', pnDISPLAY_SEQ => 2); &eh
-execute LANGUAGE.INSERT_LANGUAGE('frm', 'en', 'Middle French', psACTIVE_FLAG => 'N'); &eh
+execute LANGUAGE.SET_LANGUAGE('de', 'en', 'German'); &eh
+execute LANGUAGE.SET_LANGUAGE('eo', 'en', 'Esperanto', null, 'N'); &eh
+execute LANGUAGE.SET_LANGUAGE('it', 'en', 'Italian', 1); &eh
+execute LANGUAGE.SET_LANGUAGE('enm', 'en', 'Middle English', 999, 'N'); &eh
+execute LANGUAGE.SET_LANGUAGE('nl', 'en', 'Dutch', pnDISPLAY_SEQ => 2); &eh
+execute LANGUAGE.SET_LANGUAGE('frm', 'en', 'Middle French', psACTIVE_FLAG => 'N'); &eh
+execute LANGUAGE.SET_LANGUAGE('de', 'en', 'German!'); &eh
+execute LANGUAGE.SET_LANGUAGE('de', null, null, 1); &eh
+execute LANGUAGE.SET_LANGUAGE('de', null, null, null, 'N'); &eh
+execute LANGUAGE.SET_LANGUAGE('de', psLANG_CODE => 'en', psDescription => 'German'); &eh
+execute LANGUAGE.SET_LANGUAGE('de', pnDISPLAY_SEQ => 2); &eh
+execute LANGUAGE.SET_LANGUAGE('de', psACTIVE_FLAG => 'Y'); &eh
+execute LANGUAGE.SET_LANGUAGE('de', pnDISPLAY_SEQ => null); &eh
 
 select LANG.CODE, LANG.DISPLAY_SEQ, LANG.ACTIVE_FLAG, LANG.TXT_ID,
   TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
@@ -34,82 +41,47 @@ order by LANG.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
 -- Error cases
 -- -----------
 
--- Text must be specified
-execute LANGUAGE.INSERT_LANGUAGE('de', 'en', ''); &eh
-
--- Unknown text language
-execute LANGUAGE.INSERT_LANGUAGE('de', 'xx', 'German'); &eh
-
--- Inactive text language
-execute LANGUAGE.INSERT_LANGUAGE('de', 'la', 'German'); &eh
-
--- unique constraint (PSR.PK_LANG) violated
-execute LANGUAGE.INSERT_LANGUAGE('en', 'en', 'English'); &eh
-
--- value larger than specified precision allowed for this column
-execute LANGUAGE.INSERT_LANGUAGE('gr', 'en', 'Greek', 1e6); &eh
-
--- check constraint (PSR.CH_LANG_ACTIVE_FLAG) violated
-execute LANGUAGE.INSERT_LANGUAGE('gr', 'en', 'Greek', null, 'X'); &eh
-
--- value too large for column "PSR"."LANGUAGES"."ACTIVE_FLAG" (actual: 2, maximum: 1)
-execute LANGUAGE.INSERT_LANGUAGE('gr', 'en', 'Greek', null, 'YY'); &eh
-
--- Update languages
--- ================
-
--- Success cases
--- -------------
-
-execute LANGUAGE.UPDATE_LANGUAGE('de', 'en', 'German!'); &eh
-execute LANGUAGE.UPDATE_LANGUAGE('de', null, null, 1); &eh
-execute LANGUAGE.UPDATE_LANGUAGE('de', null, null, null, 'N'); &eh
-execute LANGUAGE.UPDATE_LANGUAGE('de', psLANG_CODE => 'en', psDescription => 'German'); &eh
-execute LANGUAGE.UPDATE_LANGUAGE('de', pnDISPLAY_SEQ => 2); &eh
-execute LANGUAGE.UPDATE_LANGUAGE('de', psACTIVE_FLAG => 'Y'); &eh
-execute LANGUAGE.UPDATE_LANGUAGE('de', pnDISPLAY_SEQ => null); &eh
-
-select LANG.CODE, LANG.DISPLAY_SEQ, LANG.ACTIVE_FLAG, LANG.TXT_ID,
-  TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
-from LANGUAGES LANG
-join TEXT_ITEMS TXI
-  on TXI.TXT_ID = LANG.TXT_ID
-where LANG.CODE = 'de'
-order by LANG.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
-
--- Error cases
--- -----------
-
--- Description language cannot be specified without description text
-execute LANGUAGE.UPDATE_LANGUAGE('de', 'en'); &eh
+-- Description must be specified for new language
+execute LANGUAGE.SET_LANGUAGE('gr', 'en', ''); &eh
 
 -- Unknown description language
-execute LANGUAGE.UPDATE_LANGUAGE('de', 'xx', 'German'); &eh
+execute LANGUAGE.SET_LANGUAGE('gr', 'xx', 'German'); &eh
 
 -- Inactive description language
-execute LANGUAGE.UPDATE_LANGUAGE('de', 'la', 'German'); &eh
-
--- no data found
-execute LANGUAGE.UPDATE_LANGUAGE('xx', 'en', 'Unknown'); &eh
-
--- Unknown description language
-execute LANGUAGE.UPDATE_LANGUAGE('de', null, 'German'); &eh
-
--- Nothing to be updated
-execute LANGUAGE.UPDATE_LANGUAGE('de'); &eh
-
--- Language does not exist
-execute LANGUAGE.UPDATE_LANGUAGE('xx', pnDISPLAY_SEQ => 1); &eh
+execute LANGUAGE.SET_LANGUAGE('gr', 'la', 'German'); &eh
 
 -- value larger than specified precision allowed for this column
-execute LANGUAGE.UPDATE_LANGUAGE('de', pnDISPLAY_SEQ => 1e6); &eh
+execute LANGUAGE.SET_LANGUAGE('gr', 'en', 'Greek', 1e6); &eh
 
 -- check constraint (PSR.CH_LANG_ACTIVE_FLAG) violated
-execute LANGUAGE.UPDATE_LANGUAGE('de', psACTIVE_FLAG => 'X'); &eh
+execute LANGUAGE.SET_LANGUAGE('gr', 'en', 'Greek', null, 'X'); &eh
 
 -- value too large for column "PSR"."LANGUAGES"."ACTIVE_FLAG" (actual: 2, maximum: 1)
-execute LANGUAGE.UPDATE_LANGUAGE('de', psACTIVE_FLAG => 'YY'); &eh
+execute LANGUAGE.SET_LANGUAGE('gr', 'en', 'Greek', null, 'YY'); &eh
+
+-- Description language cannot be specified without description text
+execute LANGUAGE.SET_LANGUAGE('de', 'en'); &eh
+
+-- Unknown description language
+execute LANGUAGE.SET_LANGUAGE('de', 'xx', 'German'); &eh
+
+-- Inactive description language
+execute LANGUAGE.SET_LANGUAGE('de', 'la', 'German'); &eh
+
+-- Unknown description language
+execute LANGUAGE.SET_LANGUAGE('de', null, 'German'); &eh
+
+-- Nothing to be updated
+execute LANGUAGE.SET_LANGUAGE('de'); &eh
+
+-- value larger than specified precision allowed for this column
+execute LANGUAGE.SET_LANGUAGE('de', pnDISPLAY_SEQ => 1e6); &eh
+
+-- check constraint (PSR.CH_LANG_ACTIVE_FLAG) violated
+execute LANGUAGE.SET_LANGUAGE('de', psACTIVE_FLAG => 'X'); &eh
+
+-- value too large for column "PSR"."LANGUAGES"."ACTIVE_FLAG" (actual: 2, maximum: 1)
+execute LANGUAGE.SET_LANGUAGE('de', psACTIVE_FLAG => 'YY'); &eh
 
 -- Set language descriptions
 -- =========================
