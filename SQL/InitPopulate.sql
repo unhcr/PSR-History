@@ -27,11 +27,11 @@ insert into TEXT_ITEMS (TXT_ID, TXTT_CODE, SEQ_NBR, LANG_CODE, TEXT) values (TXT
 -- =========
 
 -- All the UN languages
-execute LANGUAGE.INSERT_LANGUAGE('fr', 'en', 'French');
-execute LANGUAGE.INSERT_LANGUAGE('es', 'en', 'Spanish');
-execute LANGUAGE.INSERT_LANGUAGE('ru', 'en', 'Russian');
-execute LANGUAGE.INSERT_LANGUAGE('ar', 'en', 'Arabic');
-execute LANGUAGE.INSERT_LANGUAGE('zh', 'en', 'Chinese');
+execute LANGUAGE.SET_LANGUAGE('fr', 'en', 'French');
+execute LANGUAGE.SET_LANGUAGE('es', 'en', 'Spanish');
+execute LANGUAGE.SET_LANGUAGE('ru', 'en', 'Russian');
+execute LANGUAGE.SET_LANGUAGE('ar', 'en', 'Arabic');
+execute LANGUAGE.SET_LANGUAGE('zh', 'en', 'Chinese');
 
 -- Descriptions in all the UN languages
 
@@ -73,7 +73,7 @@ execute LANGUAGE.SET_LANG_DESCRIPTION('zh', 'zh', unistr('\4E2D\56FD'));
 
 -- Inactive language for testing (English description only)
 
-execute LANGUAGE.INSERT_LANGUAGE('la', 'en', 'Latin (inactive language for testing)', psACTIVE_FLAG => 'N');
+execute LANGUAGE.SET_LANGUAGE('la', 'en', 'Latin (inactive language for testing)', psACTIVE_FLAG => 'N');
 
 
 -- Text types with descriptions in all UN languages and text type properties
@@ -91,7 +91,7 @@ execute TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', 'zh', unistr('\8BF4\660E'));
 
 -- Messages, message text type properties, and message descriptions
 
-execute TEXT_TYPE.INSERT_TEXT_TYPE('MSG', 'en', 'Message');
+execute TEXT_TYPE.SET_TEXT_TYPE('MSG', 'en', 'Message');
 
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('MSG', 'MSG', 'Y', 'N');
 
@@ -103,7 +103,7 @@ execute TEXT_TYPE.SET_TXTT_DESCRIPTION('MSG', 'zh', unistr('\6D88\606F'));
 
 -- Notes, note text type properties, and note descriptions
 
-execute TEXT_TYPE.INSERT_TEXT_TYPE('NOTE', 'en', 'Note');
+execute TEXT_TYPE.SET_TEXT_TYPE('NOTE', 'en', 'Note');
 
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('NOTE', 'TAB');
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('NOTE', 'TXTT');
