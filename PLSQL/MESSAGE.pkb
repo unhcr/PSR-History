@@ -464,7 +464,7 @@ create or replace package body MESSAGE is
     sTEXT_EN TEXT_ITEMS.TEXT%type;
     sLONG_TEXT_EN varchar2(30000);
     nSQLCODE integer;
-    sMessagePrefix varchar2(100);
+    sMessagePrefix varchar2(100) := psCOMP_CODE || to_char(-pnSEQ_NBR, 'S0999') || ': ';
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DISPLAY_MESSAGE',
                              psCOMP_CODE || '~' || pnSEQ_NBR || '~' ||
@@ -489,14 +489,16 @@ create or replace package body MESSAGE is
       and MSG.SEQ_NBR = pnSEQ_NBR;
     exception
       when NO_DATA_FOUND
-      then raise_application_error(-20001, '** Message not found ** ' || psEnglishMessage);
+      then raise_application_error(-20001,
+                                   sMessagePrefix || '** Message not found ** ' ||
+                                     psEnglishMessage);
     end;
   --
     if psSEVERITY is not null
     then if psSEVERITY in ('S', 'E', 'W', 'I')
       then sSEVERITY := psSEVERITY;
       else sSEVERITY := 'S';
-        sMessagePrefix := '** Invalid severity ** ';
+        sMessagePrefix := sMessagePrefix || '** Invalid severity ** ';
       end if;
     end if;
   --
@@ -506,7 +508,7 @@ create or replace package body MESSAGE is
       when 'W' then nSQLCODE := -20003;
       when 'I' then nSQLCODE := -20004;
       else nSQLCODE := -20001;
-        sMessagePrefix := '** Invalid severity ** ';
+        sMessagePrefix := sMessagePrefix || '** Invalid severity ** ';
     end case;
   --
     sLONG_TEXT := nvl(sTEXT, sLONG_TEXT);
