@@ -5,58 +5,46 @@ create or replace package body LANGUAGE is
 -- ========================================
 --
 -- ----------------------------------------
--- INSERT_LANGUAGE
+-- SET_LANGUAGE
 -- ----------------------------------------
 --
-  procedure INSERT_LANGUAGE
-   (psCODE in LANGUAGES.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psDescription in varchar2,
-    pnDISPLAY_SEQ in LANGUAGES.DISPLAY_SEQ%type := null,
-    psACTIVE_FLAG in LANGUAGES.ACTIVE_FLAG%type := 'Y')
-  is
-    sActive varchar2(1);
-    nTXT_ID TEXT_HEADERS.ID%type;
-    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type;
-  begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.INSERT_LANGUAGE',
-                             psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
-                               psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psDescription)) || ':' || psDescription);
-  --
-    TEXT.SET_TEXT(nTXT_ID, 'LANG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
-  --
-    insert into LANGUAGES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
-    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
-  --
-    PLS_UTILITY.END_MODULE;
-  exception
-    when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
-  end INSERT_LANGUAGE;
---
--- ----------------------------------------
--- UPDATE_LANGUAGE
--- ----------------------------------------
---
-  procedure UPDATE_LANGUAGE
+  procedure SET_LANGUAGE
    (psCODE in LANGUAGES.CODE%type,
     psLANG_CODE in LANGUAGES.CODE%type := null,
     psDescription in varchar2 := null,
     pnDISPLAY_SEQ in LANGUAGES.DISPLAY_SEQ%type := -1e6,
     psACTIVE_FLAG in LANGUAGES.ACTIVE_FLAG%type := null)
   is
-    sActive varchar2(1);
     nTXT_ID TEXT_HEADERS.ID%type;
     nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
+    sActive varchar2(1);
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.UPDATE_LANGUAGE',
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_LANGUAGE',
                              psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
                                psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
                                to_char(length(psDescription)) || ':' || psDescription);
   --
-    if psDescription is not null
+  -- Check if language already exists.
+  --
+    begin
+      select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
+    exception
+      when NO_DATA_FOUND
+      then nTXT_ID := null;
+        nSEQ_NBR := null;
+    end;
+  --
+    if psDescription is null
     then
+      if nTXT_ID is null
+      then MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'en', 'Description must be specified for new language');
+      elsif psLANG_CODE is not null
+      then MESSAGE.DISPLAY_MESSAGE('LANG', 2, 'en', 'Description language cannot be specified without description text');
+      elsif pnDISPLAY_SEQ = -1e6
+        and psACTIVE_FLAG is null
+      then MESSAGE.DISPLAY_MESSAGE('LANG', 3, 'en', 'Nothing to be updated');
+      end if;
+    else
       begin
         select ACTIVE_FLAG into sActive from LANGUAGES where CODE = psLANG_CODE;
       exception
@@ -68,35 +56,32 @@ create or replace package body LANGUAGE is
       then MESSAGE.DISPLAY_MESSAGE('LANG', 5, 'en', 'Inactive description language');
       end if;
     --
-      select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
-    --
       TEXT.SET_TEXT(nTXT_ID, 'LANG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
-    --
-    elsif psLANG_CODE is not null
-    then MESSAGE.DISPLAY_MESSAGE('LANG', 7, 'en', 'Description language cannot be specified without description text');
-    elsif pnDISPLAY_SEQ = -1e6
-      and psACTIVE_FLAG is null
-    then MESSAGE.DISPLAY_MESSAGE('LANG', 8, 'en', 'Nothing to be updated');
     end if;
   --
-    if nvl(pnDISPLAY_SEQ, 0) != -1e6
-      or psACTIVE_FLAG is not null
-    then
-      update LANGUAGES
+    merge into LANGUAGES LANG
+    using
+     (select psCODE CODE from DUAL) INP
+    on (LANG.CODE = INP.CODE)
+    when matched then
+      update
       set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG)
-      where CODE = psCODE;
-    --
-      if sql%rowcount = 0
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 6, 'en', 'Language does not exist');
-      end if;
-    end if;
+      where nvl(pnDISPLAY_SEQ, 0) != -1e6
+        or psACTIVE_FLAG is not null
+    when not matched then
+      insert
+       (CODE, DISPLAY_SEQ, ACTIVE_FLAG,
+        TXT_ID)
+      values
+       (psCODE, case when pnDISPLAY_SEQ != -1e6 then pnDISPLAY_SEQ end, nvl(psACTIVE_FLAG, 'Y'),
+        nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
-  end UPDATE_LANGUAGE;
+  end SET_LANGUAGE;
 --
 -- ----------------------------------------
 -- DELETE_LANGUAGE
@@ -212,7 +197,7 @@ create or replace package body LANGUAGE is
                                to_char(pnTXI_SEQ_NBR) || '~' || psLANG_CODE);
   --
     if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('LANG', 9, 'en', 'Text type must be specified');
+    then MESSAGE.DISPLAY_MESSAGE('LANG', 7, 'en', 'Text type must be specified');
     end if;
   --
     select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
