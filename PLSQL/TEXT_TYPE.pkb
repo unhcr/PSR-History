@@ -5,97 +5,81 @@ create or replace package body TEXT_TYPE is
 -- ========================================
 --
 -- ----------------------------------------
--- INSERT_TEXT_TYPE
+-- SET_TEXT_TYPE
 -- ----------------------------------------
 --
-  procedure INSERT_TEXT_TYPE
-   (psCODE in TEXT_TYPES.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psDescription in varchar2,
-    pnDISPLAY_SEQ in TEXT_TYPES.DISPLAY_SEQ%type := null,
-    psACTIVE_FLAG in TEXT_TYPES.ACTIVE_FLAG%type := 'Y')
-  is
-    nTXT_ID TEXT_HEADERS.ID%type;
-    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type;
-  begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.INSERT_TEXT_TYPE',
-                             psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
-                               psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psDescription)) || ':' || psDescription);
-  --
-    TEXT.SET_TEXT(nTXT_ID, 'TXTT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
-  --
-    insert into TEXT_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
-    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
-  --
-    PLS_UTILITY.END_MODULE;
-  exception
-    when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
-  end INSERT_TEXT_TYPE;
---
--- ----------------------------------------
--- UPDATE_TEXT_TYPE
--- ----------------------------------------
---
-  procedure UPDATE_TEXT_TYPE
+  procedure SET_TEXT_TYPE
    (psCODE in TEXT_TYPES.CODE%type,
     psLANG_CODE in LANGUAGES.CODE%type := null,
     psDescription in varchar2 := null,
     pnDISPLAY_SEQ in TEXT_TYPES.DISPLAY_SEQ%type := -1e6,
     psACTIVE_FLAG in TEXT_TYPES.ACTIVE_FLAG%type := null)
   is
-    sActive varchar2(1);
     nTXT_ID TEXT_HEADERS.ID%type;
     nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
+    sActive varchar2(1);
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.UPDATE_TEXT_TYPE',
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_TEXT_TYPE',
                              psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
                                psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
                                to_char(length(psDescription)) || ':' || psDescription);
   --
-    if psDescription is not null
+    begin
+      select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
+    exception
+      when NO_DATA_FOUND
+      then nTXT_ID := null;
+        nSEQ_NBR := null;
+    end;
+  --
+    if psDescription is null
     then
+      if nTXT_ID is null
+      then MESSAGE.DISPLAY_MESSAGE('TXTT', 1, 'en', 'Description must be specified for new text type');
+      elsif psLANG_CODE is not null
+      then MESSAGE.DISPLAY_MESSAGE('TXTT', 2, 'en', 'Description language cannot be specified without description text');
+      elsif pnDISPLAY_SEQ = -1e6
+        and psACTIVE_FLAG is null
+      then MESSAGE.DISPLAY_MESSAGE('TXTT', 3, 'en', 'Nothing to be updated');
+      end if;
+    else
       begin
         select ACTIVE_FLAG into sActive from LANGUAGES where CODE = psLANG_CODE;
       exception
         when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('TXTT', 2, 'en', 'Unknown description language');
+        then MESSAGE.DISPLAY_MESSAGE('TXTT', 4, 'en', 'Unknown description language');
       end;
     --
       if sActive = 'N'
-      then MESSAGE.DISPLAY_MESSAGE('TXTT', 3, 'en', 'Inactive description language');
+      then MESSAGE.DISPLAY_MESSAGE('TXTT', 5, 'en', 'Inactive description language');
       end if;
-    --
-      select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
     --
       TEXT.SET_TEXT(nTXT_ID, 'TXTT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
-    --
-    elsif psLANG_CODE is not null
-    then MESSAGE.DISPLAY_MESSAGE('TXTT', 5, 'en', 'Description language cannot be specified without description text');
-    elsif pnDISPLAY_SEQ = -1e6
-      and psACTIVE_FLAG is null
-    then MESSAGE.DISPLAY_MESSAGE('TXTT', 6, 'en', 'Nothing to be updated');
     end if;
   --
-    if nvl(pnDISPLAY_SEQ, 0) != -1e6
-      or psACTIVE_FLAG is not null
-    then
-      update TEXT_TYPES
+    merge into TEXT_TYPES TXTT
+    using
+     (select psCODE CODE from DUAL) INP
+    on (TXTT.CODE = INP.CODE)
+    when matched then
+      update
       set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG)
-      where CODE = psCODE;
-    --
-      if sql%rowcount = 0
-      then MESSAGE.DISPLAY_MESSAGE('TXTT', 4, 'en', 'Text type does not exist');
-      end if;
-    end if;
+      where nvl(pnDISPLAY_SEQ, 0) != -1e6
+        or psACTIVE_FLAG is not null
+    when not matched then
+      insert
+       (CODE, DISPLAY_SEQ, ACTIVE_FLAG,
+        TXT_ID)
+      values
+       (psCODE, case when pnDISPLAY_SEQ != -1e6 then pnDISPLAY_SEQ end, nvl(psACTIVE_FLAG, 'Y'),
+        nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
-  end UPDATE_TEXT_TYPE;
+  end SET_TEXT_TYPE;
 --
 -- ----------------------------------------
 -- DELETE_TEXT_TYPE
@@ -111,7 +95,7 @@ create or replace package body TEXT_TYPE is
     delete from TEXT_TYPES where CODE = psCODE returning TXT_ID into nTXT_ID;
   --
     if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('TXTT', 4, 'en', 'Text type does not exist');
+    then MESSAGE.DISPLAY_MESSAGE('TXTT', 6, 'en', 'Text type does not exist');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID);
@@ -272,7 +256,7 @@ create or replace package body TEXT_TYPE is
     delete from TEXT_TYPE_PROPERTIES where TXTT_CODE = psTXTT_CODE and TAB_ALIAS = psTAB_ALIAS;
   --
     if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('TXTT', 9, 'en', 'Text type property does not exist');
+    then MESSAGE.DISPLAY_MESSAGE('TXTT', 8, 'en', 'Text type property does not exist');
     end if;
   --
     PLS_UTILITY.END_MODULE;

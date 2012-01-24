@@ -6,7 +6,7 @@ create or replace package TEXT_TYPE is
 --  Procedures for maintenance of text types.
 --
 --  Change History:
---  16-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  24-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -14,45 +14,24 @@ create or replace package TEXT_TYPE is
   sVersion varchar2(10) := 'D0.1';
 --
 -- ----------------------------------------
--- INSERT_TEXT_TYPE
+-- SET_TEXT_TYPE
 -- ----------------------------------------
 --
--- Create new text type record.
+-- Create a new text type record or update an existing one.
 --
 -- Parameters:
---  psCODE - Text type code (mandatory).
---  psLANG_CODE - Language code for the language of the textual description (mandatory).
---  psDescription - Textual description of text type (mandatory).
---  pnDISPLAY_SEQ - Sequence number to control display ordering of text types (optional).
---  psACTIVE_FLAG - Flag (Y/N) indicating whether the text type is currently available for use
---    (optional, defaults to Y).
---
-  procedure INSERT_TEXT_TYPE
-   (psCODE in TEXT_TYPES.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psDescription in varchar2,
-    pnDISPLAY_SEQ in TEXT_TYPES.DISPLAY_SEQ%type := null,
-    psACTIVE_FLAG in TEXT_TYPES.ACTIVE_FLAG%type := 'Y');
---
--- ----------------------------------------
--- UPDATE_TEXT_TYPE
--- ----------------------------------------
---
--- Update a text type record.
---
--- Parameters:
---  psCODE - Code of text type to be updated (mandatory).
---  psLANG_CODE - Language code for the textual description (optional, must be specified if
---    psDescription is specified).
---  psDescription - Textual description of text type (optional: if null, the description is not
---    updated).
+--  psCODE - Code of text type (mandatory).
+--  psLANG_CODE - Language code for the textual description (optional when updating an existing
+--    text type but must be specified if psDescription is specified).
+--  psDescription - Textual description of text type (optional when updating an existing text type;
+--    if not specified, the description is not updated).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of text types (optional, if not
---    specified, the display sequence is not updated; if null is specified, the display sequence is
---    set to null).
+--    specified, the display sequence is not updated and a new one is set to null; if null
+--    is specified, the display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the text type is currently available for use
---    (optional: if not specified or null, the active flag is not updated).
+--    (optional: if not specified, the existing value is not changed; a new value defaults to Y).
 --
-  procedure UPDATE_TEXT_TYPE
+  procedure SET_TEXT_TYPE
    (psCODE in TEXT_TYPES.CODE%type,
     psLANG_CODE in LANGUAGES.CODE%type := null,
     psDescription in varchar2 := null,
