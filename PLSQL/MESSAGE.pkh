@@ -22,8 +22,8 @@ create or replace package MESSAGE is
 -- Parameters:
 --  psCODE - Code of component (mandatory).
 --  psLANG_CODE - Language code for the textual description (optional when updating an existing
---    language but must be specified if psDescription is specified).
---  psDescription - Textual description of component (optional when updating an existing language;
+--    component but must be specified if psDescription is specified).
+--  psDescription - Textual description of component (optional when updating an existing component;
 --    if not specified, the description is not updated).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of components (optional: if not
 --    specified, an existing display sequence is not updated and a new one is set to null; if null
@@ -139,7 +139,7 @@ create or replace package MESSAGE is
 --  pnSEQ_NBR - Sequence number of message (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the message (optional when updating an existing message but must
 --    be specified if psMessage is specified).
---  psMessage - Message text (optional when updating an existing language; if not specified, the
+--  psMessage - Message text (optional when updating an existing message; if not specified, the
 --    message is not updated).
 --  psSEVERITY - Severity of event associated with message: S - System, E - Error, W - Warning or
 --    I - Information (optional: if not specified, the existing value is not updated; a new value
@@ -229,15 +229,15 @@ create or replace package MESSAGE is
 -- ----------------------------------------
 --
 -- Remove a general text item from a message record. The following cases arise:
--- 1. All text of the given type is deleted for the given language (only psCODE and psTXTT_CODE are
---    specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of language code, text type and
---    text item sequence number (psCODE, psTXTT_CODE and pnTXI_SEQ_NBR are specified, psLANG_CODE is
---    not). This action fails if this is the last text item for this text type and the text type is
---    mandatory.
--- 3. A single language variant is deleted (psCODE, psTXTT_CODE, pnTXI_SEQ_NBR and psLANG_CODE are
---    all specified). This action fails if this is the last language variant of the last text item
---    for this text type and the text type is mandatory.
+-- 1. All text of the given type is deleted for the given message (only psCOMP_CODE, pnSEQ_NBR and
+--    psTXTT_CODE are specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given combination of component code, message
+--    sequence number, text type and text item sequence number (psCOMP_CODE, pnSEQ_NBR, psTXTT_CODE
+--    and pnTXI_SEQ_NBR are specified, psLANG_CODE is not). This action fails if this is the last
+--    text item for this text type and the text type is mandatory.
+-- 3. A single language variant is deleted (psCOMP_CODE, pnSEQ_NBR, psTXTT_CODE, pnTXI_SEQ_NBR and
+--    psLANG_CODE are all specified). The action fails if this is the last language variant of the
+--    last text item for this text type and the text type is mandatory.
 --
 -- Parameters:
 --  psCOMP_CODE - Component code of message from which text item is to be removed (mandatory).

@@ -17,7 +17,7 @@ create or replace package body MESSAGE is
   is
     nTXT_ID TEXT_HEADERS.ID%type;
     nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
-    sActive varchar2(1);
+    sACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_COMPONENT',
                              psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
@@ -46,13 +46,13 @@ create or replace package body MESSAGE is
       end if;
     else
       begin
-        select ACTIVE_FLAG into sActive from LANGUAGES where CODE = psLANG_CODE;
+        select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
       exception
         when NO_DATA_FOUND
         then MESSAGE.DISPLAY_MESSAGE('MSG', 4, 'en', 'Unknown description language');
       end;
     --
-      if sActive = 'N'
+      if sACTIVE_FLAG = 'N'
       then MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'en', 'Inactive description language');
       end if;
     --
@@ -162,7 +162,6 @@ create or replace package body MESSAGE is
     psLANG_CODE in LANGUAGES.CODE%type,
     psText in varchar2)
   is
-    sActive varchar2(1);
     nTXT_ID TEXT_HEADERS.ID%type;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_COMP_TEXT',
@@ -172,7 +171,7 @@ create or replace package body MESSAGE is
   --
     select TXT_ID into nTXT_ID from COMPONENTS where CODE = psCODE;
   --
-    TEXT.SET_TEXT(nTXT_ID, null, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+    TEXT.SET_TEXT(nTXT_ID, 'COMP', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -223,7 +222,7 @@ create or replace package body MESSAGE is
   is
     nTXT_ID TEXT_HEADERS.ID%type;
     nTXI_SEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
-    sActive varchar2(1);
+    sACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
     nMSG_SEQ_NBR_MAX COMPONENTS.MSG_SEQ_NBR_MAX%type;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_MESSAGE',
@@ -256,13 +255,13 @@ create or replace package body MESSAGE is
       end if;
     else
       begin
-        select ACTIVE_FLAG into sActive from LANGUAGES where CODE = psLANG_CODE;
+        select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
       exception
         when NO_DATA_FOUND
         then MESSAGE.DISPLAY_MESSAGE('MSG', 10, 'en', 'Unknown message language');
       end;
     --
-      if sActive = 'N'
+      if sACTIVE_FLAG = 'N'
       then MESSAGE.DISPLAY_MESSAGE('MSG', 11, 'en', 'Inactive message language');
       end if;
     --
@@ -398,7 +397,6 @@ create or replace package body MESSAGE is
     psLANG_CODE in LANGUAGES.CODE%type,
     psText in varchar2)
   is
-    sActive varchar2(1);
     nTXT_ID TEXT_HEADERS.ID%type;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_MSG_TEXT',
@@ -408,7 +406,7 @@ create or replace package body MESSAGE is
   --
     select TXT_ID into nTXT_ID from MESSAGES where COMP_CODE = psCOMP_CODE and SEQ_NBR = pnSEQ_NBR;
   --
-    TEXT.SET_TEXT(nTXT_ID, null, psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE, psText);
+    TEXT.SET_TEXT(nTXT_ID, 'MSG', psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE, psText);
   --
     PLS_UTILITY.END_MODULE;
   exception
