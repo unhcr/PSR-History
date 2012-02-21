@@ -1,9 +1,9 @@
 -- Test set-up
 -- ===========
 
-define eh = "exception when others then dbms_output.put_line(substr(sqlerrm, case when sqlcode = -20009 then 12 else 1 end))"
+define eh = "exception when others then dbms_output.put_line(substr(sqlerrm, case when substr(sqlerrm, 12, 5) = 'ORA-2' then 12 else 1 end))"
 
-set echo on serveroutput on feedback off recsepchar "."
+set echo on serveroutput on feedback off recsepchar "." sqlprompt "        " sqlnumber off
 
 column LONG_TEXT format A150
 
@@ -35,47 +35,46 @@ from COMPONENTS COMP
 join TEXT_ITEMS TXI
   on TXI.TXT_ID = COMP.TXT_ID
 where COMP.CODE like 'TST%'
-order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Error cases
 -- -----------
 
--- Description must be specified for new component
 execute MESSAGE.SET_COMPONENT('TST7', 'en', ''); &eh
+-- MSG-0001: Description must be specified for new component
 
--- Unknown description language
 execute MESSAGE.SET_COMPONENT('TST7', 'xx', 'Statistic Types'); &eh
+-- MSG-0004: Unknown description language
 
--- Inactive description language
 execute MESSAGE.SET_COMPONENT('TST7', 'la', 'Statistic Types'); &eh
+-- MSG-0005: Inactive description language
 
--- value larger than specified precision allowed for this column
 execute MESSAGE.SET_COMPONENT('TST7', 'en', 'Statistic Types', 1e6); &eh
+-- ORA-01438: value larger than specified precision allowed for this column
 
--- check constraint (PSR.CH_COMP_ACTIVE_FLAG) violated
 execute MESSAGE.SET_COMPONENT('TST7', 'en', 'Statistic Types', null, 'X'); &eh
+-- ORA-02290: check constraint (PSR.CH_COMP_ACTIVE_FLAG) violated
 
--- Description language cannot be specified without description text
 execute MESSAGE.SET_COMPONENT('TST1', 'en'); &eh
+-- MSG-0002: Description language cannot be specified without description text
 
--- Unknown description language
 execute MESSAGE.SET_COMPONENT('TST1', 'xx', 'Text'); &eh
+-- MSG-0004: Unknown description language
 
--- Inactive description language
 execute MESSAGE.SET_COMPONENT('TST1', 'la', 'Text'); &eh
+-- MSG-0005: Inactive description language
 
--- Unknown description language
 execute MESSAGE.SET_COMPONENT('TST1', null, 'Text'); &eh
+-- MSG-0004: Unknown description language
 
--- Nothing to be updated
 execute MESSAGE.SET_COMPONENT('TST1'); &eh
+-- MSG-0003: Nothing to be updated
 
--- value larger than specified precision allowed for this column
 execute MESSAGE.SET_COMPONENT('TST1', pnDISPLAY_SEQ => 1e6); &eh
+-- ORA-01438: value larger than specified precision allowed for this column
 
--- check constraint (PSR.CH_COMP_ACTIVE_FLAG) violated
 execute MESSAGE.SET_COMPONENT('TST1', psACTIVE_FLAG => 'X'); &eh
+-- ORA-02290: check constraint (PSR.CH_COMP_ACTIVE_FLAG) violated
 
 -- Set component descriptions
 -- ==========================
@@ -92,23 +91,22 @@ from COMPONENTS COMP
 join TEXT_ITEMS TXI
   on TXI.TXT_ID = COMP.TXT_ID
 where COMP.CODE = 'TST1'
-order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Error cases
 -- -----------
 
--- Unknown text language
 execute MESSAGE.SET_COMP_DESCRIPTION('TST1', 'xx', 'Text'); &eh
+-- TXT-0004: Unknown text language
 
--- Inactive text language
 execute MESSAGE.SET_COMP_DESCRIPTION('TST1', 'la', 'Latin Text'); &eh
+-- TXT-0005: Inactive text language
 
--- no data found
 execute MESSAGE.SET_COMP_DESCRIPTION('XXX', 'en', 'Component'); &eh
+-- ORA-01403: no data found
 
--- Text must be specified
 execute MESSAGE.SET_COMP_DESCRIPTION('TST1', 'ru', ''); &eh
+-- TXT-0001: Text must be specified
 
 -- Remove component descriptions
 -- =============================
@@ -116,14 +114,14 @@ execute MESSAGE.SET_COMP_DESCRIPTION('TST1', 'ru', ''); &eh
 -- Error cases
 -- -----------
 
--- no data found
 execute MESSAGE.REMOVE_COMP_DESCRIPTION('XXX', 'fr'); &eh
+-- ORA-01403: no data found
 
--- Cannot delete last mandatory text item
 execute MESSAGE.REMOVE_COMP_DESCRIPTION('TST2', 'en'); &eh
+-- TXT-0012: Cannot delete last mandatory text item
 
--- No text to delete
 execute MESSAGE.REMOVE_COMP_DESCRIPTION('TST1', 'xx'); &eh
+-- TXT-0011: No text to delete
 
 -- Success cases
 -- -------------
@@ -136,8 +134,7 @@ from COMPONENTS COMP
 join TEXT_ITEMS TXI
   on TXI.TXT_ID = COMP.TXT_ID
 where COMP.CODE = 'TST1'
-order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Set component text
 -- ==================
@@ -159,50 +156,49 @@ from COMPONENTS COMP
 join TEXT_ITEMS TXI
   on TXI.TXT_ID = COMP.TXT_ID
 where COMP.CODE = 'TST1'
-order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Error cases
 -- -----------
 
--- Unknown text language
 execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'xx', 'Unknown note'); &eh
+-- TXT-0004: Unknown text language
 
--- Inactive text language
 execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
+-- TXT-0005: Inactive text language
 
--- no data found
 execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('XXX', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+-- ORA-01403: no data found
 
--- Unknown text type
 execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('TST1', 'XXXX', :SEQ_NBR, 'fr', 'French note'); &eh
+-- TXT-0002: Unknown text type
 
--- Only one text item of this type allowed
 execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('TST1', 'DESCR', :SEQ_NBR, 'fr', 'French note'); &eh
+-- TXT-0008: Only one text item of this type allowed
 
--- No existing text of this type
 execute :SEQ_NBR := 1; MESSAGE.SET_COMP_TEXT('TST2', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+-- TXT-0009: No existing text of this type
 
--- Text item sequence number greater than current maximum
 execute :SEQ_NBR := 9; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+-- TXT-0010: Text item sequence number greater than current maximum
 
--- Text must be specified
 execute :SEQ_NBR := null; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'en', ''); &eh
+-- TXT-0001: Text must be specified
 
--- no data found
 execute :SEQ_NBR := 1; MESSAGE.SET_COMP_TEXT('XXX', 'NOTE', :SEQ_NBR, 'fr', 'Updated note'); &eh
+-- ORA-01403: no data found
 
--- Unknown text type
 execute :SEQ_NBR := 1; MESSAGE.SET_COMP_TEXT('TST1', 'XXXX', :SEQ_NBR, 'fr', 'Updated note'); &eh
+-- TXT-0002: Unknown text type
 
--- Text item sequence number greater than current maximum
 execute :SEQ_NBR := 9; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', 'Updated note'); &eh
+-- TXT-0010: Text item sequence number greater than current maximum
 
--- Unknown text language
 execute :SEQ_NBR := 1; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'xx', 'Updated note'); &eh
+-- TXT-0004: Unknown text language
 
--- Text must be specified
 execute :SEQ_NBR := 1; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', ''); &eh
+-- TXT-0001: Text must be specified
 
 -- Remove component text
 -- =====================
@@ -210,32 +206,32 @@ execute :SEQ_NBR := 1; MESSAGE.SET_COMP_TEXT('TST1', 'NOTE', :SEQ_NBR, 'fr', '')
 -- Error cases
 -- -----------
 
--- no data found
 execute MESSAGE.REMOVE_COMP_TEXT('XXX', 'NOTE', 1, 'en'); &eh
+-- ORA-01403: no data found
 
--- Text type must be specified
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', null); &eh
+-- MSG-0007: Text type must be specified
 
--- no data found
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', 'XXXX', 1, 'en'); &eh
+-- ORA-01403: no data found
 
--- No text to delete
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', 'NOTE', 9, 'en'); &eh
+-- TXT-0011: No text to delete
 
--- No text to delete
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', 'NOTE', 1, 'xx'); &eh
+-- TXT-0011: No text to delete
 
--- No text to delete
 execute MESSAGE.REMOVE_COMP_TEXT('TST2', 'NOTE'); &eh
+-- TXT-0011: No text to delete
 
--- Cannot delete mandatory text type
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', 'DESCR'); &eh
+-- TXT-0013: Cannot delete mandatory text type
 
--- Cannot delete last mandatory text item
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', 'DESCR', 1); &eh
+-- TXT-0012: Cannot delete last mandatory text item
 
--- Cannot delete last mandatory text item
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', 'DESCR', 1, 'en'); &eh
+-- TXT-0012: Cannot delete last mandatory text item
 
 -- Success cases
 -- -------------
@@ -250,8 +246,7 @@ from COMPONENTS COMP
 join TEXT_ITEMS TXI
   on TXI.TXT_ID = COMP.TXT_ID
 where COMP.CODE = 'TST1'
-order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Delete components
 -- =================
@@ -259,8 +254,8 @@ order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
 -- Error cases
 -- -----------
 
--- Component does not exist
 execute MESSAGE.DELETE_COMPONENT('XXX'); &eh
+-- MSG-0006: Component does not exist
 
 -- Success cases
 -- -------------
@@ -273,8 +268,7 @@ from COMPONENTS COMP
 join TEXT_ITEMS TXI
   on TXI.TXT_ID = COMP.TXT_ID
 where COMP.CODE like 'TST%'
-order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
+order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 
 -- Set messages
@@ -302,56 +296,55 @@ from MESSAGES MSG
 join TEXT_ITEMS TXI
   on TXI.TXT_ID = MSG.TXT_ID
 where MSG.COMP_CODE like 'TST%'
-order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Error cases
 -- -----------
 
--- Message text must be specified for new message
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', ''); &eh
+-- MSG-0008: Message text must be specified for new message
 
--- Unknown message language
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'xx', 'Message'); &eh
+-- MSG-0010: Unknown message language
 
--- Inactive message language
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'la', 'Latin message'); &eh
+-- MSG-0011: Inactive message language
 
--- Component does not exist
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('XXX', :SEQ_NBR, 'en', 'Error message'); &eh
+-- MSG-0006: Component does not exist
 
--- no data found
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('XXX', :SEQ_NBR, 'en', 'Error message'); &eh
+-- ORA-01403: no data found
 
--- Message sequence number greater than current maximum
 execute :SEQ_NBR := 9; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message'); &eh
+-- MSG-0012: Message sequence number greater than current maximum
 
--- check constraint (PSR.CH_MSG_SEVERITY) violated
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message', 'X'); &eh
+-- ORA-02290: check constraint (PSR.CH_MSG_SEVERITY) violated
 
--- Unknown message language
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, null, 'Error message'); &eh
+-- MSG-0010: Unknown message language
 
--- Unknown message language
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'xx', 'Error message'); &eh
+-- MSG-0010: Unknown message language
 
--- Inactive message language
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'la', 'Error message'); &eh
+-- MSG-0011: Inactive message language
 
--- no data found
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('XXX', :SEQ_NBR, 'en', 'Error message'); &eh
+-- ORA-01403: no data found
 
--- Message sequence number greater than current maximum
 execute :SEQ_NBR := 9; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message'); &eh
+-- MSG-0012: Message sequence number greater than current maximum
 
--- Message language cannot be specified without message text
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en'); &eh
+-- MSG-0009: Message language cannot be specified without message text
 
--- Nothing to be updated
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR); &eh
+-- MSG-0003: Nothing to be updated
 
--- check constraint (PSR.CH_MSG_SEVERITY) violated
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, psSEVERITY => 'X'); &eh
+-- ORA-02290: check constraint (PSR.CH_MSG_SEVERITY) violated
 
 -- Set message variants
 -- ====================
@@ -368,26 +361,25 @@ from MESSAGES MSG
 join TEXT_ITEMS TXI
   on TXI.TXT_ID = MSG.TXT_ID
 where MSG.COMP_CODE like 'TST%'
-order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Error cases
 -- -----------
 
--- Unknown text language
 execute MESSAGE.SET_MSG_MESSAGE('TST1', 1, 'xx', 'Error message'); &eh
+-- TXT-0004: Unknown text language
 
--- Inactive text language
 execute MESSAGE.SET_MSG_MESSAGE('TST1', 1, 'la', 'Latin error message'); &eh
+-- TXT-0005: Inactive text language
 
--- no data found
 execute MESSAGE.SET_MSG_MESSAGE('XXX', 1, 'en', 'Error message'); &eh
+-- ORA-01403: no data found
 
--- no data found
 execute MESSAGE.SET_MSG_MESSAGE('TST1', 9, 'en', 'Error message'); &eh
+-- ORA-01403: no data found
 
--- Text must be specified
 execute MESSAGE.SET_MSG_MESSAGE('TST1', 1, 'ru', ''); &eh
+-- TXT-0001: Text must be specified
 
 -- Remove message variants
 -- =======================
@@ -395,17 +387,17 @@ execute MESSAGE.SET_MSG_MESSAGE('TST1', 1, 'ru', ''); &eh
 -- Error cases
 -- -----------
 
--- no data found
 execute MESSAGE.REMOVE_MSG_MESSAGE('XXX', 1, 'fr'); &eh
+-- ORA-01403: no data found
 
--- no data found
 execute MESSAGE.REMOVE_MSG_MESSAGE('TST1', 9, 'fr'); &eh
+-- ORA-01403: no data found
 
--- Cannot delete last mandatory text item
 execute MESSAGE.REMOVE_MSG_MESSAGE('TST2', 1, 'fr'); &eh
+-- TXT-0012: Cannot delete last mandatory text item
 
--- No text to delete
 execute MESSAGE.REMOVE_MSG_MESSAGE('TST2', 1, 'en'); &eh
+-- TXT-0011: No text to delete
 
 -- Success cases
 -- -------------
@@ -418,8 +410,7 @@ from MESSAGES MSG
 join TEXT_ITEMS TXI
   on TXI.TXT_ID = MSG.TXT_ID
 where MSG.COMP_CODE like 'TST%'
-order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Set message general text
 -- ========================
@@ -441,56 +432,55 @@ from MESSAGES MSG
 join TEXT_ITEMS TXI
   on TXI.TXT_ID = MSG.TXT_ID
 where MSG.COMP_CODE like 'TST%'
-order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Error cases
 -- -----------
 
--- Unknown text language
 execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'xx', 'Unknown note'); &eh
+-- TXT-0004: Unknown text language
 
--- Inactive text language
 execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'la', 'Latin note'); &eh
+-- TXT-0005: Inactive text language
 
--- no data found
 execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('XXX', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+-- ORA-01403: no data found
 
--- no data found
 execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 9, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+-- ORA-01403: no data found
 
--- Unknown text type
 execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 1, 'XXXX', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+-- TXT-0002: Unknown text type
 
--- Only one text item of this type allowed
 execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 1, 'MSG', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+-- TXT-0008: Only one text item of this type allowed
 
--- No existing text of this type
 execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('TST2', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+-- TXT-0009: No existing text of this type
 
--- Text item sequence number greater than current maximum
 execute :TXI_SEQ_NBR := 9; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'French note'); &eh
+-- TXT-0010: Text item sequence number greater than current maximum
 
--- Text must be specified
 execute :TXI_SEQ_NBR := null; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'en', ''); &eh
+-- TXT-0001: Text must be specified
 
--- no data found
 execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('XXX', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'Updated note'); &eh
+-- ORA-01403: no data found
 
--- no data found
 execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('TST1', 9, 'NOTE', :TXI_SEQ_NBR, 'fr', 'Updated note'); &eh
+-- ORA-01403: no data found
 
--- Unknown text type
 execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('TST1', 1, 'XXXX', :TXI_SEQ_NBR, 'fr', 'Updated note'); &eh
+-- TXT-0002: Unknown text type
 
--- Text item sequence number greater than current maximum
 execute :TXI_SEQ_NBR := 9; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', 'Updated note'); &eh
+-- TXT-0010: Text item sequence number greater than current maximum
 
--- Unknown text language
 execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'xx', 'Updated note'); &eh
+-- TXT-0004: Unknown text language
 
--- Text must be specified
 execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR, 'fr', ''); &eh
+-- TXT-0001: Text must be specified
 
 -- Remove message general text
 -- ===========================
@@ -498,35 +488,35 @@ execute :TXI_SEQ_NBR := 1; MESSAGE.SET_MSG_TEXT('TST1', 1, 'NOTE', :TXI_SEQ_NBR,
 -- Error cases
 -- -----------
 
--- no data found
 execute MESSAGE.REMOVE_MSG_TEXT('XXX', 1, 'NOTE', 1, 'en'); &eh
+-- ORA-01403: no data found
 
--- no data found
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 9, 'NOTE', 1, 'en'); &eh
+-- ORA-01403: no data found
 
--- Text type must be specified
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, null); &eh
+-- MSG-0007: Text type must be specified
 
--- no data found
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, 'XXXX', 1, 'en'); &eh
+-- ORA-01403: no data found
 
--- No text to delete
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, 'NOTE', 9, 'en'); &eh
+-- TXT-0011: No text to delete
 
--- No text to delete
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, 'NOTE', 1, 'xx'); &eh
+-- TXT-0011: No text to delete
 
--- No text to delete
 execute MESSAGE.REMOVE_MSG_TEXT('TST2', 1, 'NOTE'); &eh
+-- TXT-0011: No text to delete
 
--- Cannot delete mandatory text type
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, 'MSG'); &eh
+-- TXT-0013: Cannot delete mandatory text type
 
--- Cannot delete last mandatory text item
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, 'MSG', 1); &eh
+-- TXT-0012: Cannot delete last mandatory text item
 
--- Cannot delete last mandatory text item
 execute MESSAGE.REMOVE_MSG_TEXT('TST2', 1, 'MSG', 1, 'fr'); &eh
+-- TXT-0012: Cannot delete last mandatory text item
 
 -- Success cases
 -- -------------
@@ -541,8 +531,7 @@ from MESSAGES MSG
 join TEXT_ITEMS TXI
   on TXI.TXT_ID = MSG.TXT_ID
 where MSG.COMP_CODE like 'TST%'
-order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Delete messages
 -- ===============
@@ -550,11 +539,11 @@ order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
 -- Error cases
 -- -----------
 
--- Message does not exist
 execute MESSAGE.DELETE_MESSAGE('XXX', 1); &eh
+-- MSG-0013: Message does not exist
 
--- Message does not exist
 execute MESSAGE.DELETE_MESSAGE('TST1', 9); &eh
+-- MSG-0013: Message does not exist
 
 -- Success cases
 -- -------------
@@ -567,8 +556,7 @@ from MESSAGES MSG
 join TEXT_ITEMS TXI
   on TXI.TXT_ID = MSG.TXT_ID
 where MSG.COMP_CODE like 'TST%'
-order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE
-/
+order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Display messages
 -- ================
@@ -585,35 +573,39 @@ execute MESSAGE.DISPLAY_MESSAGE('TST2', 1, 'fr'); &eh
 -- Error cases
 -- -----------
 
--- ** Message not found **
 execute MESSAGE.DISPLAY_MESSAGE('XXX', 1, 'en'); &eh
+-- XXX-0001: ** Message not found **
 
--- ** Message not found **
 execute MESSAGE.DISPLAY_MESSAGE('TST1', 9, 'en', 'Dummy message'); &eh
+-- TST1-0009: ** Message not found **
 
--- ** Invalid severity **
 execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'en', psSEVERITY => 'X'); &eh
+-- TST1-0002: ** Invalid severity **
 
--- ** No stored English message **
 execute MESSAGE.DISPLAY_MESSAGE('TST2', 1, 'fr', 'French message'); &eh
+-- TST2-0001: ** No stored English message **
 
--- ** English message mismatch **
 execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'en', 'Error message'); &eh
+-- TST1-0002: ** English message mismatch **
 
--- ** No preferred language message **
 execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'fr'); &eh
+-- TST1-0002: ** No preferred language message **
 
--- ** No preferred language message ** ** No message found **
 execute MESSAGE.DISPLAY_MESSAGE('TST2', 1, 'en'); &eh
+-- TST2-0001: ** No preferred language message ** ** No message found **
 
--- ** No preferred language message ** ** No stored English message **
 execute MESSAGE.DISPLAY_MESSAGE('TST2', 1, 'en', 'Error message'); &eh
+-- TST2-0001: ** No preferred language message ** ** No stored English message **
 
--- ** No preferred language message ** ** English message mismatch **
 execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'fr', 'Error message'); &eh
+-- TST1-0002: ** No preferred language message ** ** English message mismatch **
 
 set echo off serveroutput off feedback on
 
 @check_orphan_TXT_ID
 
+rollback;
+
 spool off
+
+@login
