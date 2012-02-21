@@ -77,7 +77,7 @@ create or replace package body SYSTEM_PARAMETER is
   procedure SET_SYP_TEXT
    (psCODE in SYSTEM_PARAMETERS.CODE%type,
     psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnTXI_SEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
+    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
     psLANG_CODE in LANGUAGES.CODE%type,
     psText in varchar2)
   is
@@ -86,18 +86,18 @@ create or replace package body SYSTEM_PARAMETER is
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_SYP_TEXT',
                              psCODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnTXI_SEQ_NBR) || '~' || psLANG_CODE || '~' ||
+                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
                                to_char(length(psText)) || ':' || psText);
   --
     select TXT_ID, rowid into nTXT_ID, xSYP_ROWID from SYSTEM_PARAMETERS where CODE = psCODE;
   --
     if nTXT_ID is null
     then
-      TEXT.SET_TEXT(nTXT_ID, 'SYP', psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE, psText);
+      TEXT.SET_TEXT(nTXT_ID, 'SYP', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
       update SYSTEM_PARAMETERS set TXT_ID = nTXT_ID where rowid = xSYP_ROWID;
     else
-      TEXT.SET_TEXT(nTXT_ID, 'SYP', psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE, psText);
+      TEXT.SET_TEXT(nTXT_ID, 'SYP', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -113,14 +113,14 @@ create or replace package body SYSTEM_PARAMETER is
   procedure REMOVE_SYP_TEXT
    (psCODE in SYSTEM_PARAMETERS.CODE%type,
     psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnTXI_SEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
+    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
     psLANG_CODE in LANGUAGES.CODE%type := null)
   is
     nTXT_ID TEXT_HEADERS.ID%type;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_SYP_TEXT',
                              psCODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnTXI_SEQ_NBR) || '~' || psLANG_CODE);
+                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
     if psTXTT_CODE is null
     then MESSAGE.DISPLAY_MESSAGE('SYP', 2, 'en', 'Text type must be specified');
@@ -128,7 +128,7 @@ create or replace package body SYSTEM_PARAMETER is
   --
     select TXT_ID into nTXT_ID from SYSTEM_PARAMETERS where CODE = psCODE;
   --
-    TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE);
+    TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
