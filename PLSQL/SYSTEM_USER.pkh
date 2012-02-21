@@ -1,0 +1,391 @@
+create or replace package SYSTEM_USER is
+--
+-- -------------------------------------------------------------------------------------------------
+--
+--  Package SYSTEM_USER
+--  Procedures for maintenance of system users and their associated preferences, attributes and
+--   attribute types.
+--
+--  Change History:
+--  13-Feb-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--
+-- -------------------------------------------------------------------------------------------------
+--
+  sModule varchar2(30) := 'SYSTEM_USER';
+  sVersion varchar2(10) := 'D0.1';
+--
+-- ----------------------------------------
+-- SET_SYSTEM_USER
+-- ----------------------------------------
+--
+-- Create a new system user record or update an existing one.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--  psLANG_CODE - Language code of the user name (optional when updating an existing user but must
+--    be specified if psName is specified).
+--  psName - User name text (optional when updating an existing user; if not specified, the name is
+--    not updated).
+--  psLOCKED_FLAG - Flag (Y/N) indicating whether the user is currently allowed to use the system
+--    (optional: if not specified, the existing value is not updated; a new value defaults to N).
+--  psTEMPLATE_FLAG - Flag (Y/N) indicating whether the user record is a template or a real user
+--    (optional: if not specified, the existing value is not updated; a new value defaults to N).
+--
+--
+  procedure SET_SYSTEM_USER
+   (psUSERID in SYSTEM_USERS.USERID%type,
+    psLANG_CODE in LANGUAGES.CODE%type := null,
+    psName in varchar2 := null,
+    psLOCKED_FLAG in SYSTEM_USERS.LOCKED_FLAG%type := null,
+    psTEMPLATE_FLAG in SYSTEM_USERS.TEMPLATE_FLAG%type := null);
+--
+-- ----------------------------------------
+-- DELETE_SYSTEM_USER
+-- ----------------------------------------
+--
+-- Delete a system user record.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--
+  procedure DELETE_SYSTEM_USER
+   (psUSERID in SYSTEM_USERS.USERID%type);
+--
+-- ----------------------------------------
+-- SET_USR_NAME
+-- ----------------------------------------
+--
+-- Create or update a language variant of the name of a system user.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--  psLANG_CODE - Language code of the name variant (mandatory).
+--  psName - User name text (mandatory).
+--
+  procedure SET_USR_NAME
+   (psUSERID in SYSTEM_USERS.USERID%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psName in varchar2);
+--
+-- ----------------------------------------
+-- REMOVE_USR_NAME
+-- ----------------------------------------
+--
+-- Remove a variant in a given language from name of a system user. Note that it is not possible to
+--  remove the last language variant of the system user name.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--  psLANG_CODE - Language code of the variant to be removed (mandatory).
+--
+  procedure REMOVE_USR_NAME
+   (psUSERID in SYSTEM_USERS.USERID%type,
+    psLANG_CODE in LANGUAGES.CODE%type);
+--
+-- ----------------------------------------
+-- SET_USR_TEXT
+-- ----------------------------------------
+--
+-- Create or update a general text item in a given language for a system user record.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnTXI_SEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and
+--    returned).
+--  psLANG_CODE - Language code of the text item (mandatory).
+--  psText - Text associated with user (mandatory).
+--
+  procedure SET_USR_TEXT
+   (psUSERID in SYSTEM_USERS.USERID%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnTXI_SEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psText in varchar2);
+--
+-- ----------------------------------------
+-- REMOVE_USR_TEXT
+-- ----------------------------------------
+--
+-- Remove a general text item from a system user record. The following cases arise:
+-- 1. All text of the given type is deleted for the given user (only psUSERID and psTXTT_CODE are
+--    specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given combination of user, text type and text item
+--    sequence number (psUSERID, psTXTT_CODE and pnTXI_SEQ_NBR are specified, psLANG_CODE is not).
+--    The action fails if this is the last text item for this text type and the text type is
+--    mandatory.
+-- 3. A single language variant is deleted (psUSERID, psTXTT_CODE, pnTXI_SEQ_NBR and psLANG_CODE are
+--    all specified). This action fails if this is the last language variant of the last text item
+--    for this text type and the text type is mandatory.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnTXI_SEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
+--
+  procedure REMOVE_USR_TEXT
+   (psUSERID in SYSTEM_USERS.USERID%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnTXI_SEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
+    psLANG_CODE in LANGUAGES.CODE%type := null);
+--
+-- ----------------------------------------
+-- SET_USER_ATTRIBUTE_TYPE
+-- ----------------------------------------
+--
+-- Create a new user attribute type record or update an existing one.
+--
+-- Parameters:
+--  psCODE - Code of user attribute type (mandatory).
+--  psDATA_TYPE - Data type of user attribute type (optional when updating an existing user
+--    attribute type; if not specified or null the data type is not updated). The data type cannot
+--    be updated if user attributes of this type already exist.
+--  psLANG_CODE - Language code for the textual description (optional when updating an existing
+--    user attribute type but must be specified if psDescription is specified).
+--  psDescription - Textual description of user attribute type (optional when updating an existing
+--    user attribute type; if not specified, the description is not updated).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of user attribute types (optional:
+--    if not specified, an existing display sequence is not updated and a new one is set to null; if
+--    null is specified, the display sequence is set to null).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the user attribute type is currently available
+--    for use (optional: if not specified, the existing value is not updated; a new value defaults
+--    to Y).
+--
+  procedure SET_USER_ATTRIBUTE_TYPE
+   (psCODE in USER_ATTRIBUTE_TYPES.CODE%type,
+    psDATA_TYPE in USER_ATTRIBUTE_TYPES.DATA_TYPE%type := null,
+    psLANG_CODE in LANGUAGES.CODE%type := null,
+    psDescription in varchar2 := null,
+    pnDISPLAY_SEQ in USER_ATTRIBUTE_TYPES.DISPLAY_SEQ%type := -1e6,
+    psACTIVE_FLAG in USER_ATTRIBUTE_TYPES.ACTIVE_FLAG%type := null);
+--
+-- ----------------------------------------
+-- DELETE_USER_ATTRIBUTE_TYPE
+-- ----------------------------------------
+--
+-- Delete a user attribute type record.
+--
+-- Parameters:
+--  psCODE - Code of user attribute type to be deleted (mandatory).
+--
+  procedure DELETE_USER_ATTRIBUTE_TYPE
+   (psCODE in USER_ATTRIBUTE_TYPES.CODE%type);
+--
+-- ----------------------------------------
+-- SET_UATT_DESCRIPTION
+-- ----------------------------------------
+--
+-- Create or update a description in a given language for a user attribute type record.
+--
+-- Parameters:
+--  psCODE - Code of user attribute type (mandatory).
+--  psLANG_CODE - Language code of the description (mandatory).
+--  psDescription - Textual description of user attribute type (mandatory).
+--
+  procedure SET_UATT_DESCRIPTION
+   (psCODE in USER_ATTRIBUTE_TYPES.CODE%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psDescription in varchar2);
+--
+-- ----------------------------------------
+-- REMOVE_UATT_DESCRIPTION
+-- ----------------------------------------
+--
+-- Remove a description in a given language from a user attribute type record. Note that it is not
+--  possible to remove the last language variant of the description.
+--
+-- Parameters:
+--  psCODE - Code of user attribute type from which description is to be removed (mandatory).
+--  psLANG_CODE - Language code of the description to be removed (mandatory).
+--
+  procedure REMOVE_UATT_DESCRIPTION
+   (psCODE in USER_ATTRIBUTE_TYPES.CODE%type,
+    psLANG_CODE in LANGUAGES.CODE%type);
+--
+-- ----------------------------------------
+-- SET_UATT_TEXT
+-- ----------------------------------------
+--
+-- Create or update a general text item in a given language for a user attribute type record.
+--
+-- Parameters:
+--  psCODE - Code of user attribute type (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  psLANG_CODE - Language code of the text item (mandatory).
+--  psText - Text associated with user attribute type (mandatory).
+--
+  procedure SET_UATT_TEXT
+   (psCODE in USER_ATTRIBUTE_TYPES.CODE%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psText in varchar2);
+--
+-- ----------------------------------------
+-- REMOVE_UATT_TEXT
+-- ----------------------------------------
+--
+-- Remove a general text item from a user attribute type record. The following cases arise:
+-- 1. All text of the given type is deleted for the given user attribute type (only psCODE and
+--    psTXTT_CODE are specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given combination of user attribute type code, text
+--    type and text item sequence number (psCODE, psTXTT_CODE and pnSEQ_NBR are specified,
+--    psLANG_CODE is not). The action fails if this is the last text item for this text type and
+--    the text type is mandatory.
+-- 3. A single language variant is deleted (psCODE, psTXTT_CODE, pnSEQ_NBR and psLANG_CODE are all
+--    specified). This action fails if this is the last language variant of the last text item for
+--    this text type and the text type is mandatory.
+--
+-- Parameters:
+--  psCODE - Code of user attribute type from which text item is to be removed (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
+--
+  procedure REMOVE_UATT_TEXT
+   (psCODE in USER_ATTRIBUTE_TYPES.CODE%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
+    psLANG_CODE in LANGUAGES.CODE%type := null);
+--
+-- ----------------------------------------
+-- SET_USER_ATTRIBUTE
+-- ----------------------------------------
+--
+-- Create a user attribute for a system user or update the an existing language preference.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--  psUATT_CODE - User attribute type code (mandatory).
+--  psCHAR_VALUE - Value for attribute of data type character (optional).
+--  pnNUM_VALUE - Value for attribute of data type character (optional).
+--  pdDATE_VALUE - Value for attribute of data type character (optional).
+-- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
+--  depending on the value of USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
+--
+  procedure SET_USER_ATTRIBUTE
+   (psUSERID in USER_ATTRIBUTES.USERID%type,
+    psUATT_CODE in USER_ATTRIBUTES.UATT_CODE%type,
+    psCHAR_VALUE in USER_ATTRIBUTES.CHAR_VALUE%type := null,
+    pnNUM_VALUE in USER_ATTRIBUTES.NUM_VALUE%type := null,
+    pdDATE_VALUE in USER_ATTRIBUTES.DATE_VALUE%type := null);
+--
+-- ----------------------------------------
+-- REMOVE_USER_ATTRIBUTE
+-- ----------------------------------------
+--
+-- Remove a user attribute for a system user.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--  psUATT_CODE - User attribute type code (mandatory).
+--
+  procedure REMOVE_USER_ATTRIBUTE
+   (psUSERID in USER_ATTRIBUTES.USERID%type,
+    psUATT_CODE in USER_ATTRIBUTES.UATT_CODE%type);
+--
+-- ----------------------------------------
+-- SET_UAT_TEXT
+-- ----------------------------------------
+--
+-- Create or update a general text item in a given language for a user attribute record.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--  psUATT_CODE - User attribute type code (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnTXI_SEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and
+--    returned).
+--  psLANG_CODE - Language code of the text item (mandatory).
+--  psText - Text associated with user (mandatory).
+--
+  procedure SET_UAT_TEXT
+   (psUSERID in SYSTEM_USERS.USERID%type,
+    psUATT_CODE in USER_ATTRIBUTES.UATT_CODE%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psText in varchar2);
+--
+-- ----------------------------------------
+-- REMOVE_UAT_TEXT
+-- ----------------------------------------
+--
+-- Remove a general text item from a user attribute record. The following cases arise:
+-- 1. All text of the given type is deleted for the given user attribute (only psUSERID, psUATT_CODE
+--    and psTXTT_CODE are specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given combination of user attribute, text type and
+--    text item sequence number (psUSERID, psUATT_CODE, psTXTT_CODE and pnTXI_SEQ_NBR are specified,
+--    psLANG_CODE is not). The action fails if this is the last text item for this text type and
+--    the text type is mandatory.
+-- 3. A single language variant is deleted (psUSERID, psUATT_CODE, psTXTT_CODE, pnTXI_SEQ_NBR and
+--    psLANG_CODE are all specified). This action fails if this is the last language variant of the
+--    last text item for this text type and the text type is mandatory.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--  psUATT_CODE - User attribute type code (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnTXI_SEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
+--
+  procedure REMOVE_UAT_TEXT
+   (psUSERID in SYSTEM_USERS.USERID%type,
+    psUATT_CODE in USER_ATTRIBUTES.UATT_CODE%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
+    psLANG_CODE in LANGUAGES.CODE%type := null);
+--
+-- ----------------------------------------
+-- SET_USER_LANG_PREFERENCE
+-- ----------------------------------------
+--
+-- Create a language preference for a system user or update the sequence number for an existing
+--  language preference.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--  psLANG_CODE - Language code (mandatory).
+--  pnPREF_SEQ - Language preference sequence number (mandatory).
+--
+  procedure SET_USER_LANG_PREFERENCE
+   (psUSERID in USER_LANGUAGE_PREFERENCES.USERID%type,
+    psLANG_CODE in USER_LANGUAGE_PREFERENCES.LANG_CODE%type,
+    pnPREF_SEQ in USER_LANGUAGE_PREFERENCES.PREF_SEQ%type);
+--
+-- ----------------------------------------
+-- REMOVE_USER_LANG_PREFERENCE
+-- ----------------------------------------
+--
+-- Remove a language preference for a system user.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--  psLANG_CODE - Language code (optional).
+--  pnPREF_SEQ - Language preference sequence number (optional).
+--
+-- Note that psLANG_CODE or pnPREF_SEQ may be omitted, but not both (either of them uniquely
+--  identifies a language preference record for the given user). If both are specified, they must
+--  both identify the same preference record.
+--
+  procedure REMOVE_USER_LANG_PREFERENCE
+   (psUSERID in USER_LANGUAGE_PREFERENCES.USERID%type,
+    psLANG_CODE in USER_LANGUAGE_PREFERENCES.LANG_CODE%type := null,
+    pnPREF_SEQ in USER_LANGUAGE_PREFERENCES.PREF_SEQ%type := null);
+--
+-- ----------------------------------------
+-- USER_LOGIN
+-- ----------------------------------------
+--
+-- Perform housekeeping on user login.
+--
+-- Parameters:
+--  psUSERID - User identifier (mandatory).
+--
+  procedure USER_LOGIN
+   (psUSERID in SYSTEM_USERS.USERID%type);
+--
+end SYSTEM_USER;
+/

@@ -1,0 +1,100 @@
+create or replace package SYSTEM_PARAMETER is
+--
+-- -------------------------------------------------------------------------------------------------
+--
+--  Package SYSTEM_PARAMETER
+--  Procedures for maintenance of system parameters.
+--
+--  Change History:
+--  15-Feb-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--
+-- -------------------------------------------------------------------------------------------------
+--
+  sModule varchar2(30) := 'SYSTEM_PARAMETER';
+  sVersion varchar2(10) := 'D0.1';
+--
+-- ----------------------------------------
+-- SET_SYSTEM_PARAMETER
+-- ----------------------------------------
+--
+-- Create a new system parameter or update an existing one.
+--
+-- Parameters:
+--  psCODE - System parameter code (mandatory).
+--  psDATA_TYPE - Data type of system parameter (mandatory).
+--  psCHAR_VALUE - Value for system parameter of data type character (optional).
+--  pnNUM_VALUE - Value for system parameter of data type character (optional).
+--  pdDATE_VALUE - Value for system parameter of data type character (optional).
+-- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
+--  depending on the value of psDATA_TYPE.
+--
+  procedure SET_SYSTEM_PARAMETER
+   (psCODE in SYSTEM_PARAMETERS.CODE%type,
+    psDATA_TYPE in SYSTEM_PARAMETERS.DATA_TYPE%type,
+    psCHAR_VALUE in SYSTEM_PARAMETERS.CHAR_VALUE%type := null,
+    pnNUM_VALUE in SYSTEM_PARAMETERS.NUM_VALUE%type := null,
+    pdDATE_VALUE in SYSTEM_PARAMETERS.DATE_VALUE%type := null);
+--
+-- ----------------------------------------
+-- DELETE_SYSTEM_PARAMETER
+-- ----------------------------------------
+--
+-- Delete a language record.
+--
+-- Parameters:
+--  psCODE - Code of system parameter to be deleted (mandatory).
+--
+  procedure DELETE_SYSTEM_PARAMETER
+   (psCODE in SYSTEM_PARAMETERS.CODE%type);
+--
+-- ----------------------------------------
+-- SET_SYP_TEXT
+-- ----------------------------------------
+--
+-- Add a general text item in a given language to a system parameter, or update an existing text
+--  item.
+--
+-- Parameters:
+--  psCODE - Code of system parameter for which text item is to be added or updated (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnTXI_SEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and
+--    returned).
+--  psLANG_CODE - Language code of the text item to be added (mandatory).
+--  psText - Text associated with system parameter (mandatory).
+--
+  procedure SET_SYP_TEXT
+   (psCODE in SYSTEM_PARAMETERS.CODE%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnTXI_SEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
+    psLANG_CODE in LANGUAGES.CODE%type,
+    psText in varchar2);
+--
+-- ----------------------------------------
+-- REMOVE_SYP_TEXT
+-- ----------------------------------------
+--
+-- Remove a general text item from a system parameter. The following cases arise:
+-- 1. All text of the given type is deleted for the given system parameter (only psCODE and
+--    psTXTT_CODE are specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given combination of system parameter code, text
+--    type and text item sequence number (psCODE, psTXTT_CODE and pnTXI_SEQ_NBR are specified,
+--    psLANG_CODE is not). This action fails if this is the last text item of this text type and the
+--    text type is mandatory.
+-- 3. A single language variant is deleted (psCODE, psTXTT_CODE, pnTXI_SEQ_NBR and psLANG_CODE are
+--    all specified). This action fails if this is the last language variant of the last text item
+--    of this text type and the text type is mandatory.
+--
+-- Parameters:
+--  psCODE - Code of system parameter from which text item is to be removed (mandatory).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnTXI_SEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
+--
+  procedure REMOVE_SYP_TEXT
+   (psCODE in SYSTEM_PARAMETERS.CODE%type,
+    psTXTT_CODE in TEXT_TYPES.CODE%type,
+    pnTXI_SEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
+    psLANG_CODE in LANGUAGES.CODE%type := null);
+--
+end SYSTEM_PARAMETER;
+/
