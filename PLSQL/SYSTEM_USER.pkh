@@ -258,8 +258,8 @@ create or replace package SYSTEM_USER is
 --  psUSERID - User identifier (mandatory).
 --  psUATT_CODE - User attribute type code (mandatory).
 --  psCHAR_VALUE - Value for attribute of data type character (optional).
---  pnNUM_VALUE - Value for attribute of data type character (optional).
---  pdDATE_VALUE - Value for attribute of data type character (optional).
+--  pnNUM_VALUE - Value for attribute of data type numeric (optional).
+--  pdDATE_VALUE - Value for attribute of data type date (optional).
 -- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
 --  depending on the value of USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
 --
