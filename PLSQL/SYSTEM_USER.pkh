@@ -91,15 +91,14 @@ create or replace package SYSTEM_USER is
 -- Parameters:
 --  psUSERID - User identifier (mandatory).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnTXI_SEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and
---    returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with user (mandatory).
 --
   procedure SET_USR_TEXT
    (psUSERID in SYSTEM_USERS.USERID%type,
     psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnTXI_SEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
+    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
     psLANG_CODE in LANGUAGES.CODE%type,
     psText in varchar2);
 --
@@ -111,23 +110,22 @@ create or replace package SYSTEM_USER is
 -- 1. All text of the given type is deleted for the given user (only psUSERID and psTXTT_CODE are
 --    specified). This action fails if the text type is mandatory.
 -- 2. All language variants are deleted for the given combination of user, text type and text item
---    sequence number (psUSERID, psTXTT_CODE and pnTXI_SEQ_NBR are specified, psLANG_CODE is not).
---    The action fails if this is the last text item for this text type and the text type is
---    mandatory.
--- 3. A single language variant is deleted (psUSERID, psTXTT_CODE, pnTXI_SEQ_NBR and psLANG_CODE are
---    all specified). This action fails if this is the last language variant of the last text item
---    for this text type and the text type is mandatory.
+--    sequence number (psUSERID, psTXTT_CODE and pnSEQ_NBR are specified, psLANG_CODE is not). The
+--    action fails if this is the last text item for this text type and the text type is mandatory.
+-- 3. A single language variant is deleted (psUSERID, psTXTT_CODE, pnSEQ_NBR and psLANG_CODE are all
+--    specified). This action fails if this is the last language variant of the last text item for
+--    this text type and the text type is mandatory.
 --
 -- Parameters:
 --  psUSERID - User identifier (mandatory).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnTXI_SEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
 --  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_USR_TEXT
    (psUSERID in SYSTEM_USERS.USERID%type,
     psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnTXI_SEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
+    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
     psLANG_CODE in LANGUAGES.CODE%type := null);
 --
 -- ----------------------------------------
@@ -254,7 +252,7 @@ create or replace package SYSTEM_USER is
 -- SET_USER_ATTRIBUTE
 -- ----------------------------------------
 --
--- Create a user attribute for a system user or update the an existing language preference.
+-- Create a user attribute for a system user or update an existing user attribute.
 --
 -- Parameters:
 --  psUSERID - User identifier (mandatory).
@@ -296,8 +294,7 @@ create or replace package SYSTEM_USER is
 --  psUSERID - User identifier (mandatory).
 --  psUATT_CODE - User attribute type code (mandatory).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnTXI_SEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and
---    returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with user (mandatory).
 --
@@ -317,10 +314,10 @@ create or replace package SYSTEM_USER is
 -- 1. All text of the given type is deleted for the given user attribute (only psUSERID, psUATT_CODE
 --    and psTXTT_CODE are specified). This action fails if the text type is mandatory.
 -- 2. All language variants are deleted for the given combination of user attribute, text type and
---    text item sequence number (psUSERID, psUATT_CODE, psTXTT_CODE and pnTXI_SEQ_NBR are specified,
+--    text item sequence number (psUSERID, psUATT_CODE, psTXTT_CODE and pnSEQ_NBR are specified,
 --    psLANG_CODE is not). The action fails if this is the last text item for this text type and
 --    the text type is mandatory.
--- 3. A single language variant is deleted (psUSERID, psUATT_CODE, psTXTT_CODE, pnTXI_SEQ_NBR and
+-- 3. A single language variant is deleted (psUSERID, psUATT_CODE, psTXTT_CODE, pnSEQ_NBR and
 --    psLANG_CODE are all specified). This action fails if this is the last language variant of the
 --    last text item for this text type and the text type is mandatory.
 --
@@ -328,7 +325,7 @@ create or replace package SYSTEM_USER is
 --  psUSERID - User identifier (mandatory).
 --  psUATT_CODE - User attribute type code (mandatory).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnTXI_SEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
 --  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_UAT_TEXT
