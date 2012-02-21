@@ -16,7 +16,8 @@ create or replace package body TEXT is
     psLANG_CODE in LANGUAGES.CODE%type,
     psTEXT in varchar2)
   is
-    sActive varchar2(1);
+    sTXTT_ACTIVE_FLAG TEXT_TYPES.ACTIVE_FLAG%type;
+    sLANG_ACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
     sTAB_ALIAS TEXT_HEADERS.TAB_ALIAS%type;
     sMULTI_INSTANCE TEXT_TYPE_PROPERTIES.MULTI_INSTANCE%type;
     nTXI_SEQ_NBR_MAX TEXT_TYPE_HEADERS.TXI_SEQ_NBR_MAX%type;
@@ -35,26 +36,26 @@ create or replace package body TEXT is
   -- Ensure required text type is active.
   --
     begin
-      select ACTIVE_FLAG into sActive from TEXT_TYPES where CODE = psTXTT_CODE for update;
+      select ACTIVE_FLAG into sTXTT_ACTIVE_FLAG from TEXT_TYPES where CODE = psTXTT_CODE for update;
     exception
       when NO_DATA_FOUND
       then MESSAGE.DISPLAY_MESSAGE('TXT', 2, 'en', 'Unknown text type');
     end;
   --
-    if sActive = 'N'
+    if sTXTT_ACTIVE_FLAG = 'N'
     then MESSAGE.DISPLAY_MESSAGE('TXT', 3, 'en', 'Inactive text type');
     end if;
   --
   -- Ensure required language is active.
   --
     begin
-      select ACTIVE_FLAG into sActive from LANGUAGES where CODE = psLANG_CODE for update;
+      select ACTIVE_FLAG into sLANG_ACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE for update;
     exception
       when NO_DATA_FOUND
       then MESSAGE.DISPLAY_MESSAGE('TXT', 4, 'en', 'Unknown text language');
     end;
   --
-    if sActive = 'N'
+    if sLANG_ACTIVE_FLAG = 'N'
     then MESSAGE.DISPLAY_MESSAGE('TXT', 5, 'en', 'Inactive text language');
     end if;
   --
