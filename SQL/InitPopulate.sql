@@ -82,6 +82,7 @@ execute LANGUAGE.SET_LANGUAGE('la', 'en', 'Latin (inactive language for testing)
 -- Description text type properties and description descriptions
 
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('DESCR', 'COMP', 'Y', 'N');
+execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('DESCR', 'UATT', 'Y', 'N');
 
 execute TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', 'fr', unistr('Description'));
 execute TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', 'es', unistr('Descripci\00F3n'));
@@ -111,9 +112,25 @@ execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('NOTE', 'TTP');
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('NOTE', 'LANG');
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('NOTE', 'COMP');
 execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('NOTE', 'MSG');
+execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('NOTE', 'USR');
+execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('NOTE', 'UATT');
+execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('NOTE', 'UAT');
+execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('NOTE', 'SYP');
 
 execute TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', 'fr', unistr('Remarque'));
 execute TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', 'es', unistr('Nota'));
 execute TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', 'ru', unistr('\043F\0440\0438\043C\0435\0447\0430\043D\0438\0435'));
 execute TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', 'ar', unistr('\0645\0630\0643\0631\0629'));
 execute TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', 'zh', unistr('\8BF7\6CE8\610F'));
+
+-- Names, name text type properties, and name descriptions
+
+execute TEXT_TYPE.SET_TEXT_TYPE('NAME', 'en', 'Name');
+
+execute TEXT_TYPE.SET_TEXT_TYPE_PROPERTIES('NAME', 'USR', 'Y', 'N');
+
+execute TEXT_TYPE.SET_TXTT_DESCRIPTION('NAME', 'fr', unistr('Nom'));
+execute TEXT_TYPE.SET_TXTT_DESCRIPTION('NAME', 'es', unistr('Nombre'));
+execute TEXT_TYPE.SET_TXTT_DESCRIPTION('NAME', 'ru', unistr('\0438\043C\044F'));
+execute TEXT_TYPE.SET_TXTT_DESCRIPTION('NAME', 'ar', unistr('\0627\0633\0645'));
+execute TEXT_TYPE.SET_TXTT_DESCRIPTION('NAME', 'zh', unistr('\540D\79F0'));
