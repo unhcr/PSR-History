@@ -17,7 +17,7 @@ create or replace package body TEXT_TYPE is
   is
     nTXT_ID TEXT_HEADERS.ID%type;
     nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
-    sActive varchar2(1);
+    sACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_TEXT_TYPE',
                              psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
@@ -44,13 +44,13 @@ create or replace package body TEXT_TYPE is
       end if;
     else
       begin
-        select ACTIVE_FLAG into sActive from LANGUAGES where CODE = psLANG_CODE;
+        select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
       exception
         when NO_DATA_FOUND
         then MESSAGE.DISPLAY_MESSAGE('TXTT', 4, 'en', 'Unknown description language');
       end;
     --
-      if sActive = 'N'
+      if sACTIVE_FLAG = 'N'
       then MESSAGE.DISPLAY_MESSAGE('TXTT', 5, 'en', 'Inactive description language');
       end if;
     --
@@ -160,7 +160,6 @@ create or replace package body TEXT_TYPE is
     psLANG_CODE in LANGUAGES.CODE%type,
     psText in varchar2)
   is
-    sActive varchar2(1);
     nTXT_ID TEXT_HEADERS.ID%type;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_TXTT_TEXT',
@@ -170,7 +169,7 @@ create or replace package body TEXT_TYPE is
   --
     select TXT_ID into nTXT_ID from TEXT_TYPES where CODE = psCODE;
   --
-    TEXT.SET_TEXT(nTXT_ID, null, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+    TEXT.SET_TEXT(nTXT_ID, 'TXTT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -249,14 +248,22 @@ create or replace package body TEXT_TYPE is
    (psTXTT_CODE in TEXT_TYPE_PROPERTIES.TXTT_CODE%type,
     psTAB_ALIAS in TEXT_TYPE_PROPERTIES.TAB_ALIAS%type)
   is
+    nTXT_ID TEXT_TYPE_PROPERTIES.TXT_ID%type;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_TEXT_TYPE_PROPERTIES',
                              psTXTT_CODE || '~' || psTAB_ALIAS);
   --
-    delete from TEXT_TYPE_PROPERTIES where TXTT_CODE = psTXTT_CODE and TAB_ALIAS = psTAB_ALIAS;
+    delete from TEXT_TYPE_PROPERTIES
+    where TXTT_CODE = psTXTT_CODE
+    and TAB_ALIAS = psTAB_ALIAS
+    returning TXT_ID into nTXT_ID;
   --
     if sql%rowcount = 0
     then MESSAGE.DISPLAY_MESSAGE('TXTT', 8, 'en', 'Text type property does not exist');
+    end if;
+  --
+    if nTXT_ID is not null
+    then TEXT.DELETE_TEXT(nTXT_ID);
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -277,8 +284,7 @@ create or replace package body TEXT_TYPE is
     psLANG_CODE in LANGUAGES.CODE%type,
     psText in varchar2)
   is
-    sActive varchar2(1);
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID TEXT_TYPE_PROPERTIES.TXT_ID%type;
     xTXP_ROWID rowid;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_TXP_TEXT',
@@ -299,7 +305,7 @@ create or replace package body TEXT_TYPE is
     --
       update TEXT_TYPE_PROPERTIES set TXT_ID = nTXT_ID where rowid = xTXP_ROWID;
     else
-      TEXT.SET_TEXT(nTXT_ID, null, psTXTT_CODE_TEXT, pnSEQ_NBR, psLANG_CODE, psText);
+      TEXT.SET_TEXT(nTXT_ID, 'TTP', psTXTT_CODE_TEXT, pnSEQ_NBR, psLANG_CODE, psText);
     end if;
   --
     PLS_UTILITY.END_MODULE;
