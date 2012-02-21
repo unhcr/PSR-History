@@ -16,7 +16,7 @@ create or replace package body SYSTEM_USER is
     psTEMPLATE_FLAG in SYSTEM_USERS.TEMPLATE_FLAG%type := null)
   is
     nTXT_ID TEXT_HEADERS.ID%type;
-    nTXI_SEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
+    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
     sACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
     nMSG_SEQ_NBR_MAX COMPONENTS.MSG_SEQ_NBR_MAX%type;
   begin
@@ -32,7 +32,7 @@ create or replace package body SYSTEM_USER is
     exception
       when NO_DATA_FOUND
       then nTXT_ID := null;
-        nTXI_SEQ_NBR := null;
+        nSEQ_NBR := null;
     end;
   --
     if psName is null
@@ -57,7 +57,7 @@ create or replace package body SYSTEM_USER is
       then MESSAGE.DISPLAY_MESSAGE('USR', 11, 'en', 'Inactive name language');
       end if;
     --
-      TEXT.SET_TEXT(nTXT_ID, 'USR', 'NAME', nTXI_SEQ_NBR, psLANG_CODE, psName);
+      TEXT.SET_TEXT(nTXT_ID, 'USR', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
     end if;
   --
     merge into SYSTEM_USERS USR
@@ -117,13 +117,13 @@ create or replace package body SYSTEM_USER is
     psLANG_CODE in LANGUAGES.CODE%type,
     psName in varchar2)
   is
-    nTXI_SEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
+    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_USR_NAME',
                              psUSERID || '~' || psLANG_CODE || '~' ||
                                to_char(length(psName)) || ':' || psName);
   --
-    SET_USR_TEXT(psUSERID, 'NAME', nTXI_SEQ_NBR, psLANG_CODE, psName);
+    SET_USR_TEXT(psUSERID, 'NAME', nSEQ_NBR, psLANG_CODE, psName);
   --
     PLS_UTILITY.END_MODULE;
   exception
