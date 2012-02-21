@@ -221,7 +221,7 @@ create or replace package body MESSAGE is
     psSEVERITY in MESSAGES.SEVERITY%type := null)
   is
     nTXT_ID TEXT_HEADERS.ID%type;
-    nTXI_SEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
+    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
     sACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
     nMSG_SEQ_NBR_MAX COMPONENTS.MSG_SEQ_NBR_MAX%type;
   begin
@@ -241,7 +241,7 @@ create or replace package body MESSAGE is
     exception
       when NO_DATA_FOUND
       then nTXT_ID := null;
-        nTXI_SEQ_NBR := null;
+        nSEQ_NBR := null;
     end;
   --
     if psMessage is null
@@ -265,7 +265,7 @@ create or replace package body MESSAGE is
       then MESSAGE.DISPLAY_MESSAGE('MSG', 11, 'en', 'Inactive message language');
       end if;
     --
-      TEXT.SET_TEXT(nTXT_ID, 'MSG', 'MSG', nTXI_SEQ_NBR, psLANG_CODE, psMessage);
+      TEXT.SET_TEXT(nTXT_ID, 'MSG', 'MSG', nSEQ_NBR, psLANG_CODE, psMessage);
     end if;
   --
     if pnSEQ_NBR is null
@@ -350,13 +350,13 @@ create or replace package body MESSAGE is
     psLANG_CODE in LANGUAGES.CODE%type,
     psMessage in varchar2)
   is
-    nTXI_SEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
+    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_MSG_MESSAGE',
                              psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE ||
                                '~' || to_char(length(psMessage)) || ':' || psMessage);
   --
-    SET_MSG_TEXT(psCOMP_CODE, pnSEQ_NBR, 'MSG', nTXI_SEQ_NBR, psLANG_CODE, psMessage);
+    SET_MSG_TEXT(psCOMP_CODE, pnSEQ_NBR, 'MSG', nSEQ_NBR, psLANG_CODE, psMessage);
   --
     PLS_UTILITY.END_MODULE;
   exception
