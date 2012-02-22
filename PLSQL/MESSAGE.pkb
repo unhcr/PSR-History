@@ -37,23 +37,23 @@ create or replace package body MESSAGE is
     if psDescription is null
     then
       if nTXT_ID is null
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 1, 'en', 'Description must be specified for new component');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'Description must be specified for new component');
       elsif psLANG_CODE is not null
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 2, 'en', 'Description language cannot be specified without description text');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'Description language cannot be specified without description text');
       elsif pnDISPLAY_SEQ = -1e6
         and psACTIVE_FLAG is null
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 3, 'en', 'Nothing to be updated');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'Nothing to be updated');
       end if;
     else
       begin
         select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
       exception
         when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('MSG', 4, 'en', 'Unknown description language');
+        then MESSAGE.DISPLAY_MESSAGE('MSG', 8, 'Unknown description language');
       end;
     --
       if sACTIVE_FLAG = 'N'
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'en', 'Inactive description language');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 9, 'Inactive description language');
       end if;
     --
       TEXT.SET_TEXT(nTXT_ID, 'COMP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
@@ -97,7 +97,7 @@ create or replace package body MESSAGE is
     delete from COMPONENTS where CODE = psCODE returning TXT_ID into nTXT_ID;
   --
     if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'en', 'Component does not exist');
+    then MESSAGE.DISPLAY_MESSAGE('MSG', 10, 'Component does not exist');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID);
@@ -198,7 +198,7 @@ create or replace package body MESSAGE is
     select TXT_ID into nTXT_ID from COMPONENTS where CODE = psCODE;
   --
     if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'en', 'Text type must be specified');
+    then MESSAGE.DISPLAY_MESSAGE('MSG', 11, 'Text type must be specified');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
@@ -247,22 +247,22 @@ create or replace package body MESSAGE is
     if psMessage is null
     then
       if nTXT_ID is null
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 8, 'en', 'Message text must be specified for new message');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 12, 'Message text must be specified for new message');
       elsif psLANG_CODE is not null
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 9, 'en', 'Message language cannot be specified without message text');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 13, 'Message language cannot be specified without message text');
       elsif psSEVERITY is null
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 3, 'en', 'Nothing to be updated');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'Nothing to be updated');
       end if;
     else
       begin
         select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
       exception
         when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('MSG', 10, 'en', 'Unknown message language');
+        then MESSAGE.DISPLAY_MESSAGE('MSG', 14, 'Unknown message language');
       end;
     --
       if sACTIVE_FLAG = 'N'
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 11, 'en', 'Inactive message language');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 15, 'Inactive message language');
       end if;
     --
       TEXT.SET_TEXT(nTXT_ID, 'MSG', 'MSG', nSEQ_NBR, psLANG_CODE, psMessage);
@@ -279,7 +279,7 @@ create or replace package body MESSAGE is
       returning MSG_SEQ_NBR_MAX into pnSEQ_NBR;
     --
       if sql%rowcount = 0
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'en', 'Component does not exist');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 10, 'Component does not exist');
       end if;
     else
     --
@@ -288,7 +288,7 @@ create or replace package body MESSAGE is
       select MSG_SEQ_NBR_MAX into nMSG_SEQ_NBR_MAX from COMPONENTS where CODE = psCOMP_CODE;
     --
       if pnSEQ_NBR > nMSG_SEQ_NBR_MAX
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 12, 'en', 'Message sequence number greater than current maximum');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 16, 'Message sequence number greater than current maximum');
       end if;
     end if;
   --
@@ -329,7 +329,7 @@ create or replace package body MESSAGE is
     returning TXT_ID into nTXT_ID;
   --
     if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 13, 'en', 'Message does not exist');
+    then MESSAGE.DISPLAY_MESSAGE('MSG', 17, 'Message does not exist');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID);
@@ -434,7 +434,7 @@ create or replace package body MESSAGE is
     select TXT_ID into nTXT_ID from MESSAGES where COMP_CODE = psCOMP_CODE and SEQ_NBR = pnSEQ_NBR;
   --
     if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'en', 'Text type must be specified');
+    then MESSAGE.DISPLAY_MESSAGE('MSG', 11, 'Text type must be specified');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE);
@@ -451,52 +451,58 @@ create or replace package body MESSAGE is
 --
   procedure DISPLAY_MESSAGE
    (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
+    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
     psEnglishMessage in varchar2 := null,
     psSEVERITY in MESSAGES.SEVERITY%type := null)
   is
-    sSEVERITY MESSAGES.SEVERITY%type;
-    sTEXT TEXT_ITEMS.TEXT%type;
-    sLONG_TEXT varchar2(30000);
+    sSEVERITY L_MESSAGES.SEVERITY%type;
+    sMESSAGE L_MESSAGES.MESSAGE%type;
     sTEXT_EN TEXT_ITEMS.TEXT%type;
-    sLONG_TEXT_EN varchar2(30000);
     nSQLCODE integer;
     sMessagePrefix varchar2(100) := psCOMP_CODE || to_char(-pnSEQ_NBR, 'S0999') || ': ';
+  --
+    function GET_MESSAGE
+     (pnSEQ_NBR in L_MESSAGES.SEQ_NBR%type)
+      return L_MESSAGES.MESSAGE%type
+    is
+      sMESSAGE L_MESSAGES.MESSAGE%type;
+    begin
+      select MESSAGE
+      into sMESSAGE
+      from L_MESSAGES
+      where COMP_CODE = 'MSG'
+      and SEQ_NBR = pnSEQ_NBR;
+    --
+      return '** ' || sMESSAGE || ' ** ';
+    end GET_MESSAGE;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DISPLAY_MESSAGE',
-                             psCOMP_CODE || '~' || pnSEQ_NBR || '~' ||
-                               psLANG_CODE|| '~' || psSEVERITY|| '~' ||
+                             psCOMP_CODE || '~' || pnSEQ_NBR || '~' || psSEVERITY|| '~' ||
                                to_char(length(psEnglishMessage)) || ':' || psEnglishMessage);
   --
     begin
-      select MSG.SEVERITY, TXI1.TEXT, TXI1.LONG_TEXT, TXI2.TEXT, TXI2.LONG_TEXT
-      into sSEVERITY, sTEXT, sLONG_TEXT, sTEXT_EN, sLONG_TEXT_EN
-      from MESSAGES MSG
-      left outer join TEXT_ITEMS TXI1
-        on TXI1.TXT_ID = MSG.TXT_ID
-        and TXI1.TXTT_CODE = 'MSG'
-        and TXI1.SEQ_NBR = 1
-        and TXI1.LANG_CODE = psLANG_CODE
-      left outer join TEXT_ITEMS TXI2
-        on TXI2.TXT_ID = MSG.TXT_ID
-        and TXI2.TXTT_CODE = 'MSG'
-        and TXI2.SEQ_NBR = 1
-        and TXI2.LANG_CODE = 'en'
+      select MSG.SEVERITY, MSG.MESSAGE, TXI.TEXT
+      into sSEVERITY, sMESSAGE, sTEXT_EN
+      from L_MESSAGES MSG
+      left outer join TEXT_ITEMS TXI
+        on TXI.TXT_ID = MSG.TXT_ID
+        and TXI.TXTT_CODE = 'MSG'
+        and TXI.SEQ_NBR = 1
+        and TXI.LANG_CODE = 'en'
       where MSG.COMP_CODE = psCOMP_CODE
       and MSG.SEQ_NBR = pnSEQ_NBR;
     exception
       when NO_DATA_FOUND
       then raise_application_error(-20001,
-                                   sMessagePrefix || '** Message not found ** ' ||
-                                     psEnglishMessage);
+                                   sMessagePrefix || GET_MESSAGE(1)  -- Message not found
+                                     || psEnglishMessage);
     end;
   --
     if psSEVERITY is not null
     then if psSEVERITY in ('S', 'E', 'W', 'I')
       then sSEVERITY := psSEVERITY;
       else sSEVERITY := 'S';
-        sMessagePrefix := sMessagePrefix || '** Invalid severity ** ';
+        sMessagePrefix := sMessagePrefix || GET_MESSAGE(2);  -- Invalid severity
       end if;
     end if;
   --
@@ -506,27 +512,18 @@ create or replace package body MESSAGE is
       when 'W' then nSQLCODE := -20003;
       when 'I' then nSQLCODE := -20004;
       else nSQLCODE := -20001;
-        sMessagePrefix := sMessagePrefix || '** Invalid severity ** ';
+        sMessagePrefix := sMessagePrefix || GET_MESSAGE(2);  -- Invalid severity
     end case;
   --
-    sLONG_TEXT := nvl(sTEXT, sLONG_TEXT);
-    sLONG_TEXT_EN := nvl(sTEXT_EN, sLONG_TEXT_EN);
-  --
-    if sLONG_TEXT is null
-    then sMessagePrefix := sMessagePrefix || '** No preferred language message ** ';
-    end if;
-  --
     if psEnglishMessage is not null
-    then if sLONG_TEXT_EN is null
-      then sMessagePrefix := sMessagePrefix || '** No stored English message ** ';
-      elsif sLONG_TEXT_EN != psEnglishMessage
-      then sMessagePrefix := sMessagePrefix || '** English message mismatch ** ';
+    then if sTEXT_EN is null
+      then sMessagePrefix := sMessagePrefix || GET_MESSAGE(3);  -- No stored English message
+      elsif sTEXT_EN != psEnglishMessage
+      then sMessagePrefix := sMessagePrefix || GET_MESSAGE(4);  -- English message mismatch
       end if;
     end if;
   --
-    raise_application_error(nSQLCODE, sMessagePrefix ||
-                                        coalesce(sLONG_TEXT, sLONG_TEXT_EN, psEnglishMessage,
-                                                 '** No message found **'));
+    raise_application_error(nSQLCODE, sMessagePrefix || sMESSAGE);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -540,11 +537,11 @@ create or replace package body MESSAGE is
 --
 begin
   if sModule != 'MESSAGE'
-  then MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'en', 'Module name mismatch');
+  then MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
-  then MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'en', 'Module version mismatch');
+  then MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
   end if;
 --
 end MESSAGE;

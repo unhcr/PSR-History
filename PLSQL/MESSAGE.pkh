@@ -271,8 +271,7 @@ create or replace package MESSAGE is
 --
   procedure DISPLAY_MESSAGE
    (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
+    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
     psEnglishMessage in varchar2 := null,
     psSEVERITY in MESSAGES.SEVERITY%type := null);
 --
