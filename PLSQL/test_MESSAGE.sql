@@ -282,7 +282,6 @@ execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error mes
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Warning message', 'W'); &eh
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST2', :SEQ_NBR, 'fr', unistr('Message fran\00E7ais'), psSEVERITY => 'I'); &eh
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message 2'); &eh
-execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', rpad('Error message 3 ', 1001, 'x')); &eh
 execute MESSAGE.DELETE_MESSAGE('TST1', 2); &eh
 execute :SEQ_NBR := 2; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message 2a'); &eh
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message!'); &eh
@@ -345,6 +344,9 @@ execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR); &eh
 
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, psSEVERITY => 'X'); &eh
 -- ORA-02290: check constraint (PSR.CH_MSG_SEVERITY) violated
+
+execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', rpad('Error message 3 ', 1001, 'x')); &eh
+-- ORA-12899: value too large for column "PSR"."TEXT_ITEMS"."TEXT" (actual: 1001, maximum: 1000)
 
 -- Set message variants
 -- ====================
@@ -566,7 +568,6 @@ order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'en'); &eh
 execute MESSAGE.DISPLAY_MESSAGE('TST1', 3, 'en', 'Error message 2'); &eh
-execute MESSAGE.DISPLAY_MESSAGE('TST1', 4, 'en', rpad('Error message 3 ', 1001, 'x'), 'W'); &eh
 execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'en', psSEVERITY => 'I'); &eh
 execute MESSAGE.DISPLAY_MESSAGE('TST2', 1, 'fr'); &eh
 

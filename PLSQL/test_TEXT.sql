@@ -86,6 +86,12 @@ execute :TXT_ID := :TXT_ID1; :SEQ_NBR := null; TEXT.SET_TEXT(:TXT_ID, null, 'INA
 execute :TXT_ID := :TXT_ID2; :SEQ_NBR := null; TEXT.SET_TEXT(:TXT_ID, null, 'DESCR', :SEQ_NBR, 'en', 'English description'); &eh
 -- TXT-0008: Only one text item of this type allowed
 
+execute :TXT_ID := :TXT_ID2; :SEQ_NBR := :SEQ_NBR2; TEXT.SET_TEXT(:TXT_ID, null, 'DESCR', :SEQ_NBR, 'en', rpad('English description ', 1001, '$')); &eh
+-- ORA-12899: value too large for column "PSR"."TEXT_ITEMS"."TEXT" (actual: 1001, maximum: 1000)
+
+execute :TXT_ID := :TXT_ID2; :SEQ_NBR := :SEQ_NBR2; TEXT.SET_TEXT(:TXT_ID, null, 'DESCR', :SEQ_NBR, 'fr', rpad('French description ', 1001, '$')); &eh
+-- ORA-12899: value too large for column "PSR"."TEXT_ITEMS"."TEXT" (actual: 1001, maximum: 1000)
+
 execute :TXT_ID := :TXT_ID2; :SEQ_NBR := :SEQ_NBR2; TEXT.SET_TEXT(:TXT_ID, null, 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
 -- TXT-0009: No existing text of this type
 

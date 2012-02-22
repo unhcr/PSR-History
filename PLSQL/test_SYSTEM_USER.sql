@@ -20,7 +20,6 @@ execute SYSTEM_USER.SET_SYSTEM_USER('USER1', 'en', 'User 1'); &eh
 execute SYSTEM_USER.SET_SYSTEM_USER('USER2', 'fr', unistr('Utilisateur 2 fran\00E7ais'), psLOCKED_FLAG => 'Y'); &eh
 execute SYSTEM_USER.SET_SYSTEM_USER('USER3', 'en', 'User template', psTEMPLATE_FLAG => 'Y'); &eh
 execute SYSTEM_USER.SET_SYSTEM_USER('USER4', 'en', 'Locked template', 'Y', 'Y'); &eh
-execute SYSTEM_USER.SET_SYSTEM_USER('USER1', 'en', rpad('User 1a ', 1001, 'x')); &eh
 execute SYSTEM_USER.SET_SYSTEM_USER('USER1', psLANG_CODE => 'en', psName => 'User 1b'); &eh
 execute SYSTEM_USER.SET_SYSTEM_USER('USER3', null, null, 'Y'); &eh
 execute SYSTEM_USER.SET_SYSTEM_USER('USER2', psTEMPLATE_FLAG => 'Y'); &eh
@@ -104,6 +103,9 @@ execute SYSTEM_USER.SET_SYSTEM_USER('USER4', 'en'); &eh
 
 execute SYSTEM_USER.SET_SYSTEM_USER('USER4'); &eh
 -- USR-0003: Nothing to be updated
+
+execute SYSTEM_USER.SET_SYSTEM_USER('USER1', 'en', rpad('User 1a ', 1001, 'x')); &eh
+-- ORA-12899: value too large for column "PSR"."TEXT_ITEMS"."TEXT" (actual: 1001, maximum: 1000)
 
 -- Set system user names
 -- =====================
