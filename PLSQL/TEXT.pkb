@@ -30,7 +30,7 @@ create or replace package body TEXT is
   -- Ensure text has been specified.
   --
     if psTEXT is null
-    then MESSAGE.DISPLAY_MESSAGE('TXT', 1, 'en', 'Text must be specified');
+    then MESSAGE.DISPLAY_MESSAGE('TXT', 1, 'Text must be specified');
     end if;
   --
   -- Ensure required text type is active.
@@ -39,11 +39,11 @@ create or replace package body TEXT is
       select ACTIVE_FLAG into sTXTT_ACTIVE_FLAG from TEXT_TYPES where CODE = psTXTT_CODE for update;
     exception
       when NO_DATA_FOUND
-      then MESSAGE.DISPLAY_MESSAGE('TXT', 2, 'en', 'Unknown text type');
+      then MESSAGE.DISPLAY_MESSAGE('TXT', 2, 'Unknown text type');
     end;
   --
     if sTXTT_ACTIVE_FLAG = 'N'
-    then MESSAGE.DISPLAY_MESSAGE('TXT', 3, 'en', 'Inactive text type');
+    then MESSAGE.DISPLAY_MESSAGE('TXT', 3, 'Inactive text type');
     end if;
   --
   -- Ensure required language is active.
@@ -52,11 +52,11 @@ create or replace package body TEXT is
       select ACTIVE_FLAG into sLANG_ACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE for update;
     exception
       when NO_DATA_FOUND
-      then MESSAGE.DISPLAY_MESSAGE('TXT', 4, 'en', 'Unknown text language');
+      then MESSAGE.DISPLAY_MESSAGE('TXT', 4, 'Unknown text language');
     end;
   --
     if sLANG_ACTIVE_FLAG = 'N'
-    then MESSAGE.DISPLAY_MESSAGE('TXT', 5, 'en', 'Inactive text language');
+    then MESSAGE.DISPLAY_MESSAGE('TXT', 5, 'Inactive text language');
     end if;
   --
     if pnTXT_ID is null
@@ -65,7 +65,7 @@ create or replace package body TEXT is
     -- Text is to be created for a new entity.
     --
       if pnSEQ_NBR is not null
-      then MESSAGE.DISPLAY_MESSAGE('TXT', 6, 'en', 'Cannot specify a text item sequence number without a text identifier');
+      then MESSAGE.DISPLAY_MESSAGE('TXT', 6, 'Cannot specify a text item sequence number without a text identifier');
       end if;
     --
     -- Create new TEXT_HEADERS row.
@@ -95,7 +95,7 @@ create or replace package body TEXT is
       select TAB_ALIAS into sTAB_ALIAS from TEXT_HEADERS TXT where TXT.ID = pnTXT_ID;
     --
       if sTAB_ALIAS != psTAB_ALIAS
-      then MESSAGE.DISPLAY_MESSAGE('TXT', 7, 'en', 'Wrong table for this text identifier');
+      then MESSAGE.DISPLAY_MESSAGE('TXT', 7, 'Wrong table for this text identifier');
       end if;
     --
       if pnSEQ_NBR is null
@@ -134,7 +134,7 @@ create or replace package body TEXT is
           and TAB_ALIAS = sTAB_ALIAS;
         --
           if sMULTI_INSTANCE_FLAG = 'N'
-          then MESSAGE.DISPLAY_MESSAGE('TXT', 8, 'en', 'Only one text item of this type allowed');
+          then MESSAGE.DISPLAY_MESSAGE('TXT', 8, 'Only one text item of this type allowed');
           end if;
         end if;
       else
@@ -150,11 +150,11 @@ create or replace package body TEXT is
           and TXTT_CODE = psTXTT_CODE;
         exception
           when NO_DATA_FOUND
-          then MESSAGE.DISPLAY_MESSAGE('TXT', 9, 'en', 'No existing text of this type');
+          then MESSAGE.DISPLAY_MESSAGE('TXT', 9, 'No existing text of this type');
         end;
       --
         if pnSEQ_NBR > nTXI_SEQ_NBR_MAX
-        then MESSAGE.DISPLAY_MESSAGE('TXT', 10, 'en', 'Text item sequence number greater than current maximum');
+        then MESSAGE.DISPLAY_MESSAGE('TXT', 10, 'Text item sequence number greater than current maximum');
         end if;
       end if;
     end if;
@@ -241,7 +241,7 @@ create or replace package body TEXT is
       and TXTT_CODE = psTXTT_CODE;
     --
       if nItemCount2 = 0
-      then MESSAGE.DISPLAY_MESSAGE('TXT', 11, 'en', 'No text to delete');
+      then MESSAGE.DISPLAY_MESSAGE('TXT', 11, 'No text to delete');
       end if;
     --
       if nItemCount1 = nItemCount2
@@ -250,7 +250,7 @@ create or replace package body TEXT is
       -- Single text item of this type is to be deleted.
       --
         if sMANDATORY_FLAG = 'Y'
-        then MESSAGE.DISPLAY_MESSAGE('TXT', 12, 'en', 'Cannot delete last mandatory text item');
+        then MESSAGE.DISPLAY_MESSAGE('TXT', 12, 'Cannot delete last mandatory text item');
         else
         --
         -- The single subordinate TEXT_ITEMS row will be cascade deleted.
@@ -284,7 +284,7 @@ create or replace package body TEXT is
       and TXTT_CODE = psTXTT_CODE;
     --
       if nItemCount2 = 0
-      then MESSAGE.DISPLAY_MESSAGE('TXT', 11, 'en', 'No text to delete');
+      then MESSAGE.DISPLAY_MESSAGE('TXT', 11, 'No text to delete');
       end if;
     --
       if nItemCount1 = nItemCount2
@@ -293,7 +293,7 @@ create or replace package body TEXT is
       -- All text items of this type are to be deleted.
       --
         if sMANDATORY_FLAG = 'Y'
-        then MESSAGE.DISPLAY_MESSAGE('TXT', 12, 'en', 'Cannot delete last mandatory text item');
+        then MESSAGE.DISPLAY_MESSAGE('TXT', 12, 'Cannot delete last mandatory text item');
         else
         --
         -- The subordinate TEXT_ITEMS rows will be cascade deleted.
@@ -317,7 +317,7 @@ create or replace package body TEXT is
     elsif psTXTT_CODE is not null
     then
       if sMANDATORY_FLAG = 'Y'
-      then MESSAGE.DISPLAY_MESSAGE('TXT', 13, 'en', 'Cannot delete mandatory text type');
+      then MESSAGE.DISPLAY_MESSAGE('TXT', 13, 'Cannot delete mandatory text type');
       end if;
     --
     -- Subordinate TEXT_ITEMS rows will be cascade deleted.
@@ -327,7 +327,7 @@ create or replace package body TEXT is
       PLS_UTILITY.TRACE_POINT('Deleted TEXT_TYPE_HEADERS-C~' || to_char(sql%rowcount));
     --
       if sql%rowcount = 0
-      then MESSAGE.DISPLAY_MESSAGE('TXT', 11, 'en', 'No text to delete');
+      then MESSAGE.DISPLAY_MESSAGE('TXT', 11, 'No text to delete');
       end if;
     else
     --
@@ -338,7 +338,7 @@ create or replace package body TEXT is
       PLS_UTILITY.TRACE_POINT('Deleted TEXT_HEADERS~' || to_char(sql%rowcount));
     --
       if sql%rowcount = 0
-      then MESSAGE.DISPLAY_MESSAGE('TXT', 11, 'en', 'No text to delete');
+      then MESSAGE.DISPLAY_MESSAGE('TXT', 11, 'No text to delete');
       end if;
     end if;
   --
@@ -354,11 +354,11 @@ create or replace package body TEXT is
 --
 begin
   if sModule != 'TEXT'
-  then MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'en', 'Module name mismatch');
+  then MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
-  then MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'en', 'Module version mismatch');
+  then MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
   end if;
 --
 end TEXT;

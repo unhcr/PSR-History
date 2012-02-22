@@ -37,23 +37,23 @@ create or replace package body LANGUAGE is
     if psDescription is null
     then
       if nTXT_ID is null
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'en', 'Description must be specified for new language');
+      then MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'Description must be specified for new language');
       elsif psLANG_CODE is not null
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 2, 'en', 'Description language cannot be specified without description text');
+      then MESSAGE.DISPLAY_MESSAGE('LANG', 2, 'Description language cannot be specified without description text');
       elsif pnDISPLAY_SEQ = -1e6
         and psACTIVE_FLAG is null
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 3, 'en', 'Nothing to be updated');
+      then MESSAGE.DISPLAY_MESSAGE('LANG', 3, 'Nothing to be updated');
       end if;
     else
       begin
         select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
       exception
         when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('LANG', 4, 'en', 'Unknown description language');
+        then MESSAGE.DISPLAY_MESSAGE('LANG', 4, 'Unknown description language');
       end;
     --
       if sACTIVE_FLAG = 'N'
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 5, 'en', 'Inactive description language');
+      then MESSAGE.DISPLAY_MESSAGE('LANG', 5, 'Inactive description language');
       end if;
     --
       TEXT.SET_TEXT(nTXT_ID, 'LANG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
@@ -97,7 +97,7 @@ create or replace package body LANGUAGE is
     delete from LANGUAGES where CODE = psCODE returning TXT_ID into nTXT_ID;
   --
     if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('LANG', 6, 'en', 'Language does not exist');
+    then MESSAGE.DISPLAY_MESSAGE('LANG', 6, 'Language does not exist');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID);
@@ -196,7 +196,7 @@ create or replace package body LANGUAGE is
                                to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
     if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('LANG', 7, 'en', 'Text type must be specified');
+    then MESSAGE.DISPLAY_MESSAGE('LANG', 7, 'Text type must be specified');
     end if;
   --
     select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
@@ -215,11 +215,11 @@ create or replace package body LANGUAGE is
 --
 begin
   if sModule != 'LANGUAGE'
-  then MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'en', 'Module name mismatch');
+  then MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
-  then MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'en', 'Module version mismatch');
+  then MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
   end if;
 --
 end LANGUAGE;

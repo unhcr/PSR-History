@@ -57,7 +57,7 @@ create or replace package body SYSTEM_PARAMETER is
     delete from SYSTEM_PARAMETERS where CODE = psCODE returning TXT_ID into nTXT_ID;
   --
     if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('SYP', 1, 'en', 'System parameter does not exist');
+    then MESSAGE.DISPLAY_MESSAGE('SYP', 1, 'System parameter does not exist');
     end if;
   --
     if nTXT_ID is not null
@@ -123,7 +123,7 @@ create or replace package body SYSTEM_PARAMETER is
                                to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
     if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('SYP', 2, 'en', 'Text type must be specified');
+    then MESSAGE.DISPLAY_MESSAGE('SYP', 2, 'Text type must be specified');
     end if;
   --
     select TXT_ID into nTXT_ID from SYSTEM_PARAMETERS where CODE = psCODE;
@@ -142,11 +142,11 @@ create or replace package body SYSTEM_PARAMETER is
 --
 begin
   if sModule != 'SYSTEM_PARAMETER'
-  then MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'en', 'Module name mismatch');
+  then MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
-  then MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'en', 'Module version mismatch');
+  then MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
   end if;
 --
 end SYSTEM_PARAMETER;

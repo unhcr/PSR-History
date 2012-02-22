@@ -38,23 +38,23 @@ create or replace package body SYSTEM_USER is
     if psName is null
     then
       if nTXT_ID is null
-      then MESSAGE.DISPLAY_MESSAGE('USR', 8, 'en', 'Name must be specified for new user');
+      then MESSAGE.DISPLAY_MESSAGE('USR', 8, 'Name must be specified for new user');
       elsif psLANG_CODE is not null
-      then MESSAGE.DISPLAY_MESSAGE('USR', 9, 'en', 'Name language cannot be specified without name');
+      then MESSAGE.DISPLAY_MESSAGE('USR', 9, 'Name language cannot be specified without name');
       elsif psLOCKED_FLAG is null
         and psTEMPLATE_FLAG is null
-      then MESSAGE.DISPLAY_MESSAGE('USR', 3, 'en', 'Nothing to be updated');
+      then MESSAGE.DISPLAY_MESSAGE('USR', 3, 'Nothing to be updated');
       end if;
     else
       begin
         select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
       exception
         when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('USR', 10, 'en', 'Unknown name language');
+        then MESSAGE.DISPLAY_MESSAGE('USR', 10, 'Unknown name language');
       end;
     --
       if sACTIVE_FLAG = 'N'
-      then MESSAGE.DISPLAY_MESSAGE('USR', 11, 'en', 'Inactive name language');
+      then MESSAGE.DISPLAY_MESSAGE('USR', 11, 'Inactive name language');
       end if;
     --
       TEXT.SET_TEXT(nTXT_ID, 'USR', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
@@ -97,7 +97,7 @@ create or replace package body SYSTEM_USER is
     returning TXT_ID into nTXT_ID;
   --
     if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('USR', 12, 'en', 'User does not exist');
+    then MESSAGE.DISPLAY_MESSAGE('USR', 12, 'User does not exist');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID);
@@ -197,7 +197,7 @@ create or replace package body SYSTEM_USER is
     select TXT_ID into nTXT_ID from SYSTEM_USERS where USERID = psUSERID;
   --
     if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('USR', 7, 'en', 'Text type must be specified');
+    then MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Text type must be specified');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
@@ -257,7 +257,7 @@ create or replace package body SYSTEM_USER is
         then null;
       --
         when TOO_MANY_ROWS
-        then MESSAGE.DISPLAY_MESSAGE('USR', 17, 'en', 'Cannot update data type of user attribute type already in use');
+        then MESSAGE.DISPLAY_MESSAGE('USR', 17, 'Cannot update data type of user attribute type already in use');
       end;
     end if;
   --
@@ -266,24 +266,24 @@ create or replace package body SYSTEM_USER is
     if psDescription is null
     then
       if nTXT_ID is null
-      then MESSAGE.DISPLAY_MESSAGE('USR', 1, 'en', 'Description must be specified for new user attribute type');
+      then MESSAGE.DISPLAY_MESSAGE('USR', 1, 'Description must be specified for new user attribute type');
       elsif psLANG_CODE is not null
-      then MESSAGE.DISPLAY_MESSAGE('USR', 2, 'en', 'Description language cannot be specified without description text');
+      then MESSAGE.DISPLAY_MESSAGE('USR', 2, 'Description language cannot be specified without description text');
       elsif psDATA_TYPE is null
         and pnDISPLAY_SEQ = -1e6
         and psACTIVE_FLAG is null
-      then MESSAGE.DISPLAY_MESSAGE('USR', 3, 'en', 'Nothing to be updated');
+      then MESSAGE.DISPLAY_MESSAGE('USR', 3, 'Nothing to be updated');
       end if;
     else
       begin
         select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
       exception
         when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('USR', 4, 'en', 'Unknown description language');
+        then MESSAGE.DISPLAY_MESSAGE('USR', 4, 'Unknown description language');
       end;
     --
       if sACTIVE_FLAG = 'N'
-      then MESSAGE.DISPLAY_MESSAGE('USR', 5, 'en', 'Inactive description language');
+      then MESSAGE.DISPLAY_MESSAGE('USR', 5, 'Inactive description language');
       end if;
     --
       TEXT.SET_TEXT(nTXT_ID, 'UATT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
@@ -329,7 +329,7 @@ create or replace package body SYSTEM_USER is
     delete from USER_ATTRIBUTE_TYPES where CODE = psCODE returning TXT_ID into nTXT_ID;
   --
     if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('USR', 6, 'en', 'User attribute type does not exist');
+    then MESSAGE.DISPLAY_MESSAGE('USR', 6, 'User attribute type does not exist');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID);
@@ -430,7 +430,7 @@ create or replace package body SYSTEM_USER is
     select TXT_ID into nTXT_ID from USER_ATTRIBUTE_TYPES where CODE = psCODE;
   --
     if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('USR', 7, 'en', 'Text type must be specified');
+    then MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Text type must be specified');
     end if;
   --
     TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
@@ -467,18 +467,18 @@ create or replace package body SYSTEM_USER is
       where CODE = psUATT_CODE;
     exception
       when NO_DATA_FOUND
-      then MESSAGE.DISPLAY_MESSAGE('USR', 19, 'en', 'Unknown user attribute type');
+      then MESSAGE.DISPLAY_MESSAGE('USR', 19, 'Unknown user attribute type');
     end;
   --
     if sACTIVE_FLAG = 'N'
-    then MESSAGE.DISPLAY_MESSAGE('USR', 20, 'en', 'Inactive user attribute type');
+    then MESSAGE.DISPLAY_MESSAGE('USR', 20, 'Inactive user attribute type');
     end if;
   --
     case
       when sDATA_TYPE = 'C' and psCHAR_VALUE is not null then null;
       when sDATA_TYPE = 'N' and pnNUM_VALUE is not null then null;
       when sDATA_TYPE = 'D' and pdDATE_VALUE is not null then null;
-      else MESSAGE.DISPLAY_MESSAGE('USR', 21, 'en', 'Attribute of the correct type must be specified');
+      else MESSAGE.DISPLAY_MESSAGE('USR', 21, 'Attribute of the correct type must be specified');
     end case;
   --
     merge into USER_ATTRIBUTES UAT
@@ -519,7 +519,7 @@ create or replace package body SYSTEM_USER is
     returning TXT_ID into nTXT_ID;
   --
     if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('USR', 18, 'en', 'User attribute does not exist');
+    then MESSAGE.DISPLAY_MESSAGE('USR', 18, 'User attribute does not exist');
     end if;
   --
     if nTXT_ID is not null
@@ -593,7 +593,7 @@ create or replace package body SYSTEM_USER is
                                to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
     if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('USR', 7, 'en', 'Text type must be specified');
+    then MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Text type must be specified');
     end if;
   --
     select TXT_ID
@@ -630,11 +630,11 @@ create or replace package body SYSTEM_USER is
       select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
     exception
       when NO_DATA_FOUND
-      then MESSAGE.DISPLAY_MESSAGE('USR', 13, 'en', 'Unknown preference language');
+      then MESSAGE.DISPLAY_MESSAGE('USR', 13, 'Unknown preference language');
     end;
   --
     if sACTIVE_FLAG = 'N'
-    then MESSAGE.DISPLAY_MESSAGE('USR', 14, 'en', 'Inactive preference language');
+    then MESSAGE.DISPLAY_MESSAGE('USR', 14, 'Inactive preference language');
     end if;
   --
     merge into USER_LANGUAGE_PREFERENCES ULP
@@ -687,12 +687,12 @@ create or replace package body SYSTEM_USER is
         delete from USER_LANGUAGE_PREFERENCES
         where USERID = psUSERID
         and PREF_SEQ = pnPREF_SEQ;
-      else MESSAGE.DISPLAY_MESSAGE('USR', 15, 'en', 'Language or preference sequence (or both) must be specified');
+      else MESSAGE.DISPLAY_MESSAGE('USR', 15, 'Language or preference sequence (or both) must be specified');
       end if;
     end if;
   --
     if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('USR', 16, 'en', 'Language preference does not exist');
+    then MESSAGE.DISPLAY_MESSAGE('USR', 16, 'Language preference does not exist');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -724,11 +724,11 @@ create or replace package body SYSTEM_USER is
 --
 begin
   if sModule != 'SYSTEM_USER'
-  then MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'en', 'Module name mismatch');
+  then MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
-  then MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'en', 'Module version mismatch');
+  then MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
   end if;
 --
 end SYSTEM_USER;
