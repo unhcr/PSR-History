@@ -214,13 +214,14 @@ create or replace package body TEXT_TYPE is
   procedure SET_TEXT_TYPE_PROPERTIES
    (psTXTT_CODE in TEXT_TYPE_PROPERTIES.TXTT_CODE%type,
     psTAB_ALIAS in TEXT_TYPE_PROPERTIES.TAB_ALIAS%type,
-    psMANDATORY in TEXT_TYPE_PROPERTIES.MANDATORY%type := null,
-    psMULTI_INSTANCE in TEXT_TYPE_PROPERTIES.MULTI_INSTANCE%type := null)
+    psMANDATORY_FLAG in TEXT_TYPE_PROPERTIES.MANDATORY_FLAG%type := null,
+    psMULTI_INSTANCE_FLAG in TEXT_TYPE_PROPERTIES.MULTI_INSTANCE_FLAG%type := null,
+    psLONG_TEXT_FLAG in TEXT_TYPE_PROPERTIES.LONG_TEXT_FLAG%type := null)
   is
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_TEXT_TYPE_PROPERTIES',
-                             psTXTT_CODE || '~' || psTAB_ALIAS || '~' ||
-                               psMANDATORY || '~' || psMULTI_INSTANCE);
+                             psTXTT_CODE || '~' || psTAB_ALIAS || '~' || psMANDATORY_FLAG || '~' ||
+                               psMULTI_INSTANCE_FLAG || '~' || psLONG_TEXT_FLAG);
   --
     merge into TEXT_TYPE_PROPERTIES TTP
     using
@@ -228,11 +229,16 @@ create or replace package body TEXT_TYPE is
     on (TTP.TXTT_CODE = INP.TXTT_CODE and TTP.TAB_ALIAS = INP.TAB_ALIAS)
     when matched then
       update
-      set MANDATORY = nvl(psMANDATORY, MANDATORY),
-        MULTI_INSTANCE = nvl(psMULTI_INSTANCE, MULTI_INSTANCE)
+      set MANDATORY_FLAG = nvl(psMANDATORY_FLAG, MANDATORY_FLAG),
+        MULTI_INSTANCE_FLAG = nvl(psMULTI_INSTANCE_FLAG, MULTI_INSTANCE_FLAG),
+        LONG_TEXT_FLAG = nvl(psLONG_TEXT_FLAG, LONG_TEXT_FLAG)
     when not matched then
-      insert (TXTT_CODE, TAB_ALIAS, MANDATORY, MULTI_INSTANCE)
-      values (psTXTT_CODE, psTAB_ALIAS, nvl(psMANDATORY, 'N'), nvl(psMULTI_INSTANCE, 'Y'));
+      insert
+       (TXTT_CODE, TAB_ALIAS,
+        MANDATORY_FLAG, MULTI_INSTANCE_FLAG, LONG_TEXT_FLAG)
+      values
+       (psTXTT_CODE, psTAB_ALIAS,
+        nvl(psMANDATORY_FLAG, 'Y'), nvl(psMULTI_INSTANCE_FLAG, 'N'), nvl(psLONG_TEXT_FLAG, 'N'));
   --
     PLS_UTILITY.END_MODULE;
   exception

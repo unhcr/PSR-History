@@ -6,7 +6,7 @@ create or replace package TEXT_TYPE is
 --  Procedures for maintenance of text types.
 --
 --  Change History:
---  24-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  22-Feb-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -137,17 +137,21 @@ create or replace package TEXT_TYPE is
 -- Parameters:
 --  psTXTT_CODE - Code of text type (mandatory).
 --  psTAB_ALIAS - Table alias (mandatory).
---  psMANDATORY - Flag indicating whether the text type is mandatory for this table (optional -
---    when omitted the existing value is left unchanged, a new value defaults to N).
---  psMULTI_INSTANCE - Flag indicating whether multiple items of this text type can exist for this
---    table (optional - when omitted the existing value is left unchanged, a new value defaults
---    to Y).
+--  psMANDATORY_FLAG - Flag indicating whether the text type is mandatory for this table (optional -
+--    when omitted the existing value is left unchanged, a new value defaults to Y).
+--  psMULTI_INSTANCE_FLAG - Flag indicating whether multiple items of this text type can exist for
+--    this table (optional - when omitted the existing value is left unchanged, a new value defaults
+--    to N).
+--  psLONG_TEXT_FLAG - Flag indicating whether items of this text type should be stored as CLOBs,
+--    i.e. they can be longer than 1000 characters (optional - when omitted the existing value is
+--    left unchanged, a new value defaults to N).
 --
   procedure SET_TEXT_TYPE_PROPERTIES
    (psTXTT_CODE in TEXT_TYPE_PROPERTIES.TXTT_CODE%type,
     psTAB_ALIAS in TEXT_TYPE_PROPERTIES.TAB_ALIAS%type,
-    psMANDATORY in TEXT_TYPE_PROPERTIES.MANDATORY%type := null,
-    psMULTI_INSTANCE in TEXT_TYPE_PROPERTIES.MULTI_INSTANCE%type := null);
+    psMANDATORY_FLAG in TEXT_TYPE_PROPERTIES.MANDATORY_FLAG%type := null,
+    psMULTI_INSTANCE_FLAG in TEXT_TYPE_PROPERTIES.MULTI_INSTANCE_FLAG%type := null,
+    psLONG_TEXT_FLAG in TEXT_TYPE_PROPERTIES.LONG_TEXT_FLAG%type := null);
 --
 -- ----------------------------------------
 -- REMOVE_TEXT_TYPE_PROPERTIES
