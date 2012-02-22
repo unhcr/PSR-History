@@ -18,8 +18,8 @@ create or replace package body TEXT is
   is
     sTXTT_ACTIVE_FLAG TEXT_TYPES.ACTIVE_FLAG%type;
     sLANG_ACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
-    sTAB_ALIAS TEXT_HEADERS.TAB_ALIAS%type;
-    sMULTI_INSTANCE TEXT_TYPE_PROPERTIES.MULTI_INSTANCE%type;
+    sTAB_ALIAS TEXT_HEADERS.TAB_ALIAS%type := psTAB_ALIAS;
+    sMULTI_INSTANCE_FLAG TEXT_TYPE_PROPERTIES.MULTI_INSTANCE_FLAG%type;
     nTXI_SEQ_NBR_MAX TEXT_TYPE_HEADERS.TXI_SEQ_NBR_MAX%type;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_TEXT',
@@ -127,13 +127,13 @@ create or replace package body TEXT is
           pnSEQ_NBR := 1;
         --
         else
-          select MULTI_INSTANCE
-          into sMULTI_INSTANCE
+          select MULTI_INSTANCE_FLAG
+          into sMULTI_INSTANCE_FLAG
           from TEXT_TYPE_PROPERTIES
           where TXTT_CODE = psTXTT_CODE
           and TAB_ALIAS = sTAB_ALIAS;
         --
-          if sMULTI_INSTANCE = 'N'
+          if sMULTI_INSTANCE_FLAG = 'N'
           then MESSAGE.DISPLAY_MESSAGE('TXT', 8, 'en', 'Only one text item of this type allowed');
           end if;
         end if;
@@ -163,16 +163,19 @@ create or replace package body TEXT is
   --
     merge into TEXT_ITEMS TXI
     using
-     (select pnTXT_ID TXT_ID, psTXTT_CODE TXTT_CODE, pnSEQ_NBR SEQ_NBR, psLANG_CODE LANG_CODE
-      from DUAL) INP
+     (select pnTXT_ID TXT_ID, psTXTT_CODE TXTT_CODE, pnSEQ_NBR SEQ_NBR, psLANG_CODE LANG_CODE,
+        LONG_TEXT_FLAG
+      from TEXT_TYPE_PROPERTIES
+      where TXTT_CODE = psTXTT_CODE
+      and TAB_ALIAS = sTAB_ALIAS) INP
     on (TXI.TXT_ID = INP.TXT_ID
       and TXI.TXTT_CODE = INP.TXTT_CODE
       and TXI.SEQ_NBR = INP.SEQ_NBR
       and TXI.LANG_CODE = INP.LANG_CODE)
     when matched then
       update
-      set TEXT = case when length(psTEXT) <= 1000 then psTEXT end,
-        LONG_TEXT = case when length(psTEXT) > 1000 then psTEXT end
+      set TEXT = case when INP.LONG_TEXT_FLAG = 'N' then psTEXT end,
+        LONG_TEXT = case when INP.LONG_TEXT_FLAG = 'Y' then psTEXT end
     when not matched then
       insert
        (TXT_ID, TXTT_CODE, SEQ_NBR, LANG_CODE,
@@ -180,8 +183,8 @@ create or replace package body TEXT is
         LONG_TEXT)
       values
        (pnTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE,
-        case when length(psTEXT) <= 1000 then psTEXT end,
-        case when length(psTEXT) > 1000 then psTEXT end);
+        case when INP.LONG_TEXT_FLAG = 'N' then psTEXT end,
+        case when INP.LONG_TEXT_FLAG = 'Y' then psTEXT end);
   --
     PLS_UTILITY.TRACE_POINT('Merged TEXT_ITEMS',
                             to_char(pnTXT_ID) || '~' || psTAB_ALIAS || '~' || psTXTT_CODE || '~' ||
@@ -204,7 +207,7 @@ create or replace package body TEXT is
     pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
     psLANG_CODE in TEXT_ITEMS.LANG_CODE%type := null)
   is
-    sMANDATORY TEXT_TYPE_PROPERTIES.MANDATORY%type;
+    sMANDATORY_FLAG TEXT_TYPE_PROPERTIES.MANDATORY_FLAG%type;
     nItemCount1 integer;
     nItemCount2 integer;
   begin
@@ -217,8 +220,8 @@ create or replace package body TEXT is
   --
     if psTXTT_CODE is not null
     then
-      select TTP.MANDATORY
-      into sMANDATORY
+      select TTP.MANDATORY_FLAG
+      into sMANDATORY_FLAG
       from TEXT_HEADERS TXT
       join TEXT_TYPE_PROPERTIES TTP
         on TTP.TAB_ALIAS = TXT.TAB_ALIAS
@@ -246,7 +249,7 @@ create or replace package body TEXT is
       --
       -- Single text item of this type is to be deleted.
       --
-        if sMANDATORY = 'Y'
+        if sMANDATORY_FLAG = 'Y'
         then MESSAGE.DISPLAY_MESSAGE('TXT', 12, 'en', 'Cannot delete last mandatory text item');
         else
         --
@@ -289,7 +292,7 @@ create or replace package body TEXT is
       --
       -- All text items of this type are to be deleted.
       --
-        if sMANDATORY = 'Y'
+        if sMANDATORY_FLAG = 'Y'
         then MESSAGE.DISPLAY_MESSAGE('TXT', 12, 'en', 'Cannot delete last mandatory text item');
         else
         --
@@ -313,7 +316,7 @@ create or replace package body TEXT is
     --
     elsif psTXTT_CODE is not null
     then
-      if sMANDATORY = 'Y'
+      if sMANDATORY_FLAG = 'Y'
       then MESSAGE.DISPLAY_MESSAGE('TXT', 13, 'en', 'Cannot delete mandatory text type');
       end if;
     --
