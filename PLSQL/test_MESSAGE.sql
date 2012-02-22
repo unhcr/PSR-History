@@ -41,13 +41,13 @@ order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 -- -----------
 
 execute MESSAGE.SET_COMPONENT('TST7', 'en', ''); &eh
--- MSG-0001: Description must be specified for new component
+-- MSG-0005: Description must be specified for new component
 
 execute MESSAGE.SET_COMPONENT('TST7', 'xx', 'Statistic Types'); &eh
--- MSG-0004: Unknown description language
+-- MSG-0008: Unknown description language
 
 execute MESSAGE.SET_COMPONENT('TST7', 'la', 'Statistic Types'); &eh
--- MSG-0005: Inactive description language
+-- MSG-0009 Inactive description language
 
 execute MESSAGE.SET_COMPONENT('TST7', 'en', 'Statistic Types', 1e6); &eh
 -- ORA-01438: value larger than specified precision allowed for this column
@@ -56,19 +56,19 @@ execute MESSAGE.SET_COMPONENT('TST7', 'en', 'Statistic Types', null, 'X'); &eh
 -- ORA-02290: check constraint (PSR.CH_COMP_ACTIVE_FLAG) violated
 
 execute MESSAGE.SET_COMPONENT('TST1', 'en'); &eh
--- MSG-0002: Description language cannot be specified without description text
+-- MSG-0006: Description language cannot be specified without description text
 
 execute MESSAGE.SET_COMPONENT('TST1', 'xx', 'Text'); &eh
--- MSG-0004: Unknown description language
+-- MSG-0008: Unknown description language
 
 execute MESSAGE.SET_COMPONENT('TST1', 'la', 'Text'); &eh
--- MSG-0005: Inactive description language
+-- MSG-0009 Inactive description language
 
 execute MESSAGE.SET_COMPONENT('TST1', null, 'Text'); &eh
--- MSG-0004: Unknown description language
+-- MSG-0008: Unknown description language
 
 execute MESSAGE.SET_COMPONENT('TST1'); &eh
--- MSG-0003: Nothing to be updated
+-- MSG-0007: Nothing to be updated
 
 execute MESSAGE.SET_COMPONENT('TST1', pnDISPLAY_SEQ => 1e6); &eh
 -- ORA-01438: value larger than specified precision allowed for this column
@@ -210,7 +210,7 @@ execute MESSAGE.REMOVE_COMP_TEXT('XXX', 'NOTE', 1, 'en'); &eh
 -- ORA-01403: no data found
 
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', null); &eh
--- MSG-0007: Text type must be specified
+-- MSG-0011: Text type must be specified
 
 execute MESSAGE.REMOVE_COMP_TEXT('TST1', 'XXXX', 1, 'en'); &eh
 -- ORA-01403: no data found
@@ -255,7 +255,7 @@ order by COMP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 -- -----------
 
 execute MESSAGE.DELETE_COMPONENT('XXX'); &eh
--- MSG-0006: Component does not exist
+-- MSG-0010: Component does not exist
 
 -- Success cases
 -- -------------
@@ -301,46 +301,46 @@ order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 -- -----------
 
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', ''); &eh
--- MSG-0008: Message text must be specified for new message
+-- MSG-0012: Message text must be specified for new message
 
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'xx', 'Message'); &eh
--- MSG-0010: Unknown message language
+-- MSG-0014: Unknown message language
 
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'la', 'Latin message'); &eh
--- MSG-0011: Inactive message language
+-- MSG-0015: Inactive message language
 
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('XXX', :SEQ_NBR, 'en', 'Error message'); &eh
--- MSG-0006: Component does not exist
+-- MSG-0010: Component does not exist
 
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('XXX', :SEQ_NBR, 'en', 'Error message'); &eh
 -- ORA-01403: no data found
 
 execute :SEQ_NBR := 9; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message'); &eh
--- MSG-0012: Message sequence number greater than current maximum
+-- MSG-0016: Message sequence number greater than current maximum
 
 execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message', 'X'); &eh
 -- ORA-02290: check constraint (PSR.CH_MSG_SEVERITY) violated
 
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, null, 'Error message'); &eh
--- MSG-0010: Unknown message language
+-- MSG-0014: Unknown message language
 
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'xx', 'Error message'); &eh
--- MSG-0010: Unknown message language
+-- MSG-0014: Unknown message language
 
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'la', 'Error message'); &eh
--- MSG-0011: Inactive message language
+-- MSG-0015: Inactive message language
 
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('XXX', :SEQ_NBR, 'en', 'Error message'); &eh
 -- ORA-01403: no data found
 
 execute :SEQ_NBR := 9; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', 'Error message'); &eh
--- MSG-0012: Message sequence number greater than current maximum
+-- MSG-0016: Message sequence number greater than current maximum
 
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en'); &eh
--- MSG-0009: Message language cannot be specified without message text
+-- MSG-0013: Message language cannot be specified without message text
 
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR); &eh
--- MSG-0003: Nothing to be updated
+-- MSG-0007: Nothing to be updated
 
 execute :SEQ_NBR := 1; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, psSEVERITY => 'X'); &eh
 -- ORA-02290: check constraint (PSR.CH_MSG_SEVERITY) violated
@@ -356,6 +356,7 @@ execute :SEQ_NBR := null; MESSAGE.SET_MESSAGE('TST1', :SEQ_NBR, 'en', rpad('Erro
 
 execute MESSAGE.SET_MSG_MESSAGE('TST1', 1, 'fr', unistr('Message fran\00E7ais')); &eh
 execute MESSAGE.SET_MSG_MESSAGE('TST1', 1, 'fr', unistr('Error message fran\00E7ais')); &eh
+execute MESSAGE.SET_MSG_MESSAGE('TST1', 2, 'fr', unistr('Message d''erreur 2a')); &eh
 
 select MSG.COMP_CODE, MSG.SEQ_NBR, MSG.SEVERITY, MSG.TXT_ID,
   TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
@@ -497,7 +498,7 @@ execute MESSAGE.REMOVE_MSG_TEXT('TST1', 9, 'NOTE', 1, 'en'); &eh
 -- ORA-01403: no data found
 
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, null); &eh
--- MSG-0007: Text type must be specified
+-- MSG-0011: Text type must be specified
 
 execute MESSAGE.REMOVE_MSG_TEXT('TST1', 1, 'XXXX', 1, 'en'); &eh
 -- ORA-01403: no data found
@@ -542,10 +543,10 @@ order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 -- -----------
 
 execute MESSAGE.DELETE_MESSAGE('XXX', 1); &eh
--- MSG-0013: Message does not exist
+-- MSG-0017: Message does not exist
 
 execute MESSAGE.DELETE_MESSAGE('TST1', 9); &eh
--- MSG-0013: Message does not exist
+-- MSG-0017: Message does not exist
 
 -- Success cases
 -- -------------
@@ -566,40 +567,48 @@ order by MSG.COMP_CODE, MSG.SEQ_NBR, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 -- Success cases
 -- -------------
 
-execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'en'); &eh
-execute MESSAGE.DISPLAY_MESSAGE('TST1', 3, 'en', 'Error message 2'); &eh
-execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'en', psSEVERITY => 'I'); &eh
-execute MESSAGE.DISPLAY_MESSAGE('TST2', 1, 'fr'); &eh
+execute MESSAGE.DISPLAY_MESSAGE('TST1', 2); &eh
+execute MESSAGE.DISPLAY_MESSAGE('TST1', 3, 'Error message 2'); &eh
+execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, psSEVERITY => 'I'); &eh
+execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('FALLBACK LANGUAGE', 'C', 'fr');
+execute MESSAGE.DISPLAY_MESSAGE('TST1', 2); &eh
+execute SYSTEM_PARAMETER.DELETE_SYSTEM_PARAMETER('FALLBACK LANGUAGE');
+execute MESSAGE.DISPLAY_MESSAGE('TST1', 2); &eh
+execute MESSAGE.DISPLAY_MESSAGE('TST2', 1); &eh
 
 -- Error cases
 -- -----------
 
-execute MESSAGE.DISPLAY_MESSAGE('XXX', 1, 'en'); &eh
+execute MESSAGE.DISPLAY_MESSAGE('XXX', 1); &eh
 -- XXX-0001: ** Message not found **
 
-execute MESSAGE.DISPLAY_MESSAGE('TST1', 9, 'en', 'Dummy message'); &eh
+execute MESSAGE.DISPLAY_MESSAGE('TST1', 9, 'Dummy message'); &eh
 -- TST1-0009: ** Message not found **
 
-execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'en', psSEVERITY => 'X'); &eh
+execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, psSEVERITY => 'X'); &eh
 -- TST1-0002: ** Invalid severity **
 
-execute MESSAGE.DISPLAY_MESSAGE('TST2', 1, 'fr', 'French message'); &eh
--- TST2-0001: ** No stored English message **
+execute MESSAGE.DISPLAY_MESSAGE('TST2', 1, 'French message'); &eh
+-- TST2-0001: ** English message not found **
 
-execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'en', 'Error message'); &eh
+execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'Error message'); &eh
 -- TST1-0002: ** English message mismatch **
 
-execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'fr'); &eh
--- TST1-0002: ** No preferred language message **
+execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('FALLBACK LANGUAGE', 'C', 'fr');
 
-execute MESSAGE.DISPLAY_MESSAGE('TST2', 1, 'en'); &eh
--- TST2-0001: ** No preferred language message ** ** No message found **
+execute MESSAGE.DISPLAY_MESSAGE('TST1', 9, 'Dummy message'); &eh
+-- TST1-0009: ** Message introuvable **
 
-execute MESSAGE.DISPLAY_MESSAGE('TST2', 1, 'en', 'Error message'); &eh
--- TST2-0001: ** No preferred language message ** ** No stored English message **
+execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, psSEVERITY => 'X'); &eh
+-- TST1-0002: ** Sévérité invalide **
 
-execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'fr', 'Error message'); &eh
--- TST1-0002: ** No preferred language message ** ** English message mismatch **
+execute MESSAGE.DISPLAY_MESSAGE('TST2', 1, 'French message'); &eh
+-- TST2-0001: ** Message anglais introuvable **
+
+execute MESSAGE.DISPLAY_MESSAGE('TST1', 2, 'Error message'); &eh
+-- TST1-0002: ** Disparité de message anglais **
+
+execute SYSTEM_PARAMETER.DELETE_SYSTEM_PARAMETER('FALLBACK LANGUAGE');
 
 set echo off serveroutput off feedback on
 
