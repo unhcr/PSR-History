@@ -5,79 +5,127 @@ create or replace package body SYSTEM_USER is
 -- ========================================
 --
 -- ----------------------------------------
--- SET_SYSTEM_USER
+-- INSERT_SYSTEM_USER
 -- ----------------------------------------
 --
-  procedure SET_SYSTEM_USER
-   (psUSERID in SYSTEM_USERS.USERID%type,
-    psLANG_CODE in LANGUAGES.CODE%type := null,
-    psName in varchar2 := null,
-    psLOCKED_FLAG in SYSTEM_USERS.LOCKED_FLAG%type := null,
-    psTEMPLATE_FLAG in SYSTEM_USERS.TEMPLATE_FLAG%type := null)
+  procedure INSERT_SYSTEM_USER
+   (psUSERID in tmsUSR_USERID,
+    psLANG_CODE in tmsLANG_CODE,
+    psName in tmsText,
+    psLOCKED_FLAG in tmsUSR_LOCKED_FLAG := 'N',
+    psTEMPLATE_FLAG in tmsUSR_TEMPLATE_FLAG := 'N')
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
-    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
-    sACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
-    nMSG_SEQ_NBR_MAX COMPONENTS.MSG_SEQ_NBR_MAX%type;
+    nTXT_ID tnTXT_ID;
+    nSEQ_NBR tnTXI_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_SYSTEM_USER',
-                             psUSERID || '~' || psLOCKED_FLAG || '~' ||
-                               psTEMPLATE_FLAG || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psName)) || ':' || psName);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_SYSTEM_USER',
+      psUSERID || '~' || psLOCKED_FLAG || '~' || psTEMPLATE_FLAG || '~' || psLANG_CODE || '~' ||
+        to_char(length(psName)) || ':' || psName);
   --
-  -- Check if system user already exists.
+    TEXT.SET_TEXT(nTXT_ID, 'USR', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
   --
-    begin
-      select TXT_ID into nTXT_ID from SYSTEM_USERS where USERID = psUSERID;
-    exception
-      when NO_DATA_FOUND
-      then nTXT_ID := null;
-        nSEQ_NBR := null;
-    end;
-  --
-    if psName is null
-    then
-      if nTXT_ID is null
-      then MESSAGE.DISPLAY_MESSAGE('USR', 8, 'Name must be specified for new user');
-      elsif psLANG_CODE is not null
-      then MESSAGE.DISPLAY_MESSAGE('USR', 9, 'Name language cannot be specified without name');
-      elsif psLOCKED_FLAG is null
-        and psTEMPLATE_FLAG is null
-      then MESSAGE.DISPLAY_MESSAGE('USR', 3, 'Nothing to be updated');
-      end if;
-    else
-      begin
-        select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
-      exception
-        when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('USR', 10, 'Unknown name language');
-      end;
-    --
-      if sACTIVE_FLAG = 'N'
-      then MESSAGE.DISPLAY_MESSAGE('USR', 11, 'Inactive name language');
-      end if;
-    --
-      TEXT.SET_TEXT(nTXT_ID, 'USR', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
-    end if;
-  --
-    merge into SYSTEM_USERS USR
-    using
-     (select psUSERID USERID from DUAL) INP
-    on (USR.USERID = INP.USERID)
-    when matched then
-      update
-      set LOCKED_FLAG = nvl(psLOCKED_FLAG, LOCKED_FLAG),
-         TEMPLATE_FLAG = nvl(psTEMPLATE_FLAG, TEMPLATE_FLAG)
-      where psLOCKED_FLAG is not null
-        or psTEMPLATE_FLAG is not null
-    when not matched then
-      insert (USERID, LOCKED_FLAG, TEMPLATE_FLAG, TXT_ID)
-      values (psUSERID, nvl(psLOCKED_FLAG, 'N'), nvl(psTEMPLATE_FLAG, 'N'), nTXT_ID);
+    insert into SYSTEM_USERS (USERID, LOCKED_FLAG, TEMPLATE_FLAG, TXT_ID)
+    values (psUSERID, psLOCKED_FLAG, psTEMPLATE_FLAG, nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end INSERT_SYSTEM_USER;
+--
+-- ----------------------------------------
+-- UPDATE_SYSTEM_USER
+-- ----------------------------------------
+--
+  procedure UPDATE_SYSTEM_USER
+   (psUSERID in tmsUSR_USERID,
+    pnVERSION_NBR in out tnUSR_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psName in tsText := null,
+    psLOCKED_FLAG in tsUSR_LOCKED_FLAG := null,
+    psTEMPLATE_FLAG in tsUSR_TEMPLATE_FLAG := null)
+  is
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnUSR_VERSION_NBR;
+    xUSR_ROWID rowid;
+    nSEQ_NBR tnTXI_SEQ_NBR := 1;
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_SYSTEM_USER',
+      psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psLOCKED_FLAG || '~' ||
+        psTEMPLATE_FLAG || '~' || psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
+  --
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xUSR_ROWID
+    from SYSTEM_USERS
+    where USERID = psUSERID
+    for update;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      if psName is null
+      then
+        if psLOCKED_FLAG is null
+          and psTEMPLATE_FLAG is null
+        then MESSAGE.DISPLAY_MESSAGE('USR', 5, 'Nothing to be updated');
+        end if;
+      else
+        TEXT.SET_TEXT(nTXT_ID, 'USR', 'DESCR', nSEQ_NBR, psLANG_CODE, psName);
+      end if;
+    --
+      update SYSTEM_USERS
+      set LOCKED_FLAG = nvl(psLOCKED_FLAG, LOCKED_FLAG),
+        TEMPLATE_FLAG = nvl(psTEMPLATE_FLAG, TEMPLATE_FLAG),
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xUSR_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 1, 'System user has been updated by another user');
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end UPDATE_SYSTEM_USER;
+--
+-- ----------------------------------------
+-- SET_SYSTEM_USER
+-- ----------------------------------------
+--
+  procedure SET_SYSTEM_USER
+   (psUSERID in tmsUSR_USERID,
+    pnVERSION_NBR in out tnUSR_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psName in tsText := null,
+    psLOCKED_FLAG in tsUSR_LOCKED_FLAG := null,
+    psTEMPLATE_FLAG in tsUSR_TEMPLATE_FLAG := null)
+  is
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_SYSTEM_USER',
+      psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psLOCKED_FLAG || '~' ||
+        psTEMPLATE_FLAG || '~' || psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
+  --
+    if pnVERSION_NBR is null
+    then
+      INSERT_SYSTEM_USER(psUSERID, psLANG_CODE, psName,
+                         nvl(psLOCKED_FLAG, 'N'), nvl(psTEMPLATE_FLAG, 'N'));
+    --
+      pnVERSION_NBR := 1;
+    else
+      UPDATE_SYSTEM_USER(psUSERID, pnVERSION_NBR, psLANG_CODE, psName,
+                         psLOCKED_FLAG, psTEMPLATE_FLAG);
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_SYSTEM_USER;
 --
 -- ----------------------------------------
@@ -85,27 +133,37 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure DELETE_SYSTEM_USER
-   (psUSERID in SYSTEM_USERS.USERID%type)
+   (psUSERID in tmsUSR_USERID,
+    pnVERSION_NBR in tnUSR_VERSION_NBR)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnUSR_VERSION_NBR;
+    xUSR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_SYSTEM_USER',
-                             psUSERID);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_SYSTEM_USER',
+      psUSERID || '~' || to_char(pnVERSION_NBR));
   --
-    delete from SYSTEM_USERS
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xUSR_ROWID
+    from SYSTEM_USERS
     where USERID = psUSERID
-    returning TXT_ID into nTXT_ID;
+    for update;
   --
-    if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('USR', 12, 'User does not exist');
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      delete from SYSTEM_USERS where rowid = xUSR_ROWID;
+    --
+      TEXT.DELETE_TEXT(nTXT_ID);
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 1, 'System user has been updated by another user');
     end if;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end DELETE_SYSTEM_USER;
 --
 -- ----------------------------------------
@@ -113,22 +171,25 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure SET_USR_NAME
-   (psUSERID in SYSTEM_USERS.USERID%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psName in varchar2)
+   (psUSERID in tmsUSR_USERID,
+    pnVERSION_NBR in out tnUSR_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psName in tmsText)
   is
-    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
+    nSEQ_NBR tnTXI_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_USR_NAME',
-                             psUSERID || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psName)) || ':' || psName);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_USR_NAME',
+      psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
+        to_char(length(psName)) || ':' || psName);
   --
-    SET_USR_TEXT(psUSERID, 'NAME', nSEQ_NBR, psLANG_CODE, psName);
+    SET_USR_TEXT(psUSERID, pnVERSION_NBR, 'NAME', nSEQ_NBR, psLANG_CODE, psName);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_USR_NAME;
 --
 -- ----------------------------------------
@@ -136,19 +197,22 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure REMOVE_USR_NAME
-   (psUSERID in SYSTEM_USERS.USERID%type,
-    psLANG_CODE in LANGUAGES.CODE%type)
+   (psUSERID in tmsUSR_USERID,
+    pnVERSION_NBR in out tnUSR_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_USR_NAME',
-                             psUSERID || '~' || psLANG_CODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_USR_NAME',
+      psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
-    REMOVE_USR_TEXT(psUSERID, 'NAME', 1, psLANG_CODE);
+    REMOVE_USR_TEXT(psUSERID, pnVERSION_NBR, 'NAME', 1, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_USR_NAME;
 --
 -- ----------------------------------------
@@ -156,26 +220,46 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure SET_USR_TEXT
-   (psUSERID in SYSTEM_USERS.USERID%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2)
+   (psUSERID in tmsUSR_USERID,
+    pnVERSION_NBR in out tnUSR_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psText in tmsText)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnUSR_VERSION_NBR;
+    xUSR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_USR_TEXT',
-                             psUSERID || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
-                             '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_USR_TEXT',
+      psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
+        to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
+        to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID into nTXT_ID from SYSTEM_USERS where USERID = psUSERID;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xUSR_ROWID
+    from SYSTEM_USERS
+    where USERID = psUSERID
+    for update;
   --
-    TEXT.SET_TEXT(nTXT_ID, 'USR', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      TEXT.SET_TEXT(nTXT_ID, 'USR', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+    --
+      update SYSTEM_USERS
+      set VERSION_NBR = VERSION_NBR + 1
+      where rowid = xUSR_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 1, 'System user has been updated by another user');
+    end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_USR_TEXT;
 --
 -- ----------------------------------------
@@ -183,136 +267,194 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure REMOVE_USR_TEXT
-   (psUSERID in SYSTEM_USERS.USERID%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null)
+   (psUSERID in tmsUSR_USERID,
+    pnVERSION_NBR in out tnUSR_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnUSR_VERSION_NBR;
+    xUSR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_USR_TEXT',
-                             psUSERID || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
-                               '~' || psLANG_CODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_USR_TEXT',
+      psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
+        to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID into nTXT_ID from SYSTEM_USERS where USERID = psUSERID;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xUSR_ROWID
+    from SYSTEM_USERS
+    where USERID = psUSERID
+    for update;
   --
-    if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Text type must be specified');
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+    --
+      update SYSTEM_USERS
+      set VERSION_NBR = VERSION_NBR + 1
+      where rowid = xUSR_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 1, 'System user has been updated by another user');
     end if;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_USR_TEXT;
 --
 -- ----------------------------------------
--- SET_USER_ATTRIBUTE_TYPE
+-- INSERT_USER_ATTRIBUTE_TYPE
 -- ----------------------------------------
 --
-  procedure SET_USER_ATTRIBUTE_TYPE
-   (psCODE in USER_ATTRIBUTE_TYPES.CODE%type,
-    psDATA_TYPE in USER_ATTRIBUTE_TYPES.DATA_TYPE%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null,
-    psDescription in varchar2 := null,
-    pnDISPLAY_SEQ in USER_ATTRIBUTE_TYPES.DISPLAY_SEQ%type := -1e6,
-    psACTIVE_FLAG in USER_ATTRIBUTE_TYPES.ACTIVE_FLAG%type := null)
+  procedure INSERT_USER_ATTRIBUTE_TYPE
+   (psCODE in tmsUATT_CODE,
+    psDATA_TYPE in tmsUATT_DATA_TYPE,
+    psLANG_CODE in tmsLANG_CODE,
+    psDescription in tmsText,
+    pnDISPLAY_SEQ in tnUATT_DISPLAY_SEQ := null,
+    psACTIVE_FLAG in tsUATT_ACTIVE_FLAG := 'Y')
   is
-    sDATA_TYPE USER_ATTRIBUTE_TYPES.DATA_TYPE%type;
-    nTXT_ID TEXT_HEADERS.ID%type;
-    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
-    sACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
+    nTXT_ID tnTXT_ID;
+    nSEQ_NBR tnTXI_SEQ_NBR;
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_USER_ATTRIBUTE_TYPE',
+      psCODE || '~' || psDATA_TYPE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG ||
+        '~' || psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
+  --
+    TEXT.SET_TEXT(nTXT_ID, 'UATT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+  --
+    insert into USER_ATTRIBUTE_TYPES (CODE, DATA_TYPE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
+    values (psCODE, psDATA_TYPE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end INSERT_USER_ATTRIBUTE_TYPE;
+--
+-- ----------------------------------------
+-- UPDATE_USER_ATTRIBUTE_TYPE
+-- ----------------------------------------
+--
+  procedure UPDATE_USER_ATTRIBUTE_TYPE
+   (psCODE in tmsUATT_CODE,
+    pnVERSION_NBR in out tnUATT_VERSION_NBR,
+    psDATA_TYPE in tsUATT_DATA_TYPE := null,
+    psLANG_CODE in tsLANG_CODE := null,
+    psDescription in tsText := null,
+    pnDISPLAY_SEQ in tnUATT_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in tsUATT_ACTIVE_FLAG := null)
+  is
+    sDATA_TYPE tsUATT_DATA_TYPE;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnUATT_VERSION_NBR;
+    xUATT_ROWID rowid;
+    nSEQ_NBR tnTXI_SEQ_NBR := 1;
     sDummy varchar2(1);
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_USER_ATTRIBUTE_TYPE',
-                             psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
-                               psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psDescription)) || ':' || psDescription);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_USER_ATTRIBUTE_TYPE',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDATA_TYPE || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
+        to_char(length(psDescription)) || ':' || psDescription);
   --
-  -- Check if user attribute type already exists.
-  --
-    begin
-      select DATA_TYPE, TXT_ID
-      into sDATA_TYPE, nTXT_ID
-      from USER_ATTRIBUTE_TYPES
-      where CODE = psCODE;
-    exception
-      when NO_DATA_FOUND
-      then nTXT_ID := null;
-        nSEQ_NBR := null;
-    end;
+    select DATA_TYPE, TXT_ID, VERSION_NBR, rowid
+    into sDATA_TYPE, nTXT_ID, nVERSION_NBR, xUATT_ROWID
+    from USER_ATTRIBUTE_TYPES
+    where CODE = psCODE
+    for update;
   --
   -- Check if data type is to be changed and user attributes of this type already exist.
   --
     if psDATA_TYPE != sDATA_TYPE
     then
       begin
-        select 'x' into sDummy from USER_ATTRIBUTES UAT where UATT_CODE = psCODE;
+        select 'x' into sDummy from USER_ATTRIBUTES where UATT_CODE = psCODE;
       --
         raise TOO_MANY_ROWS;
       exception
-        when NO_DATA_FOUND
-        then null;
+        when NO_DATA_FOUND then null;
       --
         when TOO_MANY_ROWS
-        then MESSAGE.DISPLAY_MESSAGE('USR', 17, 'Cannot update data type of user attribute type already in use');
+        then MESSAGE.DISPLAY_MESSAGE('USR', 6, 'Cannot update data type of user attribute type already in use');
       end;
     end if;
   --
-  -- Create or update description where required.
-  --
-    if psDescription is null
+    if pnVERSION_NBR = nVERSION_NBR
     then
-      if nTXT_ID is null
-      then MESSAGE.DISPLAY_MESSAGE('USR', 1, 'Description must be specified for new user attribute type');
-      elsif psLANG_CODE is not null
-      then MESSAGE.DISPLAY_MESSAGE('USR', 2, 'Description language cannot be specified without description text');
-      elsif psDATA_TYPE is null
-        and pnDISPLAY_SEQ = -1e6
-        and psACTIVE_FLAG is null
-      then MESSAGE.DISPLAY_MESSAGE('USR', 3, 'Nothing to be updated');
-      end if;
-    else
-      begin
-        select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
-      exception
-        when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('USR', 4, 'Unknown description language');
-      end;
-    --
-      if sACTIVE_FLAG = 'N'
-      then MESSAGE.DISPLAY_MESSAGE('USR', 5, 'Inactive description language');
+      if psDescription is null
+      then
+        if psDATA_TYPE is null
+          and pnDISPLAY_SEQ = -1e6
+          and psACTIVE_FLAG is null
+        then MESSAGE.DISPLAY_MESSAGE('USR', 5, 'Nothing to be updated');
+        end if;
+      else
+        TEXT.SET_TEXT(nTXT_ID, 'USR', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      TEXT.SET_TEXT(nTXT_ID, 'UATT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
-    end if;
-  --
-    merge into USER_ATTRIBUTE_TYPES UATT
-    using
-     (select psCODE CODE from DUAL) INP
-    on (UATT.CODE = INP.CODE)
-    when matched then
-      update
+      update USER_ATTRIBUTE_TYPES
       set DATA_TYPE = nvl(psDATA_TYPE, DATA_TYPE),
         DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
-        ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG)
-      where psDATA_TYPE is not null
-        or nvl(pnDISPLAY_SEQ, 0) != -1e6
-        or psACTIVE_FLAG is not null
-    when not matched then
-      insert
-       (CODE, DATA_TYPE, DISPLAY_SEQ,
-        ACTIVE_FLAG, TXT_ID)
-      values
-       (psCODE, psDATA_TYPE, case when pnDISPLAY_SEQ != -1e6 then pnDISPLAY_SEQ end,
-        nvl(psACTIVE_FLAG, 'Y'), nTXT_ID);
+        ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xUATT_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 2, 'User attribute type has been updated by another user');
+    end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end UPDATE_USER_ATTRIBUTE_TYPE;
+--
+-- ----------------------------------------
+-- SET_USER_ATTRIBUTE_TYPE
+-- ----------------------------------------
+--
+  procedure SET_USER_ATTRIBUTE_TYPE
+   (psCODE in tmsUATT_CODE,
+    pnVERSION_NBR in out tnUATT_VERSION_NBR,
+    psDATA_TYPE in tsUATT_DATA_TYPE := null,
+    psLANG_CODE in tsLANG_CODE := null,
+    psDescription in tsText := null,
+    pnDISPLAY_SEQ in tnUATT_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in tsUATT_ACTIVE_FLAG := null)
+  is
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_USER_ATTRIBUTE_TYPE',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDATA_TYPE || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
+        to_char(length(psDescription)) || ':' || psDescription);
+  --
+    if pnVERSION_NBR is null
+    then
+      INSERT_USER_ATTRIBUTE_TYPE(psCODE, psDATA_TYPE, psLANG_CODE, psDescription,
+                                 case when pnDISPLAY_SEQ = -1e6 then null else pnDISPLAY_SEQ end,
+                                 nvl(psACTIVE_FLAG, 'Y'));
+    --
+      pnVERSION_NBR := 1;
+    else
+      UPDATE_USER_ATTRIBUTE_TYPE(psCODE, pnVERSION_NBR, psDATA_TYPE, psLANG_CODE, psDescription,
+                                 pnDISPLAY_SEQ, psACTIVE_FLAG);
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_USER_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -320,24 +462,37 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure DELETE_USER_ATTRIBUTE_TYPE
-   (psCODE in USER_ATTRIBUTE_TYPES.CODE%type)
+   (psCODE in tmsUATT_CODE,
+    pnVERSION_NBR in tnUATT_VERSION_NBR)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnUATT_VERSION_NBR;
+    xUATT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_USER_ATTRIBUTE_TYPE', psCODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_USER_ATTRIBUTE_TYPE',
+      psCODE || '~' || to_char(pnVERSION_NBR));
   --
-    delete from USER_ATTRIBUTE_TYPES where CODE = psCODE returning TXT_ID into nTXT_ID;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xUATT_ROWID
+    from USER_ATTRIBUTE_TYPES
+    where CODE = psCODE
+    for update;
   --
-    if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('USR', 6, 'User attribute type does not exist');
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      delete from USER_ATTRIBUTE_TYPES where rowid = xUATT_ROWID;
+    --
+      TEXT.DELETE_TEXT(nTXT_ID);
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 2, 'User attribute type has been updated by another user');
     end if;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end DELETE_USER_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -345,22 +500,25 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure SET_UATT_DESCRIPTION
-   (psCODE in USER_ATTRIBUTE_TYPES.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psDescription in varchar2)
+   (psCODE in tmsUATT_CODE,
+    pnVERSION_NBR in out tnUATT_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psDescription in tmsText)
   is
-    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
+    nSEQ_NBR tnTXI_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_UATT_DESCRIPTION',
-                             psCODE || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psDescription)) || ':' || psDescription);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_UATT_DESCRIPTION',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
+        to_char(length(psDescription)) || ':' || psDescription);
   --
-    SET_UATT_TEXT(psCODE, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    SET_UATT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_UATT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -368,19 +526,22 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure REMOVE_UATT_DESCRIPTION
-   (psCODE in USER_ATTRIBUTE_TYPES.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type)
+   (psCODE in tmsUATT_CODE,
+    pnVERSION_NBR in out tnUATT_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_UATT_DESCRIPTION',
-                             psCODE || '~' || psLANG_CODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_UATT_DESCRIPTION',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
-    REMOVE_UATT_TEXT(psCODE, 'DESCR', 1, psLANG_CODE);
+    REMOVE_UATT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_UATT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -388,27 +549,45 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure SET_UATT_TEXT
-   (psCODE in USER_ATTRIBUTE_TYPES.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2)
+   (psCODE in tmsUATT_CODE,
+    pnVERSION_NBR in out tnUATT_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psText in tmsText)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnUATT_VERSION_NBR;
+    xUATT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_UATT_TEXT',
-                             psCODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psText)) || ':' || psText);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_UATT_TEXT',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
+        '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID into nTXT_ID from USER_ATTRIBUTE_TYPES where CODE = psCODE;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xUATT_ROWID
+    from USER_ATTRIBUTE_TYPES
+    where CODE = psCODE
+    for update;
   --
-    TEXT.SET_TEXT(nTXT_ID, 'UATT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      TEXT.SET_TEXT(nTXT_ID, 'TXTT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+    --
+      update USER_ATTRIBUTE_TYPES
+      set VERSION_NBR = VERSION_NBR + 1
+      where rowid = xUATT_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 2, 'User attribute type has been updated by another user');
+    end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_UATT_TEXT;
 --
 -- ----------------------------------------
@@ -416,49 +595,113 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure REMOVE_UATT_TEXT
-   (psCODE in USER_ATTRIBUTE_TYPES.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null)
+   (psCODE in tmsUATT_CODE,
+    pnVERSION_NBR in out tnUATT_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnUATT_VERSION_NBR;
+    xUATT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_UATT_TEXT',
-                             psCODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_UATT_TEXT',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
+        to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID into nTXT_ID from USER_ATTRIBUTE_TYPES where CODE = psCODE;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xUATT_ROWID
+    from USER_ATTRIBUTE_TYPES
+    where CODE = psCODE
+    for update;
   --
-    if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Text type must be specified');
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+    --
+      update USER_ATTRIBUTE_TYPES
+      set VERSION_NBR = VERSION_NBR + 1
+      where rowid = xUATT_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 2, 'User attribute type has been updated by another user');
     end if;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_UATT_TEXT;
 --
 -- ----------------------------------------
--- SET_USER_ATTRIBUTE
+-- INSERT_USER_ATTRIBUTE
 -- ----------------------------------------
 --
-  procedure SET_USER_ATTRIBUTE
-   (psUSERID in USER_ATTRIBUTES.USERID%type,
-    psUATT_CODE in USER_ATTRIBUTES.UATT_CODE%type,
-    psCHAR_VALUE in USER_ATTRIBUTES.CHAR_VALUE%type := null,
-    pnNUM_VALUE in USER_ATTRIBUTES.NUM_VALUE%type := null,
-    pdDATE_VALUE in USER_ATTRIBUTES.DATE_VALUE%type := null)
+  procedure INSERT_USER_ATTRIBUTE
+   (psUSERID in tmsUSR_USERID,
+    psUATT_CODE in tmsUATT_CODE,
+    psCHAR_VALUE in tsUAT_CHAR_VALUE := null,
+    pnNUM_VALUE in tnUAT_NUM_VALUE := null,
+    pdDATE_VALUE in tdUAT_DATE_VALUE := null)
   is
-    sDATA_TYPE USER_ATTRIBUTE_TYPES.DATA_TYPE%type;
-    sACTIVE_FLAG USER_ATTRIBUTE_TYPES.ACTIVE_FLAG%type;
+    sDATA_TYPE tsUATT_DATA_TYPE;
+    sACTIVE_FLAG tsUATT_ACTIVE_FLAG;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_USER_ATTRIBUTE',
-                             psUSERID || '~' || psUATT_CODE || '~' ||
-                             psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
-                             to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_USER_ATTRIBUTE',
+      psUSERID || '~' || psUATT_CODE || '~' || psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
+        to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
+  --
+    select DATA_TYPE, ACTIVE_FLAG
+    into sDATA_TYPE, sACTIVE_FLAG
+    from USER_ATTRIBUTE_TYPES
+    where CODE = psUATT_CODE;
+  --
+    if sACTIVE_FLAG = 'N'
+    then MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Inactive user attribute type');
+    end if;
+  --
+    case
+      when sDATA_TYPE = 'C' and psCHAR_VALUE is not null then null;
+      when sDATA_TYPE = 'N' and pnNUM_VALUE is not null then null;
+      when sDATA_TYPE = 'D' and pdDATE_VALUE is not null then null;
+      else MESSAGE.DISPLAY_MESSAGE('USR', 8, 'Attribute of the correct type must be specified');
+    end case;
+  --
+    insert into USER_ATTRIBUTES (USERID, UATT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
+    values (psUSERID, psUATT_CODE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end INSERT_USER_ATTRIBUTE;
+--
+-- ----------------------------------------
+-- UPDATE_USER_ATTRIBUTE
+-- ----------------------------------------
+--
+  procedure UPDATE_USER_ATTRIBUTE
+   (psUSERID in tmsUSR_USERID,
+    psUATT_CODE in tmsUATT_CODE,
+    pnVERSION_NBR in out tnUAT_VERSION_NBR,
+    psCHAR_VALUE in tsUAT_CHAR_VALUE := null,
+    pnNUM_VALUE in tnUAT_NUM_VALUE := null,
+    pdDATE_VALUE in tdUAT_DATE_VALUE := null)
+  is
+    sDATA_TYPE tsUATT_DATA_TYPE;
+    sACTIVE_FLAG tsUATT_ACTIVE_FLAG;
+    nVERSION_NBR tnUAT_VERSION_NBR;
+    xUAT_ROWID rowid;
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_USER_ATTRIBUTE',
+      psUSERID || '~' || psUATT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
+        to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
   --
     begin
       select DATA_TYPE, ACTIVE_FLAG
@@ -467,112 +710,172 @@ create or replace package body SYSTEM_USER is
       where CODE = psUATT_CODE;
     exception
       when NO_DATA_FOUND
-      then MESSAGE.DISPLAY_MESSAGE('USR', 19, 'Unknown user attribute type');
+      then MESSAGE.DISPLAY_MESSAGE('USR', 9, 'Unknown user attribute type');
     end;
   --
     if sACTIVE_FLAG = 'N'
-    then MESSAGE.DISPLAY_MESSAGE('USR', 20, 'Inactive user attribute type');
+    then MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Inactive user attribute type');
     end if;
   --
     case
       when sDATA_TYPE = 'C' and psCHAR_VALUE is not null then null;
       when sDATA_TYPE = 'N' and pnNUM_VALUE is not null then null;
       when sDATA_TYPE = 'D' and pdDATE_VALUE is not null then null;
-      else MESSAGE.DISPLAY_MESSAGE('USR', 21, 'Attribute of the correct type must be specified');
+      else MESSAGE.DISPLAY_MESSAGE('USR', 8, 'Attribute of the correct type must be specified');
     end case;
   --
-    merge into USER_ATTRIBUTES UAT
-    using
-     (select psUSERID USERID, psUATT_CODE UATT_CODE from DUAL) INP
-    on (UAT.USERID = INP.USERID and UAT.UATT_CODE = INP.UATT_CODE)
-    when matched then
-      update
-      set CHAR_VALUE = psCHAR_VALUE,
-        NUM_VALUE = pnNUM_VALUE,
-        DATE_VALUE = pdDATE_VALUE
-    when not matched then
-      insert (USERID, UATT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
-      values (psUSERID, psUATT_CODE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
+    select VERSION_NBR, rowid
+    into nVERSION_NBR, xUAT_ROWID
+    from USER_ATTRIBUTES
+    where USERID = psUSERID
+    and UATT_CODE = psUATT_CODE
+    for update;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      update USER_ATTRIBUTES
+      set CHAR_VALUE = nvl(psCHAR_VALUE, CHAR_VALUE),
+        NUM_VALUE = nvl(pnNUM_VALUE, NUM_VALUE),
+        DATE_VALUE = nvl(pdDATE_VALUE, DATE_VALUE),
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xUAT_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 3, 'User attribute has been updated by another user');
+    end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end UPDATE_USER_ATTRIBUTE;
+--
+-- ----------------------------------------
+-- SET_USER_ATTRIBUTE
+-- ----------------------------------------
+--
+  procedure SET_USER_ATTRIBUTE
+   (psUSERID in tmsUSR_USERID,
+    psUATT_CODE in tmsUATT_CODE,
+    pnVERSION_NBR in out tnUAT_VERSION_NBR,
+    psCHAR_VALUE in tsUAT_CHAR_VALUE := null,
+    pnNUM_VALUE in tnUAT_NUM_VALUE := null,
+    pdDATE_VALUE in tdUAT_DATE_VALUE := null)
+  is
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_USER_ATTRIBUTE',
+      psUSERID || '~' || psUATT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
+        to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
+  --
+    if pnVERSION_NBR is null
+    then
+      INSERT_USER_ATTRIBUTE(psUSERID, psUATT_CODE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
+    --
+      pnVERSION_NBR := 1;
+    else
+      UPDATE_USER_ATTRIBUTE(psUSERID, psUATT_CODE, pnVERSION_NBR,
+                            psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_USER_ATTRIBUTE;
 --
 -- ----------------------------------------
--- REMOVE_USER_ATTRIBUTE
+-- DELETE_USER_ATTRIBUTE
 -- ----------------------------------------
 --
-  procedure REMOVE_USER_ATTRIBUTE
-   (psUSERID in USER_ATTRIBUTES.USERID%type,
-    psUATT_CODE in USER_ATTRIBUTES.UATT_CODE%type)
+  procedure DELETE_USER_ATTRIBUTE
+   (psUSERID in tmsUSR_USERID,
+    psUATT_CODE in tmsUATT_CODE,
+    pnVERSION_NBR in tnUAT_VERSION_NBR)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnUAT_VERSION_NBR;
+    xUAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_USER_ATTRIBUTE',
-                             psUSERID || '~' || psUATT_CODE);
+    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_USER_ATTRIBUTE',
+                             psUSERID || '~' || psUATT_CODE || '~' || to_char(pnVERSION_NBR));
   --
-    delete from USER_ATTRIBUTES
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xUAT_ROWID
+    from USER_ATTRIBUTES
     where USERID = psUSERID
     and UATT_CODE = psUATT_CODE
-    returning TXT_ID into nTXT_ID;
+    for update;
   --
-    if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('USR', 18, 'User attribute does not exist');
-    end if;
-  --
-    if nTXT_ID is not null
-    then TEXT.DELETE_TEXT(nTXT_ID);
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      delete from USER_ATTRIBUTES where rowid = xUAT_ROWID;
+    --
+      if nTXT_ID is not null
+      then TEXT.DELETE_TEXT(nTXT_ID);
+      end if;
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 3, 'User attribute has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
-  end REMOVE_USER_ATTRIBUTE;
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end DELETE_USER_ATTRIBUTE;
 --
 -- ----------------------------------------
 -- SET_UAT_TEXT
 -- ----------------------------------------
 --
   procedure SET_UAT_TEXT
-   (psUSERID in SYSTEM_USERS.USERID%type,
-    psUATT_CODE in USER_ATTRIBUTES.UATT_CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2)
+   (psUSERID in tmsUSR_USERID,
+    psUATT_CODE in tmsUATT_CODE,
+    pnVERSION_NBR in out tnUAT_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tsLANG_CODE,
+    psText in tmsText)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnUAT_VERSION_NBR;
     xUAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_UAT_TEXT',
-                             psUSERID || '~' || psUATT_CODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psText)) || ':' || psText);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_UAT_TEXT',
+      psUSERID || '~' || psUATT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
+        to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, rowid
-    into nTXT_ID, xUAT_ROWID
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xUAT_ROWID
     from USER_ATTRIBUTES
     where USERID = psUSERID
     and UATT_CODE = psUATT_CODE
     for update;
   --
-    if nTXT_ID is null
+    if pnVERSION_NBR = nVERSION_NBR
     then
       TEXT.SET_TEXT(nTXT_ID, 'UAT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update USER_ATTRIBUTES set TXT_ID = nTXT_ID where rowid = xUAT_ROWID;
+      update USER_ATTRIBUTES
+      set TXT_ID = nTXT_ID,
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xUAT_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
     else
-      TEXT.SET_TEXT(nTXT_ID, 'UAT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      MESSAGE.DISPLAY_MESSAGE('USR', 3, 'User attribute has been updated by another user');
     end if;
-
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_UAT_TEXT;
 --
 -- ----------------------------------------
@@ -580,79 +883,152 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure REMOVE_UAT_TEXT
-   (psUSERID in SYSTEM_USERS.USERID%type,
-    psUATT_CODE in USER_ATTRIBUTES.UATT_CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null)
+   (psUSERID in tmsUSR_USERID,
+    psUATT_CODE in tmsUATT_CODE,
+    pnVERSION_NBR in out tnUAT_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnUAT_VERSION_NBR;
+    xUAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_UAT_TEXT',
-                             psUSERID || '~' || psUATT_CODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_UAT_TEXT',
+      psUSERID || '~' || psUATT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Text type must be specified');
-    end if;
-  --
-    select TXT_ID
-    into nTXT_ID
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xUAT_ROWID
     from USER_ATTRIBUTES
     where USERID = psUSERID
-    and UATT_CODE = psUATT_CODE;
+    and UATT_CODE = psUATT_CODE
+    for update;
   --
-    if nTXT_ID is not null
-    then TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+    --
+      update USER_ATTRIBUTES
+      set VERSION_NBR = VERSION_NBR + 1
+      where rowid = xUAT_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 3, 'User attribute has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_UAT_TEXT;
+--
+-- ----------------------------------------
+-- INSERT_USER_LANG_PREFERENCE
+-- ----------------------------------------
+--
+  procedure INSERT_USER_LANG_PREFERENCE
+   (psUSERID in tmsUSR_USERID,
+    psLANG_CODE in tmsLANG_CODE,
+    pnPREF_SEQ in tnULP_PREF_SEQ)
+  is
+    sACTIVE_FLAG tsLANG_ACTIVE_FLAG;
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_USER_LANG_PREFERENCE',
+      psUSERID || '~' || psLANG_CODE || '~' || to_char(pnPREF_SEQ));
+  --
+    select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
+  --
+    if sACTIVE_FLAG = 'N'
+    then MESSAGE.DISPLAY_MESSAGE('USR', 10, 'Inactive preference language');
+    end if;
+  --
+    insert into USER_LANGUAGE_PREFERENCES (USERID, LANG_CODE, PREF_SEQ)
+    values (psUSERID, psLANG_CODE, pnPREF_SEQ);
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end INSERT_USER_LANG_PREFERENCE;
+--
+-- ----------------------------------------
+-- UPDATE_USER_LANG_PREFERENCE
+-- ----------------------------------------
+--
+  procedure UPDATE_USER_LANG_PREFERENCE
+   (psUSERID in tmsUSR_USERID,
+    psLANG_CODE in tmsLANG_CODE,
+    pnVERSION_NBR in out tnULP_VERSION_NBR,
+    pnPREF_SEQ in tnULP_PREF_SEQ)
+  is
+    nVERSION_NBR tnULP_VERSION_NBR;
+    xULP_ROWID rowid;
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_USER_LANG_PREFERENCE',
+      psUSERID || '~' || psLANG_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+        to_char(pnPREF_SEQ));
+  --
+    select VERSION_NBR, rowid
+    into nVERSION_NBR, xULP_ROWID
+    from USER_LANGUAGE_PREFERENCES
+    where USERID = psUSERID
+    and LANG_CODE = psLANG_CODE
+    for update;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      update USER_LANGUAGE_PREFERENCES
+      set PREF_SEQ = pnPREF_SEQ,
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xULP_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 4, 'User language preference has been updated by another user');
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end UPDATE_USER_LANG_PREFERENCE;
 --
 -- ----------------------------------------
 -- SET_USER_LANG_PREFERENCE
 -- ----------------------------------------
 --
   procedure SET_USER_LANG_PREFERENCE
-   (psUSERID in USER_LANGUAGE_PREFERENCES.USERID%type,
-    psLANG_CODE in USER_LANGUAGE_PREFERENCES.LANG_CODE%type,
-    pnPREF_SEQ in USER_LANGUAGE_PREFERENCES.PREF_SEQ%type)
+   (psUSERID in tmsUSR_USERID,
+    psLANG_CODE in tmsLANG_CODE,
+    pnVERSION_NBR in out tnULP_VERSION_NBR,
+    pnPREF_SEQ in tnULP_PREF_SEQ)
   is
-    sACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_USER_LANG_PREFERENCE',
-                             psUSERID || '~' || psLANG_CODE || '~' || to_char(pnPREF_SEQ));
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_USER_LANG_PREFERENCE',
+      psUSERID || '~' || psLANG_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+        to_char(pnPREF_SEQ));
   --
-    begin
-      select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
-    exception
-      when NO_DATA_FOUND
-      then MESSAGE.DISPLAY_MESSAGE('USR', 13, 'Unknown preference language');
-    end;
-  --
-    if sACTIVE_FLAG = 'N'
-    then MESSAGE.DISPLAY_MESSAGE('USR', 14, 'Inactive preference language');
+    if pnVERSION_NBR is null
+    then
+      INSERT_USER_LANG_PREFERENCE(psUSERID, psLANG_CODE, pnPREF_SEQ);
+    --
+      pnVERSION_NBR := 1;
+    else
+      UPDATE_USER_LANG_PREFERENCE(psUSERID, psLANG_CODE, pnVERSION_NBR, pnPREF_SEQ);
     end if;
-  --
-    merge into USER_LANGUAGE_PREFERENCES ULP
-    using
-     (select psUSERID USERID, psLANG_CODE LANG_CODE from DUAL) INP
-    on (ULP.USERID = INP.USERID and ULP.LANG_CODE = INP.LANG_CODE)
-    when matched then
-      update
-      set PREF_SEQ = pnPREF_SEQ
-      where PREF_SEQ != pnPREF_SEQ
-    when not matched then
-      insert (USERID, LANG_CODE, PREF_SEQ)
-      values (psUSERID, psLANG_CODE, pnPREF_SEQ);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_USER_LANG_PREFERENCE;
 --
 -- ----------------------------------------
@@ -660,45 +1036,48 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure REMOVE_USER_LANG_PREFERENCE
-   (psUSERID in USER_LANGUAGE_PREFERENCES.USERID%type,
-    psLANG_CODE in USER_LANGUAGE_PREFERENCES.LANG_CODE%type := null,
-    pnPREF_SEQ in USER_LANGUAGE_PREFERENCES.PREF_SEQ%type := null)
+   (psUSERID in tmsUSR_USERID,
+    pnVERSION_NBR in out tnULP_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    pnPREF_SEQ in tnULP_PREF_SEQ := null)
   is
+    nVERSION_NBR tnULP_VERSION_NBR;
+    xULP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_USER_LANG_PREFERENCE',
-                             psUSERID || '~' || psLANG_CODE || '~' || to_char(pnPREF_SEQ));
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_USER_LANG_PREFERENCE',
+      psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
+        to_char(pnPREF_SEQ));
   --
     if psLANG_CODE is not null
     then
-      if pnPREF_SEQ is not null
-      then
-        delete from USER_LANGUAGE_PREFERENCES
-        where USERID = psUSERID
-        and LANG_CODE = psLANG_CODE
-        and PREF_SEQ = pnPREF_SEQ;
-      else
-        delete from USER_LANGUAGE_PREFERENCES
-        where USERID = psUSERID
-        and LANG_CODE = psLANG_CODE;
-      end if;
+      select VERSION_NBR, rowid
+      into nVERSION_NBR, xULP_ROWID
+      from USER_LANGUAGE_PREFERENCES
+      where USERID = psUSERID
+      and LANG_CODE = psLANG_CODE
+      for update;
     else
-      if pnPREF_SEQ is not null
-      then
-        delete from USER_LANGUAGE_PREFERENCES
-        where USERID = psUSERID
-        and PREF_SEQ = pnPREF_SEQ;
-      else MESSAGE.DISPLAY_MESSAGE('USR', 15, 'Language or preference sequence (or both) must be specified');
-      end if;
+      select VERSION_NBR, rowid
+      into nVERSION_NBR, xULP_ROWID
+      from USER_LANGUAGE_PREFERENCES
+      where USERID = psUSERID
+      and PREF_SEQ = pnPREF_SEQ
+      for update;
     end if;
   --
-    if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('USR', 16, 'Language preference does not exist');
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      delete from USER_LANGUAGE_PREFERENCES where rowid = xULP_ROWID;
+    else
+      MESSAGE.DISPLAY_MESSAGE('USR', 4, 'User language preference has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_USER_LANG_PREFERENCE;
 --
 -- ----------------------------------------
@@ -706,16 +1085,18 @@ create or replace package body SYSTEM_USER is
 -- ----------------------------------------
 --
   procedure USER_LOGIN
-   (psUSERID in SYSTEM_USERS.USERID%type)
+   (psUSERID in tmsUSR_USERID)
   is
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.USER_LOGIN', psUSERID);
   --
+    PSR_CONTEXT.SET_USERID(psUSERID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end USER_LOGIN;
 --
 -- =====================================
