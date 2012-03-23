@@ -5,82 +5,130 @@ create or replace package body LANGUAGE is
 -- ========================================
 --
 -- ----------------------------------------
--- SET_LANGUAGE
+-- INSERT_LANGUAGE
 -- ----------------------------------------
 --
-  procedure SET_LANGUAGE
-   (psCODE in LANGUAGES.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type := null,
-    psDescription in varchar2 := null,
-    pnDISPLAY_SEQ in LANGUAGES.DISPLAY_SEQ%type := -1e6,
-    psACTIVE_FLAG in LANGUAGES.ACTIVE_FLAG%type := null)
+  procedure INSERT_LANGUAGE
+   (psCODE in tmsLANG_CODE,
+    psLANG_CODE in tmsLANG_CODE,
+    psDescription in tmsText,
+    pnDISPLAY_SEQ in tnLANG_DISPLAY_SEQ := null,
+    psACTIVE_FLAG in tmsACTIVE_FLAG := 'Y')
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
-    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
-    sACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
+    nTXT_ID tnTXT_ID;
+    nSEQ_NBR tnTXI_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_LANGUAGE',
-                             psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
-                               psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psDescription)) || ':' || psDescription);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_LANGUAGE',
+      psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-  -- Check if language already exists.
+    TEXT.SET_TEXT(nTXT_ID, 'LANG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    begin
-      select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
-    exception
-      when NO_DATA_FOUND
-      then nTXT_ID := null;
-        nSEQ_NBR := null;
-    end;
-  --
-    if psDescription is null
-    then
-      if nTXT_ID is null
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'Description must be specified for new language');
-      elsif psLANG_CODE is not null
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 2, 'Description language cannot be specified without description text');
-      elsif pnDISPLAY_SEQ = -1e6
-        and psACTIVE_FLAG is null
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 3, 'Nothing to be updated');
-      end if;
-    else
-      begin
-        select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
-      exception
-        when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('LANG', 4, 'Unknown description language');
-      end;
-    --
-      if sACTIVE_FLAG = 'N'
-      then MESSAGE.DISPLAY_MESSAGE('LANG', 5, 'Inactive description language');
-      end if;
-    --
-      TEXT.SET_TEXT(nTXT_ID, 'LANG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
-    end if;
-  --
-    merge into LANGUAGES LANG
-    using
-     (select psCODE CODE from DUAL) INP
-    on (LANG.CODE = INP.CODE)
-    when matched then
-      update
-      set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
-        ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG)
-      where nvl(pnDISPLAY_SEQ, 0) != -1e6
-        or psACTIVE_FLAG is not null
-    when not matched then
-      insert
-       (CODE, DISPLAY_SEQ, ACTIVE_FLAG,
-        TXT_ID)
-      values
-       (psCODE, case when pnDISPLAY_SEQ != -1e6 then pnDISPLAY_SEQ end, nvl(psACTIVE_FLAG, 'Y'),
-        nTXT_ID);
+    insert into LANGUAGES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
+    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end INSERT_LANGUAGE;
+--
+-- ----------------------------------------
+-- UPDATE_LANGUAGE
+-- ----------------------------------------
+--
+  procedure UPDATE_LANGUAGE
+   (psCODE in tmsLANG_CODE,
+    pnVERSION_NBR in out tnLANG_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psDescription in tsText := null,
+    pnDISPLAY_SEQ in tnLANG_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in tsLANG_ACTIVE_FLAG := null)
+  is
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnLANG_VERSION_NBR;
+    xLANG_ROWID rowid;
+    nSEQ_NBR tnTXI_SEQ_NBR := 1;
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_LANGUAGE',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) ||
+        '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
+        to_char(length(psDescription)) || ':' || psDescription);
+  --
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xLANG_ROWID
+    from LANGUAGES
+    where CODE = psCODE
+    for update;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      if psLANG_CODE is null and psDescription is null
+      then
+        if pnDISPLAY_SEQ = -1e6
+          and psACTIVE_FLAG is null
+        then MESSAGE.DISPLAY_MESSAGE('LANG', 2, 'Nothing to be updated');
+        end if;
+      else
+        TEXT.SET_TEXT(nTXT_ID, 'LANG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      end if;
+    --
+      update LANGUAGES
+      set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
+        ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xLANG_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'Language has been updated by another user');
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end UPDATE_LANGUAGE;
+--
+-- ----------------------------------------
+-- SET_LANGUAGE
+-- ----------------------------------------
+--
+  procedure SET_LANGUAGE
+   (psCODE in tmsLANG_CODE,
+    pnVERSION_NBR in out tnLANG_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psDescription in tsText := null,
+    pnDISPLAY_SEQ in tnLANG_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in tsLANG_ACTIVE_FLAG := null)
+  is
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LANGUAGE',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
+        psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
+        to_char(length(psDescription)) || ':' || psDescription);
+  --
+    if pnVERSION_NBR is null
+    then
+      INSERT_LANGUAGE(psCODE, psLANG_CODE, psDescription,
+                      case when pnDISPLAY_SEQ = -1e6 then null else pnDISPLAY_SEQ end,
+                      nvl(psACTIVE_FLAG, 'Y'));
+    --
+      pnVERSION_NBR := 1;
+    else
+      UPDATE_LANGUAGE(psCODE, pnVERSION_NBR, psLANG_CODE, psDescription,
+                      pnDISPLAY_SEQ, psACTIVE_FLAG);
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_LANGUAGE;
 --
 -- ----------------------------------------
@@ -88,24 +136,36 @@ create or replace package body LANGUAGE is
 -- ----------------------------------------
 --
   procedure DELETE_LANGUAGE
-   (psCODE in LANGUAGES.CODE%type)
+   (psCODE in tmsLANG_CODE,
+    pnVERSION_NBR in tnLANG_VERSION_NBR)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnLANG_VERSION_NBR;
+    xLANG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_LANGUAGE', psCODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_LANGUAGE', psCODE || '~' || to_char(pnVERSION_NBR));
   --
-    delete from LANGUAGES where CODE = psCODE returning TXT_ID into nTXT_ID;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xLANG_ROWID
+    from LANGUAGES
+    where CODE = psCODE
+    for update;
   --
-    if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('LANG', 6, 'Language does not exist');
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      delete from LANGUAGES where rowid = xLANG_ROWID;
+    --
+      TEXT.DELETE_TEXT(nTXT_ID);
+    else
+      MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'Language has been updated by another user');
     end if;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end DELETE_LANGUAGE;
 --
 -- ----------------------------------------
@@ -113,22 +173,25 @@ create or replace package body LANGUAGE is
 -- ----------------------------------------
 --
   procedure SET_LANG_DESCRIPTION
-   (psCODE in LANGUAGES.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psDescription in varchar2)
+   (psCODE in tmsLANG_CODE,
+    pnVERSION_NBR in out tnLANG_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psDescription in tmsText)
   is
-    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
+    nSEQ_NBR tnTXI_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_LANG_DESCRIPTION',
-                             psCODE || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psDescription)) || ':' || psDescription);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LANG_DESCRIPTION',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
+        to_char(length(psDescription)) || ':' || psDescription);
   --
-    SET_LANG_TEXT(psCODE, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    SET_LANG_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_LANG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -136,19 +199,22 @@ create or replace package body LANGUAGE is
 -- ----------------------------------------
 --
   procedure REMOVE_LANG_DESCRIPTION
-   (psCODE in LANGUAGES.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type)
+   (psCODE in tmsLANG_CODE,
+    pnVERSION_NBR in out tnLANG_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_LANG_DESCRIPTION',
-                             psCODE || '~' || psLANG_CODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LANG_DESCRIPTION',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
-    REMOVE_LANG_TEXT(psCODE, 'DESCR', 1, psLANG_CODE);
+    REMOVE_LANG_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_LANG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -156,27 +222,45 @@ create or replace package body LANGUAGE is
 -- ----------------------------------------
 --
   procedure SET_LANG_TEXT
-   (psCODE in LANGUAGES.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2)
+   (psCODE in tmsLANG_CODE,
+    pnVERSION_NBR in out tnLANG_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psText in tmsText)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnLANG_VERSION_NBR;
+    xLANG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_LANG_TEXT',
-                             psCODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psText)) || ':' || psText);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LANG_TEXT',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
+        '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xLANG_ROWID
+    from LANGUAGES
+    where CODE = psCODE
+    for update;
   --
-    TEXT.SET_TEXT(nTXT_ID, 'LANG', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      TEXT.SET_TEXT(nTXT_ID, 'LANG', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+    --
+      update LANGUAGES
+      set VERSION_NBR = VERSION_NBR + 1
+      where rowid = xLANG_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'Language has been updated by another user');
+    end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_LANG_TEXT;
 --
 -- ----------------------------------------
@@ -184,29 +268,44 @@ create or replace package body LANGUAGE is
 -- ----------------------------------------
 --
   procedure REMOVE_LANG_TEXT
-   (psCODE in LANGUAGES.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null)
+   (psCODE in tmsLANG_CODE,
+    pnVERSION_NBR in out tnLANG_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnLANG_VERSION_NBR;
+    xLANG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_LANG_TEXT',
-                             psCODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LANG_TEXT',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('LANG', 7, 'Text type must be specified');
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xLANG_ROWID
+    from LANGUAGES
+    where CODE = psCODE
+    for update;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+    --
+      update LANGUAGES
+      set VERSION_NBR = VERSION_NBR + 1
+      where rowid = xLANG_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'Language has been updated by another user');
     end if;
-  --
-    select TXT_ID into nTXT_ID from LANGUAGES where CODE = psCODE;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_LANG_TEXT;
 --
 -- =====================================
