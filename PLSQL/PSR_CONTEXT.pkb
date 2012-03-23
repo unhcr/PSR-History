@@ -19,7 +19,8 @@ create or replace package body PSR_CONTEXT is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_USERID;
 --
 -- =====================================
