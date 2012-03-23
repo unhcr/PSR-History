@@ -6,12 +6,92 @@ create or replace package TEXT_TYPE is
 --  Procedures for maintenance of text types.
 --
 --  Change History:
---  22-Feb-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  14-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
   sModule varchar2(30) := 'TEXT_TYPE';
   sVersion varchar2(10) := 'D0.1';
+--
+-- ========================================
+-- Subtype definitions
+-- ========================================
+--
+  subtype tmsTXTT_CODE is TEXT_TYPES.CODE%type not null;
+  subtype tnTXTT_DISPLAY_SEQ is TEXT_TYPES.DISPLAY_SEQ%type;
+  subtype tsTXTT_ACTIVE_FLAG is TEXT_TYPES.ACTIVE_FLAG%type;
+  subtype tmsTXTT_ACTIVE_FLAG is tsTXTT_ACTIVE_FLAG not null;
+  subtype tnTXTT_VERSION_NBR is TEXT_TYPES.VERSION_NBR%type;
+--
+  subtype tmsTAB_ALIAS is TABLE_ALIASES.ALIAS%type not null;
+--
+  subtype tsTTP_MANDATORY_FLAG is TEXT_TYPE_PROPERTIES.MANDATORY_FLAG%type;
+  subtype tmsTTP_MANDATORY_FLAG is tsTTP_MANDATORY_FLAG not null;
+  subtype tsTTP_MULTI_INSTANCE_FLAG is TEXT_TYPE_PROPERTIES.MULTI_INSTANCE_FLAG%type;
+  subtype tmsTTP_MULTI_INSTANCE_FLAG is tsTTP_MULTI_INSTANCE_FLAG not null;
+  subtype tsTTP_LONG_TEXT_FLAG is TEXT_TYPE_PROPERTIES.LONG_TEXT_FLAG%type;
+  subtype tmsTTP_LONG_TEXT_FLAG is tsTTP_LONG_TEXT_FLAG not null;
+  subtype tnTTP_VERSION_NBR is TEXT_TYPE_PROPERTIES.VERSION_NBR%type;
+--
+  subtype tsLANG_CODE is LANGUAGES.CODE%type;
+  subtype tmsLANG_CODE is tsLANG_CODE not null;
+--
+  subtype tnTXT_ID is TEXT_HEADERS.ID%type;
+  subtype tnTXI_SEQ_NBR is TEXT_ITEMS.SEQ_NBR%type;
+  subtype tsText is varchar2;
+  subtype tmsText is tsText not null;
+--
+-- ========================================
+-- Program unit definitions
+-- ========================================
+--
+-- ----------------------------------------
+-- INSERT_TEXT_TYPE
+-- ----------------------------------------
+--
+-- Create a new text type record.
+--
+-- Parameters:
+--  psCODE - Code of text type (mandatory).
+--  psLANG_CODE - Language code for the textual description (mandatory).
+--  psDescription - Textual description of text type (mandatory).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of text types (optional).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the text type is currently available for use
+--    (optional: defaults to Y).
+--
+  procedure INSERT_TEXT_TYPE
+   (psCODE in tmsTXTT_CODE,
+    psLANG_CODE in tmsLANG_CODE,
+    psDescription in tmsText,
+    pnDISPLAY_SEQ in tnTXTT_DISPLAY_SEQ := null,
+    psACTIVE_FLAG in tmsTXTT_ACTIVE_FLAG := 'Y');
+--
+-- ----------------------------------------
+-- UPDATE_TEXT_TYPE
+-- ----------------------------------------
+--
+-- Update an existing text type record.
+--
+-- Parameters:
+--  psCODE - Code of text type (mandatory).
+--  pnVERSION_NBR - Update version number of text type (mandatory: new version number is returned).
+--  psLANG_CODE - Language code for the textual description (optional, but must be specified if
+--    psDescription is specified).
+--  psDescription - Textual description of text type (optional, if not specified, the description
+--    is not updated).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of text types (optional, if not
+--    specified, the existing display sequence is not updated; if null is specified, the display
+--    sequence is set to null).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the text type is currently available for use
+--    (optional: if not specified, the existing value is not updated).
+--
+  procedure UPDATE_TEXT_TYPE
+   (psCODE in tmsTXTT_CODE,
+    pnVERSION_NBR in out tnTXTT_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psDescription in tsText := null,
+    pnDISPLAY_SEQ in tnTXTT_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in tsTXTT_ACTIVE_FLAG := null);
 --
 -- ----------------------------------------
 -- SET_TEXT_TYPE
@@ -21,22 +101,25 @@ create or replace package TEXT_TYPE is
 --
 -- Parameters:
 --  psCODE - Code of text type (mandatory).
+--  pnVERSION_NBR - Update version number of text type (mandatory: new version number is returned;
+--    for a new text type, null must be specified and 1 will be returned).
 --  psLANG_CODE - Language code for the textual description (optional when updating an existing
 --    text type but must be specified if psDescription is specified).
 --  psDescription - Textual description of text type (optional when updating an existing text type;
 --    if not specified, the description is not updated).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of text types (optional, if not
---    specified, the display sequence is not updated and a new one is set to null; if null
+--    specified, an existing display sequence is not updated and a new one is set to null; if null
 --    is specified, the display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the text type is currently available for use
 --    (optional: if not specified, the existing value is not changed; a new value defaults to Y).
 --
   procedure SET_TEXT_TYPE
-   (psCODE in TEXT_TYPES.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type := null,
-    psDescription in varchar2 := null,
-    pnDISPLAY_SEQ in TEXT_TYPES.DISPLAY_SEQ%type := -1e6,
-    psACTIVE_FLAG in TEXT_TYPES.ACTIVE_FLAG%type := null);
+   (psCODE in tmsTXTT_CODE,
+    pnVERSION_NBR in out tnTXTT_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psDescription in tsText := null,
+    pnDISPLAY_SEQ in tnTXTT_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in tsTXTT_ACTIVE_FLAG := null);
 --
 -- ----------------------------------------
 -- DELETE_TEXT_TYPE
@@ -46,9 +129,11 @@ create or replace package TEXT_TYPE is
 --
 -- Parameters:
 --  psCODE - Code of text type to be deleted (mandatory).
+--  pnVERSION_NBR - Update version number of text type (mandatory).
 --
   procedure DELETE_TEXT_TYPE
-   (psCODE in TEXT_TYPES.CODE%type);
+   (psCODE in tmsTXTT_CODE,
+    pnVERSION_NBR in tnTXTT_VERSION_NBR);
 --
 -- ----------------------------------------
 -- SET_TXTT_DESCRIPTION
@@ -58,13 +143,15 @@ create or replace package TEXT_TYPE is
 --
 -- Parameters:
 --  psCODE - Code of text type (mandatory).
+--  pnVERSION_NBR - Update version number of text type (mandatory: new version number is returned).
 --  psLANG_CODE - Language code of the description (mandatory).
 --  psDescription - Textual description of text type (mandatory).
 --
   procedure SET_TXTT_DESCRIPTION
-   (psCODE in TEXT_TYPES.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psDescription in varchar2);
+   (psCODE in tmsTXTT_CODE,
+    pnVERSION_NBR in out tnTXTT_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psDescription in tmsText);
 --
 -- ----------------------------------------
 -- REMOVE_TXTT_DESCRIPTION
@@ -75,11 +162,13 @@ create or replace package TEXT_TYPE is
 --
 -- Parameters:
 --  psCODE - Code of text type from which description is to be removed (mandatory).
+--  pnVERSION_NBR - Update version number of text type (mandatory: new version number is returned).
 --  psLANG_CODE - Language code of the description to be removed (mandatory).
 --
   procedure REMOVE_TXTT_DESCRIPTION
-   (psCODE in TEXT_TYPES.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type);
+   (psCODE in tmsTXTT_CODE,
+    pnVERSION_NBR in out tnTXTT_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE);
 --
 -- ----------------------------------------
 -- SET_TXTT_TEXT
@@ -89,17 +178,19 @@ create or replace package TEXT_TYPE is
 --
 -- Parameters:
 --  psCODE - Code of text type (mandatory).
+--  pnVERSION_NBR - Update version number of text type (mandatory: new version number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with text type (mandatory).
 --
   procedure SET_TXTT_TEXT
-   (psCODE in TEXT_TYPES.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2);
+   (psCODE in tmsTXTT_CODE,
+    pnVERSION_NBR in out tnTXTT_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psText in tmsText);
 --
 -- ----------------------------------------
 -- REMOVE_TXTT_TEXT
@@ -118,21 +209,23 @@ create or replace package TEXT_TYPE is
 --
 -- Parameters:
 --  psCODE - Code of text type from which text item is to be removed (mandatory).
+--  pnVERSION_NBR - Update version number of text type (mandatory: new version number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
 --  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_TXTT_TEXT
-   (psCODE in TEXT_TYPES.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null);
+   (psCODE in tmsTXTT_CODE,
+    pnVERSION_NBR in out tnTXTT_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null);
 --
 -- ----------------------------------------
--- SET_TEXT_TYPE_PROPERTIES
+-- INSERT_TEXT_TYPE_PROPERTIES
 -- ----------------------------------------
 --
--- Create or update the properties of a text type for a given table.
+-- Create the properties of a text type for a given table.
 --
 -- Parameters:
 --  psTXTT_CODE - Code of text type (mandatory).
@@ -146,31 +239,90 @@ create or replace package TEXT_TYPE is
 --    i.e. they can be longer than 1000 characters (optional - when omitted the existing value is
 --    left unchanged, a new value defaults to N).
 --
+  procedure INSERT_TEXT_TYPE_PROPERTIES
+   (psTXTT_CODE in tmsTXTT_CODE,
+    psTAB_ALIAS in tmsTAB_ALIAS,
+    psMANDATORY_FLAG in tmsTTP_MANDATORY_FLAG := 'Y',
+    psMULTI_INSTANCE_FLAG in tmsTTP_MULTI_INSTANCE_FLAG := 'N',
+    psLONG_TEXT_FLAG in tmsTTP_LONG_TEXT_FLAG := 'N');
+--
+-- ----------------------------------------
+-- UPDATE_TEXT_TYPE_PROPERTIES
+-- ----------------------------------------
+--
+-- Update the existing properties of a text type for a given table.
+--
+-- Parameters:
+--  psTXTT_CODE - Code of text type (mandatory).
+--  psTAB_ALIAS - Table alias (mandatory).
+--  pnVERSION_NBR - Update version number of text type property record (mandatory: new version
+--    number is returned).
+--  psMANDATORY_FLAG - Flag indicating whether the text type is mandatory for this table (optional -
+--    when omitted the existing value is left unchanged, a new value defaults to Y).
+--  psMULTI_INSTANCE_FLAG - Flag indicating whether multiple items of this text type can exist for
+--    this table (optional - when omitted the existing value is left unchanged, a new value defaults
+--    to N).
+--  psLONG_TEXT_FLAG - Flag indicating whether items of this text type should be stored as CLOBs,
+--    i.e. they can be longer than 1000 characters (optional - when omitted the existing value is
+--    left unchanged, a new value defaults to N).
+--
+  procedure UPDATE_TEXT_TYPE_PROPERTIES
+   (psTXTT_CODE in tmsTXTT_CODE,
+    psTAB_ALIAS in tmsTAB_ALIAS,
+    pnVERSION_NBR in out tnTTP_VERSION_NBR,
+    psMANDATORY_FLAG in tsTTP_MANDATORY_FLAG := null,
+    psMULTI_INSTANCE_FLAG in tsTTP_MULTI_INSTANCE_FLAG := null,
+    psLONG_TEXT_FLAG in tsTTP_LONG_TEXT_FLAG := null);
+--
+-- ----------------------------------------
+-- SET_TEXT_TYPE_PROPERTIES
+-- ----------------------------------------
+--
+-- Create or update the properties of a text type for a given table.
+--
+-- Parameters:
+--  psTXTT_CODE - Code of text type (mandatory).
+--  psTAB_ALIAS - Table alias (mandatory).
+--  pnVERSION_NBR - Update version number of text type property record (mandatory: new version
+--    number is returned; for a new properties record, null must be specified and 1 will be
+--    returned).
+--  psMANDATORY_FLAG - Flag indicating whether the text type is mandatory for this table (optional -
+--    when omitted the existing value is left unchanged, a new value defaults to Y).
+--  psMULTI_INSTANCE_FLAG - Flag indicating whether multiple items of this text type can exist for
+--    this table (optional - when omitted the existing value is left unchanged, a new value defaults
+--    to N).
+--  psLONG_TEXT_FLAG - Flag indicating whether items of this text type should be stored as CLOBs,
+--    i.e. they can be longer than 1000 characters (optional - when omitted the existing value is
+--    left unchanged, a new value defaults to N).
+--
   procedure SET_TEXT_TYPE_PROPERTIES
-   (psTXTT_CODE in TEXT_TYPE_PROPERTIES.TXTT_CODE%type,
-    psTAB_ALIAS in TEXT_TYPE_PROPERTIES.TAB_ALIAS%type,
-    psMANDATORY_FLAG in TEXT_TYPE_PROPERTIES.MANDATORY_FLAG%type := null,
-    psMULTI_INSTANCE_FLAG in TEXT_TYPE_PROPERTIES.MULTI_INSTANCE_FLAG%type := null,
-    psLONG_TEXT_FLAG in TEXT_TYPE_PROPERTIES.LONG_TEXT_FLAG%type := null);
+   (psTXTT_CODE in tmsTXTT_CODE,
+    psTAB_ALIAS in tmsTAB_ALIAS,
+    pnVERSION_NBR in out tnTTP_VERSION_NBR,
+    psMANDATORY_FLAG in tsTTP_MANDATORY_FLAG := null,
+    psMULTI_INSTANCE_FLAG in tsTTP_MULTI_INSTANCE_FLAG := null,
+    psLONG_TEXT_FLAG in tsTTP_LONG_TEXT_FLAG := null);
 --
 -- ----------------------------------------
--- REMOVE_TEXT_TYPE_PROPERTIES
+-- DELETE_TEXT_TYPE_PROPERTIES
 -- ----------------------------------------
 --
--- Remove the properties of a text type for a given table, making the text type not allowed for
+-- Delete the properties of a text type for a given table, making the text type not allowed for
 --  that table. The properties can only be removed if no text of this type exists associated with
 --  the given table.
 --
 -- Parameters:
 --  psTXTT_CODE - Code of text type (mandatory).
 --  psTAB_ALIAS - Table alias (mandatory).
+--  pnVERSION_NBR - Update version number of text type property record (mandatory).
 --
-  procedure REMOVE_TEXT_TYPE_PROPERTIES
-   (psTXTT_CODE in TEXT_TYPE_PROPERTIES.TXTT_CODE%type,
-    psTAB_ALIAS in TEXT_TYPE_PROPERTIES.TAB_ALIAS%type);
+  procedure DELETE_TEXT_TYPE_PROPERTIES
+   (psTXTT_CODE in tmsTXTT_CODE,
+    psTAB_ALIAS in tmsTAB_ALIAS,
+    pnVERSION_NBR in tnTTP_VERSION_NBR);
 --
 -- ----------------------------------------
--- SET_TXP_TEXT
+-- SET_TTP_TEXT
 -- ----------------------------------------
 --
 -- Add or update a general text item in a given language to a text type properties record.
@@ -178,21 +330,24 @@ create or replace package TEXT_TYPE is
 -- Parameters:
 --  psTXTT_CODE - Code of text type (mandatory).
 --  psTAB_ALIAS - Table alias (mandatory).
+--  pnVERSION_NBR - Update version number of text type property record (mandatory: new version
+--    number is returned).
 --  psTXTT_CODE_TEXT - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
 --  psLANG_CODE - Language code of the text item to be added or updated (mandatory).
 --  psText - Text associated with text type (mandatory).
 --
-  procedure SET_TXP_TEXT
-   (psTXTT_CODE in TEXT_TYPE_PROPERTIES.TXTT_CODE%type,
-    psTAB_ALIAS in TEXT_TYPE_PROPERTIES.TAB_ALIAS%type,
-    psTXTT_CODE_TEXT in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2);
+  procedure SET_TTP_TEXT
+   (psTXTT_CODE in tmsTXTT_CODE,
+    psTAB_ALIAS in tmsTAB_ALIAS,
+    pnVERSION_NBR in out tnTTP_VERSION_NBR,
+    psTXTT_CODE_TEXT in tmsTXTT_CODE,
+    pnSEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psText in tmsText);
 --
 -- ----------------------------------------
--- REMOVE_TXP_TEXT
+-- REMOVE_TTP_TEXT
 -- ----------------------------------------
 --
 -- Remove a general text item from a text type properties record. The following cases arise:
@@ -212,16 +367,19 @@ create or replace package TEXT_TYPE is
 -- Parameters:
 --  psTXTT_CODE - Code of text type (mandatory).
 --  psTAB_ALIAS - Table alias (mandatory).
+--  pnVERSION_NBR - Update version number of text type property record (mandatory: new version
+--    number is returned).
 --  psTXTT_CODE_TEXT - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
 --  psLANG_CODE - Language code of the text item to be removed (optional).
 --
-  procedure REMOVE_TXP_TEXT
-   (psTXTT_CODE in TEXT_TYPE_PROPERTIES.TXTT_CODE%type,
-    psTAB_ALIAS in TEXT_TYPE_PROPERTIES.TAB_ALIAS%type,
-    psTXTT_CODE_TEXT in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null);
+  procedure REMOVE_TTP_TEXT
+   (psTXTT_CODE in tmsTXTT_CODE,
+    psTAB_ALIAS in tmsTAB_ALIAS,
+    pnVERSION_NBR in out tnTTP_VERSION_NBR,
+    psTXTT_CODE_TEXT in tmsTXTT_CODE,
+    pnSEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null);
 --
 end TEXT_TYPE;
 /
