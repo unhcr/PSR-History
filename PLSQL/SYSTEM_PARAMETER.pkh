@@ -6,18 +6,40 @@ create or replace package SYSTEM_PARAMETER is
 --  Procedures for maintenance of system parameters.
 --
 --  Change History:
---  15-Feb-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  14-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
   sModule varchar2(30) := 'SYSTEM_PARAMETER';
   sVersion varchar2(10) := 'D0.1';
 --
+-- ========================================
+-- Subtype definitions
+-- ========================================
+--
+  subtype tmsSYP_CODE is SYSTEM_PARAMETERS.CODE%type not null;
+  subtype tmsSYP_DATA_TYPE is SYSTEM_PARAMETERS.DATA_TYPE%type not null;
+  subtype tsSYP_CHAR_VALUE is SYSTEM_PARAMETERS.CHAR_VALUE%type;
+  subtype tnSYP_NUM_VALUE is SYSTEM_PARAMETERS.NUM_VALUE%type;
+  subtype tdSYP_DATE_VALUE is SYSTEM_PARAMETERS.DATE_VALUE%type;
+  subtype tnSYP_VERSION_NBR is SYSTEM_PARAMETERS.VERSION_NBR%type;
+--
+  subtype tnTXT_ID is TEXT_HEADERS.ID%type;
+  subtype tmsTXTT_CODE is TEXT_TYPES.CODE%type not null;
+  subtype tsLANG_CODE is LANGUAGES.CODE%type;
+  subtype tmsLANG_CODE is tsLANG_CODE not null;
+  subtype tnTXI_SEQ_NBR is TEXT_ITEMS.SEQ_NBR%type;
+  subtype tmsText is varchar2 not null;
+--
+-- ========================================
+-- Program unit definitions
+-- ========================================
+--
 -- ----------------------------------------
--- SET_SYSTEM_PARAMETER
+-- INSERT_SYSTEM_PARAMETER
 -- ----------------------------------------
 --
--- Create a new system parameter or update an existing one.
+-- Create a new system parameter.
 --
 -- Parameters:
 --  psCODE - System parameter code (mandatory).
@@ -28,12 +50,62 @@ create or replace package SYSTEM_PARAMETER is
 -- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
 --  depending on the value of psDATA_TYPE.
 --
+  procedure INSERT_SYSTEM_PARAMETER
+   (psCODE in tmsSYP_CODE,
+    psDATA_TYPE in tmsSYP_DATA_TYPE,
+    psCHAR_VALUE in tsSYP_CHAR_VALUE := null,
+    pnNUM_VALUE in tnSYP_NUM_VALUE := null,
+    pdDATE_VALUE in tdSYP_DATE_VALUE := null);
+--
+-- ----------------------------------------
+-- UPDATE_SYSTEM_PARAMETER
+-- ----------------------------------------
+--
+-- Update an existing system parameter.
+--
+-- Parameters:
+--  psCODE - System parameter code (mandatory).
+--  pnVERSION_NBR - Update version number of system parameter record (mandatory: new version number
+--    is returned).
+--  psDATA_TYPE - Data type of system parameter (mandatory).
+--  psCHAR_VALUE - Value for system parameter of data type character (optional).
+--  pnNUM_VALUE - Value for system parameter of data type character (optional).
+--  pdDATE_VALUE - Value for system parameter of data type character (optional).
+-- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
+--  depending on the value of psDATA_TYPE.
+--
+  procedure UPDATE_SYSTEM_PARAMETER
+   (psCODE in tmsSYP_CODE,
+    pnVERSION_NBR in out tnSYP_VERSION_NBR,
+    psDATA_TYPE in tmsSYP_DATA_TYPE,
+    psCHAR_VALUE in tsSYP_CHAR_VALUE := null,
+    pnNUM_VALUE in tnSYP_NUM_VALUE := null,
+    pdDATE_VALUE in tdSYP_DATE_VALUE := null);
+--
+-- ----------------------------------------
+-- SET_SYSTEM_PARAMETER
+-- ----------------------------------------
+--
+-- Create a new system parameter or update an existing one.
+--
+-- Parameters:
+--  psCODE - System parameter code (mandatory).
+--  pnVERSION_NBR - Update version number of system parameter record (mandatory: new version number
+--    is returned; for a new system parameter, null must be specified and 1 will be returned).
+--  psDATA_TYPE - Data type of system parameter (mandatory).
+--  psCHAR_VALUE - Value for system parameter of data type character (optional).
+--  pnNUM_VALUE - Value for system parameter of data type character (optional).
+--  pdDATE_VALUE - Value for system parameter of data type character (optional).
+-- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
+--  depending on the value of psDATA_TYPE.
+--
   procedure SET_SYSTEM_PARAMETER
-   (psCODE in SYSTEM_PARAMETERS.CODE%type,
-    psDATA_TYPE in SYSTEM_PARAMETERS.DATA_TYPE%type,
-    psCHAR_VALUE in SYSTEM_PARAMETERS.CHAR_VALUE%type := null,
-    pnNUM_VALUE in SYSTEM_PARAMETERS.NUM_VALUE%type := null,
-    pdDATE_VALUE in SYSTEM_PARAMETERS.DATE_VALUE%type := null);
+   (psCODE in tmsSYP_CODE,
+    pnVERSION_NBR in out tnSYP_VERSION_NBR,
+    psDATA_TYPE in tmsSYP_DATA_TYPE,
+    psCHAR_VALUE in tsSYP_CHAR_VALUE := null,
+    pnNUM_VALUE in tnSYP_NUM_VALUE := null,
+    pdDATE_VALUE in tdSYP_DATE_VALUE := null);
 --
 -- ----------------------------------------
 -- DELETE_SYSTEM_PARAMETER
@@ -43,9 +115,11 @@ create or replace package SYSTEM_PARAMETER is
 --
 -- Parameters:
 --  psCODE - Code of system parameter to be deleted (mandatory).
+--  pnVERSION_NBR - Update version number of system parameter record (mandatory).
 --
   procedure DELETE_SYSTEM_PARAMETER
-   (psCODE in SYSTEM_PARAMETERS.CODE%type);
+   (psCODE in tmsSYP_CODE,
+    pnVERSION_NBR in tnSYP_VERSION_NBR);
 --
 -- ----------------------------------------
 -- SET_SYP_TEXT
@@ -56,17 +130,20 @@ create or replace package SYSTEM_PARAMETER is
 --
 -- Parameters:
 --  psCODE - Code of system parameter for which text item is to be added or updated (mandatory).
+--  pnVERSION_NBR - Update version number of system parameter record (mandatory: new version number
+--    is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
 --  psLANG_CODE - Language code of the text item to be added (mandatory).
 --  psText - Text associated with system parameter (mandatory).
 --
   procedure SET_SYP_TEXT
-   (psCODE in SYSTEM_PARAMETERS.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2);
+   (psCODE in tmsSYP_CODE,
+    pnVERSION_NBR in out tnSYP_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psText in tmsText);
 --
 -- ----------------------------------------
 -- REMOVE_SYP_TEXT
@@ -85,15 +162,18 @@ create or replace package SYSTEM_PARAMETER is
 --
 -- Parameters:
 --  psCODE - Code of system parameter from which text item is to be removed (mandatory).
+--  pnVERSION_NBR - Update version number of system parameter record (mandatory: new version number
+--    is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
 --  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_SYP_TEXT
-   (psCODE in SYSTEM_PARAMETERS.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null);
+   (psCODE in tmsSYP_CODE,
+    pnVERSION_NBR in out tnSYP_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null);
 --
 end SYSTEM_PARAMETER;
 /

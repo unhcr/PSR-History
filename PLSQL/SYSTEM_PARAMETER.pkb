@@ -5,42 +5,112 @@ create or replace package body SYSTEM_PARAMETER is
 -- ========================================
 --
 -- ----------------------------------------
--- SET_SYSTEM_PARAMETER
+-- INSERT_SYSTEM_PARAMETER
 -- ----------------------------------------
 --
-  procedure SET_SYSTEM_PARAMETER
-   (psCODE in SYSTEM_PARAMETERS.CODE%type,
-    psDATA_TYPE in SYSTEM_PARAMETERS.DATA_TYPE%type,
-    psCHAR_VALUE in SYSTEM_PARAMETERS.CHAR_VALUE%type := null,
-    pnNUM_VALUE in SYSTEM_PARAMETERS.NUM_VALUE%type := null,
-    pdDATE_VALUE in SYSTEM_PARAMETERS.DATE_VALUE%type := null)
+  procedure INSERT_SYSTEM_PARAMETER
+   (psCODE in tmsSYP_CODE,
+    psDATA_TYPE in tmsSYP_DATA_TYPE,
+    psCHAR_VALUE in tsSYP_CHAR_VALUE := null,
+    pnNUM_VALUE in tnSYP_NUM_VALUE := null,
+    pdDATE_VALUE in tdSYP_DATE_VALUE := null)
   is
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_SYSTEM_PARAMETER',
-                             psCODE || '~' || psDATA_TYPE || '~' ||
-                             psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
-                             to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_SYSTEM_PARAMETER',
+      psCODE || '~' || psDATA_TYPE || '~' || psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
+        to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
   --
-    merge into SYSTEM_PARAMETERS SYP
-    using
-     (select psCODE CODE from DUAL) INP
-    on (SYP.CODE = INP.CODE)
-    when matched then
-      update
-      set DATA_TYPE = psDATA_TYPE,
-        CHAR_VALUE = psCHAR_VALUE,
-        NUM_VALUE = pnNUM_VALUE,
-        DATE_VALUE = pdDATE_VALUE
-    when not matched then
-      insert
-       (CODE, DATA_TYPE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
-      values
-       (psCODE, psDATA_TYPE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
+    insert into SYSTEM_PARAMETERS (CODE, DATA_TYPE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
+    values (psCODE, psDATA_TYPE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end INSERT_SYSTEM_PARAMETER;
+--
+-- ----------------------------------------
+-- UPDATE_SYSTEM_PARAMETER
+-- ----------------------------------------
+--
+  procedure UPDATE_SYSTEM_PARAMETER
+   (psCODE in tmsSYP_CODE,
+    pnVERSION_NBR in out tnSYP_VERSION_NBR,
+    psDATA_TYPE in tmsSYP_DATA_TYPE,
+    psCHAR_VALUE in tsSYP_CHAR_VALUE := null,
+    pnNUM_VALUE in tnSYP_NUM_VALUE := null,
+    pdDATE_VALUE in tdSYP_DATE_VALUE := null)
+  is
+    nVERSION_NBR tnSYP_VERSION_NBR;
+    xSYP_ROWID rowid;
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_SYSTEM_PARAMETER',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDATA_TYPE || '~' || psCHAR_VALUE || '~' ||
+        to_char(pnNUM_VALUE) || '~' || to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
+  --
+    select VERSION_NBR, rowid
+    into nVERSION_NBR, xSYP_ROWID
+    from SYSTEM_PARAMETERS
+    where CODE = psCODE
+    for update;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      update SYSTEM_PARAMETERS
+      set DATA_TYPE = psDATA_TYPE,
+        CHAR_VALUE = psCHAR_VALUE,
+        NUM_VALUE = pnNUM_VALUE,
+        DATE_VALUE = pdDATE_VALUE,
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xSYP_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('SYP', 1, 'System parameter has been updated by another user');
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end UPDATE_SYSTEM_PARAMETER;
+--
+-- ----------------------------------------
+-- SET_SYSTEM_PARAMETER
+-- ----------------------------------------
+--
+  procedure SET_SYSTEM_PARAMETER
+   (psCODE in tmsSYP_CODE,
+    pnVERSION_NBR in out tnSYP_VERSION_NBR,
+    psDATA_TYPE in tmsSYP_DATA_TYPE,
+    psCHAR_VALUE in tsSYP_CHAR_VALUE := null,
+    pnNUM_VALUE in tnSYP_NUM_VALUE := null,
+    pdDATE_VALUE in tdSYP_DATE_VALUE := null)
+  is
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_SYSTEM_PARAMETER',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDATA_TYPE || '~' || psCHAR_VALUE || '~' ||
+        to_char(pnNUM_VALUE) || '~' || to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
+  --
+    if pnVERSION_NBR is null
+    then
+      INSERT_SYSTEM_PARAMETER(psCODE, psDATA_TYPE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
+    --
+      pnVERSION_NBR := 1;
+    else
+      UPDATE_SYSTEM_PARAMETER(psCODE, pnVERSION_NBR, psDATA_TYPE, psCHAR_VALUE, pnNUM_VALUE,
+                              pdDATE_VALUE);
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_SYSTEM_PARAMETER;
 --
 -- ----------------------------------------
@@ -48,26 +118,39 @@ create or replace package body SYSTEM_PARAMETER is
 -- ----------------------------------------
 --
   procedure DELETE_SYSTEM_PARAMETER
-   (psCODE in SYSTEM_PARAMETERS.CODE%type)
+   (psCODE in tmsSYP_CODE,
+    pnVERSION_NBR in tnSYP_VERSION_NBR)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnSYP_VERSION_NBR;
+    xSYP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_SYSTEM_PARAMETER', psCODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_SYSTEM_PARAMETER',
+      psCODE || '~' || to_char(pnVERSION_NBR));
   --
-    delete from SYSTEM_PARAMETERS where CODE = psCODE returning TXT_ID into nTXT_ID;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xSYP_ROWID
+    from SYSTEM_PARAMETERS
+    where CODE = psCODE
+    for update;
   --
-    if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('SYP', 1, 'System parameter does not exist');
-    end if;
-  --
-    if nTXT_ID is not null
-    then TEXT.DELETE_TEXT(nTXT_ID);
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      delete from SYSTEM_PARAMETERS where rowid = xSYP_ROWID;
+    --
+      if nTXT_ID is not null
+      then TEXT.DELETE_TEXT(nTXT_ID);
+      end if;
+    else
+      MESSAGE.DISPLAY_MESSAGE('SYP', 1, 'System parameter has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end DELETE_SYSTEM_PARAMETER;
 --
 -- ----------------------------------------
@@ -75,35 +158,47 @@ create or replace package body SYSTEM_PARAMETER is
 -- ----------------------------------------
 --
   procedure SET_SYP_TEXT
-   (psCODE in SYSTEM_PARAMETERS.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2)
+   (psCODE in tmsSYP_CODE,
+    pnVERSION_NBR in out tnSYP_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psText in tmsText)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnSYP_VERSION_NBR;
     xSYP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_SYP_TEXT',
-                             psCODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psText)) || ':' || psText);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_SYP_TEXT',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
+        to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, rowid into nTXT_ID, xSYP_ROWID from SYSTEM_PARAMETERS where CODE = psCODE;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xSYP_ROWID
+    from SYSTEM_PARAMETERS
+    where CODE = psCODE
+    for update;
   --
-    if nTXT_ID is null
+    if pnVERSION_NBR = nVERSION_NBR
     then
       TEXT.SET_TEXT(nTXT_ID, 'SYP', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update SYSTEM_PARAMETERS set TXT_ID = nTXT_ID where rowid = xSYP_ROWID;
+      update SYSTEM_PARAMETERS
+      set TXT_ID = nTXT_ID,
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xSYP_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
     else
-      TEXT.SET_TEXT(nTXT_ID, 'SYP', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      MESSAGE.DISPLAY_MESSAGE('SYP', 1, 'System parameter has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_SYP_TEXT;
 --
 -- ----------------------------------------
@@ -111,29 +206,44 @@ create or replace package body SYSTEM_PARAMETER is
 -- ----------------------------------------
 --
   procedure REMOVE_SYP_TEXT
-   (psCODE in SYSTEM_PARAMETERS.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null)
+   (psCODE in tmsSYP_CODE,
+    pnVERSION_NBR in out tnSYP_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnSYP_VERSION_NBR;
+    xSYP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_SYP_TEXT',
-                             psCODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_SYP_TEXT',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('SYP', 2, 'Text type must be specified');
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xSYP_ROWID
+    from SYSTEM_PARAMETERS
+    where CODE = psCODE
+    for update;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+    --
+      update SYSTEM_PARAMETERS
+      set VERSION_NBR = VERSION_NBR + 1
+      where rowid = xSYP_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('SYP', 1, 'System parameter has been updated by another user');
     end if;
-  --
-    select TXT_ID into nTXT_ID from SYSTEM_PARAMETERS where CODE = psCODE;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_SYP_TEXT;
 --
 -- =====================================
