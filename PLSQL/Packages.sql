@@ -6,6 +6,7 @@
 @@SYSTEM_PARAMETER.pkh
 @@SYSTEM_USER.pkh
 @@PSR_CONTEXT.pkh
+@@LOCATION.pkh
 
 @@PLS_UTILITY.pkb
 @@TEXT.pkb
@@ -15,3 +16,4 @@
 @@SYSTEM_PARAMETER.pkb
 @@SYSTEM_USER.pkb
 @@PSR_CONTEXT.pkb
+@@LOCATION.pkb
