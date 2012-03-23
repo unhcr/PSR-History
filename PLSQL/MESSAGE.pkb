@@ -5,82 +5,130 @@ create or replace package body MESSAGE is
 -- ========================================
 --
 -- ----------------------------------------
--- SET_COMPONENT
+-- INSERT_COMPONENT
 -- ----------------------------------------
 --
-  procedure SET_COMPONENT
-   (psCODE in COMPONENTS.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type := null,
-    psDescription in varchar2 := null,
-    pnDISPLAY_SEQ in COMPONENTS.DISPLAY_SEQ%type := -1e6,
-    psACTIVE_FLAG in COMPONENTS.ACTIVE_FLAG%type := null)
+  procedure INSERT_COMPONENT
+   (psCODE in tmsCOMP_CODE,
+    psLANG_CODE in tmsLANG_CODE,
+    psDescription in tmsText,
+    pnDISPLAY_SEQ in tnCOMP_DISPLAY_SEQ := null,
+    psACTIVE_FLAG in tsCOMP_ACTIVE_FLAG := 'Y')
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
-    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
-    sACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
+    nTXT_ID tnTXT_ID;
+    nSEQ_NBR tnTXI_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_COMPONENT',
-                             psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
-                               psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psDescription)) || ':' || psDescription);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_COMPONENT',
+      psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-  -- Check if component already exists.
+    TEXT.SET_TEXT(nTXT_ID, 'COMP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    begin
-      select TXT_ID into nTXT_ID from COMPONENTS where CODE = psCODE;
-    exception
-      when NO_DATA_FOUND
-      then nTXT_ID := null;
-        nSEQ_NBR := null;
-    end;
-  --
-    if psDescription is null
-    then
-      if nTXT_ID is null
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'Description must be specified for new component');
-      elsif psLANG_CODE is not null
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'Description language cannot be specified without description text');
-      elsif pnDISPLAY_SEQ = -1e6
-        and psACTIVE_FLAG is null
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'Nothing to be updated');
-      end if;
-    else
-      begin
-        select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
-      exception
-        when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('MSG', 8, 'Unknown description language');
-      end;
-    --
-      if sACTIVE_FLAG = 'N'
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 9, 'Inactive description language');
-      end if;
-    --
-      TEXT.SET_TEXT(nTXT_ID, 'COMP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
-    end if;
-  --
-    merge into COMPONENTS COMP
-    using
-     (select psCODE CODE from DUAL) INP
-    on (COMP.CODE = INP.CODE)
-    when matched then
-      update
-      set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
-        ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG)
-      where nvl(pnDISPLAY_SEQ, 0) != -1e6
-        or psACTIVE_FLAG is not null
-    when not matched then
-      insert
-       (CODE, DISPLAY_SEQ, ACTIVE_FLAG,
-        TXT_ID)
-      values
-       (psCODE, case when pnDISPLAY_SEQ != -1e6 then pnDISPLAY_SEQ end, nvl(psACTIVE_FLAG, 'Y'),
-        nTXT_ID);
+    insert into COMPONENTS (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
+    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end INSERT_COMPONENT;
+--
+-- ----------------------------------------
+-- UPDATE_COMPONENT
+-- ----------------------------------------
+--
+  procedure UPDATE_COMPONENT
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in out tnCOMP_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psDescription in tsText := null,
+    pnDISPLAY_SEQ in tnCOMP_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in tsCOMP_ACTIVE_FLAG := null)
+  is
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnCOMP_VERSION_NBR;
+    xCOMP_ROWID rowid;
+    nSEQ_NBR tnTXI_SEQ_NBR := 1;
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_COMPONENT',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
+        psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
+        to_char(length(psDescription)) || ':' || psDescription);
+  --
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xCOMP_ROWID
+    from COMPONENTS
+    where CODE = psCODE
+    for update;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      if psDescription is null
+      then
+        if pnDISPLAY_SEQ = -1e6
+          and psACTIVE_FLAG is null
+        then MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'Nothing to be updated');
+        end if;
+      else
+        TEXT.SET_TEXT(nTXT_ID, 'COMP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      end if;
+    --
+      update TEXT_TYPES
+      set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
+        ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xCOMP_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'Component has been updated by another user');
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end UPDATE_COMPONENT;
+--
+-- ----------------------------------------
+-- SET_COMPONENT
+-- ----------------------------------------
+--
+  procedure SET_COMPONENT
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in out tnCOMP_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psDescription in tsText := null,
+    pnDISPLAY_SEQ in tnCOMP_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in tsCOMP_ACTIVE_FLAG := null)
+  is
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_COMPONENT',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
+        psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
+        to_char(length(psDescription)) || ':' || psDescription);
+  --
+    if pnVERSION_NBR is null
+    then
+      INSERT_COMPONENT(psCODE, psLANG_CODE, psDescription,
+                       case when pnDISPLAY_SEQ = -1e6 then null else pnDISPLAY_SEQ end,
+                       nvl(psACTIVE_FLAG, 'Y'));
+    --
+      pnVERSION_NBR := 1;
+    else
+      UPDATE_COMPONENT(psCODE, pnVERSION_NBR, psLANG_CODE, psDescription,
+                       pnDISPLAY_SEQ, psACTIVE_FLAG);
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_COMPONENT;
 --
 -- ----------------------------------------
@@ -88,24 +136,36 @@ create or replace package body MESSAGE is
 -- ----------------------------------------
 --
   procedure DELETE_COMPONENT
-   (psCODE in COMPONENTS.CODE%type)
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in tnCOMP_VERSION_NBR)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnCOMP_VERSION_NBR;
+    xCOMP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_COMPONENT', psCODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_COMPONENT', psCODE || '~' || to_char(pnVERSION_NBR));
   --
-    delete from COMPONENTS where CODE = psCODE returning TXT_ID into nTXT_ID;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xCOMP_ROWID
+    from COMPONENTS
+    where CODE = psCODE
+    for update;
   --
-    if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 10, 'Component does not exist');
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      delete from COMPONENTS where rowid = xCOMP_ROWID;
+    --
+      TEXT.DELETE_TEXT(nTXT_ID);
+    else
+      MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'Component has been updated by another user');
     end if;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end DELETE_COMPONENT;
 --
 -- ----------------------------------------
@@ -113,22 +173,25 @@ create or replace package body MESSAGE is
 -- ----------------------------------------
 --
   procedure SET_COMP_DESCRIPTION
-   (psCODE in COMPONENTS.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psDescription in varchar2)
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in out tnCOMP_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psDescription in tmsText)
   is
-    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
+    nSEQ_NBR tnTXI_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_COMP_DESCRIPTION',
-                             psCODE || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psDescription)) || ':' || psDescription);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_COMP_DESCRIPTION',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
+        to_char(length(psDescription)) || ':' || psDescription);
   --
-    SET_COMP_TEXT(psCODE, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    SET_COMP_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_COMP_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -136,19 +199,22 @@ create or replace package body MESSAGE is
 -- ----------------------------------------
 --
   procedure REMOVE_COMP_DESCRIPTION
-   (psCODE in COMPONENTS.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type)
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in out tnCOMP_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_COMP_DESCRIPTION',
-                             psCODE || '~' || psLANG_CODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_COMP_DESCRIPTION',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
-    REMOVE_COMP_TEXT(psCODE, 'DESCR', 1, psLANG_CODE);
+    REMOVE_COMP_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_COMP_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -156,27 +222,45 @@ create or replace package body MESSAGE is
 -- ----------------------------------------
 --
   procedure SET_COMP_TEXT
-   (psCODE in COMPONENTS.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2)
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in out tnCOMP_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psText in tmsText)
   is
     nTXT_ID TEXT_HEADERS.ID%type;
+    nVERSION_NBR tnCOMP_VERSION_NBR;
+    xCOMP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_COMP_TEXT',
-                             psCODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psText)) || ':' || psText);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_COMP_TEXT',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
+        '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID into nTXT_ID from COMPONENTS where CODE = psCODE;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xCOMP_ROWID
+    from COMPONENTS
+    where CODE = psCODE
+    for update;
   --
-    TEXT.SET_TEXT(nTXT_ID, 'COMP', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      TEXT.SET_TEXT(nTXT_ID, 'COMP', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+    --
+      update LANGUAGES
+      set VERSION_NBR = VERSION_NBR + 1
+      where rowid = xCOMP_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'Component has been updated by another user');
+    end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_COMP_TEXT;
 --
 -- ----------------------------------------
@@ -184,89 +268,65 @@ create or replace package body MESSAGE is
 -- ----------------------------------------
 --
   procedure REMOVE_COMP_TEXT
-   (psCODE in COMPONENTS.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null)
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in out tnCOMP_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null)
   is
     nTXT_ID TEXT_HEADERS.ID%type;
+    nVERSION_NBR tnCOMP_VERSION_NBR;
+    xCOMP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_COMP_TEXT',
-                             psCODE || '~' || psTXTT_CODE || '~' ||
-                               to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_COMP_TEXT',
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID into nTXT_ID from COMPONENTS where CODE = psCODE;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xCOMP_ROWID
+    from COMPONENTS
+    where CODE = psCODE
+    for update;
   --
-    if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 11, 'Text type must be specified');
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+    --
+      update COMPONENTS
+      set VERSION_NBR = VERSION_NBR + 1
+      where rowid = xCOMP_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'Component has been updated by another user');
     end if;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_COMP_TEXT;
 --
 -- ----------------------------------------
--- SET_MESSAGE
+-- INSERT_MESSAGE
 -- ----------------------------------------
 --
-  procedure SET_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in out MESSAGES.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type := null,
-    psMessage in varchar2 := null,
-    psSEVERITY in MESSAGES.SEVERITY%type := null)
+  procedure INSERT_MESSAGE
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in out tnMSG_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psMessage in tmsText,
+    psSEVERITY in tsMSG_SEVERITY := 'E')
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
-    nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
-    sACTIVE_FLAG LANGUAGES.ACTIVE_FLAG%type;
-    nMSG_SEQ_NBR_MAX COMPONENTS.MSG_SEQ_NBR_MAX%type;
+    nMSG_SEQ_NBR_MAX tnMSG_SEQ_NBR;
+    nTXT_ID tnTXT_ID;
+    nSEQ_NBR tnTXI_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_MESSAGE',
-                             psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
-                               psSEVERITY || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psMessage)) || ':' || psMessage);
-  --
-  -- Check if message already exists.
-  --
-    begin
-      select TXT_ID
-      into nTXT_ID
-      from MESSAGES
-      where COMP_CODE = psCOMP_CODE
-      and SEQ_NBR = pnSEQ_NBR;
-    exception
-      when NO_DATA_FOUND
-      then nTXT_ID := null;
-        nSEQ_NBR := null;
-    end;
-  --
-    if psMessage is null
-    then
-      if nTXT_ID is null
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 12, 'Message text must be specified for new message');
-      elsif psLANG_CODE is not null
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 13, 'Message language cannot be specified without message text');
-      elsif psSEVERITY is null
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'Nothing to be updated');
-      end if;
-    else
-      begin
-        select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
-      exception
-        when NO_DATA_FOUND
-        then MESSAGE.DISPLAY_MESSAGE('MSG', 14, 'Unknown message language');
-      end;
-    --
-      if sACTIVE_FLAG = 'N'
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 15, 'Inactive message language');
-      end if;
-    --
-      TEXT.SET_TEXT(nTXT_ID, 'MSG', 'MSG', nSEQ_NBR, psLANG_CODE, psMessage);
-    end if;
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_MESSAGE',
+      psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psSEVERITY || '~' ||
+        psLANG_CODE || '~' || to_char(length(psMessage)) || ':' || psMessage);
   --
     if pnSEQ_NBR is null
     then
@@ -279,7 +339,7 @@ create or replace package body MESSAGE is
       returning MSG_SEQ_NBR_MAX into pnSEQ_NBR;
     --
       if sql%rowcount = 0
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 10, 'Component does not exist');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 8, 'Component does not exist');
       end if;
     else
     --
@@ -288,26 +348,114 @@ create or replace package body MESSAGE is
       select MSG_SEQ_NBR_MAX into nMSG_SEQ_NBR_MAX from COMPONENTS where CODE = psCOMP_CODE;
     --
       if pnSEQ_NBR > nMSG_SEQ_NBR_MAX
-      then MESSAGE.DISPLAY_MESSAGE('MSG', 16, 'Message sequence number greater than current maximum');
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 9, 'Message sequence number greater than current maximum');
       end if;
     end if;
   --
-    merge into MESSAGES MSG
-    using
-     (select psCOMP_CODE COMP_CODE, pnSEQ_NBR SEQ_NBR from DUAL) INP
-    on (MSG.COMP_CODE = INP.COMP_CODE and MSG.SEQ_NBR = INP.SEQ_NBR)
-    when matched then
-      update
-      set SEVERITY = nvl(psSEVERITY, SEVERITY)
-      where psSEVERITY is not null
-    when not matched then
-      insert (COMP_CODE, SEQ_NBR, SEVERITY, TXT_ID)
-      values (psCOMP_CODE, pnSEQ_NBR, nvl(psSEVERITY, 'E'), nTXT_ID);
+    TEXT.SET_TEXT(nTXT_ID, 'MSG', 'MSG', nSEQ_NBR, psLANG_CODE, psMessage);
+  --
+    insert into MESSAGES (COMP_CODE, SEQ_NBR, SEVERITY, TXT_ID)
+    values (psCOMP_CODE, pnSEQ_NBR, psSEVERITY, nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end INSERT_MESSAGE;
+--
+-- ----------------------------------------
+-- UPDATE_MESSAGE
+-- ----------------------------------------
+--
+  procedure UPDATE_MESSAGE
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    pnVERSION_NBR in out tnMSG_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psMessage in tsText := null,
+    psSEVERITY in tsMSG_SEVERITY := null)
+  is
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnMSG_VERSION_NBR;
+    xMSG_ROWID rowid;
+    nSEQ_NBR tnTXI_SEQ_NBR := 1;
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_MESSAGE',
+      psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psSEVERITY || '~' || psLANG_CODE || '~' || to_char(length(psMessage)) || ':' || psMessage);
+  --
+    if psMessage is null
+    then
+      if psLANG_CODE is not null
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 10, 'Message language cannot be specified without message text');
+      elsif psSEVERITY is null
+      then MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'Nothing to be updated');
+      end if;
+    end if;
+  --
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xMSG_ROWID
+    from MESSAGES
+    where COMP_CODE = psCOMP_CODE
+    and SEQ_NBR = pnSEQ_NBR
+    for update;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      if psMessage is not null
+      then TEXT.SET_TEXT(nTXT_ID, 'MSG', 'MSG', nSEQ_NBR, psLANG_CODE, psMessage);
+      end if;
+    --
+      update MESSAGES
+      set SEVERITY = nvl(psSEVERITY, SEVERITY),
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xMSG_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'Message has been updated by another user');
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end UPDATE_MESSAGE;
+--
+-- ----------------------------------------
+-- SET_MESSAGE
+-- ----------------------------------------
+--
+  procedure SET_MESSAGE
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in out tnMSG_SEQ_NBR,
+    pnVERSION_NBR in out tnMSG_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psMessage in tsText := null,
+    psSEVERITY in tsMSG_SEVERITY := null)
+  is
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_MESSAGE',
+      psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psSEVERITY || '~' || psLANG_CODE || '~' || to_char(length(psMessage)) || ':' || psMessage);
+  --
+    if pnVERSION_NBR is null
+    then
+      INSERT_MESSAGE(psCOMP_CODE, pnSEQ_NBR, psLANG_CODE, psMessage, psSEVERITY);
+    --
+      pnVERSION_NBR := 1;
+    else
+      UPDATE_MESSAGE(psCOMP_CODE, pnSEQ_NBR, pnVERSION_NBR, psLANG_CODE, psMessage, psSEVERITY);
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_MESSAGE;
 --
 -- ----------------------------------------
@@ -315,29 +463,39 @@ create or replace package body MESSAGE is
 -- ----------------------------------------
 --
   procedure DELETE_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type)
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    pnVERSION_NBR in tnMSG_VERSION_NBR)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnMSG_VERSION_NBR;
+    xMSG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DELETE_MESSAGE',
-                             psCOMP_CODE || '~' || pnSEQ_NBR);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_MESSAGE',
+      psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || to_char(pnVERSION_NBR));
   --
-    delete from MESSAGES
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xMSG_ROWID
+    from MESSAGES
     where COMP_CODE = psCOMP_CODE
     and SEQ_NBR = pnSEQ_NBR
-    returning TXT_ID into nTXT_ID;
+    for update;
   --
-    if sql%rowcount = 0
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 17, 'Message does not exist');
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      delete from MESSAGES where ROWID = xMSG_ROWID;
+    --
+      TEXT.DELETE_TEXT(nTXT_ID);
+    else
+      MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'Message has been updated by another user');
     end if;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end DELETE_MESSAGE;
 --
 -- ----------------------------------------
@@ -345,23 +503,26 @@ create or replace package body MESSAGE is
 -- ----------------------------------------
 --
   procedure SET_MSG_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psMessage in varchar2)
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    pnVERSION_NBR in out tnMSG_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psMessage in tmsText)
   is
     nSEQ_NBR TEXT_ITEMS.SEQ_NBR%type := 1;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_MSG_MESSAGE',
-                             psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE ||
-                               '~' || to_char(length(psMessage)) || ':' || psMessage);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_MSG_MESSAGE',
+      psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psLANG_CODE || '~' || to_char(length(psMessage)) || ':' || psMessage);
   --
-    SET_MSG_TEXT(psCOMP_CODE, pnSEQ_NBR, 'MSG', nSEQ_NBR, psLANG_CODE, psMessage);
+    SET_MSG_TEXT(psCOMP_CODE, pnSEQ_NBR, pnVERSION_NBR, 'MSG', nSEQ_NBR, psLANG_CODE, psMessage);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_MSG_MESSAGE;
 --
 -- ----------------------------------------
@@ -369,20 +530,24 @@ create or replace package body MESSAGE is
 -- ----------------------------------------
 --
   procedure REMOVE_MSG_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type)
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    pnVERSION_NBR in out tnMSG_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_MSG_MESSAGE',
-                             psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_MSG_MESSAGE',
+      psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psLANG_CODE);
   --
-    REMOVE_MSG_TEXT(psCOMP_CODE, pnSEQ_NBR, 'MSG', 1, psLANG_CODE);
+    REMOVE_MSG_TEXT(psCOMP_CODE, pnSEQ_NBR, pnVERSION_NBR, 'MSG', 1, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_MSG_MESSAGE;
 --
 -- ----------------------------------------
@@ -390,28 +555,48 @@ create or replace package body MESSAGE is
 -- ----------------------------------------
 --
   procedure SET_MSG_TEXT
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnTXI_SEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2)
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    pnVERSION_NBR in out tnMSG_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnTXI_SEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psText in tmsText)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnMSG_VERSION_NBR;
+    xMSG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.SET_MSG_TEXT',
-                             psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psTXTT_CODE ||
-                               '~' || to_char(pnTXI_SEQ_NBR) || '~' || psLANG_CODE || '~' ||
-                               to_char(length(psText)) || ':' || psText);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_MSG_TEXT',
+      psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psTXTT_CODE || '~' || to_char(pnTXI_SEQ_NBR) || '~' || psLANG_CODE || '~' ||
+        to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID into nTXT_ID from MESSAGES where COMP_CODE = psCOMP_CODE and SEQ_NBR = pnSEQ_NBR;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xMSG_ROWID
+    from MESSAGES
+    where COMP_CODE = psCOMP_CODE
+    and SEQ_NBR = pnSEQ_NBR
+    for update;
   --
-    TEXT.SET_TEXT(nTXT_ID, 'MSG', psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE, psText);
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      TEXT.SET_TEXT(nTXT_ID, 'MSG', psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE, psText);
+    --
+      update MESSAGES
+      set VERSION_NBR = VERSION_NBR + 1
+      where rowid = xMSG_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'Message has been updated by another user');
+    end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end SET_MSG_TEXT;
 --
 -- ----------------------------------------
@@ -419,30 +604,46 @@ create or replace package body MESSAGE is
 -- ----------------------------------------
 --
   procedure REMOVE_MSG_TEXT
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnTXI_SEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null)
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    pnVERSION_NBR in out tnMSG_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnTXI_SEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null)
   is
-    nTXT_ID TEXT_HEADERS.ID%type;
+    nTXT_ID tnTXT_ID;
+    nVERSION_NBR tnMSG_VERSION_NBR;
+    xMSG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.REMOVE_MSG_TEXT',
-                             psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
-                               psTXTT_CODE || '~' || to_char(pnTXI_SEQ_NBR) || '~' || psLANG_CODE);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_MSG_TEXT',
+      psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psTXTT_CODE || '~' || to_char(pnTXI_SEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID into nTXT_ID from MESSAGES where COMP_CODE = psCOMP_CODE and SEQ_NBR = pnSEQ_NBR;
+    select TXT_ID, VERSION_NBR, rowid
+    into nTXT_ID, nVERSION_NBR, xMSG_ROWID
+    from MESSAGES
+    where COMP_CODE = psCOMP_CODE
+    and SEQ_NBR = pnSEQ_NBR
+    for update;
   --
-    if psTXTT_CODE is null
-    then MESSAGE.DISPLAY_MESSAGE('MSG', 11, 'Text type must be specified');
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE);
+    --
+      update MESSAGES
+      set VERSION_NBR = VERSION_NBR + 1
+      where rowid = xMSG_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'Message has been updated by another user');
     end if;
-  --
-    TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnTXI_SEQ_NBR, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end REMOVE_MSG_TEXT;
 --
 -- ----------------------------------------
@@ -450,12 +651,12 @@ create or replace package body MESSAGE is
 -- ----------------------------------------
 --
   procedure DISPLAY_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
-    psEnglishMessage in varchar2 := null,
-    psSEVERITY in MESSAGES.SEVERITY%type := null)
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    psEnglishMessage in tsText := null,
+    psSEVERITY in tsMSG_SEVERITY := null)
   is
-    sSEVERITY L_MESSAGES.SEVERITY%type;
+    sSEVERITY tsMSG_SEVERITY;
     sMESSAGE L_MESSAGES.MESSAGE%type;
     sTEXT_EN TEXT_ITEMS.TEXT%type;
     nSQLCODE integer;
@@ -476,9 +677,10 @@ create or replace package body MESSAGE is
       return '** ' || sMESSAGE || ' ** ';
     end GET_MESSAGE;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sModule || '.DISPLAY_MESSAGE',
-                             psCOMP_CODE || '~' || pnSEQ_NBR || '~' || psSEVERITY|| '~' ||
-                               to_char(length(psEnglishMessage)) || ':' || psEnglishMessage);
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DISPLAY_MESSAGE',
+      psCOMP_CODE || '~' || pnSEQ_NBR || '~' || psSEVERITY|| '~' ||
+        to_char(length(psEnglishMessage)) || ':' || psEnglishMessage);
   --
     begin
       select MSG.SEVERITY, MSG.MESSAGE, TXI.TEXT
@@ -528,7 +730,8 @@ create or replace package body MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then PLS_UTILITY.END_MODULE;
+      raise;
   end DISPLAY_MESSAGE;
 --
 -- =====================================

@@ -6,12 +6,86 @@ create or replace package MESSAGE is
 --  Procedures for maintenance of system messages and their associated components.
 --
 --  Change History:
---  24-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  14-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
   sModule varchar2(30) := 'MESSAGE';
   sVersion varchar2(10) := 'D0.1';
+--
+-- ========================================
+-- Subtype definitions
+-- ========================================
+--
+  subtype tmsCOMP_CODE is COMPONENTS.CODE%type not null;
+  subtype tnCOMP_DISPLAY_SEQ is COMPONENTS.DISPLAY_SEQ%type;
+  subtype tsCOMP_ACTIVE_FLAG is COMPONENTS.ACTIVE_FLAG%type;
+  subtype tmsCOMP_ACTIVE_FLAG is tsCOMP_ACTIVE_FLAG not null;
+  subtype tnCOMP_VERSION_NBR is COMPONENTS.VERSION_NBR%type;
+--
+  subtype tnMSG_SEQ_NBR is MESSAGES.SEQ_NBR%type;
+  subtype tsMSG_SEVERITY is MESSAGES.SEVERITY%type;
+  subtype tnMSG_VERSION_NBR is MESSAGES.VERSION_NBR%type;
+--
+  subtype tnTXT_ID is TEXT_HEADERS.ID%type;
+  subtype tmsTXTT_CODE is TEXT_TYPES.CODE%type not null;
+  subtype tsLANG_CODE is LANGUAGES.CODE%type;
+  subtype tmsLANG_CODE is tsLANG_CODE not null;
+  subtype tnTXI_SEQ_NBR is TEXT_ITEMS.SEQ_NBR%type;
+  subtype tsText is varchar2;
+  subtype tmsText is tsText not null;
+--
+-- ========================================
+-- Program unit definitions
+-- ========================================
+--
+-- ----------------------------------------
+-- INSERT_COMPONENT
+-- ----------------------------------------
+--
+-- Create a new component record.
+--
+-- Parameters:
+--  psCODE - Code of component (mandatory).
+--  psLANG_CODE - Language code for the textual description (mandatory).
+--  psDescription - Textual description of component (mandatory).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of components (optional).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the component is currently available for use
+--    (optional: defaults to Y).
+--
+  procedure INSERT_COMPONENT
+   (psCODE in tmsCOMP_CODE,
+    psLANG_CODE in tmsLANG_CODE,
+    psDescription in tmsText,
+    pnDISPLAY_SEQ in tnCOMP_DISPLAY_SEQ := null,
+    psACTIVE_FLAG in tsCOMP_ACTIVE_FLAG := 'Y');
+--
+-- ----------------------------------------
+-- UPDATE_COMPONENT
+-- ----------------------------------------
+--
+-- Update an existing component record.
+--
+-- Parameters:
+--  psCODE - Code of component (mandatory).
+--  pnVERSION_NBR - Update version number of component (mandatory: new version number is returned).
+--  psLANG_CODE - Language code for the textual description (optional, but must be specified if
+--    psDescription is specified).
+--  psDescription - Textual description of component (optional, if not specified, the description
+--    is not updated).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of components (optional: if not
+--    specified, the existing display sequence is not updated; if null is specified, the display
+--    sequence is set to null).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the component is currently available for use
+--    (optional: if not specified, the existing value is not updated).
+--
+  procedure UPDATE_COMPONENT
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in out tnCOMP_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psDescription in tsText := null,
+    pnDISPLAY_SEQ in tnCOMP_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in tsCOMP_ACTIVE_FLAG := null);
 --
 -- ----------------------------------------
 -- SET_COMPONENT
@@ -21,6 +95,8 @@ create or replace package MESSAGE is
 --
 -- Parameters:
 --  psCODE - Code of component (mandatory).
+--  pnVERSION_NBR - Update version number of component (mandatory: new version number is returned;
+--    for a new component, null must be specified and 1 will be returned).
 --  psLANG_CODE - Language code for the textual description (optional when updating an existing
 --    component but must be specified if psDescription is specified).
 --  psDescription - Textual description of component (optional when updating an existing component;
@@ -32,11 +108,12 @@ create or replace package MESSAGE is
 --    (optional: if not specified, the existing value is not updated; a new value defaults to Y).
 --
   procedure SET_COMPONENT
-   (psCODE in COMPONENTS.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type := null,
-    psDescription in varchar2 := null,
-    pnDISPLAY_SEQ in COMPONENTS.DISPLAY_SEQ%type := -1e6,
-    psACTIVE_FLAG in COMPONENTS.ACTIVE_FLAG%type := null);
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in out tnCOMP_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psDescription in tsText := null,
+    pnDISPLAY_SEQ in tnCOMP_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in tsCOMP_ACTIVE_FLAG := null);
 --
 -- ----------------------------------------
 -- DELETE_COMPONENT
@@ -46,9 +123,11 @@ create or replace package MESSAGE is
 --
 -- Parameters:
 --  psCODE - Code of component to be deleted (mandatory).
+--  pnVERSION_NBR - Update version number of component (mandatory)
 --
   procedure DELETE_COMPONENT
-   (psCODE in COMPONENTS.CODE%type);
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in tnCOMP_VERSION_NBR);
 --
 -- ----------------------------------------
 -- SET_COMP_DESCRIPTION
@@ -58,13 +137,15 @@ create or replace package MESSAGE is
 --
 -- Parameters:
 --  psCODE - Code of component (mandatory).
+--  pnVERSION_NBR - Update version number of component (mandatory: new version number is returned).
 --  psLANG_CODE - Language code of the description (mandatory).
 --  psDescription - Textual description of component (mandatory).
 --
   procedure SET_COMP_DESCRIPTION
-   (psCODE in COMPONENTS.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psDescription in varchar2);
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in out tnCOMP_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psDescription in tmsText);
 --
 -- ----------------------------------------
 -- REMOVE_COMP_DESCRIPTION
@@ -75,11 +156,13 @@ create or replace package MESSAGE is
 --
 -- Parameters:
 --  psCODE - Code of component from which description is to be removed (mandatory).
+--  pnVERSION_NBR - Update version number of component (mandatory: new version number is returned).
 --  psLANG_CODE - Language code of the description to be removed (mandatory).
 --
   procedure REMOVE_COMP_DESCRIPTION
-   (psCODE in COMPONENTS.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type);
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in out tnCOMP_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE);
 --
 -- ----------------------------------------
 -- SET_COMP_TEXT
@@ -89,17 +172,19 @@ create or replace package MESSAGE is
 --
 -- Parameters:
 --  psCODE - Code of component (mandatory).
+--  pnVERSION_NBR - Update version number of component (mandatory: new version number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with component (mandatory).
 --
   procedure SET_COMP_TEXT
-   (psCODE in COMPONENTS.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2);
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in out tnCOMP_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psText in tmsText);
 --
 -- ----------------------------------------
 -- REMOVE_COMP_TEXT
@@ -118,15 +203,62 @@ create or replace package MESSAGE is
 --
 -- Parameters:
 --  psCODE - Code of component from which text item is to be removed (mandatory).
+--  pnVERSION_NBR - Update version number of component (mandatory: new version number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
 --  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_COMP_TEXT
-   (psCODE in COMPONENTS.CODE%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null);
+   (psCODE in tmsCOMP_CODE,
+    pnVERSION_NBR in out tnCOMP_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null);
+--
+-- ----------------------------------------
+-- INSERT_MESSAGE
+-- ----------------------------------------
+--
+-- Create a new message record.
+--
+-- Parameters:
+--  psCOMP_CODE - Component code of message (mandatory).
+--  pnSEQ_NBR - Sequence number of message (optional: if null, a new one is generated and returned).
+--  psLANG_CODE - Language code of the message (mandatory).
+--  psMessage - Message text (mandatory).
+--  psSEVERITY - Severity of event associated with message: S - System, E - Error, W - Warning or
+--    I - Information (optional: defaults to E).
+--
+  procedure INSERT_MESSAGE
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in out tnMSG_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psMessage in tmsText,
+    psSEVERITY in tsMSG_SEVERITY := 'E');
+--
+-- ----------------------------------------
+-- UPDATE_MESSAGE
+-- ----------------------------------------
+--
+-- Update an existing message record.
+--
+-- Parameters:
+--  psCOMP_CODE - Component code of message (mandatory).
+--  pnSEQ_NBR - Sequence number of message (mandatory).
+--  pnVERSION_NBR - Update version number of message (mandatory: new version number is returned).
+--  psLANG_CODE - Language code of the message (optional, but must be specified if psMessage is
+--    specified).
+--  psMessage - Message text (optional, if not specified, the message text is not updated).
+--  psSEVERITY - Severity of event associated with message: S - System, E - Error, W - Warning or
+--    I - Information (optional: if not specified, the existing value is not updated).
+--
+  procedure UPDATE_MESSAGE
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    pnVERSION_NBR in out tnMSG_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psMessage in tsText := null,
+    psSEVERITY in tsMSG_SEVERITY := null);
 --
 -- ----------------------------------------
 -- SET_MESSAGE
@@ -137,6 +269,8 @@ create or replace package MESSAGE is
 -- Parameters:
 --  psCOMP_CODE - Component code of message (mandatory).
 --  pnSEQ_NBR - Sequence number of message (optional: if null, a new one is generated and returned).
+--  pnVERSION_NBR - Update version number of message (mandatory: new version number is returned;
+--    for a new message, null must be specified and 1 will be returned).
 --  psLANG_CODE - Language code of the message (optional when updating an existing message but must
 --    be specified if psMessage is specified).
 --  psMessage - Message text (optional when updating an existing message; if not specified, the
@@ -146,11 +280,12 @@ create or replace package MESSAGE is
 --    defaults to E).
 --
   procedure SET_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in out MESSAGES.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type := null,
-    psMessage in varchar2 := null,
-    psSEVERITY in MESSAGES.SEVERITY%type := null);
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in out tnMSG_SEQ_NBR,
+    pnVERSION_NBR in out tnMSG_VERSION_NBR,
+    psLANG_CODE in tsLANG_CODE := null,
+    psMessage in tsText := null,
+    psSEVERITY in tsMSG_SEVERITY := null);
 --
 -- ----------------------------------------
 -- DELETE_MESSAGE
@@ -161,10 +296,12 @@ create or replace package MESSAGE is
 -- Parameters:
 --  psCOMP_CODE - Component code of message to be deleted (mandatory).
 --  pnSEQ_NBR - Sequence number of message to be deleted (mandatory).
+--  pnVERSION_NBR - Update version number of message (mandatory).
 --
   procedure DELETE_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type);
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    pnVERSION_NBR in tnMSG_VERSION_NBR);
 --
 -- ----------------------------------------
 -- SET_MSG_MESSAGE
@@ -175,14 +312,16 @@ create or replace package MESSAGE is
 -- Parameters:
 --  psCOMP_CODE - Component code of message (mandatory).
 --  pnSEQ_NBR - Sequence number of message (mandatory).
+--  pnVERSION_NBR - Update version number of message (mandatory: new version number is returned).
 --  psLANG_CODE - Language code of the message variant (mandatory).
 --  psMessage - Message text (mandatory).
 --
   procedure SET_MSG_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psMessage in varchar2);
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    pnVERSION_NBR in out tnMSG_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psMessage in tmsText);
 --
 -- ----------------------------------------
 -- REMOVE_MSG_MESSAGE
@@ -194,12 +333,14 @@ create or replace package MESSAGE is
 -- Parameters:
 --  psCOMP_CODE - Component code of message from which variant is to be removed (mandatory).
 --  pnSEQ_NBR - Sequence number of message from which variant is to be removed (mandatory).
+--  pnVERSION_NBR - Update version number of message (mandatory: new version number is returned).
 --  psLANG_CODE - Language code of the variant to be removed (mandatory).
 --
   procedure REMOVE_MSG_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type);
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    pnVERSION_NBR in out tnMSG_VERSION_NBR,
+    psLANG_CODE in tmsLANG_CODE);
 --
 -- ----------------------------------------
 -- SET_MSG_TEXT
@@ -210,6 +351,7 @@ create or replace package MESSAGE is
 -- Parameters:
 --  psCOMP_CODE - Component code of message (mandatory).
 --  pnSEQ_NBR - Sequence number of message (mandatory).
+--  pnVERSION_NBR - Update version number of message (mandatory: new version number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
 --  pnTXI_SEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and
 --    returned).
@@ -217,12 +359,13 @@ create or replace package MESSAGE is
 --  psText - Text associated with message (mandatory).
 --
   procedure SET_MSG_TEXT
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnTXI_SEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psText in varchar2);
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    pnVERSION_NBR in out tnMSG_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnTXI_SEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psText in tmsText);
 --
 -- ----------------------------------------
 -- REMOVE_MSG_TEXT
@@ -242,16 +385,18 @@ create or replace package MESSAGE is
 -- Parameters:
 --  psCOMP_CODE - Component code of message from which text item is to be removed (mandatory).
 --  pnSEQ_NBR - Sequence number of message from which text item is to be removed (mandatory).
+--  pnVERSION_NBR - Update version number of message (mandatory: new version number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
 --  pnTXI_SEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
 --  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_MSG_TEXT
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnTXI_SEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in LANGUAGES.CODE%type := null);
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    pnVERSION_NBR in out tnMSG_VERSION_NBR,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnTXI_SEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null);
 --
 -- ----------------------------------------
 -- DISPLAY_MESSAGE
@@ -270,10 +415,10 @@ create or replace package MESSAGE is
 --    used).
 --
   procedure DISPLAY_MESSAGE
-   (psCOMP_CODE in MESSAGES.COMP_CODE%type,
-    pnSEQ_NBR in MESSAGES.SEQ_NBR%type,
-    psEnglishMessage in varchar2 := null,
-    psSEVERITY in MESSAGES.SEVERITY%type := null);
+   (psCOMP_CODE in tmsCOMP_CODE,
+    pnSEQ_NBR in tnMSG_SEQ_NBR,
+    psEnglishMessage in tsText := null,
+    psSEVERITY in tsMSG_SEVERITY := null);
 --
 end MESSAGE;
 /
