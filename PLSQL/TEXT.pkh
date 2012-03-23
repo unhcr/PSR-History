@@ -6,12 +6,36 @@ create or replace package TEXT is
 --  Procedures for maintenance of the text tables.
 --
 --  Change History:
---  16-Jan-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  12-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
   sModule varchar2(30) := 'TEXT';
   sVersion varchar2(10) := 'D0.1';
+--
+-- ========================================
+-- Subtype definitions
+-- ========================================
+--
+  subtype tnTXT_ID is TEXT_HEADERS.ID%type;
+  subtype tsTAB_ALIAS is TABLE_ALIASES.ALIAS%type;
+  subtype tsTXTT_CODE is TEXT_TYPES.CODE%type;
+  subtype tmsTXTT_CODE is tsTXTT_CODE not null;
+  subtype tnTXI_SEQ_NBR_MAX is TEXT_TYPE_HEADERS.TXI_SEQ_NBR_MAX%type;
+  subtype tnTXI_SEQ_NBR is TEXT_ITEMS.SEQ_NBR%type;
+  subtype tsLANG_CODE is LANGUAGES.CODE%type;
+  subtype tmsLANG_CODE is tsLANG_CODE not null;
+  subtype tmsText is varchar2 not null;
+--
+  subtype tsTXTT_ACTIVE_FLAG is TEXT_TYPES.ACTIVE_FLAG%type;
+  subtype tsLANG_ACTIVE_FLAG is LANGUAGES.ACTIVE_FLAG%type;
+--
+  subtype tsTTP_MANDATORY_FLAG is TEXT_TYPE_PROPERTIES.MANDATORY_FLAG%type;
+  subtype tsTTP_MULTI_INSTANCE_FLAG is TEXT_TYPE_PROPERTIES.MULTI_INSTANCE_FLAG%type;
+--
+-- ========================================
+-- Program unit definitions
+-- ========================================
 --
 -- ----------------------------------------
 -- SET_TEXT
@@ -38,12 +62,12 @@ create or replace package TEXT is
 --  psTEXT - Text item text (mandatory).
 --
   procedure SET_TEXT
-   (pnTXT_ID in out TEXT_HEADERS.ID%type,
-    psTAB_ALIAS in TEXT_HEADERS.TAB_ALIAS%type,
-    psTXTT_CODE in TEXT_TYPES.CODE%type,
-    pnSEQ_NBR in out TEXT_ITEMS.SEQ_NBR%type,
-    psLANG_CODE in LANGUAGES.CODE%type,
-    psTEXT in varchar2);
+   (pnTXT_ID in out tnTXT_ID,
+    psTAB_ALIAS in tsTAB_ALIAS,
+    psTXTT_CODE in tmsTXTT_CODE,
+    pnSEQ_NBR in out tnTXI_SEQ_NBR,
+    psLANG_CODE in tmsLANG_CODE,
+    psTEXT in tmsText);
 --
 -- ----------------------------------------
 -- DELETE_TEXT
@@ -68,10 +92,10 @@ create or replace package TEXT is
 --  psLANG_CODE - Language code (optional).
 --
   procedure DELETE_TEXT
-   (pnTXT_ID in TEXT_HEADERS.ID%type,
-    psTXTT_CODE in TEXT_TYPE_HEADERS.TXTT_CODE%type := null,
-    pnSEQ_NBR in TEXT_ITEMS.SEQ_NBR%type := null,
-    psLANG_CODE in TEXT_ITEMS.LANG_CODE%type := null);
+   (pnTXT_ID in tnTXT_ID,
+    psTXTT_CODE in tsTXTT_CODE := null,
+    pnSEQ_NBR in tnTXI_SEQ_NBR := null,
+    psLANG_CODE in tsLANG_CODE := null);
 --
 end TEXT;
 /
