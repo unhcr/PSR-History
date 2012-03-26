@@ -1,12 +1,15 @@
 -- Test set-up
 -- ===========
 
-define eh = "exception when others then dbms_output.put_line(substr(sqlerrm, case when substr(sqlerrm, 12, 5) = 'ORA-2' then 12 else 1 end))"
+define eh = "exception when others then dbms_output.put_line('-- ' || sqlerrm)"
 
-set echo on serveroutput on feedback off recsepchar "." sqlprompt "        " sqlnumber off
+variable VERSION_NBR number
+variable SEQ_NBR number
+
+set echo on serveroutput on feedback off recsepchar "." sqlprompt "" sqlnumber off
 
 column DATA_TYPE format A9
-column CHAR_VALUE format A60
+column CHAR_VALUE format A50
 column LONG_TEXT format A150
 
 spool test_SYSTEM_PARAMETER.log
@@ -17,30 +20,39 @@ spool test_SYSTEM_PARAMETER.log
 -- Success cases
 -- -------------
 
-execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('TEST1', 'C', 'Character parameter'); &eh
-execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('TEST2', 'N', null, 3.14159); &eh
-execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('TEST3', 'D', null, null, date '2012-01-01'); &eh
-execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('TEST1', 'C', 'Updated character parameter'); &eh
-execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('TEST2', 'N', pnNUM_VALUE => 2.71828); &eh
-execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('TEST3', 'C', psCHAR_VALUE => 'Changed data type'); &eh
+execute SYSTEM_PARAMETER.INSERT_SYSTEM_PARAMETER('SYP1', 'C', 'Character parameter'); &eh
+execute :VERSION_NBR := 1; SYSTEM_PARAMETER.UPDATE_SYSTEM_PARAMETER('SYP1', :VERSION_NBR, 'C', 'Updated character parameter'); &eh
+execute :VERSION_NBR := null; SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('SYP2', :VERSION_NBR, 'N', null, 3.14159); &eh
+execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('SYP2', :VERSION_NBR, 'N', pnNUM_VALUE => 2.71828); &eh
+execute :VERSION_NBR := null; SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('SYP3', :VERSION_NBR, 'D', null, null, date '2012-01-01'); &eh
+execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('SYP3', :VERSION_NBR, 'C', psCHAR_VALUE => 'Changed data type'); &eh
 
-select SYP.CODE, SYP.DATA_TYPE, SYP.CHAR_VALUE, SYP.NUM_VALUE, SYP.DATE_VALUE
+select SYP.CODE, SYP.DATA_TYPE, SYP.CHAR_VALUE, SYP.NUM_VALUE, SYP.DATE_VALUE, SYP.VERSION_NBR
 from SYSTEM_PARAMETERS SYP
 order by SYP.CODE;
 
 -- Error cases
 -- -----------
 
-execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('TEST9', 'X', 'X'); &eh
--- ORA-02290: check constraint (PSR.CH_SYP_DATA_TYPE) violated
+execute SYSTEM_PARAMETER.INSERT_SYSTEM_PARAMETER('SYP1', 'C', 'Updated character parameter'); &eh
+-- ORA-00001: unique constraint (PSR.PK_SYP) violated
 
-execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('TEST9', 'CC', 'X'); &eh
+execute :VERSION_NBR := null; SYSTEM_PARAMETER.UPDATE_SYSTEM_PARAMETER('SYP1', :VERSION_NBR, 'C', 'Updated character parameter'); &eh
+-- ORA-20002: SYP-0001: System parameter has been updated by another user
+
+execute :VERSION_NBR := 1; SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('SYP1', :VERSION_NBR, 'C', 'Updated character parameter'); &eh
+-- ORA-20002: SYP-0001: System parameter has been updated by another user
+
+execute :VERSION_NBR := null; SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('SYP9', :VERSION_NBR, 'CC', 'X'); &eh
 -- ORA-12899: value too large for column "PSR"."SYSTEM_PARAMETERS"."DATA_TYPE" (actual: 2, maximum: 1)
 
-execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('TEST9', 'C'); &eh
+execute :VERSION_NBR := null; SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('SYP9', :VERSION_NBR, 'X', 'X'); &eh
 -- ORA-02290: check constraint (PSR.CH_SYP_DATA_TYPE) violated
 
-execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('TEST9', 'C', null, 999); &eh
+execute :VERSION_NBR := null; SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('SYP9', :VERSION_NBR, 'C'); &eh
+-- ORA-02290: check constraint (PSR.CH_SYP_DATA_TYPE) violated
+
+execute :VERSION_NBR := null; SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('SYP9', :VERSION_NBR, 'C', null, 999); &eh
 -- ORA-02290: check constraint (PSR.CH_SYP_DATA_TYPE) violated
 
 -- Set system parameter text
@@ -49,63 +61,65 @@ execute SYSTEM_PARAMETER.SET_SYSTEM_PARAMETER('TEST9', 'C', null, 999); &eh
 -- Success cases
 -- -------------
 
-variable SEQ_NBR number
-execute SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
-execute SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
-execute :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'es', 'New Spanish note'); &eh
-execute :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'fr', 'Updated French note'); &eh
-execute :SEQ_NBR := 2; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'es', 'Updated Spanish note'); &eh
-execute :SEQ_NBR := 2; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'es', rpad('Updated Spanish note ', 1001, unistr('\00F1'))); &eh
+execute :VERSION_NBR := 2; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
+execute SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'es', 'New Spanish note'); &eh
+execute :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'fr', 'Updated French note'); &eh
+execute :SEQ_NBR := 2; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'es', 'Updated Spanish note'); &eh
+execute :SEQ_NBR := 2; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'es', rpad('Updated Spanish note ', 1001, unistr('\00F1'))); &eh
 
-select SYP.CODE, SYP.DATA_TYPE, SYP.CHAR_VALUE, SYP.NUM_VALUE, SYP.DATE_VALUE, SYP.TXT_ID,
+select SYP.CODE, SYP.DATA_TYPE, SYP.CHAR_VALUE, SYP.NUM_VALUE, SYP.DATE_VALUE, SYP.TXT_ID, SYP.VERSION_NBR,
   TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
 from SYSTEM_PARAMETERS SYP
 left outer join TEXT_ITEMS TXI
   on TXI.TXT_ID = SYP.TXT_ID
-where SYP.CODE = 'TEST3'
+where SYP.CODE = 'SYP3'
 order by SYP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Error cases
 -- -----------
 
-execute :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'xx', 'Unknown note'); &eh
--- TXT-0004: Unknown text language
+execute :VERSION_NBR := null; :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
+-- ORA-20002: SYP-0001: System parameter has been updated by another user
 
-execute :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
--- TXT-0005: Inactive text language
+execute :VERSION_NBR := 1; :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'en', 'English note'); &eh
+-- ORA-20002: SYP-0001: System parameter has been updated by another user
 
-execute :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('XXXX', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :VERSION_NBR := 8; :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('XXXX', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
 -- ORA-01403: no data found
 
-execute :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'XXXX', :SEQ_NBR, 'fr', 'French note'); &eh
--- TXT-0002: Unknown text type
+execute :VERSION_NBR := 8; :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'xx', 'Unknown note'); &eh
+-- ORA-20002: TXT-0003: Unknown text language
 
-execute :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'DESCR', :SEQ_NBR, 'fr', 'French note'); &eh
+execute :VERSION_NBR := 8; :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'la', 'Latin note'); &eh
+-- ORA-20002: TXT-0004: Inactive text language
+
+execute :VERSION_NBR := 8; :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'XXXX', :SEQ_NBR, 'fr', 'French note'); &eh
+-- ORA-20002: TXT-0001: Unknown text type
+
+execute :VERSION_NBR := 8; :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'DESCR', :SEQ_NBR, 'fr', 'French note'); &eh
 -- ORA-02291: integrity constraint (PSR.FK_TTH_TTP) violated - parent key not found
 
-execute :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST2', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
--- TXT-0006: Cannot specify a text item sequence number without a text identifier
+execute :VERSION_NBR := 2; :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP2', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+-- ORA-20002: TXT-0005: Cannot specify a text item sequence number without a text identifier
 
-execute :SEQ_NBR := 9; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
--- TXT-0010: Text item sequence number greater than current maximum
+execute :VERSION_NBR := 8; :SEQ_NBR := 9; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'fr', 'French note'); &eh
+-- ORA-20002: TXT-0009: Text item sequence number greater than current maximum
 
-execute :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'en', ''); &eh
--- TXT-0001: Text must be specified
+execute :VERSION_NBR := 8; :SEQ_NBR := null; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'en', ''); &eh
+-- ORA-06502: PL/SQL: numeric or value error
 
-execute :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('XXXX', 'NOTE', :SEQ_NBR, 'fr', 'Updated note'); &eh
+execute :VERSION_NBR := 8; :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('XXXX', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'fr', 'Updated note'); &eh
 -- ORA-01403: no data found
 
-execute :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'XXXX', :SEQ_NBR, 'fr', 'Updated note'); &eh
--- TXT-0002: Unknown text type
+execute :VERSION_NBR := 8; :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'XXXX', :SEQ_NBR, 'fr', 'Updated note'); &eh
+-- ORA-20002: TXT-0001: Unknown text type
 
-execute :SEQ_NBR := 9; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'fr', 'Updated note'); &eh
--- TXT-0010: Text item sequence number greater than current maximum
+execute :VERSION_NBR := 8; :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'xx', 'Updated note'); &eh
+-- ORA-20002: TXT-0003: Unknown text language
 
-execute :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'xx', 'Updated note'); &eh
--- TXT-0004: Unknown text language
-
-execute :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 'fr', ''); &eh
--- TXT-0001: Text must be specified
+execute :VERSION_NBR := 8; :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', :SEQ_NBR, 'fr', ''); &eh
+-- ORA-06502: PL/SQL: numeric or value error
 
 -- Remove system parameter text
 -- ====================
@@ -113,37 +127,43 @@ execute :SEQ_NBR := 1; SYSTEM_PARAMETER.SET_SYP_TEXT('TEST3', 'NOTE', :SEQ_NBR, 
 -- Error cases
 -- -----------
 
-execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('XXXX', 'NOTE', 1, 'en'); &eh
+execute :VERSION_NBR := null; SYSTEM_PARAMETER.REMOVE_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', 1, 'en'); &eh
+-- ORA-20002: SYP-0001: System parameter has been updated by another user
+
+execute :VERSION_NBR := 1; SYSTEM_PARAMETER.REMOVE_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', 1, 'en'); &eh
+-- ORA-20002: SYP-0001: System parameter has been updated by another user
+
+execute :VERSION_NBR := 8; SYSTEM_PARAMETER.REMOVE_SYP_TEXT('SYP3', :VERSION_NBR, ''); &eh
+-- ORA-06502: PL/SQL: numeric or value error
+
+execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('XXXX', :VERSION_NBR, 'NOTE', 1, 'en'); &eh
 -- ORA-01403: no data found
 
-execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('TEST3', null); &eh
--- SYP-0007: Text type must be specified
-
-execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('TEST3', 'XXXX', 1, 'en'); &eh
+execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('SYP3', :VERSION_NBR, 'XXXX', 1, 'en'); &eh
 -- ORA-01403: no data found
 
-execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('TEST3', 'NOTE', 9, 'en'); &eh
--- TXT-0011: No text to delete
+execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', 9, 'en'); &eh
+-- ORA-20002: TXT-0010: No text to delete
 
-execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('TEST3', 'NOTE', 1, 'xx'); &eh
--- TXT-0011: No text to delete
+execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', 1, 'xx'); &eh
+-- ORA-20002: TXT-0010: No text to delete
 
-execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('TEST2', 'NOTE'); &eh
+execute :VERSION_NBR := 2; SYSTEM_PARAMETER.REMOVE_SYP_TEXT('SYP2', :VERSION_NBR, 'NOTE'); &eh
 -- ORA-01403: no data found
 
 -- Success cases
 -- -------------
 
-execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('TEST3', 'NOTE', 1, 'en'); &eh
-execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('TEST3', 'NOTE', 1); &eh
-execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('TEST3', 'NOTE'); &eh
+execute :VERSION_NBR := 8; SYSTEM_PARAMETER.REMOVE_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', 1, 'en'); &eh
+execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE', 1); &eh
+execute SYSTEM_PARAMETER.REMOVE_SYP_TEXT('SYP3', :VERSION_NBR, 'NOTE'); &eh
 
-select SYP.CODE, SYP.DATA_TYPE, SYP.CHAR_VALUE, SYP.NUM_VALUE, SYP.DATE_VALUE, SYP.TXT_ID,
+select SYP.CODE, SYP.DATA_TYPE, SYP.CHAR_VALUE, SYP.NUM_VALUE, SYP.DATE_VALUE, SYP.TXT_ID, SYP.VERSION_NBR,
   TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE, TXI.TEXT, TXI.LONG_TEXT
 from SYSTEM_PARAMETERS SYP
 left outer join TEXT_ITEMS TXI
   on TXI.TXT_ID = SYP.TXT_ID
-where SYP.CODE = 'TEST3'
+where SYP.CODE = 'SYP3'
 order by SYP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 
 -- Delete system parameters
@@ -152,15 +172,21 @@ order by SYP.CODE, TXI.TXTT_CODE, TXI.SEQ_NBR, TXI.LANG_CODE;
 -- Error cases
 -- -----------
 
-execute SYSTEM_PARAMETER.DELETE_SYSTEM_PARAMETER('TEST9'); &eh
--- SYP-0001: System parameter does not exist
+execute :VERSION_NBR := 1; SYSTEM_PARAMETER.DELETE_SYSTEM_PARAMETER('SYP9', :VERSION_NBR); &eh
+-- ORA-01403: no data found
+
+execute :VERSION_NBR := null; SYSTEM_PARAMETER.DELETE_SYSTEM_PARAMETER('SYP3', :VERSION_NBR); &eh
+-- ORA-20002: SYP-0001: System parameter has been updated by another user
+
+execute :VERSION_NBR := 10; SYSTEM_PARAMETER.DELETE_SYSTEM_PARAMETER('SYP3', :VERSION_NBR); &eh
+-- ORA-20002: SYP-0001: System parameter has been updated by another user
 
 -- Success cases
 -- -------------
 
-execute SYSTEM_PARAMETER.DELETE_SYSTEM_PARAMETER('TEST3'); &eh
+execute :VERSION_NBR := 11; SYSTEM_PARAMETER.DELETE_SYSTEM_PARAMETER('SYP3', :VERSION_NBR); &eh
 
-select SYP.CODE, SYP.DATA_TYPE, SYP.CHAR_VALUE, SYP.NUM_VALUE, SYP.DATE_VALUE
+select SYP.CODE, SYP.DATA_TYPE, SYP.CHAR_VALUE, SYP.NUM_VALUE, SYP.DATE_VALUE, SYP.VERSION_NBR
 from SYSTEM_PARAMETERS SYP
 order by SYP.CODE;
 
