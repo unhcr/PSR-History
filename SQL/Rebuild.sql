@@ -3,11 +3,15 @@
 
 spool Rebuild.log
 
+purge recyclebin;
+
 @PSRD
 @Packages
 @Triggers
-@InitPopulate
+@InitBase
 @InitMessages
+@InitLanguages
+@InitLocations
 
 commit;
 
