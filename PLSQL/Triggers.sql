@@ -28,6 +28,16 @@ end TR_LOCR_RBU_VERSION;
 /
 
 
+create or replace trigger TR_STC_RBU_AUDIT
+before update on STATISTICS
+for each row
+begin
+  :new.UPDATE_TIMESTAMP := systimestamp;
+  :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
+end TR_USR_RBU_VERSION;
+/
+
+
 create or replace trigger TR_USR_RBU_AUDIT
 before update on SYSTEM_USERS
 for each row
