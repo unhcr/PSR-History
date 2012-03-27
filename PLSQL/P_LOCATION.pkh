@@ -973,13 +973,13 @@ create or replace package P_LOCATION is
 -- DELETE_LOCATION_RELATIONSHIP
 -- ----------------------------------------
 --
--- Remove a relationship between two locations.
+-- Delete a relationship between two locations.
 --
 -- Parameters:
 --  pnLOC_CODE_PARENT - Parent location code (mandatory).
 --  pnLOC_CODE_CHILD - Child location code (mandatory).
 --  psLOCRT_CODE - Location relationship type code (mandatory).
---  pdSTART_DATE - Effective start date of this location relationship (mandatory).
+--  pdSTART_DATE - Effective start date of location relationship (mandatory).
 --  pnVERSION_NBR - Update version number of location relationship (mandatory).
 --
   procedure DELETE_LOCATION_RELATIONSHIP
