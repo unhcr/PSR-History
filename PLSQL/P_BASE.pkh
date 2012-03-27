@@ -92,6 +92,11 @@ create or replace package P_BASE is
   subtype tsMSG_SEVERITY is MESSAGES.SEVERITY%type;
   subtype tnMSG_VERSION_NBR is MESSAGES.VERSION_NBR%type;
 --
+-- POPULATION_PLANNING_GROUPS
+--
+  subtype tmsPPG_CODE is POPULATION_PLANNING_GROUPS.PPG_CODE%type not null;
+  subtype tnPPG_VERSION_NBR is POPULATION_PLANNING_GROUPS.VERSION_NBR%type;
+--
 -- SYSTEM_PARAMETERS
 --
   subtype tmsSYP_CODE is SYSTEM_PARAMETERS.CODE%type not null;
@@ -179,3 +184,5 @@ create or replace package P_BASE is
 --
 end P_BASE;
 /
+
+show error
