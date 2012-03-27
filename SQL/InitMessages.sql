@@ -19,6 +19,8 @@ execute P_MESSAGE.INSERT_COMPONENT('USR', 'en', 'System users, user attributes a
 execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('USR', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_SYSTEM_USER');
 execute P_MESSAGE.INSERT_COMPONENT('LOC', 'en', 'Locations, location attributes and location relationships');
 execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('LOC', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_LOCATION');
+execute P_MESSAGE.INSERT_COMPONENT('PPG', 'en', 'Population planning groups');
+execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('PPG', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_POPULATION_PLANNING_GROUP');
 
 -- Messages
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('GEN', :MSG_SEQ_NBR, 'en', 'Module name mismatch');
@@ -89,3 +91,6 @@ execute :MSG_SEQ_NBR := null /* 13 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_
 execute :MSG_SEQ_NBR := null /* 14 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Attribute of the correct type must be specified');
 execute :MSG_SEQ_NBR := null /* 15 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Inactive location relationship type');
 execute :MSG_SEQ_NBR := null /* 16 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Overlapping location relationship already exists');
+
+execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('PPG', :MSG_SEQ_NBR, 'en', 'PPG has been updated by another user');
+execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('PPG', :MSG_SEQ_NBR, 'en', 'Overlapping PPG already exists');
