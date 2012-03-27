@@ -10,6 +10,7 @@ purge recyclebin;
 @Triggers
 @InitBase
 @InitMessages
+@InitParameters
 @InitLanguages
 @InitLocations
 
