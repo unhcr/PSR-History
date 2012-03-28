@@ -13,6 +13,7 @@ purge recyclebin;
 @InitParameters
 @InitLanguages
 @InitLocations
+@InitPopCats
 
 commit;
 
