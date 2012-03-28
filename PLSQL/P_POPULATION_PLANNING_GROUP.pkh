@@ -195,4 +195,4 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 end P_POPULATION_PLANNING_GROUP;
 /
 
-show error
+show errors
