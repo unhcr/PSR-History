@@ -21,6 +21,8 @@ execute P_MESSAGE.INSERT_COMPONENT('LOC', 'en', 'Locations, location attributes 
 execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('LOC', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_LOCATION');
 execute P_MESSAGE.INSERT_COMPONENT('PPG', 'en', 'Population planning groups');
 execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('PPG', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_POPULATION_PLANNING_GROUP');
+execute P_MESSAGE.INSERT_COMPONENT('POPC', 'en', 'Population categories');
+execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('POPC', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_POPULATION_CATEGORY');
 
 -- Messages
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('GEN', :MSG_SEQ_NBR, 'en', 'Module name mismatch');
@@ -94,3 +96,6 @@ execute :MSG_SEQ_NBR := null /* 16 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('PPG', :MSG_SEQ_NBR, 'en', 'PPG has been updated by another user');
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('PPG', :MSG_SEQ_NBR, 'en', 'Overlapping PPG already exists');
+
+execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('POPC', :MSG_SEQ_NBR, 'en', 'Population category has been updated by another user');
+execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('POPC', :MSG_SEQ_NBR, 'en', 'Nothing to be updated');
