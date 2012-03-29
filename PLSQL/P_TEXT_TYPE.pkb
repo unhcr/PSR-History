@@ -66,14 +66,8 @@ create or replace package body P_TEXT_TYPE is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      if psDescription is null
-      then
-        if pnDISPLAY_SEQ = -1e6
-          and psACTIVE_FLAG is null
-        then P_MESSAGE.DISPLAY_MESSAGE('TXTT', 3, 'Nothing to be updated');
-        end if;
-      else
-        P_TEXT.SET_TEXT(nTXT_ID, 'TXTT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      if psDescription is not null
+      then P_TEXT.SET_TEXT(nTXT_ID, 'TXTT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
       update TEXT_TYPES
@@ -366,12 +360,6 @@ create or replace package body P_TEXT_TYPE is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      if psMANDATORY_FLAG is null
-        and psMULTI_INSTANCE_FLAG is null
-        and psLONG_TEXT_FLAG is null
-      then P_MESSAGE.DISPLAY_MESSAGE('TXTT', 3, 'Nothing to be updated');
-      end if;
-    --
       update TEXT_TYPE_PROPERTIES
       set MANDATORY_FLAG = nvl(psMANDATORY_FLAG, MANDATORY_FLAG),
         MULTI_INSTANCE_FLAG = nvl(psMULTI_INSTANCE_FLAG, MULTI_INSTANCE_FLAG),
