@@ -7,7 +7,7 @@ create or replace package P_SYSTEM_USER is
 --   attribute types.
 --
 --  Change History:
---  27-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  29-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -53,11 +53,11 @@ create or replace package P_SYSTEM_USER is
 --    returned).
 --  psLANG_CODE - Language code of the user name (optional, but must be specified if psName is
 --    specified).
---  psName - User name text (optional, if not specified, the name is not updated).
+--  psName - User name text (optional, if not specified, the name is not changed).
 --  psLOCKED_FLAG - Flag (Y/N) indicating whether the user is currently allowed to use the system
---    (optional: if not specified, the existing value is not updated).
+--    (optional: if not specified, the existing value is not changed).
 --  psTEMPLATE_FLAG - Flag (Y/N) indicating whether the user record is a template or a real user
---    (optional: if not specified, the existing value is not updated).
+--    (optional: if not specified, the existing value is not changed).
 --
 --
   procedure UPDATE_SYSTEM_USER
@@ -81,11 +81,11 @@ create or replace package P_SYSTEM_USER is
 --  psLANG_CODE - Language code of the user name (optional when updating an existing user but must
 --    be specified if psName is specified).
 --  psName - User name text (optional when updating an existing user; if not specified, the name is
---    not updated).
+--    not changed).
 --  psLOCKED_FLAG - Flag (Y/N) indicating whether the user is currently allowed to use the system
---    (optional: if not specified, the existing value is not updated; a new value defaults to N).
+--    (optional: if not specified, the existing value is not changed; a new value defaults to N).
 --  psTEMPLATE_FLAG - Flag (Y/N) indicating whether the user record is a template or a real user
---    (optional: if not specified, the existing value is not updated; a new value defaults to N).
+--    (optional: if not specified, the existing value is not changed; a new value defaults to N).
 --
 --
   procedure SET_SYSTEM_USER
@@ -233,17 +233,17 @@ create or replace package P_SYSTEM_USER is
 --  pnVERSION_NBR - Update version number of user attribute type (mandatory: new version number is
 --    returned).
 --  psDATA_TYPE - Data type of user attribute type (optional, if not specified or null the data type
---    is not updated). The data type cannot be changed if user attributes of this type already
+--    is not changed). The data type cannot be changed if user attributes of this type already
 --    exist.
 --  psLANG_CODE - Language code for the textual description (optional, but must be specified if
 --    psDescription is specified).
 --  psDescription - Textual description of user attribute type (optional; if not specified, the
---    description is not updated).
+--    description is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of user attribute types (optional:
---    if not specified, the existing display sequence is not updated; if null is specified, the
+--    if not specified, the existing display sequence is not changed; if null is specified, the
 --    display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the user attribute type is currently available
---    for use (optional: if not specified, the existing value is not updated).
+--    for use (optional: if not specified, the existing value is not changed).
 --
   procedure UPDATE_USER_ATTRIBUTE_TYPE
    (psCODE in P_BASE.tmsUATT_CODE,
@@ -265,17 +265,17 @@ create or replace package P_SYSTEM_USER is
 --  pnVERSION_NBR - Update version number of user attribute type (mandatory: new version number is
 --    returned; for a new user attribute type, null must be specified and 1 will be returned).
 --  psDATA_TYPE - Data type of user attribute type (optional when updating an existing user
---    attribute type; if not specified or null the data type is not updated). The data type cannot
---    be updated if user attributes of this type already exist.
+--    attribute type; if not specified or null the data type is not changed). The data type cannot
+--    be changed if user attributes of this type already exist.
 --  psLANG_CODE - Language code for the textual description (optional when updating an existing
 --    user attribute type but must be specified if psDescription is specified).
 --  psDescription - Textual description of user attribute type (optional when updating an existing
---    user attribute type; if not specified, the description is not updated).
+--    user attribute type; if not specified, the description is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of user attribute types (optional:
---    if not specified, an existing display sequence is not updated and a new one is set to null; if
+--    if not specified, an existing display sequence is not changed and a new one is set to null; if
 --    null is specified, the display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the user attribute type is currently available
---    for use (optional: if not specified, the existing value is not updated; a new value defaults
+--    for use (optional: if not specified, the existing value is not changed; a new value defaults
 --    to Y).
 --
   procedure SET_USER_ATTRIBUTE_TYPE

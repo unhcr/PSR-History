@@ -65,14 +65,8 @@ create or replace package body P_SYSTEM_USER is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      if psName is null
-      then
-        if psLOCKED_FLAG is null
-          and psTEMPLATE_FLAG is null
-        then P_MESSAGE.DISPLAY_MESSAGE('USR', 5, 'Nothing to be updated');
-        end if;
-      else
-        P_TEXT.SET_TEXT(nTXT_ID, 'USR', 'DESCR', nSEQ_NBR, psLANG_CODE, psName);
+      if psName is not null
+      then P_TEXT.SET_TEXT(nTXT_ID, 'USR', 'DESCR', nSEQ_NBR, psLANG_CODE, psName);
       end if;
     --
       update SYSTEM_USERS
@@ -383,21 +377,14 @@ create or replace package body P_SYSTEM_USER is
         when NO_DATA_FOUND then null;
       --
         when TOO_MANY_ROWS
-        then P_MESSAGE.DISPLAY_MESSAGE('USR', 6, 'Cannot update data type of user attribute type already in use');
+        then P_MESSAGE.DISPLAY_MESSAGE('USR', 5, 'Cannot update data type of user attribute type already in use');
       end;
     end if;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      if psDescription is null
-      then
-        if psDATA_TYPE is null
-          and pnDISPLAY_SEQ = -1e6
-          and psACTIVE_FLAG is null
-        then P_MESSAGE.DISPLAY_MESSAGE('USR', 5, 'Nothing to be updated');
-        end if;
-      else
-        P_TEXT.SET_TEXT(nTXT_ID, 'USR', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      if psDescription is not null
+      then P_TEXT.SET_TEXT(nTXT_ID, 'USR', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
       update USER_ATTRIBUTE_TYPES
@@ -660,14 +647,14 @@ create or replace package body P_SYSTEM_USER is
     where CODE = psUATT_CODE;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Inactive user attribute type');
+    then P_MESSAGE.DISPLAY_MESSAGE('USR', 6, 'Inactive user attribute type');
     end if;
   --
     case
       when sDATA_TYPE = 'C' and psCHAR_VALUE is not null then null;
       when sDATA_TYPE = 'N' and pnNUM_VALUE is not null then null;
       when sDATA_TYPE = 'D' and pdDATE_VALUE is not null then null;
-      else P_MESSAGE.DISPLAY_MESSAGE('USR', 8, 'Attribute of the correct type must be specified');
+      else P_MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Attribute of the correct type must be specified');
     end case;
   --
     insert into USER_ATTRIBUTES (USERID, UATT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
@@ -710,18 +697,18 @@ create or replace package body P_SYSTEM_USER is
       where CODE = psUATT_CODE;
     exception
       when NO_DATA_FOUND
-      then P_MESSAGE.DISPLAY_MESSAGE('USR', 9, 'Unknown user attribute type');
+      then P_MESSAGE.DISPLAY_MESSAGE('USR', 8, 'Unknown user attribute type');
     end;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Inactive user attribute type');
+    then P_MESSAGE.DISPLAY_MESSAGE('USR', 6, 'Inactive user attribute type');
     end if;
   --
     case
       when sDATA_TYPE = 'C' and psCHAR_VALUE is not null then null;
       when sDATA_TYPE = 'N' and pnNUM_VALUE is not null then null;
       when sDATA_TYPE = 'D' and pdDATE_VALUE is not null then null;
-      else P_MESSAGE.DISPLAY_MESSAGE('USR', 8, 'Attribute of the correct type must be specified');
+      else P_MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Attribute of the correct type must be specified');
     end case;
   --
     select VERSION_NBR, rowid
@@ -943,7 +930,7 @@ create or replace package body P_SYSTEM_USER is
     select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('USR', 10, 'Inactive preference language');
+    then P_MESSAGE.DISPLAY_MESSAGE('USR', 9, 'Inactive preference language');
     end if;
   --
     insert into USER_LANGUAGE_PREFERENCES (USERID, LANG_CODE, PREF_SEQ)
