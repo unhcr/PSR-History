@@ -14,6 +14,7 @@ purge recyclebin;
 @InitLanguages
 @InitLocations
 @InitPopCats
+@InitAgeProfiles
 
 commit;
 
