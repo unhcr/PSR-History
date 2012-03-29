@@ -176,9 +176,9 @@ create or replace package P_LOCATION is
 -- Remove a general text item from a location type record. The following cases arise:
 -- 1. All text of the given type is deleted for the given location type (neither psSEQ_NBR nor
 --    psLANG_CODE is specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of location type code, text type
---    and text item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action
---    fails if this is the last text item for this text type and the text type is mandatory.
+-- 2. All language variants are deleted for the given location type, text type and text item
+--    sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if this is
+--    the last text item for this text type and the text type is mandatory.
 -- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
 --    action fails if this is the last language variant of the last text item for this text type and
 --    the text type is mandatory.
@@ -375,9 +375,9 @@ create or replace package P_LOCATION is
 -- Remove a general text item from a location record. The following cases arise:
 -- 1. All text of the given type is deleted for the given location (neither psSEQ_NBR nor
 --    psLANG_CODE is specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of user, text type and text item
---    sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if this is
---    the last text item for this text type and the text type is mandatory.
+-- 2. All language variants are deleted for the given location, text type and text item sequence
+--    number (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if this is the last
+--    text item for this text type and the text type is mandatory.
 -- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
 --    action fails if this is the last language variant of the last text item for this text type and
 --    the text type is mandatory.
@@ -567,9 +567,9 @@ create or replace package P_LOCATION is
 -- Remove a general text item from a location attribute type record. The following cases arise:
 -- 1. All text of the given type is deleted for the given location attribute type (neither psSEQ_NBR
 --    nor psLANG_CODE is specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of location attribute type code,
---    text type and text item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The
---    action fails if this is the last text item for this text type and the text type is mandatory.
+-- 2. All language variants are deleted for the given location attribute type, text type and text
+--    item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if this
+--    is the last text item for this text type and the text type is mandatory.
 -- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
 --    action fails if this is the last language variant of the last text item for this text type and
 --    the text type is mandatory.
@@ -709,9 +709,9 @@ create or replace package P_LOCATION is
 -- Remove a general text item from a location attribute record. The following cases arise:
 -- 1. All text of the given type is deleted for the given location attribute (neither psSEQ_NBR nor
 --    psLANG_CODE is specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of location attribute, text type
---    and text item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action
---    fails if this is the last text item for this text type and the text type is mandatory.
+-- 2. All language variants are deleted for the given location attribute, text type and text item
+--    sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if this is
+--    the last text item for this text type and the text type is mandatory.
 -- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
 --    action fails if this is the last language variant of the last text item for this text type and
 --    the text type is mandatory.
@@ -894,10 +894,9 @@ create or replace package P_LOCATION is
 -- Remove a general text item from a location relationship type record. The following cases arise:
 -- 1. All text of the given type is deleted for the given location relationship type (neither
 --    psSEQ_NBR nor psLANG_CODE is specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of location relationship type
---    code, text type and text item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not).
---    The action fails if this is the last text item for this text type and the text type is
---    mandatory.
+-- 2. All language variants are deleted for the given location relationship type, text type and text
+--    item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if this
+--    is the last text item for this text type and the text type is mandatory.
 -- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
 --    action fails if this is the last language variant of the last text item for this text type and
 --    the text type is mandatory.
@@ -1026,9 +1025,9 @@ create or replace package P_LOCATION is
 -- Remove a general text item from a location relationship record. The following cases arise:
 -- 1. All text of the given type is deleted for the given location relationship (neither psSEQ_NBR
 --    nor psLANG_CODE is specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of user attribute, text type and
---    text item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if
---    this is the last text item for this text type and the text type is mandatory.
+-- 2. All language variants are deleted for the given combination of location relationship, text
+--    type and text item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action
+--    fails if this is the last text item for this text type and the text type is mandatory.
 -- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
 --    action fails if this is the last language variant of the last text item for this text type and
 --    the text type is mandatory.

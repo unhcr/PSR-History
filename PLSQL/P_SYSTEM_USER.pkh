@@ -177,9 +177,9 @@ create or replace package P_SYSTEM_USER is
 -- Remove a general text item from a system user record. The following cases arise:
 -- 1. All text of the given type is deleted for the given user (neither psSEQ_NBR nor psLANG_CODE is
 --    specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of user, text type and text item
---    sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if this is
---    the last text item for this text type and the text type is mandatory.
+-- 2. All language variants are deleted for the given user, text type and text item sequence number
+--    (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if this is the last text
+--    item for this text type and the text type is mandatory.
 -- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
 --    action fails if this is the last language variant of the last text item for this text type and
 --    the text type is mandatory.
@@ -368,9 +368,9 @@ create or replace package P_SYSTEM_USER is
 -- Remove a general text item from a user attribute type record. The following cases arise:
 -- 1. All text of the given type is deleted for the given user attribute type (neither psSEQ_NBR nor
 --    psLANG_CODE is specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of user attribute type code, text
---    type and text item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action
---    fails if this is the last text item for this text type and the text type is mandatory.
+-- 2. All language variants are deleted for the given user attribute type, text type and text item
+--    sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if this is
+--    the last text item for this text type and the text type is mandatory.
 -- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
 --    action fails if this is the last language variant of the last text item for this text type and
 --    the text type is mandatory.
@@ -510,8 +510,8 @@ create or replace package P_SYSTEM_USER is
 -- Remove a general text item from a user attribute record. The following cases arise:
 -- 1. All text of the given type is deleted for the given user attribute (neither psSEQ_NBR nor
 --    psLANG_CODE is specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of user attribute, text type and
---    text item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if
+-- 2. All language variants are deleted for the given user attribute, text type and text item
+--    sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if
 --    this is the last text item for this text type and the text type is mandatory.
 -- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
 --    action fails if this is the last language variant of the last text item for this text type and

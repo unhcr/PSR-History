@@ -175,9 +175,9 @@ create or replace package P_AGE_PROFILE is
 -- Remove a general text item from an age profile. The following cases arise:
 -- 1. All text of the given type is deleted for the given age profile (neither psSEQ_NBR nor
 --    psLANG_CODE is specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of language code, text type and
---    text item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). This action fails
---    if this is the last text item for this text type and the text type is mandatory.
+-- 2. All language variants are deleted for the given age profile, text type and text item sequence
+--    number (pnSEQ_NBR is specified but psLANG_CODE is not). This action fails if this is the last
+--    text item for this text type and the text type is mandatory.
 -- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
 --    action fails if this is the last language variant of the last text item for this text type and
 --    the text type is mandatory.
@@ -335,9 +335,9 @@ create or replace package P_AGE_PROFILE is
 -- Remove a general text item from an age range. The following cases arise:
 -- 1. All text of the given type is deleted for the given age range (neither psSEQ_NBR nor
 --    psLANG_CODE is specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of language code, text type and
---    text item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). This action fails
---    if this is the last text item for this text type and the text type is mandatory.
+-- 2. All language variants are deleted for the given age range, text type and text item sequence
+--    number (pnSEQ_NBR is specified but psLANG_CODE is not). This action fails if this is the last
+--    text item for this text type and the text type is mandatory.
 -- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
 --    action fails if this is the last language variant of the last text item for this text type and
 --    the text type is mandatory.

@@ -167,9 +167,9 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 -- Remove a general text item from a PPG. The following cases arise:
 -- 1. All text of the given type is deleted for the given PPG (neither psSEQ_NBR nor psLANG_CODE is
 --    specified). This action fails if the text type is mandatory.
--- 2. All language variants are deleted for the given combination of PPG code, text type and text
---    item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). This action fails if
---    this is the last text item of this text type and the text type is mandatory.
+-- 2. All language variants are deleted for the given PPG, text type and text item sequence number
+--    (pnSEQ_NBR is specified but psLANG_CODE is not). This action fails if this is the last text
+--    item of this text type and the text type is mandatory.
 -- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
 --    action fails if this is the last language variant of the last text item of this text type and
 --    the text type is mandatory.
