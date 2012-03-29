@@ -66,14 +66,8 @@ create or replace package body P_MESSAGE is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      if psDescription is null
-      then
-        if pnDISPLAY_SEQ = -1e6
-          and psACTIVE_FLAG is null
-        then P_MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'Nothing to be updated');
-        end if;
-      else
-        P_TEXT.SET_TEXT(nTXT_ID, 'COMP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      if psDescription is not null
+      then P_TEXT.SET_TEXT(nTXT_ID, 'COMP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
       update TEXT_TYPES
@@ -83,7 +77,7 @@ create or replace package body P_MESSAGE is
       where rowid = xCOMP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'Component has been updated by another user');
+      DISPLAY_MESSAGE('MSG', 5, 'Component has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -158,7 +152,7 @@ create or replace package body P_MESSAGE is
     --
       P_TEXT.DELETE_TEXT(nTXT_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'Component has been updated by another user');
+      DISPLAY_MESSAGE('MSG', 5, 'Component has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -253,7 +247,7 @@ create or replace package body P_MESSAGE is
       where rowid = xCOMP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'Component has been updated by another user');
+      DISPLAY_MESSAGE('MSG', 5, 'Component has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -298,7 +292,7 @@ create or replace package body P_MESSAGE is
       where rowid = xCOMP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('MSG', 5, 'Component has been updated by another user');
+      DISPLAY_MESSAGE('MSG', 5, 'Component has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -339,7 +333,7 @@ create or replace package body P_MESSAGE is
       returning MSG_SEQ_NBR_MAX into pnSEQ_NBR;
     --
       if sql%rowcount = 0
-      then P_MESSAGE.DISPLAY_MESSAGE('MSG', 8, 'Component does not exist');
+      then DISPLAY_MESSAGE('MSG', 7, 'Component does not exist');
       end if;
     else
     --
@@ -348,7 +342,7 @@ create or replace package body P_MESSAGE is
       select MSG_SEQ_NBR_MAX into nMSG_SEQ_NBR_MAX from COMPONENTS where CODE = psCOMP_CODE;
     --
       if pnSEQ_NBR > nMSG_SEQ_NBR_MAX
-      then P_MESSAGE.DISPLAY_MESSAGE('MSG', 9, 'Message sequence number greater than current maximum');
+      then DISPLAY_MESSAGE('MSG', 8, 'Message sequence number greater than current maximum');
       end if;
     end if;
   --
@@ -386,15 +380,6 @@ create or replace package body P_MESSAGE is
       psCOMP_CODE || '~' || to_char(pnSEQ_NBR) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psSEVERITY || '~' || psLANG_CODE || '~' || to_char(length(psMessage)) || ':' || psMessage);
   --
-    if psMessage is null
-    then
-      if psLANG_CODE is not null
-      then P_MESSAGE.DISPLAY_MESSAGE('MSG', 10, 'Message language cannot be specified without message text');
-      elsif psSEVERITY is null
-      then P_MESSAGE.DISPLAY_MESSAGE('MSG', 7, 'Nothing to be updated');
-      end if;
-    end if;
-  --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xMSG_ROWID
     from MESSAGES
@@ -414,7 +399,7 @@ create or replace package body P_MESSAGE is
       where rowid = xMSG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'Message has been updated by another user');
+      DISPLAY_MESSAGE('MSG', 6, 'Message has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -488,7 +473,7 @@ create or replace package body P_MESSAGE is
     --
       P_TEXT.DELETE_TEXT(nTXT_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'Message has been updated by another user');
+      DISPLAY_MESSAGE('MSG', 6, 'Message has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -589,7 +574,7 @@ create or replace package body P_MESSAGE is
       where rowid = xMSG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'Message has been updated by another user');
+      DISPLAY_MESSAGE('MSG', 6, 'Message has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -636,7 +621,7 @@ create or replace package body P_MESSAGE is
       where rowid = xMSG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('MSG', 6, 'Message has been updated by another user');
+      DISPLAY_MESSAGE('MSG', 6, 'Message has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -740,11 +725,11 @@ create or replace package body P_MESSAGE is
 --
 begin
   if sComponent != 'MSG'
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
+  then DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  then DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
   end if;
 --
 end P_MESSAGE;

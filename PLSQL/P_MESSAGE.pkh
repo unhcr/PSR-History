@@ -6,7 +6,7 @@ create or replace package P_MESSAGE is
 --  Procedures for maintenance of system messages and their associated components.
 --
 --  Change History:
---  27-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  29-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -50,12 +50,12 @@ create or replace package P_MESSAGE is
 --  psLANG_CODE - Language code for the textual description (optional, but must be specified if
 --    psDescription is specified).
 --  psDescription - Textual description of component (optional, if not specified, the description
---    is not updated).
+--    is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of components (optional: if not
---    specified, the existing display sequence is not updated; if null is specified, the display
+--    specified, the existing display sequence is not changed; if null is specified, the display
 --    sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the component is currently available for use
---    (optional: if not specified, the existing value is not updated).
+--    (optional: if not specified, the existing value is not changed).
 --
   procedure UPDATE_COMPONENT
    (psCODE in P_BASE.tmsCOMP_CODE,
@@ -78,12 +78,12 @@ create or replace package P_MESSAGE is
 --  psLANG_CODE - Language code for the textual description (optional when updating an existing
 --    component but must be specified if psDescription is specified).
 --  psDescription - Textual description of component (optional when updating an existing component;
---    if not specified, the description is not updated).
+--    if not specified, the description is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of components (optional: if not
---    specified, an existing display sequence is not updated and a new one is set to null; if null
+--    specified, an existing display sequence is not changed and a new one is set to null; if null
 --    is specified, the display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the component is currently available for use
---    (optional: if not specified, the existing value is not updated; a new value defaults to Y).
+--    (optional: if not specified, the existing value is not changed; a new value defaults to Y).
 --
   procedure SET_COMPONENT
    (psCODE in P_BASE.tmsCOMP_CODE,
@@ -226,9 +226,9 @@ create or replace package P_MESSAGE is
 --  pnVERSION_NBR - Update version number of message (mandatory: new version number is returned).
 --  psLANG_CODE - Language code of the message (optional, but must be specified if psMessage is
 --    specified).
---  psMessage - Message text (optional, if not specified, the message text is not updated).
+--  psMessage - Message text (optional, if not specified, the message text is not changed).
 --  psSEVERITY - Severity of event associated with message: S - System, E - Error, W - Warning or
---    I - Information (optional: if not specified, the existing value is not updated).
+--    I - Information (optional: if not specified, the existing value is not changed).
 --
   procedure UPDATE_MESSAGE
    (psCOMP_CODE in P_BASE.tmsCOMP_CODE,
@@ -252,9 +252,9 @@ create or replace package P_MESSAGE is
 --  psLANG_CODE - Language code of the message (optional when updating an existing message but must
 --    be specified if psMessage is specified).
 --  psMessage - Message text (optional when updating an existing message; if not specified, the
---    message is not updated).
+--    message is not changed).
 --  psSEVERITY - Severity of event associated with message: S - System, E - Error, W - Warning or
---    I - Information (optional: if not specified, the existing value is not updated; a new value
+--    I - Information (optional: if not specified, the existing value is not changed; a new value
 --    defaults to E).
 --
   procedure SET_MESSAGE
