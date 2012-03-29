@@ -23,6 +23,8 @@ execute P_MESSAGE.INSERT_COMPONENT('PPG', 'en', 'Population planning groups');
 execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('PPG', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_POPULATION_PLANNING_GROUP');
 execute P_MESSAGE.INSERT_COMPONENT('POPC', 'en', 'Population categories');
 execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('POPC', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_POPULATION_CATEGORY');
+execute P_MESSAGE.INSERT_COMPONENT('AGP', 'en', 'Age profiles and ranges');
+execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('AGP', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_AGE_PROFILE');
 
 -- Messages
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('GEN', :MSG_SEQ_NBR, 'en', 'Module name mismatch');
@@ -95,7 +97,12 @@ execute :MSG_SEQ_NBR := null /* 15 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_
 execute :MSG_SEQ_NBR := null /* 16 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Overlapping location relationship already exists');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('PPG', :MSG_SEQ_NBR, 'en', 'PPG has been updated by another user');
-execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('PPG', :MSG_SEQ_NBR, 'en', 'Overlapping PPG already exists');
+execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('PPG', :MSG_SEQ_NBR, 'en', 'PPG with overlapping dates already exists');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('POPC', :MSG_SEQ_NBR, 'en', 'Population category has been updated by another user');
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('POPC', :MSG_SEQ_NBR, 'en', 'Nothing to be updated');
+
+execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('AGP', :MSG_SEQ_NBR, 'en', 'Age profile has been updated by another user');
+execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('AGP', :MSG_SEQ_NBR, 'en', 'Age range has been updated by another user');
+execute :MSG_SEQ_NBR := null /* 3 */; P_MESSAGE.INSERT_MESSAGE('AGP', :MSG_SEQ_NBR, 'en', 'Cannot change age range already in use');
+execute :MSG_SEQ_NBR := null /* 4 */; P_MESSAGE.INSERT_MESSAGE('AGP', :MSG_SEQ_NBR, 'en', 'Overlapping age ranges for this age profile');
