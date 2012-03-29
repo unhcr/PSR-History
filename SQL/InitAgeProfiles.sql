@@ -1,6 +1,3 @@
-variable VERSION_NBR number;
-variable TXI_SEQ_NBR number;
-
 execute P_AGE_PROFILE.INSERT_AGE_PROFILE('STD', 'en', 'UNHCR standard age profile');
 execute P_AGE_PROFILE.INSERT_AGE_RANGE('STD', 0, 4, 'en', '0-4 years');
 execute P_AGE_PROFILE.INSERT_AGE_RANGE('STD', 5, 11, 'en', '5-11 years');
