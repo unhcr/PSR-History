@@ -66,14 +66,8 @@ create or replace package body P_POPULATION_CATEGORY is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      if psLANG_CODE is null and psDescription is null
-      then
-        if pnDISPLAY_SEQ = -1e6
-          and psACTIVE_FLAG is null
-        then P_MESSAGE.DISPLAY_MESSAGE('POPC', 2, 'Nothing to be updated');
-        end if;
-      else
-        P_TEXT.SET_TEXT(nTXT_ID, 'POPC', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      if psDescription is not null
+      then P_TEXT.SET_TEXT(nTXT_ID, 'POPC', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
       update POPULATION_CATEGORIES

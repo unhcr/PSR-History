@@ -6,7 +6,7 @@ create or replace package P_POPULATION_CATEGORY is
 --  Procedures for maintenance of population categories.
 --
 --  Change History:
---  28-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  29-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -51,12 +51,12 @@ create or replace package P_POPULATION_CATEGORY is
 --  psLANG_CODE - Language code of the textual description (optional, but must be specified if
 --    psDescription is specified).
 --  psDescription - Textual description of population category (optional: if not specified, the
---    description is not updated).
+--    description is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of population categories (optional:
---    if not specified, the existing display sequence is not updated; if null is specified, the
+--    if not specified, the existing display sequence is not changed; if null is specified, the
 --    display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the population category is currently available for
---    use (optional: if not specified, the existing value is not updated).
+--    use (optional: if not specified, the existing value is not changed).
 --
   procedure UPDATE_POPULATION_CATEGORY
    (psCODE in P_BASE.tmsPOPC_CODE,
@@ -80,12 +80,12 @@ create or replace package P_POPULATION_CATEGORY is
 --  psLANG_CODE - Language code of the textual description (optional when updating an existing
 --    population category but must be specified if psDescription is specified).
 --  psDescription - Textual description of population category (optional when updating an existing
---    population category; if not specified, the description is not updated).
+--    population category; if not specified, the description is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of population categories (optional:
---    if not specified, an existing display sequence is not updated and a new one is set to null; if
+--    if not specified, an existing display sequence is not changed and a new one is set to null; if
 --    null is specified, the display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the population category is currently available for
---    use (optional: if not specified, the existing value is not updated; a new value defaults
+--    use (optional: if not specified, the existing value is not changed; a new value defaults
 --    to Y).
 --
   procedure SET_POPULATION_CATEGORY
