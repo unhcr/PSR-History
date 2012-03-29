@@ -26,7 +26,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-  -- Check that the associated location is active during the given effective date range.
+  -- Check that the associated location is active for the whole of the given effective date range.
   --
     declare
       sDummy varchar2(1);
@@ -35,10 +35,8 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       into sDummy
       from LOCATIONS
       where CODE = pnLOC_CODE
-      and START_DATE <= pdEND_DATE
-      and END_DATE >= pdSTART_DATE;
-    exception
-      when TOO_MANY_ROWS then null;
+      and START_DATE <= pdSTART_DATE
+      and END_DATE >= pdEND_DATE;
     end;
   --
   -- Check for an existing PPG with the same code and overlapping effective date range.
@@ -51,7 +49,6 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       from POPULATION_PLANNING_GROUPS
       where LOC_CODE = pnLOC_CODE
       and PPG_CODE = psPPG_CODE
-      and START_DATE = pdSTART_DATE
       and START_DATE <= pdEND_DATE
       and END_DATE >= pdSTART_DATE;
     --
@@ -60,7 +57,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       when NO_DATA_FOUND then null;
     --
       when TOO_MANY_ROWS
-      then P_MESSAGE.DISPLAY_MESSAGE('PPG', 2, 'Overlapping PPG already exists');
+      then P_MESSAGE.DISPLAY_MESSAGE('PPG', 2, 'PPG with overlapping dates already exists');
     end;
   --
     P_TEXT.SET_TEXT(nTXT_ID, 'PPG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
@@ -93,9 +90,12 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     pdSTART_DATE_NEW in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE)
   is
+    dEND_DATE P_BASE.tdDate;
     nTXT_ID P_BASE.tnTXT_ID;
     nVERSION_NBR P_BASE.tnPPG_VERSION_NBR;
     xPPG_ROWID rowid;
+    dSTART_DATE_NEW P_BASE.tdDate;
+    dEND_DATE_NEW P_BASE.tdDate;
     nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
@@ -106,8 +106,8 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPPG_ROWID
+    select END_DATE, TXT_ID, VERSION_NBR, rowid
+    into dEND_DATE, nTXT_ID, nVERSION_NBR, xPPG_ROWID
     from POPULATION_PLANNING_GROUPS
     where LOC_CODE = pnLOC_CODE
     and PPG_CODE = psPPG_CODE
@@ -117,42 +117,51 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     if pnVERSION_NBR = nVERSION_NBR
     then
     --
-    -- Check for PPG with the same code and overlapping effective date range.
+    -- Determine new values for dates.
     --
-      declare
-        sDummy varchar2(1);
-      begin
-        select 'x'
-        into sDummy
-        from POPULATION_PLANNING_GROUPS
-        where LOC_CODE = pnLOC_CODE
-        and PPG_CODE = psPPG_CODE
-        and START_DATE = pdSTART_DATE
-        and START_DATE <= pdEND_DATE
-        and END_DATE >= pdSTART_DATE
-        and START_DATE != pdSTART_DATE;
-      --
-        raise TOO_MANY_ROWS;
-      exception
-        when NO_DATA_FOUND then null;
-      --
-        when TOO_MANY_ROWS
-        then P_MESSAGE.DISPLAY_MESSAGE('PPG', 2, 'Overlapping PPG already exists');
-      end;
+      dSTART_DATE_NEW :=
+        case
+          when pdSTART_DATE_NEW = P_BASE.gdFALSE_DATE then pdSTART_DATE
+          else nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)
+        end;
+      dEND_DATE_NEW :=
+        case
+          when pdEND_DATE = P_BASE.gdFALSE_DATE then dEND_DATE
+          else nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
+        end;
     --
-      P_TEXT.SET_TEXT(nTXT_ID, 'PPG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    -- If dates are being changed, check for PPG with the same code and overlapping effective dates.
+    --
+      if dSTART_DATE_NEW != pdSTART_DATE or dEND_DATE_NEW != dEND_DATE
+      then
+        declare
+          sDummy varchar2(1);
+        begin
+          select 'x'
+          into sDummy
+          from POPULATION_PLANNING_GROUPS
+          where LOC_CODE = pnLOC_CODE
+          and PPG_CODE = psPPG_CODE
+          and START_DATE <= dEND_DATE_NEW
+          and END_DATE >= dSTART_DATE_NEW
+          and START_DATE != pdSTART_DATE;
+        --
+          raise TOO_MANY_ROWS;
+        exception
+          when NO_DATA_FOUND then null;
+        --
+          when TOO_MANY_ROWS
+          then P_MESSAGE.DISPLAY_MESSAGE('PPG', 2, 'Overlapping PPG already exists');
+        end;
+      end if;
+    --
+      if psDescription is not null
+      then P_TEXT.SET_TEXT(nTXT_ID, 'PPG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      end if;
     --
       update POPULATION_PLANNING_GROUPS
-      set START_DATE =
-          case
-            when pdSTART_DATE = P_BASE.gdFALSE_DATE then START_DATE
-            else nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)
-          end,
-        END_DATE =
-          case
-            when pdEND_DATE = P_BASE.gdFALSE_DATE then END_DATE
-            else nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
-          end,
+      set START_DATE = dSTART_DATE_NEW,
+        END_DATE = dEND_DATE_NEW,
         VERSION_NBR = VERSION_NBR + 1
       where rowid = xPPG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
