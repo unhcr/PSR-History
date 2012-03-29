@@ -169,15 +169,14 @@ create or replace package P_MESSAGE is
 -- ----------------------------------------
 --
 -- Remove a general text item from a component record. The following cases arise:
--- 1. All text of the given type is deleted for the given component (only psCODE and psTXTT_CODE are
---    specified). This action fails if the text type is mandatory.
+-- 1. All text of the given type is deleted for the given component (neither psSEQ_NBR nor
+--    psLANG_CODE is specified). This action fails if the text type is mandatory.
 -- 2. All language variants are deleted for the given combination of component code, text type and
---    text item sequence number (psCODE, psTXTT_CODE and pnSEQ_NBR are specified, psLANG_CODE is
---    not). This action fails if this is the last text item for this text type and the text type is
---    mandatory.
--- 3. A single language variant is deleted (psCODE, psTXTT_CODE, pnSEQ_NBR and psLANG_CODE are all
---    specified). This action fails if this is the last language variant of the last text item for
---    this text type and the text type is mandatory.
+--    text item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). This action fails
+--    if this is the last text item for this text type and the text type is mandatory.
+-- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
+--    action fails if this is the last language variant of the last text item for this text type and
+--    the text type is mandatory.
 --
 -- Parameters:
 --  psCODE - Code of component from which text item is to be removed (mandatory).
@@ -350,15 +349,15 @@ create or replace package P_MESSAGE is
 -- ----------------------------------------
 --
 -- Remove a general text item from a message record. The following cases arise:
--- 1. All text of the given type is deleted for the given message (only psCOMP_CODE, pnSEQ_NBR and
---    psTXTT_CODE are specified). This action fails if the text type is mandatory.
+-- 1. All text of the given type is deleted for the given message (neither psSEQ_NBR nor psLANG_CODE
+--    is specified). This action fails if the text type is mandatory.
 -- 2. All language variants are deleted for the given combination of component code, message
---    sequence number, text type and text item sequence number (psCOMP_CODE, pnSEQ_NBR, psTXTT_CODE
---    and pnTXI_SEQ_NBR are specified, psLANG_CODE is not). This action fails if this is the last
---    text item for this text type and the text type is mandatory.
--- 3. A single language variant is deleted (psCOMP_CODE, pnSEQ_NBR, psTXTT_CODE, pnTXI_SEQ_NBR and
---    psLANG_CODE are all specified). The action fails if this is the last language variant of the
---    last text item for this text type and the text type is mandatory.
+--    sequence number, text type and text item sequence number (pnSEQ_NBR is specified but
+--    psLANG_CODE is not). This action fails if this is the last text item for this text type and
+--    the text type is mandatory.
+-- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). The
+--    action fails if this is the last language variant of the last text item for this text type and
+--    the text type is mandatory.
 --
 -- Parameters:
 --  psCOMP_CODE - Component code of message from which text item is to be removed (mandatory).
