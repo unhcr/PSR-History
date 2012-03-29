@@ -6,7 +6,7 @@ create or replace package P_SYSTEM_PARAMETER is
 --  Procedures for maintenance of system parameters.
 --
 --  Change History:
---  27-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  29-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -56,7 +56,7 @@ create or replace package P_SYSTEM_PARAMETER is
 --  psLANG_CODE - Language code of the textual description (optional, but must be specified if
 --    psDescription is specified).
 --  psDescription - Textual description of system parameter (optional: if not specified, the
---    description is not updated).
+--    description is not changed).
 --  psDATA_TYPE - Data type of system parameter (optional: if not specified, none of psCHAR_VALUE,
 --    pnNUM_VALUE or pdDATE_VALUE may be specified either).
 --  psCHAR_VALUE - Value for system parameter of data type character (optional).
@@ -88,7 +88,7 @@ create or replace package P_SYSTEM_PARAMETER is
 --  psLANG_CODE - Language code of the textual description (optional when updating an existing
 --    language but must be specified if psDescription is specified).
 --  psDescription - Textual description of language (optional when updating an existing language;
---    if not specified, the description is not updated).
+--    if not specified, the description is not changed).
 --  psDATA_TYPE - Data type of system parameter (optional: if not specified, none of psCHAR_VALUE,
 --    pnNUM_VALUE or pdDATE_VALUE may be specified either).
 --  psCHAR_VALUE - Value for system parameter of data type character (optional).

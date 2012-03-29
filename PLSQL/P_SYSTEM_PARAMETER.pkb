@@ -71,13 +71,8 @@ create or replace package body P_SYSTEM_PARAMETER is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      if psLANG_CODE is null and psDescription is null
-      then
-        if psDATA_TYPE is null
-        then P_MESSAGE.DISPLAY_MESSAGE('SYP', 2, 'Nothing to be updated');
-        end if;
-      else
-        P_TEXT.SET_TEXT(nTXT_ID, 'SYP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      if psDescription is not null
+      then P_TEXT.SET_TEXT(nTXT_ID, 'SYP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
       update SYSTEM_PARAMETERS
