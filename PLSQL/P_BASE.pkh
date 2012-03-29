@@ -24,6 +24,22 @@ create or replace package P_BASE is
   subtype tdDate is date;
   subtype tmdDate is tdDate not null;
 --
+-- AGE_PROFILES
+--
+  subtype tmsAGP_CODE is AGE_PROFILES.CODE%type not null;
+  subtype tnAGP_DISPLAY_SEQ is AGE_PROFILES.DISPLAY_SEQ%type;
+  subtype tsAGP_ACTIVE_FLAG is AGE_PROFILES.ACTIVE_FLAG%type;
+  subtype tmsAGP_ACTIVE_FLAG is tsAGP_ACTIVE_FLAG not null;
+  subtype tnAGP_VERSION_NBR is AGE_PROFILES.VERSION_NBR%type;
+--
+-- AGE_RANGES
+--
+  subtype tnAGR_AGE_FROM is AGE_RANGES.AGE_FROM%type;
+  subtype tmnAGR_AGE_FROM is tnAGR_AGE_FROM not null;
+  subtype tnAGR_AGE_TO is AGE_RANGES.AGE_TO%type;
+  subtype tmnAGR_AGE_TO is tnAGR_AGE_TO not null;
+  subtype tnAGR_VERSION_NBR is AGE_RANGES.VERSION_NBR%type;
+--
 -- COMPONENTS
 --
   subtype tmsCOMP_CODE is COMPONENTS.CODE%type not null;
