@@ -176,6 +176,18 @@ create or replace package P_BASE is
   subtype tmsTXTT_ACTIVE_FLAG is tsTXTT_ACTIVE_FLAG not null;
   subtype tnTXTT_VERSION_NBR is TEXT_TYPES.VERSION_NBR%type;
 --
+-- TIME_PERIOD_TYPES
+--
+  subtype tmsPERT_CODE is TIME_PERIOD_TYPES.CODE%type not null;
+  subtype tnPERT_DISPLAY_SEQ is TIME_PERIOD_TYPES.DISPLAY_SEQ%type;
+  subtype tsPERT_ACTIVE_FLAG is TIME_PERIOD_TYPES.ACTIVE_FLAG%type;
+  subtype tmsPERT_ACTIVE_FLAG is tsPERT_ACTIVE_FLAG not null;
+  subtype tnPERT_VERSION_NBR is TIME_PERIOD_TYPES.VERSION_NBR%type;
+--
+-- TIME_PERIODS
+--
+  subtype tnPER_VERSION_NBR is TIME_PERIODS.VERSION_NBR%type;
+--
 -- USER_ATTRIBUTE_TYPES
 --
   subtype tmsUATT_CODE is USER_ATTRIBUTE_TYPES.CODE%type not null;
