@@ -119,16 +119,15 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     --
     -- Determine new values for dates.
     --
-      dSTART_DATE_NEW :=
-        case
-          when pdSTART_DATE_NEW = P_BASE.gdFALSE_DATE then pdSTART_DATE
-          else nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)
-        end;
-      dEND_DATE_NEW :=
-        case
-          when pdEND_DATE = P_BASE.gdFALSE_DATE then dEND_DATE
-          else nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
-        end;
+      if pdSTART_DATE_NEW = P_BASE.gdFALSE_DATE
+      then dSTART_DATE_NEW := pdSTART_DATE;
+      else dSTART_DATE_NEW := nvl(pdSTART_DATE_NEW, P_BASE.gdMIN_DATE);
+      end if;
+    --
+      if pdEND_DATE = P_BASE.gdFALSE_DATE
+      then dEND_DATE_NEW := dEND_DATE;
+      else dEND_DATE_NEW := nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
+      end if;
     --
     -- If dates are being changed, check for PPG with the same code and overlapping effective dates.
     --
