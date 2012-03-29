@@ -80,14 +80,8 @@ create or replace package body P_LOCATION is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      if psDescription is null
-      then
-        if pnDISPLAY_SEQ = -1e6
-          and psACTIVE_FLAG is null
-        then P_MESSAGE.DISPLAY_MESSAGE('LOCT', 7, 'Nothing to be updated');
-        end if;
-      else
-        P_TEXT.SET_TEXT(nTXT_ID, 'LOCT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      if psDescription is not null
+      then P_TEXT.SET_TEXT(nTXT_ID, 'LOCT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
       update LOCATION_TYPES
@@ -97,7 +91,7 @@ create or replace package body P_LOCATION is
       where rowid = xLOCT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOCT', 1, 'Location type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE('LOC', 1, 'Location type has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -173,7 +167,7 @@ create or replace package body P_LOCATION is
     --
       P_TEXT.DELETE_TEXT(nTXT_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOCT', 1, 'Location type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE('LOC', 1, 'Location type has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -353,7 +347,7 @@ create or replace package body P_LOCATION is
     then
       if psCOUNTRY_CODE is null
       then
-        P_MESSAGE.DISPLAY_MESSAGE('LOC', 8, 'Country code must be specified for new country');
+        P_MESSAGE.DISPLAY_MESSAGE('LOC', 7, 'Country code must be specified for new country');
       else
       --
       -- Check for existing country with same country code and overlapping effective date range.
@@ -373,7 +367,7 @@ create or replace package body P_LOCATION is
           when NO_DATA_FOUND then null;
         --
           when TOO_MANY_ROWS
-          then P_MESSAGE.DISPLAY_MESSAGE('LOC', 9, 'Country with this code already exists');
+          then P_MESSAGE.DISPLAY_MESSAGE('LOC', 8, 'Country with this code already exists');
         end;
       end if;
     end if;
@@ -429,6 +423,8 @@ create or replace package body P_LOCATION is
     nTXT_ID P_BASE.tnTXT_ID;
     nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
     xLOC_ROWID rowid;
+    dSTART_DATE_NEW P_BASE.tdDate;
+    dEND_DATE_NEW P_BASE.tdDate;
     nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
@@ -446,23 +442,29 @@ create or replace package body P_LOCATION is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
+    --
+    -- Determine new values for dates.
+    --
       if pdSTART_DATE = P_BASE.gdFALSE_DATE
-      then dSTART_DATE := P_BASE.gdMIN_DATE;
-      else dSTART_DATE := nvl(pdSTART_DATE, dSTART_DATE);
+      then dSTART_DATE_NEW := dSTART_DATE;
+      else dSTART_DATE_NEW := nvl(pdSTART_DATE, P_BASE.gdMIN_DATE);
       end if;
     --
       if pdEND_DATE = P_BASE.gdFALSE_DATE
-      then dEND_DATE := P_BASE.gdMAX_DATE;
-      else dEND_DATE := nvl(pdEND_DATE, dEND_DATE);
+      then dEND_DATE_NEW := dEND_DATE;
+      else dEND_DATE_NEW := nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
       end if;
     --
     -- Special processing for countries.
     --
       if sLOCT_CODE = 'COUNTRY'
       then
-        if psCOUNTRY_CODE is not null
-          or pdSTART_DATE is not null
-          or pdEND_DATE is not null
+      --
+      -- Check if country code or effective date range are being changed.
+      --
+        if psCOUNTRY_CODE != sCOUNTRY_CODE
+          or dSTART_DATE_NEW != dSTART_DATE
+          or dEND_DATE_NEW != dEND_DATE
         then
         --
         -- Check for existing country with same country code and overlapping effective date range.
@@ -474,8 +476,8 @@ create or replace package body P_LOCATION is
             into sDummy
             from LOCATIONS
             where COUNTRY_CODE = nvl(psCOUNTRY_CODE, sCOUNTRY_CODE)
-            and START_DATE <= dEND_DATE
-            and END_DATE >= dSTART_DATE
+            and START_DATE <= dEND_DATE_NEW
+            and END_DATE >= dSTART_DATE_NEW
             and CODE != pnCODE;
           --
             raise TOO_MANY_ROWS;
@@ -483,23 +485,16 @@ create or replace package body P_LOCATION is
             when NO_DATA_FOUND then null;
           --
             when TOO_MANY_ROWS
-            then P_MESSAGE.DISPLAY_MESSAGE('LOC', 9, 'Country with this code already exists');
+            then P_MESSAGE.DISPLAY_MESSAGE('LOC', 8, 'Country with this code already exists');
           end;
         end if;
       elsif psCOUNTRY_CODE is not null
       then
-        P_MESSAGE.DISPLAY_MESSAGE('LOC', 10, 'Country code can only be specified for countries');
+        P_MESSAGE.DISPLAY_MESSAGE('LOC', 9, 'Country code can only be specified for countries');
       end if;
     --
-      if psLANG_CODE is null and psName is null
-      then
-        if psCOUNTRY_CODE is null
-          and pdSTART_DATE = P_BASE.gdFALSE_DATE
-          and pdEND_DATE = P_BASE.gdFALSE_DATE
-        then P_MESSAGE.DISPLAY_MESSAGE('LOC', 7, 'Nothing to be updated');
-        end if;
-      else
-        P_TEXT.SET_TEXT(nTXT_ID, 'LOC', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
+      if psName is not null
+      then P_TEXT.SET_TEXT(nTXT_ID, 'LOC', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
       end if;
     --
       update LOCATIONS
@@ -550,7 +545,7 @@ create or replace package body P_LOCATION is
     --
       pnVERSION_NBR := 1;
     elsif psLOCT_CODE is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 11, 'Location type cannot be updated');
+    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 10, 'Location type cannot be updated');
     else
       UPDATE_LOCATION(pnCODE, pnVERSION_NBR, psLANG_CODE, psName, psCOUNTRY_CODE,
                       pdSTART_DATE, pdEND_DATE);
@@ -823,19 +818,12 @@ create or replace package body P_LOCATION is
           when NO_DATA_FOUND then null;
         --
           when TOO_MANY_ROWS
-          then P_MESSAGE.DISPLAY_MESSAGE('LOC', 12, 'Cannot update data type of location attribute type already in use');
+          then P_MESSAGE.DISPLAY_MESSAGE('LOC', 11, 'Cannot update data type of location attribute type already in use');
         end;
       end if;
     --
-      if psDescription is null
-      then
-        if psDATA_TYPE is null
-          and pnDISPLAY_SEQ = -1e6
-          and psACTIVE_FLAG is null
-        then P_MESSAGE.DISPLAY_MESSAGE('LOC', 7, 'Nothing to be updated');
-        end if;
-      else
-        P_TEXT.SET_TEXT(nTXT_ID, 'LOCAT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      if psDescription is not null
+      then P_TEXT.SET_TEXT(nTXT_ID, 'LOCAT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
       update LOCATION_ATTRIBUTE_TYPES
@@ -1065,7 +1053,7 @@ create or replace package body P_LOCATION is
       where rowid = xLOCAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('TXTT', 3, 'Location attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE('LOC', 3, 'Location attribute type has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -1100,14 +1088,14 @@ create or replace package body P_LOCATION is
     where CODE = psLOCAT_CODE;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 13, 'Inactive location attribute type');
+    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 12, 'Inactive location attribute type');
     end if;
   --
     case
       when sDATA_TYPE = 'C' and psCHAR_VALUE is not null then null;
       when sDATA_TYPE = 'N' and pnNUM_VALUE is not null then null;
       when sDATA_TYPE = 'D' and pdDATE_VALUE is not null then null;
-      else P_MESSAGE.DISPLAY_MESSAGE('LOC', 14, 'Attribute of the correct type must be specified');
+      else P_MESSAGE.DISPLAY_MESSAGE('LOC', 13, 'Attribute of the correct type must be specified');
     end case;
   --
     insert into LOCATION_ATTRIBUTES (LOC_CODE, LOCAT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
@@ -1405,14 +1393,8 @@ create or replace package body P_LOCATION is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      if psDescription is null
-      then
-        if pnDISPLAY_SEQ = -1e6
-          and psACTIVE_FLAG is null
-        then P_MESSAGE.DISPLAY_MESSAGE('LOC', 7, 'Nothing to be updated');
-        end if;
-      else
-        P_TEXT.SET_TEXT(nTXT_ID, 'LOCRT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      if psDescription is not null
+      then P_TEXT.SET_TEXT(nTXT_ID, 'LOCRT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
       update LOCATION_RELATIONSHIP_TYPES
@@ -1639,7 +1621,7 @@ create or replace package body P_LOCATION is
       where rowid = xLOCRT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('TXTT', 5, 'Location relationship type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE('LOC', 5, 'Location relationship type has been updated by another user');
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -1671,7 +1653,7 @@ create or replace package body P_LOCATION is
     select ACTIVE_FLAG into sACTIVE_FLAG from LOCATION_RELATIONSHIP_TYPES where CODE = psLOCRT_CODE;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 15, 'Inactive location relationship type');
+    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 14, 'Inactive location relationship type');
     end if;
   --
   -- Check for an existing relationship of the same type between these locations with overlapping
@@ -1694,7 +1676,7 @@ create or replace package body P_LOCATION is
       when NO_DATA_FOUND then null;
     --
       when TOO_MANY_ROWS
-      then P_MESSAGE.DISPLAY_MESSAGE('LOC', 16, 'Overlapping location relationship already exists');
+      then P_MESSAGE.DISPLAY_MESSAGE('LOC', 15, 'Overlapping location relationship already exists');
     end;
   --
     insert into LOCATION_RELATIONSHIPS
@@ -1724,8 +1706,11 @@ create or replace package body P_LOCATION is
     pdSTART_DATE_NEW in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE)
   is
+    dEND_DATE P_BASE.tdDate;
     nVERSION_NBR P_BASE.tnLOCR_VERSION_NBR;
     xLOCR_ROWID rowid;
+    dSTART_DATE_NEW P_BASE.tdDate;
+    dEND_DATE_NEW P_BASE.tdDate;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_LOCATION_RELATIONSHIP',
@@ -1734,8 +1719,8 @@ create or replace package body P_LOCATION is
         to_char(pnVERSION_NBR) || '~' || to_char(pdSTART_DATE_NEW, 'YYYY-MM-DD HH24:MI:SS') ||
         '~' || to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
   --
-    select VERSION_NBR, rowid
-    into nVERSION_NBR, xLOCR_ROWID
+    select END_DATE, VERSION_NBR, rowid
+    into dEND_DATE, nVERSION_NBR, xLOCR_ROWID
     from LOCATION_RELATIONSHIPS
     where LOC_CODE_PARENT = pnLOC_CODE_PARENT
     and LOC_CODE_CHILD = pnLOC_CODE_CHILD
@@ -1744,6 +1729,18 @@ create or replace package body P_LOCATION is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
+    --
+    -- Determine new values for dates.
+    --
+      if pdSTART_DATE_NEW = P_BASE.gdFALSE_DATE
+      then dSTART_DATE_NEW := pdSTART_DATE;
+      else dSTART_DATE_NEW := nvl(pdSTART_DATE_NEW, P_BASE.gdMIN_DATE);
+      end if;
+    --
+      if pdEND_DATE = P_BASE.gdFALSE_DATE
+      then dEND_DATE_NEW := dEND_DATE;
+      else dEND_DATE_NEW := nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
+      end if;
     --
     -- Check for relationship of the same type between these locations with overlapping effective
     --  date range.
@@ -1757,8 +1754,8 @@ create or replace package body P_LOCATION is
         where LOC_CODE_PARENT = pnLOC_CODE_PARENT
         and LOC_CODE_CHILD = pnLOC_CODE_CHILD
         and LOCRT_CODE = psLOCRT_CODE
-        and START_DATE <= pdEND_DATE
-        and END_DATE >= pdSTART_DATE
+        and START_DATE <= dEND_DATE_NEW
+        and END_DATE >= dSTART_DATE_NEW
         and START_DATE != pdSTART_DATE;
       --
         raise TOO_MANY_ROWS;
@@ -1766,20 +1763,12 @@ create or replace package body P_LOCATION is
         when NO_DATA_FOUND then null;
       --
         when TOO_MANY_ROWS
-        then P_MESSAGE.DISPLAY_MESSAGE('LOC', 16, 'Overlapping location relationship already exists');
+        then P_MESSAGE.DISPLAY_MESSAGE('LOC', 15, 'Overlapping location relationship already exists');
       end;
     --
       update LOCATION_RELATIONSHIPS
-      set START_DATE =
-          case
-            when pdSTART_DATE = P_BASE.gdFALSE_DATE then START_DATE
-            else nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)
-          end,
-        END_DATE =
-          case
-            when pdEND_DATE = P_BASE.gdFALSE_DATE then END_DATE
-            else nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
-          end,
+      set START_DATE = dSTART_DATE_NEW,
+        END_DATE = dEND_DATE_NEW,
         VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;

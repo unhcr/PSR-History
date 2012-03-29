@@ -7,7 +7,7 @@ create or replace package P_LOCATION is
 --   relationships and relationship types.
 --
 --  Change History:
---  27-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  29-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -52,12 +52,12 @@ create or replace package P_LOCATION is
 --  psLANG_CODE - Language code for the textual description (optional, but must be specified if
 --    psDescription is specified).
 --  psDescription - Textual description of location type (optional, if not specified, the
---    description is not updated).
+--    description is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of location types (optional, if not
---    specified, the existing display sequence is not updated; if null is specified, the display
+--    specified, the existing display sequence is not changed; if null is specified, the display
 --    sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the location type is currently available for use
---    (optional: if not specified, the existing value is not updated).
+--    (optional: if not specified, the existing value is not changed).
 --
   procedure UPDATE_LOCATION_TYPE
    (psCODE in P_BASE.tmsLOCT_CODE,
@@ -80,12 +80,12 @@ create or replace package P_LOCATION is
 --  psLANG_CODE - Language code for the textual description (optional when updating an existing
 --    location type but must be specified if psDescription is specified).
 --  psDescription - Textual description of location type (optional when updating an existing
---    location type; if not specified, the description is not updated).
+--    location type; if not specified, the description is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of location types (optional: if not
---    specified, an existing display sequence is not updated and a new one is set to null; if null
+--    specified, an existing display sequence is not changed and a new one is set to null; if null
 --    is specified, the display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the location type is currently available for use
---    (optional: if not specified, the existing value is not updated; a new value defaults to Y).
+--    (optional: if not specified, the existing value is not changed; a new value defaults to Y).
 --
   procedure SET_LOCATION_TYPE
    (psCODE in P_BASE.tmsLOCT_CODE,
@@ -238,7 +238,7 @@ create or replace package P_LOCATION is
 --    returned).
 --  psLANG_CODE - Language code of the location name (optional, but must be specified if psName
 --    is specified).
---  psName - Location name text (optional, if not specified, the name is not updated).
+--  psName - Location name text (optional, if not specified, the name is not changed).
 --  psCOUNTRY_CODE - Country code (not allowed when the location type is not country; if not
 --    specified when updating an existing country, the existing value is left unchanged).
 --  pdSTART_DATE - Effective start date of details of this location (optional: if not specified, the
@@ -270,7 +270,7 @@ create or replace package P_LOCATION is
 --  psLANG_CODE - Language code of the location name (mandatory when creating a new location;
 --    optional when updating an existing location but must be specified if psName is specified).
 --  psName - Location name text (mandatory when creating a new location; optional when updating
---    an existing location: if not specified, the name is not updated).
+--    an existing location: if not specified, the name is not changed).
 --  psLOCT_CODE - Location type code (mandatory when creating an new location; not allowed when
 --    updating an existing location).
 --  psCOUNTRY_CODE - Country code (not allowed when the location type is not country; mandatory
@@ -431,17 +431,17 @@ create or replace package P_LOCATION is
 --  pnVERSION_NBR - Update version number of location attribute type (mandatory: new version number
 --    is returned).
 --  psDATA_TYPE - Data type of location attribute type (optional, if not specified or null the data
---    type is not updated). The data type cannot be updated if location attributes of this type
+--    type is not changed). The data type cannot be changed if location attributes of this type
 --    already exist.
 --  psLANG_CODE - Language code for the textual description (optional, but must be specified if
 --    psDescription is specified).
 --  psDescription - Textual description of location attribute type (optional, if not specified, the
---    description is not updated).
+--    description is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of location attribute types
---    (optional: if not specified, an existing display sequence is not updated; if null is
+--    (optional: if not specified, an existing display sequence is not changed; if null is
 --    specified, the display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the location attribute type is currently available
---    for use (optional: if not specified, the existing value is not updated).
+--    for use (optional: if not specified, the existing value is not changed).
 --
   procedure UPDATE_LOCATION_ATTRIBUTE_TYPE
    (psCODE in P_BASE.tmsLOCAT_CODE,
@@ -464,17 +464,17 @@ create or replace package P_LOCATION is
 --    is returned; for a new attribute location type, null must be specified and 1 will be
 --    returned).
 --  psDATA_TYPE - Data type of location attribute type (optional when updating an existing location
---    attribute type; if not specified or null the data type is not updated). The data type cannot
---    be updated if location attributes of this type already exist.
+--    attribute type; if not specified or null the data type is not changed). The data type cannot
+--    be changed if location attributes of this type already exist.
 --  psLANG_CODE - Language code for the textual description (optional when updating an existing
 --    location attribute type but must be specified if psDescription is specified).
 --  psDescription - Textual description of location attribute type (optional when updating an
---    existing location attribute type; if not specified, the description is not updated).
+--    existing location attribute type; if not specified, the description is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of location attribute types
---    (optional: if not specified, an existing display sequence is not updated and a new one is set
+--    (optional: if not specified, an existing display sequence is not changed and a new one is set
 --    to null; if null is specified, the display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the location attribute type is currently available
---    for use (optional: if not specified, the existing value is not updated; a new value defaults
+--    for use (optional: if not specified, the existing value is not changed; a new value defaults
 --    to Y).
 --
   procedure SET_LOCATION_ATTRIBUTE_TYPE
@@ -768,12 +768,12 @@ create or replace package P_LOCATION is
 --  psLANG_CODE - Language code for the textual description (optional, but must be specified if
 --    psDescription is specified).
 --  psDescription - Textual description of location relationship type (optional, if not specified,
---    the description is not updated).
+--    the description is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of location relationship types
---    (optional: if not specified, an existing display sequence is not updated; if null is
+--    (optional: if not specified, an existing display sequence is not changed; if null is
 --    specified, the display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the location relationship type is currently
---    available for use (optional: if not specified, the existing value is not updated).
+--    available for use (optional: if not specified, the existing value is not changed).
 --
   procedure UPDATE_LOC_RELATIONSHIP_TYPE
    (psCODE in P_BASE.tmsLOCRT_CODE,
@@ -797,12 +797,12 @@ create or replace package P_LOCATION is
 --  psLANG_CODE - Language code for the textual description (optional when updating an existing
 --    location relationship type but must be specified if psDescription is specified).
 --  psDescription - Textual description of location relationship type (optional when updating an
---    existing location relationship type; if not specified, the description is not updated).
+--    existing location relationship type; if not specified, the description is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of location relationship types
---    (optional: if not specified, an existing display sequence is not updated and a new one is set
+--    (optional: if not specified, an existing display sequence is not changed and a new one is set
 --    to null; if null is specified, the display sequence is set to null).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the location relationship type is currently
---    available for use (optional: if not specified, the existing value is not updated; a new value
+--    available for use (optional: if not specified, the existing value is not changed; a new value
 --    defaults to Y).
 --
   procedure SET_LOC_RELATIONSHIP_TYPE
@@ -1066,15 +1066,15 @@ create or replace package P_LOCATION is
 --  psLANG_CODE - Language code of the location name (optional when updating an existing location
 --    but must be specified if psName is specified).
 --  psName - Location name text (optional when updating an existing location; if not specified, the
---    name is not updated).
+--    name is not changed).
 --  psLOCT_CODE - Location type code (mandatory when creating an new location; not allowed when
 --    updating an existing location).
 --  psCOUNTRY_CODE - Country code (optional: only allowed and required when the location type is
---    country; if allowed but not specified, the existing value is not updated).
+--    country; if allowed but not specified, the existing value is not changed).
 --  pdSTART_DATE - Effective start date of details of this location (optional when updating an
---    existing location; if not specified, the name is not updated).
+--    existing location; if not specified, the name is not changed).
 --  pdEND_DATE - Effective end date of details of this location (optional when updating an existing
---    location; if not specified, the name is not updated).
+--    location; if not specified, the name is not changed).
 --
 --
   procedure SET_COUNTRY
