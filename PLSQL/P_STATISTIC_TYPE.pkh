@@ -1,0 +1,470 @@
+create or replace package P_STATISTIC_TYPE is
+--
+-- -------------------------------------------------------------------------------------------------
+--
+--  Package P_STATISTIC_TYPE
+--  Procedures for maintenance of statistic types and groups.
+--
+--  Change History:
+--  30-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--
+-- -------------------------------------------------------------------------------------------------
+--
+  sComponent varchar2(30) := 'STCT';
+  sVersion varchar2(10) := 'D0.1';
+--
+-- ========================================
+-- Program unit definitions
+-- ========================================
+--
+-- ----------------------------------------
+-- INSERT_STATISTIC_TYPE
+-- ----------------------------------------
+--
+-- Create a new statistic type.
+--
+-- Parameters:
+--  psCODE - Statistic type code (mandatory).
+--  psLANG_CODE - Language code of the textual description (mandatory).
+--  psDescription - Textual description of statistic type (mandatory).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of statistic types (optional).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the statistic type is currently available for use
+--    (optional: defaults to Y).
+--
+  procedure INSERT_STATISTIC_TYPE
+   (psCODE in P_BASE.tmsSTCT_CODE,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psDescription in P_BASE.tmsText,
+    pnDISPLAY_SEQ in P_BASE.tnSTCT_DISPLAY_SEQ := null,
+    psACTIVE_FLAG in P_BASE.tmsSTCT_ACTIVE_FLAG := 'Y');
+--
+-- ----------------------------------------
+-- UPDATE_STATISTIC_TYPE
+-- ----------------------------------------
+--
+-- Update an existing statistic type.
+--
+-- Parameters:
+--  psCODE - Statistic type code (mandatory).
+--  pnVERSION_NBR - Update version number of statistic type record (mandatory: new version number is
+--    returned).
+--  psLANG_CODE - Language code of the textual description (optional, but must be specified if
+--    psDescription is specified).
+--  psDescription - Textual description of statistic type (optional: if not specified, the
+--    description is not changed).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of statistic types (optional: if not
+--    specified, the existing display sequence is not changed; if null is specified, the display
+--    sequence is set to null).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the statistic type is currently available for use
+--    (optional: if not specified, the existing value is not changed).
+--
+  procedure UPDATE_STATISTIC_TYPE
+   (psCODE in P_BASE.tmsSTCT_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null,
+    psDescription in P_BASE.tsText := null,
+    pnDISPLAY_SEQ in P_BASE.tnSTCT_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in P_BASE.tsSTCT_ACTIVE_FLAG := null);
+--
+-- ----------------------------------------
+-- SET_STATISTIC_TYPE
+-- ----------------------------------------
+--
+-- Create a new statistic type or update an existing one.
+--
+-- Parameters:
+--  psCODE - Statistic type code (mandatory).
+--  pnVERSION_NBR - Update version number of statistic type record (mandatory: new version number is
+--    returned; for a new statistic type, null must be specified and 1 will be returned).
+--  psLANG_CODE - Language code of the textual description (optional when updating an existing
+--    statistic type but must be specified if psDescription is specified).
+--  psDescription - Textual description of statistic type (optional when updating an existing
+--    statistic type; if not specified, the description is not changed).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of statistic types (optional: if not
+--    specified, an existing display sequence is not changed and a new one is set to null; if null
+--    is specified, the display sequence is set to null).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the statistic type is currently available for use
+--    (optional: if not specified, the existing value is not changed; a new value defaults to Y).
+--
+  procedure SET_STATISTIC_TYPE
+   (psCODE in P_BASE.tmsSTCT_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null,
+    psDescription in P_BASE.tsText := null,
+    pnDISPLAY_SEQ in P_BASE.tnSTCT_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in P_BASE.tsSTCT_ACTIVE_FLAG := null);
+--
+-- ----------------------------------------
+-- DELETE_STATISTIC_TYPE
+-- ----------------------------------------
+--
+-- Delete a statistic type record.
+--
+-- Parameters:
+--  psCODE - Code of statistic type to be deleted (mandatory).
+--  pnVERSION_NBR - Update version number of statistic type record (mandatory).
+--
+  procedure DELETE_STATISTIC_TYPE
+   (psCODE in P_BASE.tmsSTCT_CODE,
+    pnVERSION_NBR in P_BASE.tnSTCT_VERSION_NBR);
+--
+-- ----------------------------------------
+-- SET_STCT_DESCRIPTION
+-- ----------------------------------------
+--
+-- Add a description in a given language to a statistic type, or update an existing description.
+--
+-- Parameters:
+--  psCODE - Code of statistic type for which description is to be added or updated (mandatory).
+--  pnVERSION_NBR - Update version number of statistic type record (mandatory: new version number is
+--    returned).
+--  psLANG_CODE - Language code of the description to be added or updated (mandatory).
+--  psDescription - Textual description of statistic type (mandatory).
+--
+  procedure SET_STCT_DESCRIPTION
+   (psCODE in P_BASE.tmsSTCT_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psDescription in P_BASE.tmsText);
+--
+-- ----------------------------------------
+-- REMOVE_STCT_DESCRIPTION
+-- ----------------------------------------
+--
+-- Remove a description in a given language from a statistic type. Note that it is not possible to
+--  remove the last language variant of the description.
+--
+-- Parameters:
+--  psCODE - Code of statistic type from which description is to be removed (mandatory).
+--  pnVERSION_NBR - Update version number of statistic type record (mandatory: new version number is
+--    returned).
+--  psLANG_CODE - Language code of the description to be removed (mandatory).
+--
+  procedure REMOVE_STCT_DESCRIPTION
+   (psCODE in P_BASE.tmsSTCT_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
+    psLANG_CODE in P_BASE.tmsLANG_CODE);
+--
+-- ----------------------------------------
+-- SET_STCT_TEXT
+-- ----------------------------------------
+--
+-- Add a general text item in a given language to a statistic type, or update an existing text item.
+--
+-- Parameters:
+--  psCODE - Code of statistic type for which text item is to be added or updated (mandatory).
+--  pnVERSION_NBR - Update version number of statistic type record (mandatory: new version number is
+--    returned).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  psLANG_CODE - Language code of the text item to be added (mandatory).
+--  psText - Text associated with statistic type (mandatory).
+--
+  procedure SET_STCT_TEXT
+   (psCODE in P_BASE.tmsSTCT_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
+    psTXTT_CODE in P_BASE.tmsTXTT_CODE,
+    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psText in P_BASE.tmsText);
+--
+-- ----------------------------------------
+-- REMOVE_STCT_TEXT
+-- ----------------------------------------
+--
+-- Remove a general text item from a statistic type. The following cases arise:
+-- 1. All text of the given type is deleted for the given statistic type (neither psSEQ_NBR nor
+--    psLANG_CODE is specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given statistic type, text type and text item
+--    sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). This action fails if this is
+--    the last text item for this text type and the text type is mandatory.
+-- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
+--    action fails if this is the last language variant of the last text item for this text type and
+--    the text type is mandatory.
+--
+-- Parameters:
+--  psCODE - Code of statistic type from which text item is to be removed (mandatory).
+--  pnVERSION_NBR - Update version number of statistic type record (mandatory: new version number is
+--    returned).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
+--
+  procedure REMOVE_STCT_TEXT
+   (psCODE in P_BASE.tmsSTCT_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
+    psTXTT_CODE in P_BASE.tmsTXTT_CODE,
+    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null);
+--
+-- ----------------------------------------
+-- INSERT_STATISTIC_GROUP
+-- ----------------------------------------
+--
+-- Create a new statistic group.
+--
+-- Parameters:
+--  psCODE - Statistic group code (mandatory).
+--  psLANG_CODE - Language code of the textual description (mandatory).
+--  psDescription - Textual description of statistic group (mandatory).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of statistic groups (optional).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the statistic group is currently available for use
+--    (optional: defaults to Y).
+--
+  procedure INSERT_STATISTIC_GROUP
+   (psCODE in P_BASE.tmsSTCG_CODE,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psDescription in P_BASE.tmsText,
+    pnDISPLAY_SEQ in P_BASE.tnSTCG_DISPLAY_SEQ := null,
+    psACTIVE_FLAG in P_BASE.tmsSTCG_ACTIVE_FLAG := 'Y');
+--
+-- ----------------------------------------
+-- UPDATE_STATISTIC_GROUP
+-- ----------------------------------------
+--
+-- Update an existing statistic group.
+--
+-- Parameters:
+--  psCODE - Statistic group code (mandatory).
+--  pnVERSION_NBR - Update version number of statistic group record (mandatory: new version number
+--     isreturned).
+--  psLANG_CODE - Language code of the textual description (optional, but must be specified if
+--    psDescription is specified).
+--  psDescription - Textual description of statistic group (optional: if not specified, the
+--    description is not changed).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of statistic groups (optional: if
+--    not specified, the existing display sequence is not changed; if null is specified, the display
+--    sequence is set to null).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the statistic group is currently available for use
+--    (optional: if not specified, the existing value is not changed).
+--
+  procedure UPDATE_STATISTIC_GROUP
+   (psCODE in P_BASE.tmsSTCG_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCG_VERSION_NBR,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null,
+    psDescription in P_BASE.tsText := null,
+    pnDISPLAY_SEQ in P_BASE.tnSTCG_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in P_BASE.tsSTCG_ACTIVE_FLAG := null);
+--
+-- ----------------------------------------
+-- SET_STATISTIC_GROUP
+-- ----------------------------------------
+--
+-- Create a new statistic group or update an existing one.
+--
+-- Parameters:
+--  psCODE - Statistic group code (mandatory).
+--  pnVERSION_NBR - Update version number of statistic group record (mandatory: new version number
+--     isreturned; for a new statistic group, null must be specified and 1 will be returned).
+--  psLANG_CODE - Language code of the textual description (optional when updating an existing
+--    statistic group but must be specified if psDescription is specified).
+--  psDescription - Textual description of statistic group (optional when updating an existing
+--    statistic group; if not specified, the description is not changed).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of statistic groups (optional: if
+--    not specified, an existing display sequence is not changed and a new one is set to null; if
+--    null is specified, the display sequence is set to null).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the statistic group is currently available for use
+--    (optional: if not specified, the existing value is not changed; a new value defaults to Y).
+--
+  procedure SET_STATISTIC_GROUP
+   (psCODE in P_BASE.tmsSTCG_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCG_VERSION_NBR,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null,
+    psDescription in P_BASE.tsText := null,
+    pnDISPLAY_SEQ in P_BASE.tnSTCG_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in P_BASE.tsSTCG_ACTIVE_FLAG := null);
+--
+-- ----------------------------------------
+-- DELETE_STATISTIC_GROUP
+-- ----------------------------------------
+--
+-- Delete a statistic group record.
+--
+-- Parameters:
+--  psCODE - Code of statistic group to be deleted (mandatory).
+--  pnVERSION_NBR - Update version number of statistic group record (mandatory).
+--
+  procedure DELETE_STATISTIC_GROUP
+   (psCODE in P_BASE.tmsSTCG_CODE,
+    pnVERSION_NBR in P_BASE.tnSTCG_VERSION_NBR);
+--
+-- ----------------------------------------
+-- SET_STCG_DESCRIPTION
+-- ----------------------------------------
+--
+-- Add a description in a given language to a statistic group, or update an existing description.
+--
+-- Parameters:
+--  psCODE - Code of statistic group for which description is to be added or updated (mandatory).
+--  pnVERSION_NBR - Update version number of statistic group record (mandatory: new version number
+--    is returned).
+--  psLANG_CODE - Language code of the description to be added or updated (mandatory).
+--  psDescription - Textual description of statistic group (mandatory).
+--
+  procedure SET_STCG_DESCRIPTION
+   (psCODE in P_BASE.tmsSTCG_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCG_VERSION_NBR,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psDescription in P_BASE.tmsText);
+--
+-- ----------------------------------------
+-- REMOVE_STCG_DESCRIPTION
+-- ----------------------------------------
+--
+-- Remove a description in a given language from a statistic group. Note that it is not possible to
+--  remove the last language variant of the description.
+--
+-- Parameters:
+--  psCODE - Code of statistic group from which description is to be removed (mandatory).
+--  pnVERSION_NBR - Update version number of statistic group record (mandatory: new version number
+--    is returned).
+--  psLANG_CODE - Language code of the description to be removed (mandatory).
+--
+  procedure REMOVE_STCG_DESCRIPTION
+   (psCODE in P_BASE.tmsSTCG_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCG_VERSION_NBR,
+    psLANG_CODE in P_BASE.tmsLANG_CODE);
+--
+-- ----------------------------------------
+-- SET_STCG_TEXT
+-- ----------------------------------------
+--
+-- Add a general text item in a given language to a statistic group, or update an existing text item.
+--
+-- Parameters:
+--  psCODE - Code of statistic group for which text item is to be added or updated (mandatory).
+--  pnVERSION_NBR - Update version number of statistic group record (mandatory: new version number
+--    is returned).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  psLANG_CODE - Language code of the text item to be added (mandatory).
+--  psText - Text associated with statistic group (mandatory).
+--
+  procedure SET_STCG_TEXT
+   (psCODE in P_BASE.tmsSTCG_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCG_VERSION_NBR,
+    psTXTT_CODE in P_BASE.tmsTXTT_CODE,
+    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psText in P_BASE.tmsText);
+--
+-- ----------------------------------------
+-- REMOVE_STCG_TEXT
+-- ----------------------------------------
+--
+-- Remove a general text item from a statistic group. The following cases arise:
+-- 1. All text of the given type is deleted for the given statistic group (neither psSEQ_NBR nor
+--    psLANG_CODE is specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given statistic group, text type and text item
+--    sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). This action fails if this is
+--    the last text item for this text type and the text type is mandatory.
+-- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
+--    action fails if this is the last language variant of the last text item for this text type and
+--    the text type is mandatory.
+--
+-- Parameters:
+--  psCODE - Code of statistic group from which text item is to be removed (mandatory).
+--  pnVERSION_NBR - Update version number of statistic group record (mandatory: new version number
+--    is returned).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
+--
+  procedure REMOVE_STCG_TEXT
+   (psCODE in P_BASE.tmsSTCG_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCG_VERSION_NBR,
+    psTXTT_CODE in P_BASE.tmsTXTT_CODE,
+    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null);
+--
+-- ----------------------------------------
+-- INSERT_STATISTIC_TYPE_GROUPING
+-- ----------------------------------------
+--
+-- Create a new statistic type grouping.
+--
+-- Parameters:
+--  psSTCG_CODE - Statistic group code (mandatory).
+--  psSTCT_CODE - Statistic type code (mandatory).
+--
+  procedure INSERT_STATISTIC_TYPE_GROUPING
+   (psSTCG_CODE in P_BASE.tmsSTCG_CODE,
+    psSTCT_CODE in P_BASE.tmsSTCT_CODE);
+--
+-- ----------------------------------------
+-- DELETE_STATISTIC_TYPE_GROUPING
+-- ----------------------------------------
+--
+-- Delete a statistic type grouping record.
+--
+-- Parameters:
+--  psSTCG_CODE - Statistic group code (mandatory).
+--  psSTCT_CODE - Statistic type code (mandatory).
+--  pnVERSION_NBR - Update version number of statistic type grouping record (mandatory).
+--
+  procedure DELETE_STATISTIC_TYPE_GROUPING
+   (psSTCG_CODE in P_BASE.tmsSTCG_CODE,
+    psSTCT_CODE in P_BASE.tmsSTCT_CODE,
+    pnVERSION_NBR in P_BASE.tnSTCTG_VERSION_NBR);
+--
+-- ----------------------------------------
+-- SET_STCTG_TEXT
+-- ----------------------------------------
+--
+-- Add a general text item in a given language to a statistic type grouping, or update an existing
+--  text item.
+--
+-- Parameters:
+--  psSTCG_CODE - Statistic group code (mandatory).
+--  psSTCT_CODE - Statistic type code (mandatory).
+--  pnVERSION_NBR - Update version number of statistic type grouping record (mandatory: new version
+--    number is returned).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  psLANG_CODE - Language code of the text item to be added (mandatory).
+--  psText - Text associated with statistic type grouping (mandatory).
+--
+  procedure SET_STCTG_TEXT
+   (psSTCG_CODE in P_BASE.tmsSTCG_CODE,
+    psSTCT_CODE in P_BASE.tmsSTCT_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCTG_VERSION_NBR,
+    psTXTT_CODE in P_BASE.tmsTXTT_CODE,
+    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psText in P_BASE.tmsText);
+--
+-- ----------------------------------------
+-- REMOVE_STCTG_TEXT
+-- ----------------------------------------
+--
+-- Remove a general text item from a statistic type grouping. The following cases arise:
+-- 1. All text of the given type is deleted for the given statistic type grouping (neither psSEQ_NBR
+--    nor psLANG_CODE is specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given statistic type grouping, text type and text
+--    item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). This action fails if
+--    this is the last text item for this text type and the text type is mandatory.
+-- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
+--    action fails if this is the last language variant of the last text item for this text type and
+--    the text type is mandatory.
+--
+-- Parameters:
+--  psSTCG_CODE - Statistic group code (mandatory).
+--  psSTCT_CODE - Statistic type code (mandatory).
+--  pnVERSION_NBR - Update version number of statistic type grouping record (mandatory: new version
+--    number is returned).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
+--
+  procedure REMOVE_STCTG_TEXT
+   (psSTCG_CODE in P_BASE.tmsSTCG_CODE,
+    psSTCT_CODE in P_BASE.tmsSTCT_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTCTG_VERSION_NBR,
+    psTXTT_CODE in P_BASE.tmsTXTT_CODE,
+    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null);
+--
+end P_STATISTIC_TYPE;
+/
+
+show errors
