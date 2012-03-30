@@ -1,0 +1,250 @@
+create or replace package P_STATISTIC is
+--
+-- -------------------------------------------------------------------------------------------------
+--
+--  Package P_STATISTIC
+--  Procedures for maintenance of statistics.
+--
+--  Change History:
+--  30-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--
+-- -------------------------------------------------------------------------------------------------
+--
+  sComponent varchar2(30) := 'STC';
+  sVersion varchar2(10) := 'D0.1';
+--
+-- ========================================
+-- Program unit definitions
+-- ========================================
+--
+-- ----------------------------------------
+-- INSERT_STATISTIC
+-- ----------------------------------------
+--
+-- Create a new statistic.
+--
+-- Parameters:
+--  pnID - New statistic identifier (returned).
+--  psSTCT_CODE - Statistic type code (mandatory).
+--  pnLOC_CODE - Code of residence location of persons of concern (mandatory).
+--  pnLOC_CODE_COUNTRY - Location code of country of residence of persons of concern (mandatory).
+--  psCOUNTRY_CODE - Country code of country of residence of persons of concern (mandatory).
+--  pnLOC_CODE_ORIGIN - Code of location of origin of persons of concern (optional).
+--  pnLOC_CODE_COUNTRY_ORIGIN - Location code of country of origin of persons of concern (optional).
+--  psCOUNTRY_CODE_ORIGIN - Country code of country of origin of persons of concern (optional).
+--  pnLOC_CODE_PPG - Code of location associated with PPG (optional).
+--  psPPG_CODE - PPG code (optional).
+--  pdPPG_START_DATE - Start date of effectivity of PPG (optional).
+--  psPOPC_CODE - Population category code (optional).
+--  pdPER_START_DATE - Start date of period (optional).
+--  pdPER_END_DATE - Day after end date of period (optional).
+--  psSEX - Sex code (M/F) (optional).
+--  psAGP_CODE - Age profile code (optional).
+--  pnAGE_FROM - Lower age range limit (optional).
+--  pnAGE_TO - Upper age range limit (optional).
+--  pnVALUE - The value of the statistic (mandatory).
+--
+-- Some optional parameters form composite groups, within which all parameters must be specified or
+--  none:
+--  - pnLOC_CODE_COUNTRY_ORIGIN and psCOUNTRY_CODE_ORIGIN;
+--  - pnLOC_CODE_PPG, psPPG_CODE and psPPG_START_DATE;
+--  - pdPER_START_DATE and pdPER_END_DATE;
+--  - psAGP_CODE, pnAGE_FROM and pnAGE_TO.
+--
+  procedure INSERT_STATISTIC
+   (pnID out P_BASE.tnSTC_ID,
+    psSTCT_CODE in P_BASE.tmsSTCT_CODE,
+    pnLOC_CODE in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_COUNTRY in P_BASE.tmnLOC_CODE,
+    psCOUNTRY_CODE in P_BASE.tmsLOC_COUNTRY_CODE,
+    pnLOC_CODE_ORIGIN in P_BASE.tnLOC_CODE := null,
+    pnLOC_CODE_COUNTRY_ORIGIN in P_BASE.tnLOC_CODE := null,
+    psCOUNTRY_CODE_ORIGIN in P_BASE.tsLOC_COUNTRY_CODE := null,
+    pnLOC_CODE_PPG in P_BASE.tnLOC_CODE := null,
+    psPPG_CODE in P_BASE.tsPPG_CODE := null,
+    pdPPG_START_DATE in P_BASE.tdDate := null,
+    psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
+    pdPER_START_DATE in P_BASE.tdDate := null,
+    pdPER_END_DATE in P_BASE.tdDate := null,
+    psSEX in P_BASE.tsSTC_SEX := null,
+    psAGP_CODE in P_BASE.tsAGP_CODE := null,
+    pnAGE_FROM in P_BASE.tnAGR_AGE_FROM := null,
+    pnAGE_TO in P_BASE.tnAGR_AGE_TO := null,
+    pnVALUE in P_BASE.tmnSTC_VALUE);
+/*
+--
+-- ----------------------------------------
+-- UPDATE_STATISTIC
+-- ----------------------------------------
+--
+-- Update an existing statistic.
+--
+-- Parameters:
+--  pnID - Statistic identifier (mandatory).
+--  pnVERSION_NBR - Update version number of statistic record (mandatory: new version number is
+--    returned).
+--  psSTCT_CODE - Statistic type code (optional).
+--  pnLOC_CODE - Code of residence location of persons of concern (optional).
+--  pnLOC_CODE_COUNTRY - Location code of country of residence of persons of concern (optional).
+--  psCOUNTRY_CODE - Country code of country of residence of persons of concern (optional).
+--  pnLOC_CODE_ORIGIN - Code of location of origin of persons of concern (optional).
+--  pnLOC_CODE_COUNTRY_ORIGIN - Location code of country of origin of persons of concern (optional).
+--  psCOUNTRY_CODE_ORIGIN - Country code of country of origin of persons of concern (optional).
+--  pnLOC_CODE_PPG - Code of location associated with PPG (optional).
+--  psPPG_CODE - PPG code (optional).
+--  pdPPG_START_DATE - Start date of effectivity of PPG (optional).
+--  psPOPC_CODE - Population category code (optional).
+--  pdPER_START_DATE - Start date of period (optional).
+--  pdPER_END_DATE - Day after end date of period (optional).
+--  psSEX - Sex code (M/F) (optional).
+--  psAGP_CODE - Age profile code (optional).
+--  pnAGE_FROM - Lower age range limit (optional).
+--  pnAGE_TO - Upper age range limit (optional).
+--  pnVALUE - The value of the statistic (optional).
+--
+-- If any optional parameter is not specified, the corresponding database value is left unchanged.
+--
+  procedure UPDATE_STATISTIC
+   (pnID in P_BASE.tmnSTC_ID,
+    pnVERSION_NBR in out P_BASE.tnSTC_VERSION_NBR,
+    psSTCT_CODE in P_BASE.tsSTCT_CODE := null,
+    pnLOC_CODE in P_BASE.tnLOC_CODE := null,
+    pnLOC_CODE_COUNTRY in P_BASE.tnLOC_CODE := null,
+    psCOUNTRY_CODE in P_BASE.tsLOC_COUNTRY_CODE := null,
+    pnLOC_CODE_ORIGIN in P_BASE.tnLOC_CODE := null,
+    pnLOC_CODE_COUNTRY_ORIGIN in P_BASE.tnLOC_CODE := null,
+    psCOUNTRY_CODE_ORIGIN in P_BASE.tsLOC_COUNTRY_CODE := null,
+    pnLOC_CODE_PPG in P_BASE.tnLOC_CODE := null,
+    psPPG_CODE in P_BASE.tsPPG_CODE := null,
+    pdPPG_START_DATE in P_BASE.tdDate := null,
+    psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
+    pdPER_START_DATE in P_BASE.tdDate := null,
+    pdPER_END_DATE in P_BASE.tdDate := null,
+    psSEX in P_BASE.tsSTC_SEX := null,
+    psAGP_CODE in P_BASE.tsAGP_CODE := null,
+    pnAGE_FROM in P_BASE.tnAGR_AGE_FROM := null,
+    pnAGE_TO in P_BASE.tnAGR_AGE_TO := null,
+    pnVALUE in P_BASE.tnSTC_VALUE := null);
+--
+-- ----------------------------------------
+-- SET_STATISTIC
+-- ----------------------------------------
+--
+-- Create a new statistic or update an existing one.
+--
+-- Parameters:
+--  pnID - Statistic identifier (mandatory).
+--  pnVERSION_NBR - Update version number of statistic record (mandatory: new version number is
+--    returned; for a new statistic, null must be specified and 1 will be returned).
+--  psSTCT_CODE - Statistic type code (optional).
+--  pnLOC_CODE - Code of residence location of persons of concern (optional).
+--  pnLOC_CODE_COUNTRY - Location code of country of residence of persons of concern (optional).
+--  psCOUNTRY_CODE - Country code of country of residence of persons of concern (optional).
+--  pnLOC_CODE_ORIGIN - Code of location of origin of persons of concern (optional).
+--  pnLOC_CODE_COUNTRY_ORIGIN - Location code of country of origin of persons of concern (optional).
+--  psCOUNTRY_CODE_ORIGIN - Country code of country of origin of persons of concern (optional).
+--  pnLOC_CODE_PPG - Code of location associated with PPG (optional).
+--  psPPG_CODE - PPG code (optional).
+--  psPPG_START_DATE - Start date of effectivity of PPG (optional).
+--  psPOPC_CODE - Population category code (optional).
+--  pdPER_START_DATE - Start date of period (optional).
+--  pdPER_END_DATE - Day after end date of period (optional).
+--  psSEX - Sex code (M/F) (optional).
+--  psAGP_CODE - Age profile code (optional).
+--  pnAGE_FROM - Lower age range limit (optional).
+--  pnAGE_TO - Upper age range limit (optional).
+--  pnVALUE - The value of the statistic (mandatory).
+--
+  procedure SET_STATISTIC
+   (pnID in out P_BASE.tnSTC_ID,
+    pnVERSION_NBR in out P_BASE.tnSTC_VERSION_NBR,
+    psSTCT_CODE in P_BASE.tsSTCT_CODE := null,
+    pnLOC_CODE in P_BASE.tnLOC_CODE := null,
+    pnLOC_CODE_COUNTRY in P_BASE.tnLOC_CODE := null,
+    psCOUNTRY_CODE in P_BASE.tsLOC_COUNTRY_CODE := null,
+    pnLOC_CODE_ORIGIN in P_BASE.tnLOC_CODE := null,
+    pnLOC_CODE_COUNTRY_ORIGIN in P_BASE.tnLOC_CODE := null,
+    psCOUNTRY_CODE_ORIGIN in P_BASE.tsLOC_COUNTRY_CODE := null,
+    pnLOC_CODE_PPG in P_BASE.tnLOC_CODE := null,
+    psPPG_CODE in P_BASE.tsPPG_CODE := null,
+    psPPG_START_DATE in P_BASE.tdDate := null,
+    psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
+    pdPER_START_DATE in P_BASE.tdDate := null,
+    pdPER_END_DATE in P_BASE.tdDate := null,
+    psSEX in P_BASE.tsSTC_SEX := null,
+    psAGP_CODE in P_BASE.tsAGP_CODE := null,
+    pnAGE_FROM in P_BASE.tnAGR_AGE_FROM := null,
+    pnAGE_TO in P_BASE.tnAGR_AGE_TO := null,
+    pnVALUE in P_BASE.tmnSTC_VALUE);
+*/
+--
+-- ----------------------------------------
+-- DELETE_STATISTIC
+-- ----------------------------------------
+--
+-- Delete a statistic record.
+--
+-- Parameters:
+--  pnID - Identifier of statistic to be deleted (mandatory).
+--  pnVERSION_NBR - Update version number of statistic record (mandatory).
+--
+  procedure DELETE_STATISTIC
+   (pnID in P_BASE.tmsPOPC_CODE,
+    pnVERSION_NBR in P_BASE.tnSTC_VERSION_NBR);
+--
+-- ----------------------------------------
+-- SET_STC_TEXT
+-- ----------------------------------------
+--
+-- Add a general text item in a given language to a statistic, or update an existing text item.
+--
+-- Parameters:
+--  pnID - Identifier of statistic for which text item is to be added or updated (mandatory).
+--  pnVERSION_NBR - Update version number of statistic record (mandatory: new version number is
+--    returned).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  psLANG_CODE - Language code of the text item to be added (mandatory).
+--  psText - Text associated with statistic (mandatory).
+--
+  procedure SET_STC_TEXT
+   (pnID in P_BASE.tmnSTC_ID,
+    pnVERSION_NBR in out P_BASE.tnSTC_VERSION_NBR,
+    psTXTT_CODE in P_BASE.tmsTXTT_CODE,
+    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psText in P_BASE.tmsText);
+--
+-- ----------------------------------------
+-- REMOVE_STC_TEXT
+-- ----------------------------------------
+--
+-- Remove a general text item from a statistic. The following cases arise:
+-- 1. All text of the given type is deleted for the given statistic (neither psSEQ_NBR nor
+--    psLANG_CODE is specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given statistic, text type and text item
+--    sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). This action fails if this is
+--    the last text item for this text type and the text type is mandatory.
+-- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
+--    action fails if this is the last language variant of the last text item for this text type and
+--    the text type is mandatory.
+--
+-- Parameters:
+--  pnID - Identifier of statistic from which text item is to be removed (mandatory).
+--  pnVERSION_NBR - Update version number of statistic record (mandatory: new version number is
+--    returned).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
+--
+  procedure REMOVE_STC_TEXT
+   (pnID in P_BASE.tmnSTC_ID,
+    pnVERSION_NBR in out P_BASE.tnSTC_VERSION_NBR,
+    psTXTT_CODE in P_BASE.tmsTXTT_CODE,
+    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null);
+--
+end P_STATISTIC;
+/
+
+show errors
