@@ -16,6 +16,7 @@ purge recyclebin;
 @InitPopCats
 @InitAgeProfiles
 @InitTimePeriods
+@InitStatTypes
 
 commit;
 
