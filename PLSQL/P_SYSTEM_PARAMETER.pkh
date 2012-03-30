@@ -213,3 +213,5 @@ create or replace package P_SYSTEM_PARAMETER is
 --
 end P_SYSTEM_PARAMETER;
 /
+
+show errors

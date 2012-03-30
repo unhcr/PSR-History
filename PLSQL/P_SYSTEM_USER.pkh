@@ -626,3 +626,5 @@ create or replace package P_SYSTEM_USER is
 --
 end P_SYSTEM_USER;
 /
+
+show errors

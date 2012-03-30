@@ -352,3 +352,5 @@ create or replace package P_TEXT_TYPE is
 --
 end P_TEXT_TYPE;
 /
+
+show errors

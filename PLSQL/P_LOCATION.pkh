@@ -1088,3 +1088,5 @@ create or replace package P_LOCATION is
 --
 end P_LOCATION;
 /
+
+show errors

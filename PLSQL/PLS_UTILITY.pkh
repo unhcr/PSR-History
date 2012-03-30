@@ -82,3 +82,5 @@ create or replace package PLS_UTILITY is
 --
 end PLS_UTILITY;
 /
+
+show errors

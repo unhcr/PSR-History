@@ -79,3 +79,5 @@ create or replace package P_TEXT is
 --
 end P_TEXT;
 /
+
+show errors

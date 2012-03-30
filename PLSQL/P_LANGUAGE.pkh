@@ -206,3 +206,5 @@ create or replace package P_LANGUAGE is
 --
 end P_LANGUAGE;
 /
+
+show errors

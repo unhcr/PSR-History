@@ -398,3 +398,5 @@ create or replace package P_MESSAGE is
 --
 end P_MESSAGE;
 /
+
+show errors

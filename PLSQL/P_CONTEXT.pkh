@@ -27,3 +27,5 @@ create or replace package P_CONTEXT is
 --
 end P_CONTEXT;
 /
+
+show errors
