@@ -81,6 +81,12 @@ execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('PPG', :MSG_SEQ_N
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('PPG', :MSG_SEQ_NBR, 'en', 'PPG with overlapping dates already exists');
 
 
+execute P_MESSAGE.INSERT_COMPONENT('STC', 'en', 'Statistics');
+execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('STC', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_STATISTIC');
+
+execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('STC', :MSG_SEQ_NBR, 'en', 'Statistic has been updated by another user');
+
+
 execute P_MESSAGE.INSERT_COMPONENT('STCT', 'en', 'Statistic types and groups');
 execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('STCT', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_STATISTIC_TYPE');
 
