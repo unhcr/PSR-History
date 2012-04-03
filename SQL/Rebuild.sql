@@ -20,4 +20,6 @@ purge recyclebin;
 
 commit;
 
+execute dbms_stats.gather_schema_stats(user);
+
 spool off
