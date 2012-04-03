@@ -1,3 +1,5 @@
+set serveroutput on
+
 variable LOC_CODE1 number;
 variable LOC_CODE2 number;
 variable VERSION_NBR number
@@ -17,6 +19,7 @@ execute P_LOCATION.INSERT_LOCATION_ATTRIBUTE_TYPE('IS03166A3', 'C', 'en', 'ISO 3
 execute P_LOCATION.INSERT_LOCATION_ATTRIBUTE_TYPE('IS03166A2', 'C', 'en', 'ISO 3166-1 Alpha-2 country code');
 execute P_LOCATION.INSERT_LOCATION_ATTRIBUTE_TYPE('IS03166NUM', 'C', 'en', 'ISO 3166-1 Numeric country code');
 execute P_LOCATION.INSERT_LOCATION_ATTRIBUTE_TYPE('UNHCRCC', 'C', 'en', 'UNHCR country code');
+execute P_LOCATION.INSERT_LOCATION_ATTRIBUTE_TYPE('IS03166_2', 'C', 'en', 'ISO 3166-2 subdivision code');
 
 -- Location relationship types
 execute P_LOCATION.INSERT_LOC_RELATIONSHIP_TYPE('WITHIN', 'en', 'Divided into / Within');
@@ -91,6 +94,7 @@ declare
   nLOC_CODE_COU P_BASE.tnLOC_CODE;
   nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
   nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+  nCount pls_integer := 0;
 begin
   for rCOU in
    (select COU.COUNTRY_NAME, COU.NAME_LANGUAGE, COU.ISO_A3, COU.ISO_A2, COU.ISO_N, COU.UNHCR, COU.FORMAL_NAME, SUB.CODE LOC_CODE_SUB, BOP.CODE LOC_CODE_BOP
@@ -103,6 +107,8 @@ begin
     and BOP.LOCT_CODE in ('HCRBUR', 'HCROPN')
     order by COU.COUNTRY_NAME)
   loop
+    nCount := nCount + 1;
+  --
     P_LOCATION.INSERT_LOCATION(nLOC_CODE_COU, rCOU.NAME_LANGUAGE, rCOU.COUNTRY_NAME, 'COUNTRY', rCOU.ISO_A3);
   --
     P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_CODE_COU, 'IS03166A2', rCOU.ISO_A2);
@@ -123,5 +129,34 @@ begin
     then P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rCOU.LOC_CODE_BOP, nLOC_CODE_COU, 'WITHIN');
     end if;
   end loop;
+--
+  dbms_output.put_line(to_char(nCount) || ' country records inserted');
+end;
+/
+
+declare
+  nLOC_CODE_DIV P_BASE.tnLOC_CODE;
+  nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
+  nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+  nCount pls_integer := 0;
+begin
+  for rDIV in
+   (select DIV.ISO3166_2, DIV.NAME, LOC.CODE
+    from STAGE.SUBDIVISIONS DIV
+    join LOCATIONS LOC
+    on LOC.COUNTRY_CODE = DIV.ISO3166_1_A3
+    where DIV.NAME is not null
+    order by DIV.ISO3166_1_A3, DIV.ISO3166_2)
+  loop
+    nCount := nCount + 1;
+  --
+    P_LOCATION.INSERT_LOCATION(nLOC_CODE_DIV, 'en', rDIV.NAME, 'ADMIN1');
+  --
+    P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_CODE_DIV, 'IS03166_2', rDIV.ISO3166_2);
+  --
+    P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rDIV.CODE, nLOC_CODE_DIV, 'WITHIN');
+  end loop;
+--
+  dbms_output.put_line(to_char(nCount) || ' subdivision records inserted');
 end;
 /
