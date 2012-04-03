@@ -19,7 +19,7 @@ insert into TEXT_TYPE_PROPERTIES (TXTT_CODE, TAB_ALIAS, MANDATORY_FLAG, MULTI_IN
 insert into TEXT_TYPE_HEADERS (TXT_ID, TXTT_CODE, TAB_ALIAS, TXI_SEQ_NBR_MAX) values (TXT_SEQ.currval, 'DESCR', 'TXTT', 1);
 insert into TEXT_HEADERS (ID, TAB_ALIAS) values (TXT_SEQ.nextval, 'LANG');
 insert into TEXT_TYPE_HEADERS (TXT_ID, TXTT_CODE, TAB_ALIAS, TXI_SEQ_NBR_MAX) values (TXT_SEQ.currval, 'DESCR', 'LANG', 1);
-insert into LANGUAGES (CODE, TXT_ID) values ('en', TXT_SEQ.currval);
+insert into LANGUAGES (CODE, DISPLAY_SEQ, TXT_ID) values ('en', 1, TXT_SEQ.currval);
 insert into TEXT_ITEMS (TXT_ID, TXTT_CODE, SEQ_NBR, LANG_CODE, TAB_ALIAS, TEXT) values (:TXT_ID, 'DESCR', 1, 'en', 'TXTT', 'Description');
 insert into TEXT_ITEMS (TXT_ID, TXTT_CODE, SEQ_NBR, LANG_CODE, TAB_ALIAS, TEXT) values (TXT_SEQ.currval, 'DESCR', 1, 'en', 'LANG', 'English');
 
@@ -28,7 +28,7 @@ insert into TEXT_ITEMS (TXT_ID, TXTT_CODE, SEQ_NBR, LANG_CODE, TAB_ALIAS, TEXT) 
 -- =========
 
 -- All the UN languages
-execute P_LANGUAGE.INSERT_LANGUAGE('fr', 'en', 'French');
+execute P_LANGUAGE.INSERT_LANGUAGE('fr', 'en', 'French', 2);
 execute P_LANGUAGE.INSERT_LANGUAGE('es', 'en', 'Spanish');
 execute P_LANGUAGE.INSERT_LANGUAGE('ru', 'en', 'Russian');
 execute P_LANGUAGE.INSERT_LANGUAGE('ar', 'en', 'Arabic');
