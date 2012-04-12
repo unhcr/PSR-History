@@ -152,7 +152,7 @@ create or replace package P_MESSAGE is
 --  psCODE - Code of component (mandatory).
 --  pnVERSION_NBR - Update version number of component (mandatory: new version number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with component (mandatory).
 --
@@ -330,7 +330,7 @@ create or replace package P_MESSAGE is
 --  pnSEQ_NBR - Sequence number of message (mandatory).
 --  pnVERSION_NBR - Update version number of message (mandatory: new version number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnTXI_SEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and
+--  pnTXI_SEQ_NBR - Text item sequence number (optional: if null, a new one is generated and
 --    returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with message (mandatory).
