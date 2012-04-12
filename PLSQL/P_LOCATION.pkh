@@ -7,7 +7,7 @@ create or replace package P_LOCATION is
 --   relationships and relationship types.
 --
 --  Change History:
---  29-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  11-Apr-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -157,7 +157,7 @@ create or replace package P_LOCATION is
 --  pnVERSION_NBR - Update version number of location type (mandatory: new version number is
 --    returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with location type (mandatory).
 --
@@ -209,8 +209,8 @@ create or replace package P_LOCATION is
 --  psLANG_CODE - Language code of the location name (mandatory).
 --  psName - Location name text (mandatory).
 --  psLOCT_CODE - Location type code (mandatory).
---  psCOUNTRY_CODE - Country code (not allowed when the location type is not country; mandatory
---    for a new location of type country).
+--  psCOUNTRY_CODE - Country code (not allowed when the location type is not country; mandatory for
+--    a new location of type country).
 --  pdSTART_DATE - Effective start date of details of this location (optional, the absence of a
 --    start date, or a null value, indicates that the effectivity starts indefinitely far in the
 --    past).
@@ -236,8 +236,8 @@ create or replace package P_LOCATION is
 --  pnCODE - Location code (mandatory).
 --  pnVERSION_NBR - Update version number of location record (mandatory: new version number is
 --    returned).
---  psLANG_CODE - Language code of the location name (optional, but must be specified if psName
---    is specified).
+--  psLANG_CODE - Language code of the location name (optional, but must be specified if psName is
+--    specified).
 --  psName - Location name text (optional, if not specified, the name is not changed).
 --  psCOUNTRY_CODE - Country code (not allowed when the location type is not country; if not
 --    specified when updating an existing country, the existing value is left unchanged).
@@ -264,27 +264,27 @@ create or replace package P_LOCATION is
 -- Create a new location record or update an existing one.
 --
 -- Parameters:
---  pnCODE - Location code (optional: if null, a new one is allocated and returned).
+--  pnCODE - Location code (optional: if null, a new one is generated and returned).
 --  pnVERSION_NBR - Update version number of location record (mandatory: new version number is
 --    returned; for a new location, null must be specified and 1 will be returned).
 --  psLANG_CODE - Language code of the location name (mandatory when creating a new location;
 --    optional when updating an existing location but must be specified if psName is specified).
---  psName - Location name text (mandatory when creating a new location; optional when updating
---    an existing location: if not specified, the name is not changed).
---  psLOCT_CODE - Location type code (mandatory when creating an new location; not allowed when
---    updating an existing location).
---  psCOUNTRY_CODE - Country code (not allowed when the location type is not country; mandatory
---    when creating a new location of type country; if not specified when updating an existing
---    country, the existing value is left unchanged).
+--  psName - Location name text (mandatory when creating a new location; optional when updating an
+--    existing location: if not specified, the name is not changed).
+--  psLOCT_CODE - Location type code (mandatory when creating an new location; ignored when updating
+--    an existing location, since the location type my not be changed).
+--  psCOUNTRY_CODE - Country code (not allowed when the location type is not country; mandatory when
+--    creating a new location of type country; if not specified when updating an existing country,
+--    the existing value is left unchanged).
 --  pdSTART_DATE - Effective start date of details of this location (optional: for a new location,
---    the absence of a start date, or a null value, indicates that the effectivity extends
---    indefinitely far in the past; when updating an existing location, if not specified, the
---    existing start date is left unchanged; a null value indicates that the effectivity starts
+--    the absence of a start date, or a null value, indicates that the effectivity starts
+--    indefinitely far in the past; when updating an existing location, the absence of a start date
+--    leaves the existing date unchanged, and a null value indicates that the effectivity starts
 --    indefinitely far in the past).
 --  pdEND_DATE - Effective end date of details of this location (optional: for a new location, the
 --    absence of an end date, or a null value, indicates that the effectivity extends indefinitely
---    into the future; when updating an existing location, if not specified then the existing end
---    date is left unchanged; a null value indicates that the effectivity extends indefinitely
+--    into the future; when updating an existing location, the absence of an end date leaves the
+--    existing date unchanged, and a null value indicates that the effectivity extends indefinitely
 --    into the future).
 --
   procedure SET_LOCATION
@@ -356,7 +356,7 @@ create or replace package P_LOCATION is
 --  pnCODE - Location code (mandatory).
 --  pnVERSION_NBR - Update version number of location (mandatory: new version number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with location (mandatory).
 --
@@ -548,7 +548,7 @@ create or replace package P_LOCATION is
 --  pnVERSION_NBR - Update version number of location attribute type (mandatory: new version number
 --    is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with location attribute type (mandatory).
 --
@@ -689,7 +689,7 @@ create or replace package P_LOCATION is
 --  pnVERSION_NBR - Update version number of location attribute (mandatory: new version number is
 --    returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with location attribute (mandatory).
 --
@@ -875,7 +875,7 @@ create or replace package P_LOCATION is
 --  pnVERSION_NBR - Update version number of location relationship type (mandatory: new version
 --    number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with location relationship type (mandatory).
 --
@@ -923,8 +923,8 @@ create or replace package P_LOCATION is
 -- Create a relationship between two locations.
 --
 -- Parameters:
---  pnLOC_CODE_PARENT - Parent location code (mandatory).
---  pnLOC_CODE_CHILD - Child location code (mandatory).
+--  pnLOC_CODE_FROM - From location code (mandatory).
+--  pnLOC_CODE_TO - To location code (mandatory).
 --  psLOCRT_CODE - Location relationship type code (mandatory).
 --  pdSTART_DATE - Effective start date of this location relationship (optional, the absence of a
 --    start date, or a null value, indicates that the effectivity starts indefinitely far in the
@@ -933,8 +933,8 @@ create or replace package P_LOCATION is
 --    date, or a null value, indicates that the effectivity extends indefinitely into the future).
 --
   procedure INSERT_LOCATION_RELATIONSHIP
-   (pnLOC_CODE_PARENT in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_CHILD in P_BASE.tmnLOC_CODE,
+   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null);
@@ -946,8 +946,8 @@ create or replace package P_LOCATION is
 -- Update an existing relationship between two locations.
 --
 -- Parameters:
---  pnLOC_CODE_PARENT - Parent location code (mandatory).
---  pnLOC_CODE_CHILD - Child location code (mandatory).
+--  pnLOC_CODE_FROM - From location code (mandatory).
+--  pnLOC_CODE_TO - To location code (mandatory).
 --  psLOCRT_CODE - Location relationship type code (mandatory).
 --  pdSTART_DATE - Current effective start date of this location relationship (mandatory).
 --  pnVERSION_NBR - Update version number of location relationship (mandatory: new version number is
@@ -960,8 +960,8 @@ create or replace package P_LOCATION is
 --    indefinitely into the future).
 --
   procedure UPDATE_LOCATION_RELATIONSHIP
-   (pnLOC_CODE_PARENT in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_CHILD in P_BASE.tmnLOC_CODE,
+   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
@@ -975,15 +975,15 @@ create or replace package P_LOCATION is
 -- Delete a relationship between two locations.
 --
 -- Parameters:
---  pnLOC_CODE_PARENT - Parent location code (mandatory).
---  pnLOC_CODE_CHILD - Child location code (mandatory).
+--  pnLOC_CODE_FROM - From location code (mandatory).
+--  pnLOC_CODE_TO - To location code (mandatory).
 --  psLOCRT_CODE - Location relationship type code (mandatory).
 --  pdSTART_DATE - Effective start date of location relationship (mandatory).
 --  pnVERSION_NBR - Update version number of location relationship (mandatory).
 --
   procedure DELETE_LOCATION_RELATIONSHIP
-   (pnLOC_CODE_PARENT in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_CHILD in P_BASE.tmnLOC_CODE,
+   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in P_BASE.tnLOCR_VERSION_NBR);
@@ -996,20 +996,20 @@ create or replace package P_LOCATION is
 --  locations.
 --
 -- Parameters:
---  pnLOC_CODE_PARENT - Parent location code (mandatory).
---  pnLOC_CODE_CHILD - Child location code (mandatory).
+--  pnLOC_CODE_FROM - From location code (mandatory).
+--  pnLOC_CODE_TO - To location code (mandatory).
 --  psLOCRT_CODE - Location relationship type code (mandatory).
 --  pdSTART_DATE - Effective start date of this location relationship (mandatory).
 --  pnVERSION_NBR - Update version number of location relationship (mandatory: new version number is
 --    returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with location relationship (mandatory).
 --
   procedure SET_LOCR_TEXT
-   (pnLOC_CODE_PARENT in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_CHILD in P_BASE.tmnLOC_CODE,
+   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
@@ -1033,8 +1033,8 @@ create or replace package P_LOCATION is
 --    the text type is mandatory.
 --
 -- Parameters:
---  pnLOC_CODE_PARENT - Parent location code (mandatory).
---  pnLOC_CODE_CHILD - Child location code (mandatory).
+--  pnLOC_CODE_FROM - From location code (mandatory).
+--  pnLOC_CODE_TO - To location code (mandatory).
 --  psLOCRT_CODE - Location relationship type code (mandatory).
 --  pdSTART_DATE - Effective start date of this location relationship (mandatory).
 --  pnVERSION_NBR - Update version number of location relationship (mandatory: new version number is
@@ -1044,8 +1044,8 @@ create or replace package P_LOCATION is
 --  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_LOCR_TEXT
-   (pnLOC_CODE_PARENT in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_CHILD in P_BASE.tmnLOC_CODE,
+   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,

@@ -544,8 +544,6 @@ create or replace package body P_LOCATION is
                       case when pdEND_DATE = P_BASE.gdFALSE_DATE then null else pdEND_DATE end);
     --
       pnVERSION_NBR := 1;
-    elsif psLOCT_CODE is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 10, 'Location type cannot be updated');
     else
       UPDATE_LOCATION(pnCODE, pnVERSION_NBR, psLANG_CODE, psName, psCOUNTRY_CODE,
                       pdSTART_DATE, pdEND_DATE);
@@ -818,7 +816,7 @@ create or replace package body P_LOCATION is
           when NO_DATA_FOUND then null;
         --
           when TOO_MANY_ROWS
-          then P_MESSAGE.DISPLAY_MESSAGE('LOC', 11, 'Cannot update data type of location attribute type already in use');
+          then P_MESSAGE.DISPLAY_MESSAGE('LOC', 10, 'Cannot update data type of location attribute type already in use');
         end;
       end if;
     --
@@ -1088,14 +1086,14 @@ create or replace package body P_LOCATION is
     where CODE = psLOCAT_CODE;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 12, 'Inactive location attribute type');
+    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 11, 'Inactive location attribute type');
     end if;
   --
     case
       when sDATA_TYPE = 'C' and psCHAR_VALUE is not null then null;
       when sDATA_TYPE = 'N' and pnNUM_VALUE is not null then null;
       when sDATA_TYPE = 'D' and pdDATE_VALUE is not null then null;
-      else P_MESSAGE.DISPLAY_MESSAGE('LOC', 13, 'Attribute of the correct type must be specified');
+      else P_MESSAGE.DISPLAY_MESSAGE('LOC', 12, 'Attribute of the correct type must be specified');
     end case;
   --
     insert into LOCATION_ATTRIBUTES (LOC_CODE, LOCAT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
@@ -1636,8 +1634,8 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure INSERT_LOCATION_RELATIONSHIP
-   (pnLOC_CODE_PARENT in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_CHILD in P_BASE.tmnLOC_CODE,
+   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null)
@@ -1646,14 +1644,14 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_LOCATION_RELATIONSHIP',
-      to_char(pnLOC_CODE_PARENT) || '~' || to_char(pnLOC_CODE_CHILD) || '~' ||
+      to_char(pnLOC_CODE_FROM) || '~' || to_char(pnLOC_CODE_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
   --
     select ACTIVE_FLAG into sACTIVE_FLAG from LOCATION_RELATIONSHIP_TYPES where CODE = psLOCRT_CODE;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 14, 'Inactive location relationship type');
+    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 13, 'Inactive location relationship type');
     end if;
   --
   -- Check for an existing relationship of the same type between these locations with overlapping
@@ -1665,8 +1663,8 @@ create or replace package body P_LOCATION is
       select 'x'
       into sDummy
       from LOCATION_RELATIONSHIPS
-      where LOC_CODE_PARENT = pnLOC_CODE_PARENT
-      and LOC_CODE_CHILD = pnLOC_CODE_CHILD
+      where LOC_CODE_FROM = pnLOC_CODE_FROM
+      and LOC_CODE_TO = pnLOC_CODE_TO
       and LOCRT_CODE = psLOCRT_CODE
       and START_DATE <= pdEND_DATE
       and END_DATE >= pdSTART_DATE;
@@ -1676,14 +1674,14 @@ create or replace package body P_LOCATION is
       when NO_DATA_FOUND then null;
     --
       when TOO_MANY_ROWS
-      then P_MESSAGE.DISPLAY_MESSAGE('LOC', 15, 'Overlapping location relationship already exists');
+      then P_MESSAGE.DISPLAY_MESSAGE('LOC', 14, 'Overlapping location relationship already exists');
     end;
   --
     insert into LOCATION_RELATIONSHIPS
-     (LOC_CODE_PARENT, LOC_CODE_CHILD, LOCRT_CODE, START_DATE,
+     (LOC_CODE_FROM, LOC_CODE_TO, LOCRT_CODE, START_DATE,
       END_DATE)
     values
-     (pnLOC_CODE_PARENT, pnLOC_CODE_CHILD, psLOCRT_CODE, nvl(pdSTART_DATE, P_BASE.gdMIN_DATE),
+     (pnLOC_CODE_FROM, pnLOC_CODE_TO, psLOCRT_CODE, nvl(pdSTART_DATE, P_BASE.gdMIN_DATE),
       nvl(pdEND_DATE, P_BASE.gdMAX_DATE));
   --
     PLS_UTILITY.END_MODULE;
@@ -1698,8 +1696,8 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure UPDATE_LOCATION_RELATIONSHIP
-   (pnLOC_CODE_PARENT in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_CHILD in P_BASE.tmnLOC_CODE,
+   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
@@ -1714,7 +1712,7 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_LOCATION_RELATIONSHIP',
-      to_char(pnLOC_CODE_PARENT) || '~' || to_char(pnLOC_CODE_CHILD) || '~' ||
+      to_char(pnLOC_CODE_FROM) || '~' || to_char(pnLOC_CODE_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR) || '~' || to_char(pdSTART_DATE_NEW, 'YYYY-MM-DD HH24:MI:SS') ||
         '~' || to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -1722,8 +1720,8 @@ create or replace package body P_LOCATION is
     select END_DATE, VERSION_NBR, rowid
     into dEND_DATE, nVERSION_NBR, xLOCR_ROWID
     from LOCATION_RELATIONSHIPS
-    where LOC_CODE_PARENT = pnLOC_CODE_PARENT
-    and LOC_CODE_CHILD = pnLOC_CODE_CHILD
+    where LOC_CODE_FROM = pnLOC_CODE_FROM
+    and LOC_CODE_TO = pnLOC_CODE_TO
     and LOCRT_CODE = psLOCRT_CODE
     and START_DATE = pdSTART_DATE;
   --
@@ -1751,8 +1749,8 @@ create or replace package body P_LOCATION is
         select 'x'
         into sDummy
         from LOCATION_RELATIONSHIPS
-        where LOC_CODE_PARENT = pnLOC_CODE_PARENT
-        and LOC_CODE_CHILD = pnLOC_CODE_CHILD
+        where LOC_CODE_FROM = pnLOC_CODE_FROM
+        and LOC_CODE_TO = pnLOC_CODE_TO
         and LOCRT_CODE = psLOCRT_CODE
         and START_DATE <= dEND_DATE_NEW
         and END_DATE >= dSTART_DATE_NEW
@@ -1763,7 +1761,7 @@ create or replace package body P_LOCATION is
         when NO_DATA_FOUND then null;
       --
         when TOO_MANY_ROWS
-        then P_MESSAGE.DISPLAY_MESSAGE('LOC', 15, 'Overlapping location relationship already exists');
+        then P_MESSAGE.DISPLAY_MESSAGE('LOC', 14, 'Overlapping location relationship already exists');
       end;
     --
       update LOCATION_RELATIONSHIPS
@@ -1788,8 +1786,8 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure DELETE_LOCATION_RELATIONSHIP
-   (pnLOC_CODE_PARENT in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_CHILD in P_BASE.tmnLOC_CODE,
+   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in P_BASE.tnLOCR_VERSION_NBR)
@@ -1800,15 +1798,15 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.DELETE_LOCATION_RELATIONSHIP',
-      to_char(pnLOC_CODE_PARENT) || '~' || to_char(pnLOC_CODE_CHILD) || '~' ||
+      to_char(pnLOC_CODE_FROM) || '~' || to_char(pnLOC_CODE_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR));
   --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xLOCR_ROWID
     from LOCATION_RELATIONSHIPS
-    where LOC_CODE_PARENT = pnLOC_CODE_PARENT
-    and LOC_CODE_CHILD = pnLOC_CODE_CHILD
+    where LOC_CODE_FROM = pnLOC_CODE_FROM
+    and LOC_CODE_TO = pnLOC_CODE_TO
     and LOCRT_CODE = psLOCRT_CODE
     and START_DATE = pdSTART_DATE
     for update;
@@ -1836,8 +1834,8 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure SET_LOCR_TEXT
-   (pnLOC_CODE_PARENT in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_CHILD in P_BASE.tmnLOC_CODE,
+   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
@@ -1852,7 +1850,7 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOCR_TEXT',
-      to_char(pnLOC_CODE_PARENT) || '~' || to_char(pnLOC_CODE_CHILD) || '~' ||
+      to_char(pnLOC_CODE_FROM) || '~' || to_char(pnLOC_CODE_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
@@ -1860,8 +1858,8 @@ create or replace package body P_LOCATION is
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xLOCR_ROWID
     from LOCATION_RELATIONSHIPS
-    where LOC_CODE_PARENT = pnLOC_CODE_PARENT
-    and LOC_CODE_CHILD = pnLOC_CODE_CHILD
+    where LOC_CODE_FROM = pnLOC_CODE_FROM
+    and LOC_CODE_TO = pnLOC_CODE_TO
     and LOCRT_CODE = psLOCRT_CODE
     and START_DATE = pdSTART_DATE
     for update;
@@ -1891,8 +1889,8 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure REMOVE_LOCR_TEXT
-   (pnLOC_CODE_PARENT in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_CHILD in P_BASE.tmnLOC_CODE,
+   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
@@ -1906,15 +1904,15 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_LOCR_TEXT',
-      to_char(pnLOC_CODE_PARENT) || '~' || to_char(pnLOC_CODE_CHILD) || '~' || psLOCRT_CODE ||
+      to_char(pnLOC_CODE_FROM) || '~' || to_char(pnLOC_CODE_TO) || '~' || psLOCRT_CODE ||
         '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || to_char(pnVERSION_NBR) ||
         '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xLOCR_ROWID
     from LOCATION_RELATIONSHIPS
-    where LOC_CODE_PARENT = pnLOC_CODE_PARENT
-    and LOC_CODE_CHILD = pnLOC_CODE_CHILD
+    where LOC_CODE_FROM = pnLOC_CODE_FROM
+    and LOC_CODE_TO = pnLOC_CODE_TO
     and LOCRT_CODE = psLOCRT_CODE
     and START_DATE = pdSTART_DATE
     for update;
