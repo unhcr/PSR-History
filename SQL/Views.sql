@@ -13,16 +13,20 @@ select COUNTRY_CODE, UNHCR_COUNTRY_CODE, LOC_NAME_COUNTRY,
   FEMALE_18_59,
   FEMALE_60_PLUS,
   FEMALE_UNSPECIFIED,
-  nvl(FEMALE_0_4, 0) + nvl(FEMALE_5_11, 0) + nvl(FEMALE_12_17, 0) + nvl(FEMALE_18_59, 0) +
-    nvl(FEMALE_60_PLUS, 0) + nvl(FEMALE_UNSPECIFIED, 0) FEMALE_TOTAL,
+  case
+    when nvl(FEMALE_0_4, 0) + nvl(FEMALE_5_11, 0) + nvl(FEMALE_12_17, 0) + nvl(FEMALE_18_59, 0) + nvl(FEMALE_60_PLUS, 0) + nvl(FEMALE_UNSPECIFIED, 0) > 0
+    then nvl(FEMALE_0_4, 0) + nvl(FEMALE_5_11, 0) + nvl(FEMALE_12_17, 0) + nvl(FEMALE_18_59, 0) + nvl(FEMALE_60_PLUS, 0) + nvl(FEMALE_UNSPECIFIED, 0)
+  end FEMALE_TOTAL,
   MALE_0_4,
   MALE_5_11,
   MALE_12_17,
   MALE_18_59,
   MALE_60_PLUS,
   MALE_UNSPECIFIED,
-  nvl(MALE_0_4, 0) + nvl(MALE_5_11, 0) + nvl(MALE_12_17, 0) + nvl(MALE_18_59, 0) +
-    nvl(MALE_60_PLUS, 0) + nvl(MALE_UNSPECIFIED, 0) MALE_TOTAL,
+  case
+    when nvl(MALE_0_4, 0) + nvl(MALE_5_11, 0) + nvl(MALE_12_17, 0) + nvl(MALE_18_59, 0) + nvl(MALE_60_PLUS, 0) + nvl(MALE_UNSPECIFIED, 0) > 0
+    then nvl(MALE_0_4, 0) + nvl(MALE_5_11, 0) + nvl(MALE_12_17, 0) + nvl(MALE_18_59, 0) + nvl(MALE_60_PLUS, 0) + nvl(MALE_UNSPECIFIED, 0)
+  end MALE_TOTAL,
   UNSPECIFIED,
   nvl(FEMALE_0_4, 0) + nvl(FEMALE_5_11, 0) + nvl(FEMALE_12_17, 0) + nvl(FEMALE_18_59, 0) +
     nvl(FEMALE_60_PLUS, 0) + nvl(FEMALE_UNSPECIFIED, 0) +
