@@ -6,7 +6,7 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 --  Procedures for maintenance of population planning groups (PPGs).
 --
 --  Change History:
---  29-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  11-Apr-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -24,20 +24,22 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 -- Create a new PPG.
 --
 -- Parameters:
---  pnLOC_CODE - Location code of PPG (mandatory).
---  psPPG_CODE - PPG code (mandatory).
+--  pnID - New PPG identifier (returned).
 --  psLANG_CODE - Language code of the textual description (mandatory).
 --  psDescription - Textual description of PPG (mandatory).
+--  pnLOC_CODE - Location code of PPG (mandatory).
+--  psPPG_CODE - PPG code (mandatory).
 --  pdSTART_DATE - Effective start date of this PPG (optional, the absence of a start date, or a
 --    null value, indicates that the effectivity starts indefinitely far in the past).
 --  pdEND_DATE - Effective end date of this PPG (optional, the absence of an end date, or a null
 --    value, indicates that the effectivity extends indefinitely into the future).
 --
   procedure INSERT_PPG
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
-    psPPG_CODE in P_BASE.tmsPPG_CODE,
+   (pnID out P_BASE.tnPPG_ID,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText,
+    pnLOC_CODE in P_BASE.tmnLOC_CODE,
+    psPPG_CODE in P_BASE.tmsPPG_CODE,
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null);
 --
@@ -48,29 +50,67 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 -- Update an existing PPG.
 --
 -- Parameters:
---  pnLOC_CODE - Location code of PPG (mandatory).
---  psPPG_CODE - PPG code (mandatory).
---  pdSTART_DATE - Current effective start date of this PPG (mandatory).
+--  pnID - PPG identifier (mandatory).
 --  pnVERSION_NBR - Update version number of PPG record (mandatory: new version number is returned).
 --  psLANG_CODE - Language code of the textual description (optional, but must be specified if
 --    psDescription is specified).
 --  psDescription - Textual description of PPG (optional: if not specified, the description is not
 --    changed).
---  pdSTART_DATE_NEW - New effective start date of this PPG (optional: if not specified, the
---    existing start date is left unchanged; a null value indicates that the effectivity starts
---    indefinitely far in the past).
+--  pnLOC_CODE - Location code of PPG (optional: if not specified, the existing location code is not
+--    changed).
+--  psPPG_CODE - PPG code (optional: if not specified, the existing PPG code is not changed).
+--  pdSTART_DATE - Effective start date of this PPG (optional: if not specified, the existing start
+--    date is not changed; a null value indicates that the effectivity starts indefinitely far in
+--    the past).
 --  pdEND_DATE - Effective end date of this PPG (optional: if not specified, the existing end date
---    is left unchanged; a null value indicates that the effectivity extends indefinitely into the
+--    is not changed; a null value indicates that the effectivity extends indefinitely into the
 --    future).
 --
   procedure UPDATE_PPG
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
-    psPPG_CODE in P_BASE.tmsPPG_CODE,
-    pdSTART_DATE in P_BASE.tmdDate,
+   (pnID in P_BASE.tmnPPG_ID,
     pnVERSION_NBR in out P_BASE.tnPPG_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
-    pdSTART_DATE_NEW in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    pnLOC_CODE in P_BASE.tnLOC_CODE := null,
+    psPPG_CODE in P_BASE.tsPPG_CODE := null,
+    pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE);
+--
+-- ----------------------------------------
+-- SET_PPG
+-- ----------------------------------------
+--
+-- Create a new PPG or update an existing one.
+--
+-- Parameters:
+--  pnID - PPG identifier (optional: if null, a new one is generated and returned).
+--  pnVERSION_NBR - Update version number of PPG record (mandatory: new version number is returned;
+--    for a new PPG, null must be specified and 1 will be returned).
+--  pnLOC_CODE - Location code of PPG (mandatory when creating a new PPG; optional: if not specified
+--    when updating an existing PPG, the existing location code is not changed).
+--  psPPG_CODE - PPG code (mandatory when creating a new PPG; if not specified when updating an
+--    existing PPG, the existing PPG code is not changed).
+--  pdSTART_DATE - Effective start date of this PPG (optional: for a new PPG, the absence of a start
+--    date, or a null value, indicates that the effectivity starts indefinitely far in the past;
+--    when updating an existing PPG, the absence of a start date leaves the existing date unchanged,
+--    and a null value indicates that the effectivity starts indefinitely far in the past).
+--  pdEND_DATE - Effective end date of this PPG (optional: for a new PPG, the absence of an end
+--    date, or a null value, indicates that the effectivity extends indefinitely into the future;
+--    when updating an existing PPG, the absence of an end date leaves the existing date unchanged;
+--    a null value indicates that the effectivity extends indefinitely into the future).
+--  psLANG_CODE - Language code of the textual description (optional, but must be specified if
+--    psDescription is specified).
+--  psDescription - Textual description of PPG (optional: if not specified, the description is not
+--    changed).
+--
+  procedure SET_PPG
+   (pnID in out P_BASE.tnPPG_ID,
+    pnVERSION_NBR in out P_BASE.tnPPG_VERSION_NBR,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null,
+    psDescription in P_BASE.tsText := null,
+    pnLOC_CODE in P_BASE.tnLOC_CODE := null,
+    psPPG_CODE in P_BASE.tsPPG_CODE := null,
+    pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE);
 --
 -- ----------------------------------------
@@ -80,15 +120,11 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 -- Delete a PPG.
 --
 -- Parameters:
---  pnLOC_CODE - Location code of PPG (mandatory).
---  psPPG_CODE - Code of PPG (mandatory).
---  pdSTART_DATE - Effective start date of PPG (mandatory).
+--  pnID - PPG identifier (mandatory).
 --  pnVERSION_NBR - Update version number of PPG record (mandatory).
 --
   procedure DELETE_PPG
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
-    psPPG_CODE in P_BASE.tmsPPG_CODE,
-    pdSTART_DATE in P_BASE.tmdDate,
+   (pnID in P_BASE.tmnPPG_ID,
     pnVERSION_NBR in P_BASE.tnPPG_VERSION_NBR);
 --
 -- ----------------------------------------
@@ -98,17 +134,13 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 -- Add a description in a given language to a PPG, or update an existing description.
 --
 -- Parameters:
---  pnLOC_CODE - Location code of PPG (mandatory).
---  psPPG_CODE - Code of PPG (mandatory).
---  pdSTART_DATE - Effective start date of PPG (mandatory).
+--  pnID - PPG identifier (mandatory).
 --  pnVERSION_NBR - Update version number of PPG (mandatory: new version number is returned).
 --  psLANG_CODE - Language code of the description to be added or updated (mandatory).
 --  psDescription - Textual description of PPG (mandatory).
 --
   procedure SET_PPG_DESCRIPTION
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
-    psPPG_CODE in P_BASE.tmsPPG_CODE,
-    pdSTART_DATE in P_BASE.tmdDate,
+   (pnID in P_BASE.tmnPPG_ID,
     pnVERSION_NBR in out P_BASE.tnPPG_VERSION_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText);
@@ -121,16 +153,12 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 --  last language variant of the description.
 --
 -- Parameters:
---  pnLOC_CODE - Location code of PPG (mandatory).
---  psPPG_CODE - Code of PPG (mandatory).
---  pdSTART_DATE - Effective start date of PPG (mandatory).
+--  pnID - PPG identifier (mandatory).
 --  pnVERSION_NBR - Update version number of PPG (mandatory: new version number is returned).
 --  psLANG_CODE - Language code of the description to be removed (mandatory).
 --
   procedure REMOVE_PPG_DESCRIPTION
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
-    psPPG_CODE in P_BASE.tmsPPG_CODE,
-    pdSTART_DATE in P_BASE.tmdDate,
+   (pnID in P_BASE.tmnPPG_ID,
     pnVERSION_NBR in out P_BASE.tnPPG_VERSION_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE);
 --
@@ -141,19 +169,15 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 -- Add a general text item in a given language to a PPG, or update an existing text item.
 --
 -- Parameters:
---  pnLOC_CODE - Location code of PPG (mandatory).
---  psPPG_CODE - Code of PPG (mandatory).
---  pdSTART_DATE - Effective start date of PPG (mandatory).
+--  pnID - PPG identifier (mandatory).
 --  pnVERSION_NBR - Update version number of PPG record (mandatory: new version number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item to be added (mandatory).
 --  psText - Text associated with PPG (mandatory).
 --
   procedure SET_PPG_TEXT
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
-    psPPG_CODE in P_BASE.tmsPPG_CODE,
-    pdSTART_DATE in P_BASE.tmdDate,
+   (pnID in P_BASE.tmnPPG_ID,
     pnVERSION_NBR in out P_BASE.tnPPG_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
@@ -175,18 +199,14 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 --    the text type is mandatory.
 --
 -- Parameters:
---  pnLOC_CODE - Location code of PPG (mandatory).
---  psPPG_CODE - Code of PPG (mandatory).
---  pdSTART_DATE - Effective start date of PPG (mandatory).
+--  pnID - PPG identifier (mandatory).
 --  pnVERSION_NBR - Update version number of PPG record (mandatory: new version number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
 --  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
 --  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_PPG_TEXT
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
-    psPPG_CODE in P_BASE.tmsPPG_CODE,
-    pdSTART_DATE in P_BASE.tmdDate,
+   (pnID in P_BASE.tmnPPG_ID,
     pnVERSION_NBR in out P_BASE.tnPPG_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
