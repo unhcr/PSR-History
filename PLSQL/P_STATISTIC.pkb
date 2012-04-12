@@ -13,38 +13,55 @@ create or replace package body P_STATISTIC is
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
     pnLOC_CODE in P_BASE.tmnLOC_CODE,
     pnLOC_CODE_COUNTRY in P_BASE.tmnLOC_CODE,
-    psCOUNTRY_CODE in P_BASE.tmsLOC_COUNTRY_CODE,
     pnLOC_CODE_ORIGIN in P_BASE.tnLOC_CODE := null,
     pnLOC_CODE_COUNTRY_ORIGIN in P_BASE.tnLOC_CODE := null,
-    psCOUNTRY_CODE_ORIGIN in P_BASE.tsLOC_COUNTRY_CODE := null,
-    pnLOC_CODE_PPG in P_BASE.tnLOC_CODE := null,
-    psPPG_CODE in P_BASE.tsPPG_CODE := null,
-    pdPPG_START_DATE in P_BASE.tdDate := null,
+    pnPPG_ID in P_BASE.tnPPG_ID := null,
     psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
-    pdPER_START_DATE in P_BASE.tdDate := null,
-    pdPER_END_DATE in P_BASE.tdDate := null,
-    psSEX in P_BASE.tsSTC_SEX := null,
-    psAGP_CODE in P_BASE.tsAGP_CODE := null,
-    pnAGE_FROM in P_BASE.tnAGR_AGE_FROM := null,
-    pnAGE_TO in P_BASE.tnAGR_AGE_TO := null,
+    pnPER_ID in P_BASE.tnPER_ID := null,
+    psSEX_CODE in P_BASE.tsSEX_CODE := null,
+    pnAGR_ID in P_BASE.tnAGR_ID := null,
+    pnDIM_ID1 in P_BASE.tnDIM_ID := null,
+    pnDIM_ID2 in P_BASE.tnDIM_ID := null,
+    pnDIM_ID3 in P_BASE.tnDIM_ID := null,
+    pnDIM_ID4 in P_BASE.tnDIM_ID := null,
+    pnDIM_ID5 in P_BASE.tnDIM_ID := null,
     pnVALUE in P_BASE.tmnSTC_VALUE)
   is
+    sCOUNTRY_CODE P_BASE.tsLOC_COUNTRY_CODE;
+    sCOUNTRY_CODE_ORIGIN P_BASE.tsLOC_COUNTRY_CODE;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_STATISTIC',
       psSTCT_CODE || '~' ||
         to_char(pnLOC_CODE) || '~' ||
-        to_char(pnLOC_CODE_COUNTRY) || '~' || psCOUNTRY_CODE || '~' ||
+        to_char(pnLOC_CODE_COUNTRY) || '~' ||
         to_char(pnLOC_CODE_ORIGIN) || '~' ||
-        to_char(pnLOC_CODE_COUNTRY_ORIGIN) || '~' || psCOUNTRY_CODE_ORIGIN || '~' ||
-        to_char(pnLOC_CODE_PPG) || '~' || psPPG_CODE || '~' ||
-        to_char(pdPPG_START_DATE, 'YYYY-MM-DD') || '~' ||
+        to_char(pnLOC_CODE_COUNTRY_ORIGIN) || '~' ||
+        to_char(pnPPG_ID) || '~' ||
         psPOPC_CODE || '~' ||
-        to_char(pdPER_START_DATE, 'YYYY-MM-DD') || '~' ||
-        to_char(pdPER_END_DATE, 'YYYY-MM-DD') || '~' ||
-        psSEX || '~' ||
-        psAGP_CODE || '~' || to_char(pnAGE_FROM) || '~' || to_char(pnAGE_TO) || '~' ||
+        to_char(pnPER_ID) || '~' ||
+        psSEX_CODE || '~' ||
+        to_char(pnDIM_ID1) || '~' ||
+        to_char(pnDIM_ID2) || '~' ||
+        to_char(pnDIM_ID3) || '~' ||
+        to_char(pnDIM_ID4) || '~' ||
+        to_char(pnDIM_ID5) || '~' ||
         to_char(pnVALUE));
+  --
+    select COUNTRY_CODE
+    into sCOUNTRY_CODE
+    from LOCATIONS
+    where CODE = pnLOC_CODE_COUNTRY
+    and LOCT_CODE = 'COUNTRY';
+  --
+    if pnLOC_CODE_COUNTRY_ORIGIN is not null
+    then
+      select COUNTRY_CODE
+      into sCOUNTRY_CODE_ORIGIN
+      from LOCATIONS
+      where CODE = pnLOC_CODE_COUNTRY_ORIGIN
+      and LOCT_CODE = 'COUNTRY';
+    end if;
   --
     insert into STATISTICS
      (ID,
@@ -53,24 +70,34 @@ create or replace package body P_STATISTIC is
       LOC_CODE_COUNTRY, COUNTRY_CODE,
       LOC_CODE_ORIGIN,
       LOC_CODE_COUNTRY_ORIGIN, COUNTRY_CODE_ORIGIN,
-      LOC_CODE_PPG, PPG_CODE, PPG_START_DATE,
+      PPG_ID,
       POPC_CODE,
-      PER_START_DATE, PER_END_DATE,
-      SEX,
-      AGP_CODE, AGE_FROM, AGE_TO,
+      PER_ID,
+      SEX_CODE,
+      AGR_ID,
+      DIM_ID1,
+      DIM_ID2,
+      DIM_ID3,
+      DIM_ID4,
+      DIM_ID5,
       VALUE)
     values
      (STC_SEQ.nextval,
       psSTCT_CODE,
       pnLOC_CODE,
-      pnLOC_CODE_COUNTRY, psCOUNTRY_CODE,
+      pnLOC_CODE_COUNTRY, sCOUNTRY_CODE,
       pnLOC_CODE_ORIGIN,
-      pnLOC_CODE_COUNTRY_ORIGIN, psCOUNTRY_CODE_ORIGIN,
-      pnLOC_CODE_PPG, psPPG_CODE, pdPPG_START_DATE,
+      pnLOC_CODE_COUNTRY_ORIGIN, sCOUNTRY_CODE_ORIGIN,
+      pnPPG_ID,
       psPOPC_CODE,
-      pdPER_START_DATE, pdPER_END_DATE,
-      psSEX,
-      psAGP_CODE, pnAGE_FROM, pnAGE_TO,
+      pnPER_ID,
+      psSEX_CODE,
+      pnAGR_ID,
+      pnDIM_ID1,
+      pnDIM_ID2,
+      pnDIM_ID3,
+      pnDIM_ID4,
+      pnDIM_ID5,
       pnVALUE)
     returning ID into pnID;
   --

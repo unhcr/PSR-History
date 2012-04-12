@@ -6,7 +6,7 @@ create or replace package P_STATISTIC is
 --  Procedures for maintenance of statistics.
 --
 --  Change History:
---  30-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  11-Apr-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -28,48 +28,37 @@ create or replace package P_STATISTIC is
 --  psSTCT_CODE - Statistic type code (mandatory).
 --  pnLOC_CODE - Code of residence location of persons of concern (mandatory).
 --  pnLOC_CODE_COUNTRY - Location code of country of residence of persons of concern (mandatory).
---  psCOUNTRY_CODE - Country code of country of residence of persons of concern (mandatory).
 --  pnLOC_CODE_ORIGIN - Code of location of origin of persons of concern (optional).
 --  pnLOC_CODE_COUNTRY_ORIGIN - Location code of country of origin of persons of concern (optional).
---  psCOUNTRY_CODE_ORIGIN - Country code of country of origin of persons of concern (optional).
---  pnLOC_CODE_PPG - Code of location associated with PPG (optional).
---  psPPG_CODE - PPG code (optional).
---  pdPPG_START_DATE - Start date of effectivity of PPG (optional).
+--  pnPPG_ID - PPG identifier (optional).
 --  psPOPC_CODE - Population category code (optional).
---  pdPER_START_DATE - Start date of period (optional).
---  pdPER_END_DATE - Day after end date of period (optional).
---  psSEX - Sex code (M/F) (optional).
---  psAGP_CODE - Age profile code (optional).
---  pnAGE_FROM - Lower age range limit (optional).
---  pnAGE_TO - Upper age range limit (optional).
+--  pnPER_ID - Time period identifier (optional).
+--  psSEX_CODE - Sex code (optional).
+--  pnAGR_ID - Age range identifier (optional).
+--  pnDIM_ID1 - Dimension value identifier 1 (optional).
+--  pnDIM_ID2 - Dimension value identifier 2 (optional).
+--  pnDIM_ID3 - Dimension value identifier 3 (optional).
+--  pnDIM_ID4 - Dimension value identifier 4 (optional).
+--  pnDIM_ID5 - Dimension value identifier 5 (optional).
 --  pnVALUE - The value of the statistic (mandatory).
---
--- Some optional parameters form composite groups, within which all parameters must be specified or
---  none:
---  - pnLOC_CODE_COUNTRY_ORIGIN and psCOUNTRY_CODE_ORIGIN;
---  - pnLOC_CODE_PPG, psPPG_CODE and psPPG_START_DATE;
---  - pdPER_START_DATE and pdPER_END_DATE;
---  - psAGP_CODE, pnAGE_FROM and pnAGE_TO.
 --
   procedure INSERT_STATISTIC
    (pnID out P_BASE.tnSTC_ID,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
     pnLOC_CODE in P_BASE.tmnLOC_CODE,
     pnLOC_CODE_COUNTRY in P_BASE.tmnLOC_CODE,
-    psCOUNTRY_CODE in P_BASE.tmsLOC_COUNTRY_CODE,
     pnLOC_CODE_ORIGIN in P_BASE.tnLOC_CODE := null,
     pnLOC_CODE_COUNTRY_ORIGIN in P_BASE.tnLOC_CODE := null,
-    psCOUNTRY_CODE_ORIGIN in P_BASE.tsLOC_COUNTRY_CODE := null,
-    pnLOC_CODE_PPG in P_BASE.tnLOC_CODE := null,
-    psPPG_CODE in P_BASE.tsPPG_CODE := null,
-    pdPPG_START_DATE in P_BASE.tdDate := null,
+    pnPPG_ID in P_BASE.tnPPG_ID := null,
     psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
-    pdPER_START_DATE in P_BASE.tdDate := null,
-    pdPER_END_DATE in P_BASE.tdDate := null,
-    psSEX in P_BASE.tsSTC_SEX := null,
-    psAGP_CODE in P_BASE.tsAGP_CODE := null,
-    pnAGE_FROM in P_BASE.tnAGR_AGE_FROM := null,
-    pnAGE_TO in P_BASE.tnAGR_AGE_TO := null,
+    pnPER_ID in P_BASE.tnPER_ID := null,
+    psSEX_CODE in P_BASE.tsSEX_CODE := null,
+    pnAGR_ID in P_BASE.tnAGR_ID := null,
+    pnDIM_ID1 in P_BASE.tnDIM_ID := null,
+    pnDIM_ID2 in P_BASE.tnDIM_ID := null,
+    pnDIM_ID3 in P_BASE.tnDIM_ID := null,
+    pnDIM_ID4 in P_BASE.tnDIM_ID := null,
+    pnDIM_ID5 in P_BASE.tnDIM_ID := null,
     pnVALUE in P_BASE.tmnSTC_VALUE);
 /*
 --
@@ -86,17 +75,17 @@ create or replace package P_STATISTIC is
 --  psSTCT_CODE - Statistic type code (optional).
 --  pnLOC_CODE - Code of residence location of persons of concern (optional).
 --  pnLOC_CODE_COUNTRY - Location code of country of residence of persons of concern (optional).
---  psCOUNTRY_CODE - Country code of country of residence of persons of concern (optional).
 --  pnLOC_CODE_ORIGIN - Code of location of origin of persons of concern (optional).
 --  pnLOC_CODE_COUNTRY_ORIGIN - Location code of country of origin of persons of concern (optional).
---  psCOUNTRY_CODE_ORIGIN - Country code of country of origin of persons of concern (optional).
 --  pnLOC_CODE_PPG - Code of location associated with PPG (optional).
 --  psPPG_CODE - PPG code (optional).
 --  pdPPG_START_DATE - Start date of effectivity of PPG (optional).
 --  psPOPC_CODE - Population category code (optional).
 --  pdPER_START_DATE - Start date of period (optional).
 --  pdPER_END_DATE - Day after end date of period (optional).
---  psSEX - Sex code (M/F) (optional).
+--  psRCX_CODE - Residence context code (optional).
+--  psACMT_CODE - Accommodation type code (optional).
+--  psSEX_CODE - Sex code (optional).
 --  psAGP_CODE - Age profile code (optional).
 --  pnAGE_FROM - Lower age range limit (optional).
 --  pnAGE_TO - Upper age range limit (optional).
@@ -120,7 +109,9 @@ create or replace package P_STATISTIC is
     psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
     pdPER_START_DATE in P_BASE.tdDate := null,
     pdPER_END_DATE in P_BASE.tdDate := null,
-    psSEX in P_BASE.tsSTC_SEX := null,
+    psRCX_CODE in P_BASE.tsRCX_CODE := null,
+    psACMT_CODE in P_BASE.tsACMT_CODE := null,
+    psSEX_CODE in P_BASE.tsSEX_CODE := null,
     psAGP_CODE in P_BASE.tsAGP_CODE := null,
     pnAGE_FROM in P_BASE.tnAGR_AGE_FROM := null,
     pnAGE_TO in P_BASE.tnAGR_AGE_TO := null,
@@ -139,17 +130,17 @@ create or replace package P_STATISTIC is
 --  psSTCT_CODE - Statistic type code (optional).
 --  pnLOC_CODE - Code of residence location of persons of concern (optional).
 --  pnLOC_CODE_COUNTRY - Location code of country of residence of persons of concern (optional).
---  psCOUNTRY_CODE - Country code of country of residence of persons of concern (optional).
 --  pnLOC_CODE_ORIGIN - Code of location of origin of persons of concern (optional).
 --  pnLOC_CODE_COUNTRY_ORIGIN - Location code of country of origin of persons of concern (optional).
---  psCOUNTRY_CODE_ORIGIN - Country code of country of origin of persons of concern (optional).
 --  pnLOC_CODE_PPG - Code of location associated with PPG (optional).
 --  psPPG_CODE - PPG code (optional).
 --  psPPG_START_DATE - Start date of effectivity of PPG (optional).
 --  psPOPC_CODE - Population category code (optional).
 --  pdPER_START_DATE - Start date of period (optional).
 --  pdPER_END_DATE - Day after end date of period (optional).
---  psSEX - Sex code (M/F) (optional).
+--  psRCX_CODE - Residence context code (optional).
+--  psACMT_CODE - Accommodation type code (optional).
+--  psSEX_CODE - Sex code (M/F) (optional).
 --  psAGP_CODE - Age profile code (optional).
 --  pnAGE_FROM - Lower age range limit (optional).
 --  pnAGE_TO - Upper age range limit (optional).
@@ -171,7 +162,9 @@ create or replace package P_STATISTIC is
     psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
     pdPER_START_DATE in P_BASE.tdDate := null,
     pdPER_END_DATE in P_BASE.tdDate := null,
-    psSEX in P_BASE.tsSTC_SEX := null,
+    psRCX_CODE in P_BASE.tsRCX_CODE := null,
+    psACMT_CODE in P_BASE.tsACMT_CODE := null,
+    psSEX_CODE in P_BASE.tsSEX_CODE := null,
     psAGP_CODE in P_BASE.tsAGP_CODE := null,
     pnAGE_FROM in P_BASE.tnAGR_AGE_FROM := null,
     pnAGE_TO in P_BASE.tnAGR_AGE_TO := null,
@@ -203,7 +196,7 @@ create or replace package P_STATISTIC is
 --  pnVERSION_NBR - Update version number of statistic record (mandatory: new version number is
 --    returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item to be added (mandatory).
 --  psText - Text associated with statistic (mandatory).
 --
