@@ -134,18 +134,16 @@ begin
 end;
 /
 
+/*
 declare
   nLOC_CODE_DIV P_BASE.tnLOC_CODE;
-  nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
-  nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
   nCount pls_integer := 0;
 begin
   for rDIV in
-   (select DIV.ISO3166_2, DIV.NAME, LOC.CODE
+   (select DIV.ISO3166_2, nvl(DIV.NAME, 'Unknown') NAME, LOC.CODE
     from STAGE.SUBDIVISIONS DIV
     join LOCATIONS LOC
     on LOC.COUNTRY_CODE = DIV.ISO3166_1_A3
-    where DIV.NAME is not null
     order by DIV.ISO3166_1_A3, DIV.ISO3166_2)
   loop
     nCount := nCount + 1;
@@ -155,6 +153,28 @@ begin
     P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_CODE_DIV, 'IS03166_2', rDIV.ISO3166_2);
   --
     P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rDIV.CODE, nLOC_CODE_DIV, 'WITHIN');
+  end loop;
+--
+  dbms_output.put_line(to_char(nCount) || ' subdivision records inserted');
+end;
+*/
+
+declare
+  nLOC_CODE_DEM P_BASE.tnLOC_CODE;
+  nCount pls_integer := 0;
+begin
+  for rDEM in
+   (select distinct regexp_replace(nvl(DEM.LOC_NAME, DEM.LOC_NAME_NEW), ' : .*$', '') NAME, COU.CODE
+    from STAGE.DEMOGRAPHICS_2010 DEM
+    join L_COUNTRIES COU
+    on COU.UNHCR_COUNTRY_CODE = DEM.COUNTRY_CODE
+    order by 2, 1)
+  loop
+    nCount := nCount + 1;
+  --
+    P_LOCATION.INSERT_LOCATION(nLOC_CODE_DEM, 'en', rDEM.NAME, 'ADMIN1');
+  --
+    P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rDEM.CODE, nLOC_CODE_DEM, 'WITHIN');
   end loop;
 --
   dbms_output.put_line(to_char(nCount) || ' subdivision records inserted');
