@@ -2,6 +2,7 @@
 @@P_BASE.pkh
 @@P_AGE_PROFILE.pkh
 @@P_CONTEXT.pkh
+@@P_DIMENSION.pkh
 @@P_LANGUAGE.pkh
 @@P_LOCATION.pkh
 @@P_MESSAGE.pkh
@@ -19,6 +20,7 @@
 @@P_BASE.pkb
 @@P_AGE_PROFILE.pkb
 @@P_CONTEXT.pkb
+@@P_DIMENSION.pkb
 @@P_LANGUAGE.pkb
 @@P_LOCATION.pkb
 @@P_MESSAGE.pkb
