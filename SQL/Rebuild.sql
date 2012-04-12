@@ -8,6 +8,7 @@ purge recyclebin;
 @PSRD
 @Packages
 @Triggers
+@Views
 @InitBase
 @InitMessages
 @InitParameters
