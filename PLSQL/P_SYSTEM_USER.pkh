@@ -158,7 +158,7 @@ create or replace package P_SYSTEM_USER is
 --  pnVERSION_NBR - Update version number of system user record (mandatory: new version number is
 --    returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with user (mandatory).
 --
@@ -349,7 +349,7 @@ create or replace package P_SYSTEM_USER is
 --  pnVERSION_NBR - Update version number of user attribute type (mandatory: new version number is
 --    returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with user attribute type (mandatory).
 --
@@ -490,7 +490,7 @@ create or replace package P_SYSTEM_USER is
 --  pnVERSION_NBR - Update version number of user attribute (mandatory: new version number is
 --    returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item (mandatory).
 --  psText - Text associated with user attribute (mandatory).
 --

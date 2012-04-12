@@ -32,11 +32,11 @@ create or replace package P_TEXT is
 --    specified and the new values of both are returned).
 --
 -- Parameters:
---  pnTXT_ID - Text identifier (optional: if null, a new one is allocated and returned).
+--  pnTXT_ID - Text identifier (optional: if null, a new one is generated and returned).
 --  psTAB_ALIAS - Alias of table with which the text item is associated (optional if pnTXT_ID is
 --    specified but if specified it must be consistent with existing association of pnTXT_ID).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned,
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned,
 --    must be null if pnTXT_ID is not specified).
 --  psLANG_CODE - Language code (mandatory).
 --  psTEXT - Text item text (mandatory).

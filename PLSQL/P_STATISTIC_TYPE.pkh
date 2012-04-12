@@ -156,7 +156,7 @@ create or replace package P_STATISTIC_TYPE is
 --  pnVERSION_NBR - Update version number of statistic type record (mandatory: new version number is
 --    returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item to be added (mandatory).
 --  psText - Text associated with statistic type (mandatory).
 --
@@ -336,7 +336,7 @@ create or replace package P_STATISTIC_TYPE is
 --  pnVERSION_NBR - Update version number of statistic group record (mandatory: new version number
 --    is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item to be added (mandatory).
 --  psText - Text associated with statistic group (mandatory).
 --
@@ -420,7 +420,7 @@ create or replace package P_STATISTIC_TYPE is
 --  pnVERSION_NBR - Update version number of statistic type grouping record (mandatory: new version
 --    number is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item to be added (mandatory).
 --  psText - Text associated with statistic type grouping (mandatory).
 --
