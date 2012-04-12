@@ -6,7 +6,7 @@ create or replace package P_BASE is
 --  Type definitions and data values used throughout the PSR system.
 --
 --  Change History:
---  26-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  11-Apr-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -35,6 +35,8 @@ create or replace package P_BASE is
 --
 -- AGE_RANGES
 --
+  subtype tnAGR_ID is AGE_RANGES.ID%type;
+  subtype tmnAGR_ID is tnAGR_ID not null;
   subtype tnAGR_AGE_FROM is AGE_RANGES.AGE_FROM%type;
   subtype tmnAGR_AGE_FROM is tnAGR_AGE_FROM not null;
   subtype tnAGR_AGE_TO is AGE_RANGES.AGE_TO%type;
@@ -48,6 +50,26 @@ create or replace package P_BASE is
   subtype tsCOMP_ACTIVE_FLAG is COMPONENTS.ACTIVE_FLAG%type;
   subtype tmsCOMP_ACTIVE_FLAG is tsCOMP_ACTIVE_FLAG not null;
   subtype tnCOMP_VERSION_NBR is COMPONENTS.VERSION_NBR%type;
+--
+-- DIMENSION_TYPES
+--
+  subtype tsDIMT_CODE is DIMENSION_TYPES.CODE%type;
+  subtype tmsDIMT_CODE is tsDIMT_CODE not null;
+  subtype tnDIMT_DISPLAY_SEQ is DIMENSION_TYPES.DISPLAY_SEQ%type;
+  subtype tsDIMT_ACTIVE_FLAG is DIMENSION_TYPES.ACTIVE_FLAG%type;
+  subtype tmsDIMT_ACTIVE_FLAG is tsDIMT_ACTIVE_FLAG not null;
+  subtype tnDIMT_VERSION_NBR is DIMENSION_TYPES.VERSION_NBR%type;
+--
+-- DIMENSION_VALUES
+--
+  subtype tnDIM_ID is DIMENSION_VALUES.ID%type;
+  subtype tmnDIM_ID is tnDIM_ID not null;
+  subtype tsDIM_CODE is DIMENSION_VALUES.CODE%type;
+  subtype tmsDIM_CODE is tsDIM_CODE not null;
+  subtype tnDIM_DISPLAY_SEQ is DIMENSION_VALUES.DISPLAY_SEQ%type;
+  subtype tsDIM_ACTIVE_FLAG is DIMENSION_VALUES.ACTIVE_FLAG%type;
+  subtype tmsDIM_ACTIVE_FLAG is tsDIM_ACTIVE_FLAG not null;
+  subtype tnDIM_VERSION_NBR is DIMENSION_VALUES.VERSION_NBR%type;
 --
 -- LANGUAGES
 --
@@ -121,9 +143,15 @@ create or replace package P_BASE is
 --
 -- POPULATION_PLANNING_GROUPS
 --
+  subtype tnPPG_ID is POPULATION_PLANNING_GROUPS.ID%type;
+  subtype tmnPPG_ID is tnPPG_ID not null;
   subtype tsPPG_CODE is POPULATION_PLANNING_GROUPS.PPG_CODE%type;
   subtype tmsPPG_CODE is tsPPG_CODE not null;
   subtype tnPPG_VERSION_NBR is POPULATION_PLANNING_GROUPS.VERSION_NBR%type;
+--
+-- SEXES
+--
+  subtype tsSEX_CODE is SEXES.CODE%type;
 --
 -- STATISTIC_GROUPS
 --
@@ -150,7 +178,7 @@ create or replace package P_BASE is
 --
   subtype tnSTC_ID is STATISTICS.ID%type;
   subtype tmnSTC_ID is tnSTC_ID not null;
-  subtype tsSTC_SEX is STATISTICS.SEX%type;
+  subtype tsSTC_SEX is STATISTICS.SEX_CODE%type;
   subtype tnSTC_VALUE is STATISTICS.VALUE%type;
   subtype tmnSTC_VALUE is tnSTC_VALUE not null;
   subtype tnSTC_VERSION_NBR is STATISTICS.VERSION_NBR%type;
@@ -212,7 +240,8 @@ create or replace package P_BASE is
 --
 -- TIME_PERIOD_TYPES
 --
-  subtype tmsPERT_CODE is TIME_PERIOD_TYPES.CODE%type not null;
+  subtype tsPERT_CODE is TIME_PERIOD_TYPES.CODE%type;
+  subtype tmsPERT_CODE is tsPERT_CODE not null;
   subtype tnPERT_DISPLAY_SEQ is TIME_PERIOD_TYPES.DISPLAY_SEQ%type;
   subtype tsPERT_ACTIVE_FLAG is TIME_PERIOD_TYPES.ACTIVE_FLAG%type;
   subtype tmsPERT_ACTIVE_FLAG is tsPERT_ACTIVE_FLAG not null;
@@ -220,6 +249,8 @@ create or replace package P_BASE is
 --
 -- TIME_PERIODS
 --
+  subtype tnPER_ID is TIME_PERIODS.ID%type;
+  subtype tmnPER_ID is tnPER_ID not null;
   subtype tnPER_VERSION_NBR is TIME_PERIODS.VERSION_NBR%type;
 --
 -- USER_ATTRIBUTE_TYPES
