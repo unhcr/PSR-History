@@ -13,10 +13,13 @@ purge recyclebin;
 @InitParameters
 @InitLanguages
 @InitLocations
+@InitStatTypes
 @InitPopCats
+@InitSexes
 @InitAgeProfiles
 @InitTimePeriods
-@InitStatTypes
+@InitDimensions
+@InitStatistics
 
 commit;
 
