@@ -6,7 +6,7 @@ create or replace package P_TIME_PERIOD is
 --  Procedures for maintenance of time periods and time period types.
 --
 --  Change History:
---  29-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  11-Apr-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -159,7 +159,7 @@ create or replace package P_TIME_PERIOD is
 --  pnVERSION_NBR - Update version number of time period type record (mandatory: new version number
 --    is returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item to be added (mandatory).
 --  psText - Text associated with time period type (mandatory).
 --
@@ -204,32 +204,77 @@ create or replace package P_TIME_PERIOD is
 -- INSERT_TIME_PERIOD
 -- ----------------------------------------
 --
--- Create a new time period type.
+-- Create a new time period.
 --
 -- Parameters:
+--  pnID - New time period identifier (returned).
+--  psPERT_CODE - Time period type code (mandatory).
 --  pdSTART_DATE - Start date of period (mandatory).
 --  pdEND_DATE - Day after end date of period (mandatory).
---  psPERT_CODE - Time period type code (mandatory).
 --
   procedure INSERT_TIME_PERIOD
-   (pdSTART_DATE in P_BASE.tmdDate,
-    pdEND_DATE in P_BASE.tmdDate,
-    psPERT_CODE in P_BASE.tmsPERT_CODE);
+   (pnID out P_BASE.tnPER_ID,
+    psPERT_CODE in P_BASE.tmsPERT_CODE,
+    pdSTART_DATE in P_BASE.tmdDate,
+    pdEND_DATE in P_BASE.tmdDate);
+--
+-- ----------------------------------------
+-- UPDATE_TIME_PERIOD
+-- ----------------------------------------
+--
+-- Update an existing time period.
+--
+-- Parameters:
+--  pnID - Time period identifier (mandatory).
+--  pnVERSION_NBR - Update version number of time period record (mandatory: new version number is
+--    returned).
+--  pdSTART_DATE - Start date of period (optional: if not specified, the existing start date is not
+--    changed).
+--  pdEND_DATE - Day after end date of period (optional: if not specified, the existing end date is
+--    not changed).
+--
+  procedure UPDATE_TIME_PERIOD
+   (pnID in P_BASE.tmnPER_ID,
+    pnVERSION_NBR in out P_BASE.tnPER_VERSION_NBR,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null);
+--
+-- ----------------------------------------
+-- SET_TIME_PERIOD
+-- ----------------------------------------
+--
+-- Create a new time period or update an existing one.
+--
+-- Parameters:
+--  pnID - Time period identifier (optional: if null, a new one is generated and returned).
+--  pnVERSION_NBR - Update version number of time period record (mandatory: new version number is
+--    returned; for a new time period, null must be specified and 1 will be returned).
+--  psPERT_CODE - Time period type code (mandatory when creating a new time period; ignored when
+--    updating an existing time period, since the time period type may not be changed).
+--  pdSTART_DATE - Start date of period (mandatory when creating a new time period; if not specified
+--    when updating an existing time period, the existing start date is not changed).
+--  pdEND_DATE - Day after end date of period (mandatory when creating a new time period; if not
+--    specified when updating an existing time period, the existing end date is not changed).
+--
+  procedure SET_TIME_PERIOD
+   (pnID in out P_BASE.tnPER_ID,
+    pnVERSION_NBR in out P_BASE.tnPER_VERSION_NBR,
+    psPERT_CODE in P_BASE.tsPERT_CODE := null,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null);
 --
 -- ----------------------------------------
 -- DELETE_TIME_PERIOD
 -- ----------------------------------------
 --
--- Delete a time period type record.
+-- Delete a time period record.
 --
 -- Parameters:
---  pdSTART_DATE - Start date of period (mandatory).
---  pdEND_DATE - Day after end date of period (mandatory).
+--  pnID - Time period identifier (mandatory).
 --  pnVERSION_NBR - Update version number of time period record (mandatory).
 --
   procedure DELETE_TIME_PERIOD
-   (pdSTART_DATE in P_BASE.tmdDate,
-    pdEND_DATE in P_BASE.tmdDate,
+   (pnID in P_BASE.tmnPER_ID,
     pnVERSION_NBR in P_BASE.tnPER_VERSION_NBR);
 --
 -- ----------------------------------------
@@ -239,18 +284,16 @@ create or replace package P_TIME_PERIOD is
 -- Add a general text item in a given language to a time period, or update an existing text item.
 --
 -- Parameters:
---  pdSTART_DATE - Start date of period (mandatory).
---  pdEND_DATE - Day after end date of period (mandatory).
+--  pnID - Time period identifier (mandatory).
 --  pnVERSION_NBR - Update version number of time period record (mandatory: new version number is
 --    returned).
 --  psTXTT_CODE - Type of text item (mandatory).
---  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is allocated and returned).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
 --  psLANG_CODE - Language code of the text item to be added (mandatory).
 --  psText - Text associated with time period (mandatory).
 --
   procedure SET_PER_TEXT
-   (pdSTART_DATE in P_BASE.tmdDate,
-    pdEND_DATE in P_BASE.tmdDate,
+   (pnID in P_BASE.tmnPER_ID,
     pnVERSION_NBR in out P_BASE.tnPER_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
@@ -272,8 +315,7 @@ create or replace package P_TIME_PERIOD is
 --    the text type is mandatory.
 --
 -- Parameters:
---  pdSTART_DATE - Start date of period (mandatory).
---  pdEND_DATE - Day after end date of period (mandatory).
+--  pnID - Time period identifier (mandatory).
 --  pnVERSION_NBR - Update version number of time period record (mandatory: new version number is
 --    returned).
 --  psTXTT_CODE - Type of text item (mandatory).
@@ -281,8 +323,7 @@ create or replace package P_TIME_PERIOD is
 --  psLANG_CODE - Language code of the text item to be removed (optional).
 --
   procedure REMOVE_PER_TEXT
-   (pdSTART_DATE in P_BASE.tmdDate,
-    pdEND_DATE in P_BASE.tmdDate,
+   (pnID in P_BASE.tmnPER_ID,
     pnVERSION_NBR in out P_BASE.tnPER_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,

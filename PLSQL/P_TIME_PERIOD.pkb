@@ -308,18 +308,40 @@ create or replace package body P_TIME_PERIOD is
 -- ----------------------------------------
 --
   procedure INSERT_TIME_PERIOD
-   (pdSTART_DATE in P_BASE.tmdDate,
-    pdEND_DATE in P_BASE.tmdDate,
-    psPERT_CODE in P_BASE.tmsPERT_CODE)
+   (pnID out P_BASE.tnPER_ID,
+    psPERT_CODE in P_BASE.tmsPERT_CODE,
+    pdSTART_DATE in P_BASE.tmdDate,
+    pdEND_DATE in P_BASE.tmdDate)
   is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_TIME_PERIOD',
-      to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || psPERT_CODE);
+      psPERT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
   --
-    insert into TIME_PERIODS (START_DATE, END_DATE, PERT_CODE)
-    values (pdSTART_DATE, pdEND_DATE, psPERT_CODE);
+  -- Check for existing time period of same type with overlapping date range.
+  --
+    declare
+      sDummy varchar2(1);
+    begin
+      select 'x'
+      into sDummy
+      from TIME_PERIODS
+      where PERT_CODE = psPERT_CODE
+      and START_DATE < pdEND_DATE
+      and END_DATE > pdSTART_DATE;
+    --
+      raise TOO_MANY_ROWS;
+    exception
+      when NO_DATA_FOUND then null;
+    --
+      when TOO_MANY_ROWS
+      then P_MESSAGE.DISPLAY_MESSAGE('PER', 3, 'Date range overlaps with another time period of the same type');
+    end;
+  --
+    insert into TIME_PERIODS (ID, PERT_CODE, START_DATE, END_DATE)
+    values (PER_SEQ.nextval, psPERT_CODE, pdSTART_DATE, pdEND_DATE)
+    returning ID into pnID;
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -329,12 +351,133 @@ create or replace package body P_TIME_PERIOD is
   end INSERT_TIME_PERIOD;
 --
 -- ----------------------------------------
+-- UPDATE_TIME_PERIOD
+-- ----------------------------------------
+--
+  procedure UPDATE_TIME_PERIOD
+   (pnID in P_BASE.tmnPER_ID,
+    pnVERSION_NBR in out P_BASE.tnPER_VERSION_NBR,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null)
+  is
+    sPERT_CODE P_BASE.tsPERT_CODE;
+    dSTART_DATE P_BASE.tdDate;
+    dEND_DATE P_BASE.tdDate;
+    nTXT_ID P_BASE.tnTXT_ID;
+    nVERSION_NBR P_BASE.tnPER_VERSION_NBR;
+    xPER_ROWID rowid;
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sComponent || '.UPDATE_TIME_PERIOD',
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
+  --
+    select PERT_CODE, START_DATE, END_DATE, TXT_ID, VERSION_NBR, rowid
+    into sPERT_CODE, dSTART_DATE, dEND_DATE, nTXT_ID, nVERSION_NBR, xPER_ROWID
+    from TIME_PERIODS
+    where ID = pnID
+    for update;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+    --
+    -- Check for attempt to change a time period already in use.
+    --
+      if pdSTART_DATE != dSTART_DATE or pdEND_DATE != dEND_DATE
+      then
+        declare
+          sDummy varchar2(1);
+        begin
+          select 'x' into sDummy from STATISTICS where PER_ID = pnID;
+        --
+          raise TOO_MANY_ROWS;
+        exception
+          when NO_DATA_FOUND then null;
+        --
+          when TOO_MANY_ROWS
+          then P_MESSAGE.DISPLAY_MESSAGE('PER', 4, 'Cannot change time period already in use');
+        end;
+      --
+      -- Check for existing time period of same type with overlapping date range.
+      --
+        declare
+          sDummy varchar2(1);
+        begin
+          select 'x'
+          into sDummy
+          from TIME_PERIODS
+          where PERT_CODE = sPERT_CODE
+          and START_DATE < nvl(pdEND_DATE, dEND_DATE)
+          and END_DATE > nvl(pdSTART_DATE, dSTART_DATE)
+          and ID != pnID;
+        --
+          raise TOO_MANY_ROWS;
+        exception
+          when NO_DATA_FOUND then null;
+        --
+          when TOO_MANY_ROWS
+          then P_MESSAGE.DISPLAY_MESSAGE('PER', 3, 'Date range overlaps with another time period of the same type');
+        end;
+      end if;
+    --
+      update TIME_PERIODS
+      set START_DATE = nvl(pdSTART_DATE, START_DATE),
+        END_DATE = nvl(pdEND_DATE, END_DATE),
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xPER_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      P_MESSAGE.DISPLAY_MESSAGE('PER', 2, 'Time period has been updated by another user');
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end UPDATE_TIME_PERIOD;
+--
+-- ----------------------------------------
+-- SET_TIME_PERIOD
+-- ----------------------------------------
+--
+  procedure SET_TIME_PERIOD
+   (pnID in out P_BASE.tnPER_ID,
+    pnVERSION_NBR in out P_BASE.tnPER_VERSION_NBR,
+    psPERT_CODE in P_BASE.tsPERT_CODE := null,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null)
+  is
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sComponent || '.SET_TIME_PERIOD',
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
+  --
+    if pnVERSION_NBR is null
+    then
+      INSERT_TIME_PERIOD(pnID, psPERT_CODE, pdSTART_DATE, pdEND_DATE);
+    --
+      pnVERSION_NBR := 1;
+    else
+      UPDATE_TIME_PERIOD(pnID, pnVERSION_NBR, pdSTART_DATE, pdEND_DATE);
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end SET_TIME_PERIOD;
+--
+-- ----------------------------------------
 -- DELETE_TIME_PERIOD
 -- ----------------------------------------
 --
   procedure DELETE_TIME_PERIOD
-   (pdSTART_DATE in P_BASE.tmdDate,
-    pdEND_DATE in P_BASE.tmdDate,
+   (pnID in P_BASE.tmnPER_ID,
     pnVERSION_NBR in P_BASE.tnPER_VERSION_NBR)
   is
     nTXT_ID P_BASE.tnTXT_ID;
@@ -343,14 +486,12 @@ create or replace package body P_TIME_PERIOD is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.DELETE_TIME_PERIOD',
-      to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || to_char(pnVERSION_NBR));
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xPER_ROWID
     from TIME_PERIODS
-    where START_DATE = pdSTART_DATE
-    and END_DATE = pdEND_DATE
+    where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
@@ -376,8 +517,7 @@ create or replace package body P_TIME_PERIOD is
 -- ----------------------------------------
 --
   procedure SET_PER_TEXT
-   (pdSTART_DATE in P_BASE.tmdDate,
-    pdEND_DATE in P_BASE.tmdDate,
+   (pnID in P_BASE.tmnPER_ID,
     pnVERSION_NBR in out P_BASE.tnPER_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
@@ -390,16 +530,14 @@ create or replace package body P_TIME_PERIOD is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_PER_TEXT',
-      to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || to_char(pnVERSION_NBR) || '~' ||
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xPER_ROWID
     from TIME_PERIODS
-    where START_DATE = pdSTART_DATE
-    and END_DATE = pdEND_DATE
+    where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
@@ -426,8 +564,7 @@ create or replace package body P_TIME_PERIOD is
 -- ----------------------------------------
 --
   procedure REMOVE_PER_TEXT
-   (pdSTART_DATE in P_BASE.tmdDate,
-    pdEND_DATE in P_BASE.tmdDate,
+   (pnID in P_BASE.tmnPER_ID,
     pnVERSION_NBR in out P_BASE.tnPER_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
@@ -439,15 +576,13 @@ create or replace package body P_TIME_PERIOD is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_PER_TEXT',
-      to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || to_char(pnVERSION_NBR) || '~' ||
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xPER_ROWID
     from TIME_PERIODS
-    where START_DATE = pdSTART_DATE
-    and END_DATE = pdEND_DATE
+    where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
