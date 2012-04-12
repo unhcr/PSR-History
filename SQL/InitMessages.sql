@@ -36,12 +36,11 @@ execute :MSG_SEQ_NBR := null /* 6 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_N
 execute :MSG_SEQ_NBR := null /* 7 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Country code must be specified for new country');
 execute :MSG_SEQ_NBR := null /* 8 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Country with this code already exists');
 execute :MSG_SEQ_NBR := null /* 9 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Country code can only be specified for countries');
-execute :MSG_SEQ_NBR := null /* 10 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Location type cannot be updated');
-execute :MSG_SEQ_NBR := null /* 11 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Cannot update data type of location attribute type already in use');
-execute :MSG_SEQ_NBR := null /* 12 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Inactive location attribute type');
-execute :MSG_SEQ_NBR := null /* 13 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Attribute of the correct type must be specified');
-execute :MSG_SEQ_NBR := null /* 14 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Inactive location relationship type');
-execute :MSG_SEQ_NBR := null /* 15 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Overlapping location relationship already exists');
+execute :MSG_SEQ_NBR := null /* 10 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Cannot update data type of location attribute type already in use');
+execute :MSG_SEQ_NBR := null /* 11 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Inactive location attribute type');
+execute :MSG_SEQ_NBR := null /* 12 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Attribute of the correct type must be specified');
+execute :MSG_SEQ_NBR := null /* 13 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Inactive location relationship type');
+execute :MSG_SEQ_NBR := null /* 14 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Overlapping location relationship already exists');
 
 
 execute P_MESSAGE.INSERT_COMPONENT('MSG', 'en', 'Messages and Components');
@@ -66,6 +65,8 @@ execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('PER', 
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('PER', :MSG_SEQ_NBR, 'en', 'Time period type has been updated by another user');
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('PER', :MSG_SEQ_NBR, 'en', 'Time period has been updated by another user');
+execute :MSG_SEQ_NBR := null /* 3 */; P_MESSAGE.INSERT_MESSAGE('PER', :MSG_SEQ_NBR, 'en', 'Date range overlaps with another time period of the same type');
+execute :MSG_SEQ_NBR := null /* 4 */; P_MESSAGE.INSERT_MESSAGE('PER', :MSG_SEQ_NBR, 'en', 'Cannot change time period already in use');
 
 
 execute P_MESSAGE.INSERT_COMPONENT('POPC', 'en', 'Population categories');
