@@ -60,6 +60,12 @@ execute :MSG_SEQ_NBR := null /* 7 */; P_MESSAGE.INSERT_MESSAGE('MSG', :MSG_SEQ_N
 execute :MSG_SEQ_NBR := null /* 8 */; P_MESSAGE.INSERT_MESSAGE('MSG', :MSG_SEQ_NBR, 'en', 'Message sequence number greater than current maximum');
 
 
+execute P_MESSAGE.INSERT_COMPONENT('OGN', 'en', 'Origins');
+execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('OGN', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_ORIGIN');
+
+execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('OGN', :MSG_SEQ_NBR, 'en', 'Origin has been updated by another user');
+
+
 execute P_MESSAGE.INSERT_COMPONENT('PER', 'en', 'Time periods');
 execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('PER', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_TIME_PERIOD');
 
