@@ -128,11 +128,20 @@ begin
     if rCOU.LOC_CODE_BOP is not null
     then P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rCOU.LOC_CODE_BOP, nLOC_CODE_COU, 'WITHIN');
     end if;
+  --
+    P_ORIGIN.INSERT_ORIGIN(rCOU.ISO_A3, rCOU.NAME_LANGUAGE, rCOU.COUNTRY_NAME, nLOC_CODE_COU);
   end loop;
+--
+  P_ORIGIN.INSERT_ORIGIN('TIB', 'en', 'Tibetan');
+  P_ORIGIN.INSERT_ORIGIN('CHY', 'en', 'Chechnyan');
+  P_ORIGIN.INSERT_ORIGIN('KOS', 'en', 'Kosovo (S/RES/1244 (1999))');
+  P_ORIGIN.INSERT_ORIGIN('STA', 'en', 'Stateless');
 --
   dbms_output.put_line(to_char(nCount) || ' country records inserted');
 end;
 /
+
+
 
 /*
 declare
