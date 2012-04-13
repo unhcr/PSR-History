@@ -5,7 +5,7 @@ execute P_TIME_PERIOD.INSERT_TIME_PERIOD_TYPE('DAY', 'en', 'Day');
 
 declare
   nID P_BASE.tnPER_ID;
-  dDay date := date '1950-01-01';
+  dDay date := date '2000-01-01';
 begin
   while dDay < date '2020-01-01'
   loop
