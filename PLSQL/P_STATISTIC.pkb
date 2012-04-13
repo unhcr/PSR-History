@@ -14,7 +14,7 @@ create or replace package body P_STATISTIC is
     pnLOC_CODE in P_BASE.tmnLOC_CODE,
     pnLOC_CODE_COUNTRY in P_BASE.tmnLOC_CODE,
     pnLOC_CODE_ORIGIN in P_BASE.tnLOC_CODE := null,
-    pnLOC_CODE_COUNTRY_ORIGIN in P_BASE.tnLOC_CODE := null,
+    psOGN_CODE in P_BASE.tsOGN_CODE := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
     psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
     pnPER_ID in P_BASE.tnPER_ID := null,
@@ -28,7 +28,6 @@ create or replace package body P_STATISTIC is
     pnVALUE in P_BASE.tmnSTC_VALUE)
   is
     sCOUNTRY_CODE P_BASE.tsLOC_COUNTRY_CODE;
-    sCOUNTRY_CODE_ORIGIN P_BASE.tsLOC_COUNTRY_CODE;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_STATISTIC',
@@ -36,7 +35,7 @@ create or replace package body P_STATISTIC is
         to_char(pnLOC_CODE) || '~' ||
         to_char(pnLOC_CODE_COUNTRY) || '~' ||
         to_char(pnLOC_CODE_ORIGIN) || '~' ||
-        to_char(pnLOC_CODE_COUNTRY_ORIGIN) || '~' ||
+        psOGN_CODE || '~' ||
         to_char(pnPPG_ID) || '~' ||
         psPOPC_CODE || '~' ||
         to_char(pnPER_ID) || '~' ||
@@ -54,22 +53,13 @@ create or replace package body P_STATISTIC is
     where CODE = pnLOC_CODE_COUNTRY
     and LOCT_CODE = 'COUNTRY';
   --
-    if pnLOC_CODE_COUNTRY_ORIGIN is not null
-    then
-      select COUNTRY_CODE
-      into sCOUNTRY_CODE_ORIGIN
-      from LOCATIONS
-      where CODE = pnLOC_CODE_COUNTRY_ORIGIN
-      and LOCT_CODE = 'COUNTRY';
-    end if;
-  --
     insert into STATISTICS
      (ID,
       STCT_CODE,
       LOC_CODE,
       LOC_CODE_COUNTRY, COUNTRY_CODE,
       LOC_CODE_ORIGIN,
-      LOC_CODE_COUNTRY_ORIGIN, COUNTRY_CODE_ORIGIN,
+      OGN_CODE,
       PPG_ID,
       POPC_CODE,
       PER_ID,
@@ -87,7 +77,7 @@ create or replace package body P_STATISTIC is
       pnLOC_CODE,
       pnLOC_CODE_COUNTRY, sCOUNTRY_CODE,
       pnLOC_CODE_ORIGIN,
-      pnLOC_CODE_COUNTRY_ORIGIN, sCOUNTRY_CODE_ORIGIN,
+      psOGN_CODE,
       pnPPG_ID,
       psPOPC_CODE,
       pnPER_ID,
