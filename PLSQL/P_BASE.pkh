@@ -132,6 +132,14 @@ create or replace package P_BASE is
   subtype tsMSG_SEVERITY is MESSAGES.SEVERITY%type;
   subtype tnMSG_VERSION_NBR is MESSAGES.VERSION_NBR%type;
 --
+-- ORIGINS
+--
+  subtype tsOGN_CODE is ORIGINS.CODE%type;
+  subtype tmsOGN_CODE is tsOGN_CODE not null;
+  subtype tsOGN_ACTIVE_FLAG is ORIGINS.ACTIVE_FLAG%type;
+  subtype tmsOGN_ACTIVE_FLAG is tsOGN_ACTIVE_FLAG not null;
+  subtype tnOGN_VERSION_NBR is ORIGINS.VERSION_NBR%type;
+--
 -- POPULATION_CATEGORIES
 --
   subtype tsPOPC_CODE is POPULATION_CATEGORIES.CODE%type;
