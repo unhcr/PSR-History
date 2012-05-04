@@ -6,7 +6,7 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 --  Procedures for maintenance of population planning groups (PPGs).
 --
 --  Change History:
---  11-Apr-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  04-May-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -27,7 +27,7 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 --  pnID - New PPG identifier (returned).
 --  psLANG_CODE - Language code of the textual description (mandatory).
 --  psDescription - Textual description of PPG (mandatory).
---  pnLOC_CODE - Location code of PPG (mandatory).
+--  pnLOC_ID - Location identifier of operation of PPG (mandatory).
 --  psPPG_CODE - PPG code (mandatory).
 --  pdSTART_DATE - Effective start date of this PPG (optional, the absence of a start date, or a
 --    null value, indicates that the effectivity starts indefinitely far in the past).
@@ -38,7 +38,7 @@ create or replace package P_POPULATION_PLANNING_GROUP is
    (pnID out P_BASE.tnPPG_ID,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText,
-    pnLOC_CODE in P_BASE.tmnLOC_CODE,
+    pnLOC_ID in P_BASE.tmnLOC_ID,
     psPPG_CODE in P_BASE.tmsPPG_CODE,
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null);
@@ -56,8 +56,8 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 --    psDescription is specified).
 --  psDescription - Textual description of PPG (optional: if not specified, the description is not
 --    changed).
---  pnLOC_CODE - Location code of PPG (optional: if not specified, the existing location code is not
---    changed).
+--  pnLOC_ID - Location identifier of operation of PPG (optional: if not specified, the existing
+--    location identifier is not changed).
 --  psPPG_CODE - PPG code (optional: if not specified, the existing PPG code is not changed).
 --  pdSTART_DATE - Effective start date of this PPG (optional: if not specified, the existing start
 --    date is not changed; a null value indicates that the effectivity starts indefinitely far in
@@ -71,7 +71,7 @@ create or replace package P_POPULATION_PLANNING_GROUP is
     pnVERSION_NBR in out P_BASE.tnPPG_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
-    pnLOC_CODE in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID in P_BASE.tnLOC_ID := null,
     psPPG_CODE in P_BASE.tsPPG_CODE := null,
     pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE);
@@ -86,8 +86,8 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 --  pnID - PPG identifier (optional: if null, a new one is generated and returned).
 --  pnVERSION_NBR - Update version number of PPG record (mandatory: new version number is returned;
 --    for a new PPG, null must be specified and 1 will be returned).
---  pnLOC_CODE - Location code of PPG (mandatory when creating a new PPG; optional: if not specified
---    when updating an existing PPG, the existing location code is not changed).
+--  pnLOC_ID - Location identifier of operation of PPG (mandatory when creating a new PPG; if not
+--    specified when updating an existing PPG, the existing location identifier is not changed).
 --  psPPG_CODE - PPG code (mandatory when creating a new PPG; if not specified when updating an
 --    existing PPG, the existing PPG code is not changed).
 --  pdSTART_DATE - Effective start date of this PPG (optional: for a new PPG, the absence of a start
@@ -108,7 +108,7 @@ create or replace package P_POPULATION_PLANNING_GROUP is
     pnVERSION_NBR in out P_BASE.tnPPG_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
-    pnLOC_CODE in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID in P_BASE.tnLOC_ID := null,
     psPPG_CODE in P_BASE.tsPPG_CODE := null,
     pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE);
