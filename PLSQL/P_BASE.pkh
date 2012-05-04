@@ -135,8 +135,8 @@ create or replace package P_BASE is
 --
 -- LOCATIONS
 --
-  subtype tnLOC_CODE is LOCATIONS.CODE%type;
-  subtype tmnLOC_CODE is tnLOC_CODE not null;
+  subtype tnLOC_ID is LOCATIONS.ID%type;
+  subtype tmnLOC_ID is tnLOC_ID not null;
   subtype tnLOC_VERSION_NBR is LOCATIONS.VERSION_NBR%type;
 --
 -- MESSAGES
