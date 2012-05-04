@@ -81,7 +81,13 @@ execute P_LANGUAGE.INSERT_LANGUAGE('la', 'en', 'Latin (inactive language for tes
 -- Text types with descriptions in all UN languages and text type properties
 -- =========================================================================
 
--- Description text type properties and description descriptions
+-- Description descriptions and description text type properties
+
+execute :VERSION_NBR := 1; P_TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', :VERSION_NBR, 'fr', unistr('Description'));
+execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', :VERSION_NBR, 'es', unistr('Descripci\00F3n'));
+execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', :VERSION_NBR, 'ru', unistr('\043E\043F\0438\0441\0430\043D\0438\0435'));
+execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', :VERSION_NBR, 'ar', unistr('\0648\0635\0641'));
+execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', :VERSION_NBR, 'zh', unistr('\8BF4\660E'));
 
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'AGP');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'AGR');
@@ -91,6 +97,7 @@ execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'DIMT');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'LOCT');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'LOCAT');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'LOCRT');
+execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'LOCTV');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'PERT');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'POPC');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'PPG');
@@ -100,27 +107,25 @@ execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'STCT');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'SYP');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('DESCR', 'UATT');
 
-execute :VERSION_NBR := 1; P_TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', :VERSION_NBR, 'fr', unistr('Description'));
-execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', :VERSION_NBR, 'es', unistr('Descripci\00F3n'));
-execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', :VERSION_NBR, 'ru', unistr('\043E\043F\0438\0441\0430\043D\0438\0435'));
-execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', :VERSION_NBR, 'ar', unistr('\0648\0635\0641'));
-execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('DESCR', :VERSION_NBR, 'zh', unistr('\8BF4\660E'));
-
--- Messages, message text type properties, and message descriptions
+-- Messages, message descriptions, and message text type properties
 
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE('MSG', 'en', 'Message');
-
-execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('MSG', 'MSG');
-
 execute :VERSION_NBR := 1; P_TEXT_TYPE.SET_TXTT_DESCRIPTION('MSG', :VERSION_NBR, 'fr', unistr('Message'));
 execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('MSG', :VERSION_NBR, 'es', unistr('Mensaje'));
 execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('MSG', :VERSION_NBR, 'ru', unistr('\0441\043E\043E\0431\0449\0435\043D\0438\0435'));
 execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('MSG', :VERSION_NBR, 'ar', unistr('\0631\0633\0627\0644\0629'));
 execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('MSG', :VERSION_NBR, 'zh', unistr('\6D88\606F'));
 
--- Notes, note text type properties, and note descriptions
+execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('MSG', 'MSG');
+
+-- Notes, note descriptions, and note text type properties
 
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE('NOTE', 'en', 'Note');
+execute :VERSION_NBR := 1; P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', :VERSION_NBR, 'fr', unistr('Remarque'));
+execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', :VERSION_NBR, 'es', unistr('Nota'));
+execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', :VERSION_NBR, 'ru', unistr('\043F\0440\0438\043C\0435\0447\0430\043D\0438\0435'));
+execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', :VERSION_NBR, 'ar', unistr('\0645\0630\0643\0631\0629'));
+execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', :VERSION_NBR, 'zh', unistr('\8BF7\6CE8\610F'));
 
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'AGP', 'N', 'Y', 'Y');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'AGR', 'N', 'Y', 'Y');
@@ -134,8 +139,9 @@ execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'LOCAT', 'N', 'Y', 'Y');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'LOCR', 'N', 'Y', 'Y');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'LOCRT', 'N', 'Y', 'Y');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'LOCT', 'N', 'Y', 'Y');
+execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'LOCTR', 'N', 'Y', 'Y');
+execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'LOCTV', 'N', 'Y', 'Y');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'MSG', 'N', 'Y', 'Y');
-execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'OGN', 'N', 'Y', 'Y');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'PER', 'N', 'Y', 'Y');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'PERT', 'N', 'Y', 'Y');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'POPC', 'N', 'Y', 'Y');
@@ -153,34 +159,36 @@ execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'UAT', 'N', 'Y', 'Y');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'UATT', 'N', 'Y', 'Y');
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NOTE', 'USR', 'N', 'Y', 'Y');
 
-execute :VERSION_NBR := 1; P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', :VERSION_NBR, 'fr', unistr('Remarque'));
-execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', :VERSION_NBR, 'es', unistr('Nota'));
-execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', :VERSION_NBR, 'ru', unistr('\043F\0440\0438\043C\0435\0447\0430\043D\0438\0435'));
-execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', :VERSION_NBR, 'ar', unistr('\0645\0630\0643\0631\0629'));
-execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NOTE', :VERSION_NBR, 'zh', unistr('\8BF7\6CE8\610F'));
-
--- Names, name text type properties, and name descriptions
+-- Names, name descriptions, and name text type properties
 
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE('NAME', 'en', 'Name');
-
-execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NAME', 'USR');
-execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NAME', 'LOC');
-execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NAME', 'OGN');
-
 execute :VERSION_NBR := 1; P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NAME', :VERSION_NBR, 'fr', unistr('Nom'));
 execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NAME', :VERSION_NBR, 'es', unistr('Nombre'));
 execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NAME', :VERSION_NBR, 'ru', unistr('\0438\043C\044F'));
 execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NAME', :VERSION_NBR, 'ar', unistr('\0627\0633\0645'));
 execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('NAME', :VERSION_NBR, 'zh', unistr('\540D\79F0'));
 
--- Formal names for locations
+execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NAME', 'USR');
+execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('NAME', 'LOC');
+
+-- Formal names, formal name descriptions, and formal name text type properties for locations
 
 execute P_TEXT_TYPE.INSERT_TEXT_TYPE('FORMALNAME', 'en', 'Formal name');
-
-execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('FORMALNAME', 'LOC');
-
 execute :VERSION_NBR := 1; P_TEXT_TYPE.SET_TXTT_DESCRIPTION('FORMALNAME', :VERSION_NBR, 'fr', unistr('Nom officiel'));
 execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('FORMALNAME', :VERSION_NBR, 'es', unistr('Nombre formal'));
 execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('FORMALNAME', :VERSION_NBR, 'ru', unistr('\041E\0444\0438\0446\0438\0430\043B\044C\043D\043E\0435 \043D\0430\0437\0432\0430\043D\0438\0435'));
 execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('FORMALNAME', :VERSION_NBR, 'ar', unistr('\0627\0633\0645 \0631\0633\0645\064A'));
 execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('FORMALNAME', :VERSION_NBR, 'zh', unistr('\6B63\5F0F\540D\79F0'));
+
+execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('FORMALNAME', 'LOC');
+
+-- Alternative names, alternative name descriptions, and alternative name text type properties for locations
+
+execute P_TEXT_TYPE.INSERT_TEXT_TYPE('ALTNAME', 'en', 'Alternative name');
+execute :VERSION_NBR := 1; P_TEXT_TYPE.SET_TXTT_DESCRIPTION('ALTNAME', :VERSION_NBR, 'fr', unistr('Autre nom'));
+execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('ALTNAME', :VERSION_NBR, 'es', unistr('Nombre alternativo'));
+execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('ALTNAME', :VERSION_NBR, 'ru', unistr('\0430\043B\044C\0442\0435\0440\043D\0430\0442\0438\0432\043D\043E\0435 \043D\0430\0437\0432\0430\043D\0438\0435'));
+execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('ALTNAME', :VERSION_NBR, 'ar', unistr('\0627\0633\0645 \0628\062F\064A\0644'));
+execute P_TEXT_TYPE.SET_TXTT_DESCRIPTION('ALTNAME', :VERSION_NBR, 'zh', unistr('\66FF\4EE3\540D\79F0'));
+
+execute P_TEXT_TYPE.INSERT_TEXT_TYPE_PROPERTIES('ALTNAME', 'LOC');
