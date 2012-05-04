@@ -15,9 +15,9 @@ begin
         when 'S' then 'POCPOPS'
         else 'POCPOPO'
       end STCT_CODE,
-      HLOC.CODE LOC_CODE,
-      COU1.CODE LOC_CODE_COUNTRY,
-      nvl(OGN1.CODE, OGN2.CODE) OGN_CODE,
+      HLOC.CODE LOC_CODE_ASYLUM,
+      COU.CODE LOC_CODE_COUNTRY,
+      LOC.CODE LOC_CODE_ORIGIN,
       upper(DEM.POPC_CODE) POPC_CODE,
       PER.ID PER_ID,
       DEM.SEX_CODE,
@@ -48,17 +48,17 @@ begin
       unpivot
        (VALUE for SEX_AGE in (F0_4 as 'F00', F5_11 as 'F05', F12_17 as 'F12', F18_59 as 'F18', F60, FTOTAL as 'F',
                               M0_4 as 'M00', M5_11 as 'M05', M12_17 as 'M12', M18_59 as 'M18', M60, MTOTAL as 'M', TOTAL as ''))) DEM
-    join L_COUNTRIES COU1
-    on COU1.UNHCR_COUNTRY_CODE = DEM.COUNTRY_CODE
+    join L_COUNTRIES COU
+    on COU.UNHCR_COUNTRY_CODE = DEM.COUNTRY_CODE
     join L_HIERARCHICAL_LOCATIONS HLOC
-    on HLOC.NAME = DEM.LOC_NAME
-    and HLOC.LOC_CODE_FROM = COU1.CODE
-    left outer join L_COUNTRIES COU2
-    on COU2.UNHCR_COUNTRY_CODE = DEM.COUNTRY_CODE_ORIGIN
-    left outer join L_ORIGINS OGN1
-    on OGN1.LOC_CODE = COU2.CODE
-    left outer join L_ORIGINS OGN2
-    on OGN2.CODE = DEM.COUNTRY_CODE_ORIGIN
+    on HLOC.LOC_CODE_FROM = COU.CODE
+    and nlssort(HLOC.NAME, 'NLS_SORT=BINARY_AI') = nlssort(DEM.LOC_NAME, 'NLS_SORT=BINARY_AI')
+    left outer join LOCATION_ATTRIBUTES LOCA
+    on LOCA.CHAR_VALUE = DEM.COUNTRY_CODE_ORIGIN
+    and LOCA.LOCAT_CODE = 'UNHCRCC'
+    left outer join L_LOCATIONS LOC
+    on LOC.CODE = LOCA.LOC_CODE
+    and LOC.LOCT_CODE in ('COUNTRY', 'OTHORIGIN')
     cross join
      (select ID
       from TIME_PERIODS
@@ -78,9 +78,9 @@ begin
     P_STATISTIC.INSERT_STATISTIC
      (nID,
       psSTCT_CODE => rDEM.STCT_CODE,
-      pnLOC_CODE => rDEM.LOC_CODE,
       pnLOC_CODE_COUNTRY => rDEM.LOC_CODE_COUNTRY,
-      psOGN_CODE => rDEM.OGN_CODE,
+      pnLOC_CODE_ASYLUM => rDEM.LOC_CODE_ASYLUM,
+      pnLOC_CODE_ORIGIN => rDEM.LOC_CODE_ORIGIN,
       psPOPC_CODE => rDEM.POPC_CODE,
       pnPER_ID => rDEM.PER_ID,
       psSEX_CODE => rDEM.SEX_CODE,
