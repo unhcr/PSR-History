@@ -8,11 +8,11 @@ create or replace package body P_LOCATION is
 --
 -- Parameters used in calculating hashed, check-digited location code.
 --
-  gnLOC_CODE_MULTIPLIER number;
-  gnLOC_CODE_INCREMENT number;
-  gnLOC_CODE_CHECK_MULTIPLIER number;
-  gnLOC_CODE_CHECK_INCREMENT number;
-  gnLOC_CODE_CHECK_MODULUS number;
+  gnLOC_ID_MULTIPLIER number;
+  gnLOC_ID_INCREMENT number;
+  gnLOC_ID_CHECK_MULTIPLIER number;
+  gnLOC_ID_CHECK_INCREMENT number;
+  gnLOC_ID_CHECK_MODULUS number;
 --
 -- ========================================
 -- Public program units
@@ -323,7 +323,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure INSERT_LOCATION
-   (pnCODE out P_BASE.tnLOC_CODE,
+   (pnID out P_BASE.tnLOC_ID,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psName in P_BASE.tmsText,
     psLOCT_CODE in P_BASE.tmsLOCT_CODE,
@@ -336,7 +336,7 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_LOCATION',
-      to_char(pnCODE) || '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
+      to_char(pnID) || '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
@@ -359,7 +359,7 @@ create or replace package body P_LOCATION is
           into sDummy
           from LOCATION_ATTRIBUTES LOCA
           join LOCATIONS LOC
-            on LOC.CODE = LOCA.LOC_CODE
+            on LOC.ID = LOCA.LOC_ID
           where LOCA.CHAR_VALUE = psCountryCode
           and LOCA.LOCAT_CODE = gsCOUNTRY_LOCAT_CODE
           and LOC.START_DATE < nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
@@ -377,26 +377,26 @@ create or replace package body P_LOCATION is
   --
   -- Generate new location code.
   --
-    select LOC_SEQ.nextval into pnCODE from DUAL;
+    select LOC_SEQ.nextval into pnID from DUAL;
   --
-    pnCODE :=
-      mod(pnCODE * gnLOC_CODE_MULTIPLIER + gnLOC_CODE_INCREMENT, 1e8) +
-        (gnLOC_CODE_CHECK_INCREMENT -
-          mod(pnCODE * gnLOC_CODE_CHECK_MULTIPLIER, gnLOC_CODE_CHECK_MODULUS)) * 1e8;
+    pnID :=
+      mod(pnID * gnLOC_ID_MULTIPLIER + gnLOC_ID_INCREMENT, 1e8) +
+        (gnLOC_ID_CHECK_INCREMENT -
+          mod(pnID * gnLOC_ID_CHECK_MULTIPLIER, gnLOC_ID_CHECK_MODULUS)) * 1e8;
   --
     P_TEXT.SET_TEXT(nTXT_ID, 'LOC', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
   --
     insert into LOCATIONS
-     (CODE, LOCT_CODE,
+     (ID, LOCT_CODE,
       START_DATE, END_DATE, TXT_ID)
     values
-     (pnCODE, psLOCT_CODE,
+     (pnID, psLOCT_CODE,
       nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE), nTXT_ID);
   --
   -- Create location attribute for country code if necessary.
   --
     if psLOCT_CODE = 'COUNTRY'
-    then INSERT_LOCATION_ATTRIBUTE(pnCODE, gsCOUNTRY_LOCAT_CODE, psCountryCode);
+    then INSERT_LOCATION_ATTRIBUTE(pnID, gsCOUNTRY_LOCAT_CODE, psCountryCode);
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -411,7 +411,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure UPDATE_LOCATION
-   (pnCODE in P_BASE.tmnLOC_CODE,
+   (pnID in P_BASE.tmnLOC_ID,
     pnVERSION_NBR in out P_BASE.tnLOC_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psName in P_BASE.tsText := null,
@@ -435,7 +435,7 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_LOCATION',
-      to_char(pnCODE) || '~' || to_char(pnVERSION_NBR) || '~' ||
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnLOCTV_ID) || '~' || psCountryCode || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -444,7 +444,7 @@ create or replace package body P_LOCATION is
     select LOCT_CODE, LOCTV_ID, START_DATE, END_DATE, TXT_ID, VERSION_NBR, rowid
     into sLOCT_CODE, nLOCTV_ID, dSTART_DATE, dEND_DATE, nTXT_ID, nVERSION_NBR, xLOC_ROWID
     from LOCATIONS
-    where CODE = pnCODE
+    where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
@@ -479,7 +479,7 @@ create or replace package body P_LOCATION is
           select CHAR_VALUE, VERSION_NBR
           into sCOUNTRY_CODE, nLOCA_VERSION_NBR
           from LOCATION_ATTRIBUTES
-          where LOC_CODE = pnCODE
+          where LOC_ID = pnID
           and LOCAT_CODE = gsCOUNTRY_LOCAT_CODE;
         --
         -- Check if country code or effective date range are being changed.
@@ -498,12 +498,12 @@ create or replace package body P_LOCATION is
               into sDummy
               from LOCATION_ATTRIBUTES LOCA
               join LOCATIONS LOC
-                on LOC.CODE = LOCA.LOC_CODE
+                on LOC.ID = LOCA.LOC_ID
               where LOCA.CHAR_VALUE = nvl(psCountryCode, sCOUNTRY_CODE)
               and LOCA.LOCAT_CODE = gsCOUNTRY_LOCAT_CODE
               and START_DATE < dEND_DATE_NEW
               and END_DATE > dSTART_DATE_NEW
-              and CODE != pnCODE;
+              and ID != pnID;
             --
               raise TOO_MANY_ROWS;
             exception
@@ -516,7 +516,7 @@ create or replace package body P_LOCATION is
         end if;
       --
         if psCountryCode != sCOUNTRY_CODE
-        then UPDATE_LOCATION_ATTRIBUTE(pnCODE, gsCOUNTRY_LOCAT_CODE, nLOCA_VERSION_NBR,
+        then UPDATE_LOCATION_ATTRIBUTE(pnID, gsCOUNTRY_LOCAT_CODE, nLOCA_VERSION_NBR,
                                        psCountryCode);
         end if;
       elsif psCountryCode is not null
@@ -538,8 +538,8 @@ create or replace package body P_LOCATION is
           into sDummy
           from LOCATION_TYPE_VARIANTS LOCTV
           join LOCATION_RELATIONSHIPS LOCR
-            on LOCR.LOC_CODE_FROM = LOCTV.LOC_CODE
-            and LOCR.LOC_CODE_TO = pnCODE
+            on LOCR.LOC_ID_FROM = LOCTV.LOC_ID
+            and LOCR.LOC_ID_TO = pnID
             and LOCR.LOCRT_CODE = LOCTV.LOCRT_CODE
           where LOCTV.ID = pnLOCTV_ID
           and LOCTV.LOCT_CODE = sLOCT_CODE;
@@ -576,7 +576,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure SET_LOCATION
-   (pnCODE in out P_BASE.tnLOC_CODE,
+   (pnID in out P_BASE.tnLOC_ID,
     pnVERSION_NBR in out P_BASE.tnLOC_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psName in P_BASE.tsText := null,
@@ -589,7 +589,7 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOCATION',
-      to_char(pnCODE) || '~' || to_char(pnVERSION_NBR) || '~' || psLOCT_CODE || '~' ||
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLOCT_CODE || '~' ||
         to_char(pnLOCTV_ID) || '~' || psCountryCode || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -597,13 +597,13 @@ create or replace package body P_LOCATION is
   --
     if pnVERSION_NBR is null
     then
-      INSERT_LOCATION(pnCODE, psLANG_CODE, psName, psLOCT_CODE, psCountryCode,
+      INSERT_LOCATION(pnID, psLANG_CODE, psName, psLOCT_CODE, psCountryCode,
                       case when pdSTART_DATE = P_BASE.gdFALSE_DATE then null else pdSTART_DATE end,
                       case when pdEND_DATE = P_BASE.gdFALSE_DATE then null else pdEND_DATE end);
     --
       pnVERSION_NBR := 1;
     else
-      UPDATE_LOCATION(pnCODE, pnVERSION_NBR, psLANG_CODE, psName, pnLOCTV_ID, psCountryCode,
+      UPDATE_LOCATION(pnID, pnVERSION_NBR, psLANG_CODE, psName, pnLOCTV_ID, psCountryCode,
                       pdSTART_DATE, pdEND_DATE);
     end if;
   --
@@ -619,7 +619,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure DELETE_LOCATION
-   (pnCODE in P_BASE.tmnLOC_CODE,
+   (pnID in P_BASE.tmnLOC_ID,
     pnVERSION_NBR in P_BASE.tnLOC_VERSION_NBR)
   is
     nTXT_ID P_BASE.tnTXT_ID;
@@ -628,12 +628,12 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.DELETE_LOCATION',
-      to_char(pnCODE) || '~' || to_char(pnVERSION_NBR));
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xLOC_ROWID
     from LOCATIONS
-    where CODE = pnCODE
+    where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
@@ -657,7 +657,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure SET_LOC_NAME
-   (pnCODE in P_BASE.tmnLOC_CODE,
+   (pnID in P_BASE.tmnLOC_ID,
     pnVERSION_NBR in out P_BASE.tnLOC_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE,
     psName in P_BASE.tsText)
@@ -666,10 +666,10 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOC_NAME',
-      to_char(pnCODE) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psName)) || ':' || psName);
   --
-    SET_LOC_TEXT(pnCODE, pnVERSION_NBR, 'NAME', nSEQ_NBR, psLANG_CODE, psName);
+    SET_LOC_TEXT(pnID, pnVERSION_NBR, 'NAME', nSEQ_NBR, psLANG_CODE, psName);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -683,16 +683,16 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure REMOVE_LOC_NAME
-   (pnCODE in P_BASE.tmnLOC_CODE,
+   (pnID in P_BASE.tmnLOC_ID,
     pnVERSION_NBR in out P_BASE.tnLOC_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE)
   is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_LOC_NAME',
-      to_char(pnCODE) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
-    REMOVE_LOC_TEXT(pnCODE, pnVERSION_NBR, 'NAME', 1, psLANG_CODE);
+    REMOVE_LOC_TEXT(pnID, pnVERSION_NBR, 'NAME', 1, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -706,7 +706,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure SET_LOC_TEXT
-   (pnCODE in P_BASE.tmnLOC_CODE,
+   (pnID in P_BASE.tmnLOC_ID,
     pnVERSION_NBR in out P_BASE.tnLOC_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
@@ -719,14 +719,14 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOC_TEXT',
-      to_char(pnCODE) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xLOC_ROWID
     from LOCATIONS
-    where CODE = pnCODE
+    where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
@@ -753,7 +753,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure REMOVE_LOC_TEXT
-   (pnCODE in P_BASE.tmnLOC_CODE,
+   (pnID in P_BASE.tmnLOC_ID,
     pnVERSION_NBR in out P_BASE.tnLOC_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
@@ -765,13 +765,13 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_LOC_TEXT',
-      to_char(pnCODE) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xLOC_ROWID
     from LOCATIONS
-    where CODE = pnCODE
+    where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
@@ -1124,7 +1124,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure INSERT_LOCATION_ATTRIBUTE
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
+   (pnLOC_ID in P_BASE.tmnLOC_ID,
     psLOCAT_CODE in P_BASE.tmsLOCAT_CODE,
     psCHAR_VALUE in P_BASE.tsLOCA_CHAR_VALUE := null,
     pnNUM_VALUE in P_BASE.tnLOCA_NUM_VALUE := null,
@@ -1135,7 +1135,7 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_LOCATION_ATTRIBUTE',
-      to_char(pnLOC_CODE) || '~' || psLOCAT_CODE || '~' || psCHAR_VALUE || '~' ||
+      to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || psCHAR_VALUE || '~' ||
         to_char(pnNUM_VALUE) || '~' || to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
   --
     select DATA_TYPE, ACTIVE_FLAG
@@ -1154,8 +1154,8 @@ create or replace package body P_LOCATION is
       else P_MESSAGE.DISPLAY_MESSAGE('LOC', 12, 'Attribute of the correct type must be specified');
     end case;
   --
-    insert into LOCATION_ATTRIBUTES (LOC_CODE, LOCAT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
-    values (pnLOC_CODE, psLOCAT_CODE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
+    insert into LOCATION_ATTRIBUTES (LOC_ID, LOCAT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
+    values (pnLOC_ID, psLOCAT_CODE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -1169,7 +1169,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure UPDATE_LOCATION_ATTRIBUTE
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
+   (pnLOC_ID in P_BASE.tmnLOC_ID,
     psLOCAT_CODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCA_VERSION_NBR,
     psCHAR_VALUE in P_BASE.tsLOCA_CHAR_VALUE := null,
@@ -1182,14 +1182,14 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_LOCATION_ATTRIBUTE',
-      to_char(pnLOC_CODE) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+      to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
         to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
   --
     select CHAR_VALUE, VERSION_NBR, rowid
     into sCHAR_VALUE, nVERSION_NBR, xLOCA_ROWID
     from LOCATION_ATTRIBUTES
-    where LOC_CODE = pnLOC_CODE
+    where LOC_ID = pnLOC_ID
     and LOCAT_CODE = psLOCAT_CODE
     for update;
   --
@@ -1208,14 +1208,14 @@ create or replace package body P_LOCATION is
           into sDummy
           from LOCATIONS LOC1
           join LOCATION_ATTRIBUTES LOCA
-            on LOCA.LOC_CODE != LOC1.CODE
+            on LOCA.LOC_ID != LOC1.ID
             and LOCA.CHAR_VALUE = psCHAR_VALUE
             and LOCA.LOCAT_CODE = gsCOUNTRY_LOCAT_CODE
           join LOCATIONS LOC2
-            on LOC2.CODE = LOCA.LOC_CODE
+            on LOC2.ID = LOCA.LOC_ID
             and LOC2.START_DATE < LOC1.END_DATE
             and LOC2.END_DATE > LOC1.START_DATE
-          where LOC1.CODE = pnLOC_CODE;
+          where LOC1.ID = pnLOC_ID;
         --
           raise TOO_MANY_ROWS;
         exception
@@ -1249,7 +1249,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure SET_LOCATION_ATTRIBUTE
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
+   (pnLOC_ID in P_BASE.tmnLOC_ID,
     psLOCAT_CODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCA_VERSION_NBR,
     psCHAR_VALUE in P_BASE.tsLOCA_CHAR_VALUE := null,
@@ -1259,19 +1259,19 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOCATION_ATTRIBUTE',
-      to_char(pnLOC_CODE) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+      to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
         to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
   --
     if pnVERSION_NBR is null
     then
       INSERT_LOCATION_ATTRIBUTE
-       (pnLOC_CODE, psLOCAT_CODE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
+       (pnLOC_ID, psLOCAT_CODE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
     --
       pnVERSION_NBR := 1;
     else
       UPDATE_LOCATION_ATTRIBUTE
-       (pnLOC_CODE, psLOCAT_CODE, pnVERSION_NBR, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
+       (pnLOC_ID, psLOCAT_CODE, pnVERSION_NBR, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -1286,7 +1286,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure DELETE_LOCATION_ATTRIBUTE
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
+   (pnLOC_ID in P_BASE.tmnLOC_ID,
     psLOCAT_CODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in P_BASE.tnLOCA_VERSION_NBR)
   is
@@ -1296,7 +1296,7 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.DELETE_LOCATION_ATTRIBUTE',
-      to_char(pnLOC_CODE) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR));
+      to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR));
   --
     if psLOCAT_CODE = gsCOUNTRY_LOCAT_CODE
     then P_MESSAGE.DISPLAY_MESSAGE('LOC', 999, 'Cannot delete the primary country code');
@@ -1305,7 +1305,7 @@ create or replace package body P_LOCATION is
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xLOCA_ROWID
     from LOCATION_ATTRIBUTES
-    where LOC_CODE = pnLOC_CODE
+    where LOC_ID = pnLOC_ID
     and LOCAT_CODE = psLOCAT_CODE
     for update;
   --
@@ -1332,7 +1332,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure SET_LOCA_TEXT
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
+   (pnLOC_ID in P_BASE.tmnLOC_ID,
     psLOCAT_CODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCA_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
@@ -1346,14 +1346,14 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOCA_TEXT',
-      to_char(pnLOC_CODE) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+      to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xLOCA_ROWID
     from LOCATION_ATTRIBUTES
-    where LOC_CODE = pnLOC_CODE
+    where LOC_ID = pnLOC_ID
     and LOCAT_CODE = psLOCAT_CODE
     for update;
   --
@@ -1382,7 +1382,7 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure REMOVE_LOCA_TEXT
-   (pnLOC_CODE in P_BASE.tmnLOC_CODE,
+   (pnLOC_ID in P_BASE.tmnLOC_ID,
     psLOCAT_CODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCA_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
@@ -1395,13 +1395,13 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_LOCA_TEXT',
-      to_char(pnLOC_CODE) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+      to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xLOCA_ROWID
     from LOCATION_ATTRIBUTES
-    where LOC_CODE = pnLOC_CODE
+    where LOC_ID = pnLOC_ID
     and LOCAT_CODE = psLOCAT_CODE
     for update;
   --
@@ -1729,8 +1729,8 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure INSERT_LOCATION_RELATIONSHIP
-   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null)
@@ -1739,7 +1739,7 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_LOCATION_RELATIONSHIP',
-      to_char(pnLOC_CODE_FROM) || '~' || to_char(pnLOC_CODE_TO) || '~' ||
+      to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
   --
@@ -1758,8 +1758,8 @@ create or replace package body P_LOCATION is
       select 'x'
       into sDummy
       from LOCATION_RELATIONSHIPS
-      where LOC_CODE_FROM = pnLOC_CODE_FROM
-      and LOC_CODE_TO = pnLOC_CODE_TO
+      where LOC_ID_FROM = pnLOC_ID_FROM
+      and LOC_ID_TO = pnLOC_ID_TO
       and LOCRT_CODE = psLOCRT_CODE
       and START_DATE <= pdEND_DATE
       and END_DATE >= pdSTART_DATE;
@@ -1773,10 +1773,10 @@ create or replace package body P_LOCATION is
     end;
   --
     insert into LOCATION_RELATIONSHIPS
-     (LOC_CODE_FROM, LOC_CODE_TO, LOCRT_CODE, START_DATE,
+     (LOC_ID_FROM, LOC_ID_TO, LOCRT_CODE, START_DATE,
       END_DATE)
     values
-     (pnLOC_CODE_FROM, pnLOC_CODE_TO, psLOCRT_CODE, nvl(pdSTART_DATE, P_BASE.gdMIN_DATE),
+     (pnLOC_ID_FROM, pnLOC_ID_TO, psLOCRT_CODE, nvl(pdSTART_DATE, P_BASE.gdMIN_DATE),
       nvl(pdEND_DATE, P_BASE.gdMAX_DATE));
   --
     PLS_UTILITY.END_MODULE;
@@ -1791,8 +1791,8 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure UPDATE_LOCATION_RELATIONSHIP
-   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
@@ -1807,7 +1807,7 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_LOCATION_RELATIONSHIP',
-      to_char(pnLOC_CODE_FROM) || '~' || to_char(pnLOC_CODE_TO) || '~' ||
+      to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR) || '~' || to_char(pdSTART_DATE_NEW, 'YYYY-MM-DD HH24:MI:SS') ||
         '~' || to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -1815,8 +1815,8 @@ create or replace package body P_LOCATION is
     select END_DATE, VERSION_NBR, rowid
     into dEND_DATE, nVERSION_NBR, xLOCR_ROWID
     from LOCATION_RELATIONSHIPS
-    where LOC_CODE_FROM = pnLOC_CODE_FROM
-    and LOC_CODE_TO = pnLOC_CODE_TO
+    where LOC_ID_FROM = pnLOC_ID_FROM
+    and LOC_ID_TO = pnLOC_ID_TO
     and LOCRT_CODE = psLOCRT_CODE
     and START_DATE = pdSTART_DATE;
   --
@@ -1844,8 +1844,8 @@ create or replace package body P_LOCATION is
         select 'x'
         into sDummy
         from LOCATION_RELATIONSHIPS
-        where LOC_CODE_FROM = pnLOC_CODE_FROM
-        and LOC_CODE_TO = pnLOC_CODE_TO
+        where LOC_ID_FROM = pnLOC_ID_FROM
+        and LOC_ID_TO = pnLOC_ID_TO
         and LOCRT_CODE = psLOCRT_CODE
         and START_DATE <= dEND_DATE_NEW
         and END_DATE >= dSTART_DATE_NEW
@@ -1881,8 +1881,8 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure DELETE_LOCATION_RELATIONSHIP
-   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in P_BASE.tnLOCR_VERSION_NBR)
@@ -1893,15 +1893,15 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.DELETE_LOCATION_RELATIONSHIP',
-      to_char(pnLOC_CODE_FROM) || '~' || to_char(pnLOC_CODE_TO) || '~' ||
+      to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR));
   --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xLOCR_ROWID
     from LOCATION_RELATIONSHIPS
-    where LOC_CODE_FROM = pnLOC_CODE_FROM
-    and LOC_CODE_TO = pnLOC_CODE_TO
+    where LOC_ID_FROM = pnLOC_ID_FROM
+    and LOC_ID_TO = pnLOC_ID_TO
     and LOCRT_CODE = psLOCRT_CODE
     and START_DATE = pdSTART_DATE
     for update;
@@ -1929,8 +1929,8 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure SET_LOCR_TEXT
-   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
@@ -1945,7 +1945,7 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOCR_TEXT',
-      to_char(pnLOC_CODE_FROM) || '~' || to_char(pnLOC_CODE_TO) || '~' ||
+      to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
@@ -1953,8 +1953,8 @@ create or replace package body P_LOCATION is
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xLOCR_ROWID
     from LOCATION_RELATIONSHIPS
-    where LOC_CODE_FROM = pnLOC_CODE_FROM
-    and LOC_CODE_TO = pnLOC_CODE_TO
+    where LOC_ID_FROM = pnLOC_ID_FROM
+    and LOC_ID_TO = pnLOC_ID_TO
     and LOCRT_CODE = psLOCRT_CODE
     and START_DATE = pdSTART_DATE
     for update;
@@ -1984,8 +1984,8 @@ create or replace package body P_LOCATION is
 -- ----------------------------------------
 --
   procedure REMOVE_LOCR_TEXT
-   (pnLOC_CODE_FROM in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_TO in P_BASE.tmnLOC_CODE,
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
@@ -1999,15 +1999,15 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_LOCR_TEXT',
-      to_char(pnLOC_CODE_FROM) || '~' || to_char(pnLOC_CODE_TO) || '~' || psLOCRT_CODE ||
+      to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' || psLOCRT_CODE ||
         '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || to_char(pnVERSION_NBR) ||
         '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
     select TXT_ID, VERSION_NBR, rowid
     into nTXT_ID, nVERSION_NBR, xLOCR_ROWID
     from LOCATION_RELATIONSHIPS
-    where LOC_CODE_FROM = pnLOC_CODE_FROM
-    and LOC_CODE_TO = pnLOC_CODE_TO
+    where LOC_ID_FROM = pnLOC_ID_FROM
+    and LOC_ID_TO = pnLOC_ID_TO
     and LOCRT_CODE = psLOCRT_CODE
     and START_DATE = pdSTART_DATE
     for update;
@@ -2217,7 +2217,7 @@ create or replace package body P_LOCATION is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText,
     psLOCT_CODE in P_BASE.tmsLOCT_CODE,
-    pnLOC_CODE in P_BASE.tmnLOC_CODE,
+    pnLOC_ID in P_BASE.tmnLOC_ID,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pnDISPLAY_SEQ in P_BASE.tnLOCTV_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tsLOCTV_ACTIVE_FLAG := 'Y')
@@ -2227,17 +2227,17 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_LOCATION_TYPE_VARIANT',
-      psLOCT_CODE || '~' || to_char(pnLOC_CODE) || '~' || psLOCRT_CODE || '~' ||
+      psLOCT_CODE || '~' || to_char(pnLOC_ID) || '~' || psLOCRT_CODE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     P_TEXT.SET_TEXT(nTXT_ID, 'LOCTV', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
     insert into LOCATION_TYPE_VARIANTS
-     (ID, LOCT_CODE, LOC_CODE, LOCRT_CODE, DISPLAY_SEQ, ACTIVE_FLAG,
+     (ID, LOCT_CODE, LOC_ID, LOCRT_CODE, DISPLAY_SEQ, ACTIVE_FLAG,
       TXT_ID)
     values
-     (LOCTV_SEQ.nextval, psLOCT_CODE, pnLOC_CODE, psLOCRT_CODE, pnDISPLAY_SEQ, psACTIVE_FLAG,
+     (LOCTV_SEQ.nextval, psLOCT_CODE, pnLOC_ID, psLOCRT_CODE, pnDISPLAY_SEQ, psACTIVE_FLAG,
       nTXT_ID)
     returning ID into pnID;
   --
@@ -2310,7 +2310,7 @@ create or replace package body P_LOCATION is
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
     psLOCT_CODE in P_BASE.tsLOCT_CODE := null,
-    pnLOC_CODE in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID in P_BASE.tnLOC_ID := null,
     psLOCRT_CODE in P_BASE.tsLOCRT_CODE := null,
     pnDISPLAY_SEQ in P_BASE.tnLOCTV_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsLOCTV_ACTIVE_FLAG := null)
@@ -2319,14 +2319,14 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOCATION_TYPE_VARIANT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
-        psLOCT_CODE || '~' || to_char(pnLOC_CODE) || '~' || psLOCRT_CODE || '~' ||
+        psLOCT_CODE || '~' || to_char(pnLOC_ID) || '~' || psLOCRT_CODE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     if pnVERSION_NBR is null
     then
       INSERT_LOCATION_TYPE_VARIANT
-       (pnID, psLANG_CODE, psDescription, psLOCT_CODE, pnLOC_CODE, psLOCRT_CODE,
+       (pnID, psLANG_CODE, psDescription, psLOCT_CODE, pnLOC_ID, psLOCRT_CODE,
         case when pnDISPLAY_SEQ = -1e6 then null else pnDISPLAY_SEQ end, nvl(psACTIVE_FLAG, 'Y'));
     --
       pnVERSION_NBR := 1;
@@ -2540,29 +2540,29 @@ begin
   where CODE = 'COUNTRY LOCAT CODE';
 --
   select NUM_VALUE
-  into gnLOC_CODE_MULTIPLIER
+  into gnLOC_ID_MULTIPLIER
   from SYSTEM_PARAMETERS
-  where CODE = 'LOCATION CODE MULTIPLIER';
+  where CODE = 'LOCATION ID MULTIPLIER';
 --
   select NUM_VALUE
-  into gnLOC_CODE_INCREMENT
+  into gnLOC_ID_INCREMENT
   from SYSTEM_PARAMETERS
-  where CODE = 'LOCATION CODE INCREMENT';
+  where CODE = 'LOCATION ID INCREMENT';
 --
   select NUM_VALUE
-  into gnLOC_CODE_CHECK_MULTIPLIER
+  into gnLOC_ID_CHECK_MULTIPLIER
   from SYSTEM_PARAMETERS
-  where CODE = 'LOCATION CODE CHECK MULTIPLIER';
+  where CODE = 'LOCATION ID CHECK MULTIPLIER';
 --
   select NUM_VALUE
-  into gnLOC_CODE_CHECK_INCREMENT
+  into gnLOC_ID_CHECK_INCREMENT
   from SYSTEM_PARAMETERS
-  where CODE = 'LOCATION CODE CHECK INCREMENT';
+  where CODE = 'LOCATION ID CHECK INCREMENT';
 --
   select NUM_VALUE
-  into gnLOC_CODE_CHECK_MODULUS
+  into gnLOC_ID_CHECK_MODULUS
   from SYSTEM_PARAMETERS
-  where CODE = 'LOCATION CODE CHECK MODULUS';
+  where CODE = 'LOCATION ID CHECK MODULUS';
 --
 end P_LOCATION;
 /
