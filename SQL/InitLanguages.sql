@@ -6,7 +6,7 @@ begin
    (select CODE, ENGLISH_NAME, FRENCH_NAME
     from STAGE.LANGUAGES
     where CODE not in
-     (select CODE from LANGUAGES)
+     (select CODE from T_LANGUAGES)
     order by CODE)
   loop
     P_LANGUAGE.INSERT_LANGUAGE(rLANG.CODE, 'en', rLANG.ENGLISH_NAME);
