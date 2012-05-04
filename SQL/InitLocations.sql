@@ -6,6 +6,7 @@ variable VERSION_NBR number
 
 -- Location types
 execute P_LOCATION.INSERT_LOCATION_TYPE('COUNTRY', 'en', 'Country');
+execute P_LOCATION.INSERT_LOCATION_TYPE('OTHORIGIN', 'en', 'Other Origin');
 execute P_LOCATION.INSERT_LOCATION_TYPE('UNREG', 'en', 'UN Region');
 execute P_LOCATION.INSERT_LOCATION_TYPE('UNSUBREG', 'en', 'UN Subregion');
 execute P_LOCATION.INSERT_LOCATION_TYPE('HCRBUR', 'en', 'UNHCR Bureau');
@@ -90,6 +91,7 @@ execute P_LOCATION.INSERT_LOCATION(:LOC_CODE1, 'en', 'The Americas (RBAC)', 'HCR
 execute P_LOCATION.INSERT_LOCATION(:LOC_CODE1, 'en', 'Asia and Pacific (RBAP)', 'HCRBUR');
 execute P_LOCATION.INSERT_LOCATION(:LOC_CODE1, 'en', 'Europe (RBE)', 'HCRBUR');
 
+-- Countries (from spreadsheet constructed from CommonDataHub "ISO 3166 Country Codes" and UNHCR Style Companion
 declare
   nLOC_CODE_COU P_BASE.tnLOC_CODE;
   nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
@@ -128,31 +130,55 @@ begin
     if rCOU.LOC_CODE_BOP is not null
     then P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rCOU.LOC_CODE_BOP, nLOC_CODE_COU, 'WITHIN');
     end if;
-  --
-    P_ORIGIN.INSERT_ORIGIN(rCOU.ISO_A3, rCOU.NAME_LANGUAGE, rCOU.COUNTRY_NAME, nLOC_CODE_COU);
   end loop;
 --
-  P_ORIGIN.INSERT_ORIGIN('TIB', 'en', 'Tibetan');
-  P_ORIGIN.INSERT_ORIGIN('CHY', 'en', 'Chechnyan');
-  P_ORIGIN.INSERT_ORIGIN('KOS', 'en', 'Kosovo (S/RES/1244 (1999))');
-  P_ORIGIN.INSERT_ORIGIN('STA', 'en', 'Stateless');
+  P_LOCATION.INSERT_LOCATION(nLOC_CODE_COU, 'en', 'Tibetan', 'OTHORIGIN');
+  P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_CODE_COU, 'UNHCRCC', 'TIB');
+  P_LOCATION.INSERT_LOCATION(nLOC_CODE_COU, 'en', 'Chechnyan', 'OTHORIGIN');
+  P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_CODE_COU, 'UNHCRCC', 'CHY');
+  P_LOCATION.INSERT_LOCATION(nLOC_CODE_COU, 'en', 'Kosovo (S/RES/1244 (1999))', 'OTHORIGIN');
+  P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_CODE_COU, 'UNHCRCC', 'KOS');
+  P_LOCATION.INSERT_LOCATION(nLOC_CODE_COU, 'en', 'Stateless', 'OTHORIGIN');
+  P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_CODE_COU, 'UNHCRCC', 'STA');
 --
   dbms_output.put_line(to_char(nCount) || ' country records inserted');
 end;
 /
 
-
-
-/*
+-- Country first-level subdivisions and dependant areas as specified by the ISO 3166-2 standard obtained from CommonDataHub "ISO 3166-2 State Codes".
 declare
+  nLOCTV_ID P_BASE.tnLOCTV_ID;
   nLOC_CODE_DIV P_BASE.tnLOC_CODE;
+  nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
   nCount pls_integer := 0;
 begin
   for rDIV in
-   (select DIV.ISO3166_2, nvl(DIV.NAME, 'Unknown') NAME, LOC.CODE
+   (select distinct DIV.ISO3166_1_A3, DIV.LEVEL_NAME, COU.CODE
     from STAGE.SUBDIVISIONS DIV
-    join LOCATIONS LOC
-    on LOC.COUNTRY_CODE = DIV.ISO3166_1_A3
+    join L_COUNTRIES COU
+      on COU.ISO3166_ALPHA3_CODE = DIV.ISO3166_1_A3
+    where DIV.LEVEL_NAME is not null
+    order by ISO3166_1_A3, LEVEL_NAME)
+  loop
+    nCount := nCount + 1;
+  --
+    P_LOCATION.INSERT_LOCATION_TYPE_VARIANT(nLOCTV_ID, 'en', rDIV.LEVEL_NAME, 'ADMIN1', rDIV.CODE, 'WITHIN');
+  end loop;
+--
+  dbms_output.put_line(to_char(nCount) || ' location type variant records inserted');
+--
+  nCount := 0;
+--
+  for rDIV in
+   (select DIV.ISO3166_2, nvl(DIV.NAME, 'Unknown') NAME, COU.CODE, LOCTV.ID LOCTV_ID
+    from STAGE.SUBDIVISIONS DIV
+    join L_COUNTRIES COU
+    on COU.ISO3166_ALPHA3_CODE = DIV.ISO3166_1_A3
+    left outer join L_LOCATION_TYPE_VARIANTS LOCTV
+      on LOCTV.LOCT_CODE = 'ADMIN1'
+      and LOCTV.LOC_CODE = COU.CODE
+      and LOCTV.LOCRT_CODE = 'WITHIN'
+      and LOCTV.DESCRIPTION = DIV.LEVEL_NAME
     order by DIV.ISO3166_1_A3, DIV.ISO3166_2)
   loop
     nCount := nCount + 1;
@@ -162,21 +188,34 @@ begin
     P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_CODE_DIV, 'IS03166_2', rDIV.ISO3166_2);
   --
     P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rDIV.CODE, nLOC_CODE_DIV, 'WITHIN');
+  --
+    if rDIV.LOCTV_ID is not null
+    then
+      nVERSION_NBR := 1;
+      P_LOCATION.UPDATE_LOCATION(nLOC_CODE_DIV, nVERSION_NBR, pnLOCTV_ID => rDIV.LOCTV_ID);
+    end if;
   end loop;
 --
-  dbms_output.put_line(to_char(nCount) || ' subdivision records inserted');
+  dbms_output.put_line(to_char(nCount) || ' ISO subdivision records inserted');
 end;
-*/
+/
 
 declare
   nLOC_CODE_DEM P_BASE.tnLOC_CODE;
   nCount pls_integer := 0;
 begin
   for rDEM in
-   (select distinct regexp_replace(nvl(DEM.LOC_NAME, DEM.LOC_NAME_NEW), ' : .*$', '') NAME, COU.CODE
-    from STAGE.DEMOGRAPHICS_2010 DEM
-    join L_COUNTRIES COU
-    on COU.UNHCR_COUNTRY_CODE = DEM.COUNTRY_CODE
+   (select DEM1.NAME, DEM1.CODE
+    from
+     (select distinct regexp_replace(nvl(DEM.LOC_NAME, DEM.LOC_NAME_NEW), ' : .*$', '') NAME, COU.CODE
+      from STAGE.DEMOGRAPHICS_2010 DEM
+      join L_COUNTRIES COU
+      on COU.UNHCR_COUNTRY_CODE = DEM.COUNTRY_CODE) DEM1
+    where not exists
+     (select null
+      from L_HIERARCHICAL_LOCATIONS HLOC
+      where HLOC.LOC_CODE_FROM = DEM1.CODE
+      and nlssort(HLOC.NAME, 'NLS_SORT=BINARY_AI') = nlssort(DEM1.NAME, 'NLS_SORT=BINARY_AI'))
     order by 2, 1)
   loop
     nCount := nCount + 1;
@@ -186,6 +225,6 @@ begin
     P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rDEM.CODE, nLOC_CODE_DEM, 'WITHIN');
   end loop;
 --
-  dbms_output.put_line(to_char(nCount) || ' subdivision records inserted');
+  dbms_output.put_line(to_char(nCount) || ' ASR subdivision records inserted');
 end;
 /
