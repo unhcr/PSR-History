@@ -11,10 +11,10 @@ create or replace package body P_STATISTIC is
   procedure INSERT_STATISTIC
    (pnID out P_BASE.tnSTC_ID,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
-    pnLOC_CODE_COUNTRY in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_ASYLUM in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_ORIGIN in P_BASE.tnLOC_CODE := null,
-    pnLOC_CODE_SOURCE in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID_COUNTRY in P_BASE.tmnLOC_ID,
+    pnLOC_ID_ASYLUM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_ORIGIN in P_BASE.tnLOC_ID := null,
+    pnLOC_ID_SOURCE in P_BASE.tnLOC_ID := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
     psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
     pnPER_ID in P_BASE.tnPER_ID := null,
@@ -31,10 +31,10 @@ create or replace package body P_STATISTIC is
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_STATISTIC',
       psSTCT_CODE || '~' ||
-        to_char(pnLOC_CODE_COUNTRY) || '~' ||
-        to_char(pnLOC_CODE_ASYLUM) || '~' ||
-        to_char(pnLOC_CODE_ORIGIN) || '~' ||
-        to_char(pnLOC_CODE_SOURCE) || '~' ||
+        to_char(pnLOC_ID_COUNTRY) || '~' ||
+        to_char(pnLOC_ID_ASYLUM) || '~' ||
+        to_char(pnLOC_ID_ORIGIN) || '~' ||
+        to_char(pnLOC_ID_SOURCE) || '~' ||
         to_char(pnPPG_ID) || '~' ||
         psPOPC_CODE || '~' ||
         to_char(pnPER_ID) || '~' ||
@@ -48,13 +48,13 @@ create or replace package body P_STATISTIC is
   --
     insert into STATISTICS
      (ID, STCT_CODE,
-      LOC_CODE_COUNTRY, LOC_CODE_ASYLUM, LOC_CODE_ORIGIN, LOC_CODE_SOURCE,
+      LOC_ID_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN, LOC_ID_SOURCE,
       PPG_ID, POPC_CODE, PER_ID, SEX_CODE, AGR_ID,
       DIM_ID1, DIM_ID2, DIM_ID3, DIM_ID4, DIM_ID5,
       VALUE)
     values
      (STC_SEQ.nextval, psSTCT_CODE,
-      pnLOC_CODE_COUNTRY, pnLOC_CODE_ASYLUM, pnLOC_CODE_ORIGIN, pnLOC_CODE_SOURCE,
+      pnLOC_ID_COUNTRY, pnLOC_ID_ASYLUM, pnLOC_ID_ORIGIN, pnLOC_ID_SOURCE,
       pnPPG_ID, psPOPC_CODE, pnPER_ID, psSEX_CODE, pnAGR_ID,
       pnDIM_ID1, pnDIM_ID2, pnDIM_ID3, pnDIM_ID4, pnDIM_ID5,
       pnVALUE)

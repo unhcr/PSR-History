@@ -6,7 +6,7 @@ create or replace package P_STATISTIC is
 --  Procedures for maintenance of statistics.
 --
 --  Change History:
---  11-Apr-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  04-May-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -26,10 +26,10 @@ create or replace package P_STATISTIC is
 -- Parameters:
 --  pnID - New statistic identifier (returned).
 --  psSTCT_CODE - Statistic type code (mandatory).
---  pnLOC_CODE_COUNTRY - Location code of country of asylum of persons of concern (mandatory).
---  pnLOC_CODE_ASYLUM - Code of asylum location of persons of concern (mandatory).
---  pnLOC_CODE_ORIGIN - Location code of (country of) origin of persons of concern (optional).
---  pnLOC_CODE_SOURCE - Code of location of origin of persons of concern (optional).
+--  pnLOC_ID_COUNTRY - Location identifier of country of asylum of persons of concern (mandatory).
+--  pnLOC_ID_ASYLUM - Identifier of asylum location of persons of concern (mandatory).
+--  pnLOC_ID_ORIGIN - Location identifier of (country of) origin of persons of concern (optional).
+--  pnLOC_ID_SOURCE - Identifier of location of origin of persons of concern (optional).
 --  pnPPG_ID - PPG identifier (optional).
 --  psPOPC_CODE - Population category code (optional).
 --  pnPER_ID - Time period identifier (optional).
@@ -45,10 +45,10 @@ create or replace package P_STATISTIC is
   procedure INSERT_STATISTIC
    (pnID out P_BASE.tnSTC_ID,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
-    pnLOC_CODE_COUNTRY in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_ASYLUM in P_BASE.tmnLOC_CODE,
-    pnLOC_CODE_ORIGIN in P_BASE.tnLOC_CODE := null,
-    pnLOC_CODE_SOURCE in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID_COUNTRY in P_BASE.tmnLOC_ID,
+    pnLOC_ID_ASYLUM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_ORIGIN in P_BASE.tnLOC_ID := null,
+    pnLOC_ID_SOURCE in P_BASE.tnLOC_ID := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
     psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
     pnPER_ID in P_BASE.tnPER_ID := null,
@@ -73,11 +73,11 @@ create or replace package P_STATISTIC is
 --  pnVERSION_NBR - Update version number of statistic record (mandatory: new version number is
 --    returned).
 --  psSTCT_CODE - Statistic type code (optional).
---  pnLOC_CODE - Code of residence location of persons of concern (optional).
---  pnLOC_CODE_COUNTRY - Location code of country of residence of persons of concern (optional).
---  pnLOC_CODE_ORIGIN - Code of location of origin of persons of concern (optional).
---  pnLOC_CODE_COUNTRY_ORIGIN - Location code of country of origin of persons of concern (optional).
---  pnLOC_CODE_PPG - Code of location associated with PPG (optional).
+--  pnLOC_ID - Code of residence location of persons of concern (optional).
+--  pnLOC_ID_COUNTRY - Location code of country of residence of persons of concern (optional).
+--  pnLOC_ID_ORIGIN - Code of location of origin of persons of concern (optional).
+--  pnLOC_ID_COUNTRY_ORIGIN - Location code of country of origin of persons of concern (optional).
+--  pnLOC_ID_PPG - Code of location associated with PPG (optional).
 --  psPPG_CODE - PPG code (optional).
 --  pdPPG_START_DATE - Start date of effectivity of PPG (optional).
 --  psPOPC_CODE - Population category code (optional).
@@ -97,13 +97,13 @@ create or replace package P_STATISTIC is
    (pnID in P_BASE.tmnSTC_ID,
     pnVERSION_NBR in out P_BASE.tnSTC_VERSION_NBR,
     psSTCT_CODE in P_BASE.tsSTCT_CODE := null,
-    pnLOC_CODE in P_BASE.tnLOC_CODE := null,
-    pnLOC_CODE_COUNTRY in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID in P_BASE.tnLOC_ID := null,
+    pnLOC_ID_COUNTRY in P_BASE.tnLOC_ID := null,
     psCOUNTRY_CODE in P_BASE.tsLOC_COUNTRY_CODE := null,
-    pnLOC_CODE_ORIGIN in P_BASE.tnLOC_CODE := null,
-    pnLOC_CODE_COUNTRY_ORIGIN in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID_ORIGIN in P_BASE.tnLOC_ID := null,
+    pnLOC_ID_COUNTRY_ORIGIN in P_BASE.tnLOC_ID := null,
     psCOUNTRY_CODE_ORIGIN in P_BASE.tsLOC_COUNTRY_CODE := null,
-    pnLOC_CODE_PPG in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID_PPG in P_BASE.tnLOC_ID := null,
     psPPG_CODE in P_BASE.tsPPG_CODE := null,
     pdPPG_START_DATE in P_BASE.tdDate := null,
     psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
@@ -128,11 +128,11 @@ create or replace package P_STATISTIC is
 --  pnVERSION_NBR - Update version number of statistic record (mandatory: new version number is
 --    returned; for a new statistic, null must be specified and 1 will be returned).
 --  psSTCT_CODE - Statistic type code (optional).
---  pnLOC_CODE - Code of residence location of persons of concern (optional).
---  pnLOC_CODE_COUNTRY - Location code of country of residence of persons of concern (optional).
---  pnLOC_CODE_ORIGIN - Code of location of origin of persons of concern (optional).
---  pnLOC_CODE_COUNTRY_ORIGIN - Location code of country of origin of persons of concern (optional).
---  pnLOC_CODE_PPG - Code of location associated with PPG (optional).
+--  pnLOC_ID - Code of residence location of persons of concern (optional).
+--  pnLOC_ID_COUNTRY - Location code of country of residence of persons of concern (optional).
+--  pnLOC_ID_ORIGIN - Code of location of origin of persons of concern (optional).
+--  pnLOC_ID_COUNTRY_ORIGIN - Location code of country of origin of persons of concern (optional).
+--  pnLOC_ID_PPG - Code of location associated with PPG (optional).
 --  psPPG_CODE - PPG code (optional).
 --  psPPG_START_DATE - Start date of effectivity of PPG (optional).
 --  psPOPC_CODE - Population category code (optional).
@@ -150,13 +150,13 @@ create or replace package P_STATISTIC is
    (pnID in out P_BASE.tnSTC_ID,
     pnVERSION_NBR in out P_BASE.tnSTC_VERSION_NBR,
     psSTCT_CODE in P_BASE.tsSTCT_CODE := null,
-    pnLOC_CODE in P_BASE.tnLOC_CODE := null,
-    pnLOC_CODE_COUNTRY in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID in P_BASE.tnLOC_ID := null,
+    pnLOC_ID_COUNTRY in P_BASE.tnLOC_ID := null,
     psCOUNTRY_CODE in P_BASE.tsLOC_COUNTRY_CODE := null,
-    pnLOC_CODE_ORIGIN in P_BASE.tnLOC_CODE := null,
-    pnLOC_CODE_COUNTRY_ORIGIN in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID_ORIGIN in P_BASE.tnLOC_ID := null,
+    pnLOC_ID_COUNTRY_ORIGIN in P_BASE.tnLOC_ID := null,
     psCOUNTRY_CODE_ORIGIN in P_BASE.tsLOC_COUNTRY_CODE := null,
-    pnLOC_CODE_PPG in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID_PPG in P_BASE.tnLOC_ID := null,
     psPPG_CODE in P_BASE.tsPPG_CODE := null,
     psPPG_START_DATE in P_BASE.tdDate := null,
     psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
