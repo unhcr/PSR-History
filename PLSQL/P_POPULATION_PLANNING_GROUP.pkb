@@ -12,7 +12,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
    (pnID out P_BASE.tnPPG_ID,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText,
-    pnLOC_CODE in P_BASE.tmnLOC_CODE,
+    pnLOC_ID in P_BASE.tmnLOC_ID,
     psPPG_CODE in P_BASE.tmsPPG_CODE,
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null)
@@ -22,7 +22,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_PPG',
-      to_char(pnLOC_CODE) || '~' || psPPG_CODE || '~' ||
+      to_char(pnLOC_ID) || '~' || psPPG_CODE || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -35,9 +35,9 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       select 'x'
       into sDummy
       from LOCATIONS
-      where CODE = pnLOC_CODE
-      and START_DATE <= nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)
-      and END_DATE >= nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
+      where ID = pnLOC_ID
+      and START_DATE < nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)
+      and END_DATE > nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
     end;
   --
   -- Check for an existing PPG with the same code and overlapping effective date range.
@@ -49,8 +49,8 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       into sDummy
       from POPULATION_PLANNING_GROUPS
       where PPG_CODE = psPPG_CODE
-      and START_DATE <= nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
-      and END_DATE >= nvl(pdSTART_DATE, P_BASE.gdMIN_DATE);
+      and START_DATE < nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
+      and END_DATE > nvl(pdSTART_DATE, P_BASE.gdMIN_DATE);
     --
       raise TOO_MANY_ROWS;
     exception
@@ -63,10 +63,10 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     P_TEXT.SET_TEXT(nTXT_ID, 'PPG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
     insert into POPULATION_PLANNING_GROUPS
-     (ID, LOC_CODE, PPG_CODE,
+     (ID, LOC_ID, PPG_CODE,
       START_DATE, END_DATE, TXT_ID)
     values
-     (PPG_SEQ.nextval, pnLOC_CODE, psPPG_CODE,
+     (PPG_SEQ.nextval, pnLOC_ID, psPPG_CODE,
       nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE), nTXT_ID)
     returning ID into pnID;
   --
@@ -86,12 +86,12 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     pnVERSION_NBR in out P_BASE.tnPPG_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
-    pnLOC_CODE in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID in P_BASE.tnLOC_ID := null,
     psPPG_CODE in P_BASE.tsPPG_CODE := null,
     pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE)
   is
-    nLOC_CODE P_BASE.tnLOC_CODE;
+    nLOC_ID P_BASE.tnLOC_ID;
     sPPG_CODE P_BASE.tsPPG_CODE;
     dSTART_DATE P_BASE.tdDate;
     dEND_DATE P_BASE.tdDate;
@@ -104,13 +104,13 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_PPG',
-      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||to_char(pnLOC_CODE) || '~' ||
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||to_char(pnLOC_ID) || '~' ||
         psPPG_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    select LOC_CODE, PPG_CODE, START_DATE, END_DATE, TXT_ID, VERSION_NBR, rowid
-    into nLOC_CODE, sPPG_CODE, dSTART_DATE, dEND_DATE, nTXT_ID, nVERSION_NBR, xPPG_ROWID
+    select LOC_ID, PPG_CODE, START_DATE, END_DATE, TXT_ID, VERSION_NBR, rowid
+    into nLOC_ID, sPPG_CODE, dSTART_DATE, dEND_DATE, nTXT_ID, nVERSION_NBR, xPPG_ROWID
     from POPULATION_PLANNING_GROUPS
     where ID = pnID
     for update;
@@ -133,7 +133,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     -- If associated location or dates are being changed, check that the location is active for the
     --   whole of the effective date range.
     --
-      if pnLOC_CODE != nLOC_CODE or dSTART_DATE_NEW != dSTART_DATE or dEND_DATE_NEW != dEND_DATE
+      if pnLOC_ID != nLOC_ID or dSTART_DATE_NEW != dSTART_DATE or dEND_DATE_NEW != dEND_DATE
       then
         declare
           sDummy varchar2(1);
@@ -141,9 +141,9 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
           select 'x'
           into sDummy
           from LOCATIONS
-          where CODE = pnLOC_CODE
-          and START_DATE <= dSTART_DATE_NEW
-          and END_DATE >= dEND_DATE_NEW;
+          where ID = pnLOC_ID
+          and START_DATE < dSTART_DATE_NEW
+          and END_DATE > dEND_DATE_NEW;
         end;
       end if;
     --
@@ -158,8 +158,8 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
           into sDummy
           from POPULATION_PLANNING_GROUPS
           where PPG_CODE = psPPG_CODE
-          and START_DATE <= dEND_DATE_NEW
-          and END_DATE >= dSTART_DATE_NEW
+          and START_DATE < dEND_DATE_NEW
+          and END_DATE > dSTART_DATE_NEW
           and ID != pnID;
         --
           raise TOO_MANY_ROWS;
@@ -176,7 +176,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       end if;
     --
       update POPULATION_PLANNING_GROUPS
-      set LOC_CODE = nvl(pnLOC_CODE, LOC_CODE),
+      set LOC_ID = nvl(pnLOC_ID, LOC_ID),
         PPG_CODE = nvl(psPPG_CODE, PPG_CODE),
         START_DATE = dSTART_DATE_NEW,
         END_DATE = dEND_DATE_NEW,
@@ -203,7 +203,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     pnVERSION_NBR in out P_BASE.tnPPG_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
-    pnLOC_CODE in P_BASE.tnLOC_CODE := null,
+    pnLOC_ID in P_BASE.tnLOC_ID := null,
     psPPG_CODE in P_BASE.tsPPG_CODE := null,
     pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE)
@@ -211,20 +211,20 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOCATION',
-      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||to_char(pnLOC_CODE) || '~' ||
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||to_char(pnLOC_ID) || '~' ||
         psPPG_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     if pnVERSION_NBR is null
     then
-      INSERT_PPG(pnID, psLANG_CODE, psDescription, pnLOC_CODE, psPPG_CODE,
+      INSERT_PPG(pnID, psLANG_CODE, psDescription, pnLOC_ID, psPPG_CODE,
                  case when pdSTART_DATE = P_BASE.gdFALSE_DATE then null else pdSTART_DATE end,
                  case when pdEND_DATE = P_BASE.gdFALSE_DATE then null else pdEND_DATE end);
     --
       pnVERSION_NBR := 1;
     else
-      UPDATE_PPG(pnID, pnVERSION_NBR, psLANG_CODE, psDescription, pnLOC_CODE, psPPG_CODE,
+      UPDATE_PPG(pnID, pnVERSION_NBR, psLANG_CODE, psDescription, pnLOC_ID, psPPG_CODE,
                  pdSTART_DATE, pdEND_DATE);
     end if;
   --
