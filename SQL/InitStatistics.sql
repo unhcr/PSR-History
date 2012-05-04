@@ -53,7 +53,7 @@ begin
     join L_HIERARCHICAL_LOCATIONS HLOC
     on HLOC.LOC_ID_FROM = COU.ID
     and nlssort(HLOC.NAME, 'NLS_SORT=BINARY_AI') = nlssort(DEM.LOC_NAME, 'NLS_SORT=BINARY_AI')
-    left outer join LOCATION_ATTRIBUTES LOCA
+    left outer join T_LOCATION_ATTRIBUTES LOCA
     on LOCA.CHAR_VALUE = DEM.COUNTRY_CODE_ORIGIN
     and LOCA.LOCAT_CODE = 'UNHCRCC'
     left outer join L_LOCATIONS LOC
@@ -61,14 +61,14 @@ begin
     and LOC.LOCT_CODE in ('COUNTRY', 'OTHORIGIN')
     cross join
      (select ID
-      from TIME_PERIODS
+      from T_TIME_PERIODS
       where PERT_CODE = 'YEAR'
       and START_DATE = date '2010-01-01'
       and END_DATE = date '2011-01-01') PER
-    left outer join AGE_RANGES AGR
+    left outer join T_AGE_RANGES AGR
     on AGR.AGP_CODE = 'STD'
     and AGR.AGE_FROM = DEM.AGE_FROM
-    join DIMENSION_VALUES DIM1
+    join T_DIMENSION_VALUES DIM1
     on DIM1.CODE = DEM.RCX_CODE
     and DIM1.DIMT_CODE = 'UR'
     join L_DIMENSION_VALUES DIM2
