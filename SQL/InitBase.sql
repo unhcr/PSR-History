@@ -1,7 +1,7 @@
 -- Table aliases
 -- =============
 
-insert into TABLE_ALIASES (ALIAS, TABLE_NAME)
+insert into T_TABLE_ALIASES (ALIAS, TABLE_NAME)
 select substr(CONSTRAINT_NAME, 4), TABLE_NAME
 from USER_CONSTRAINTS
 where CONSTRAINT_TYPE = 'P'
@@ -11,17 +11,17 @@ and GENERATED = 'USER NAME';
 -- Initial "bootstrapping" entries in text-related tables
 -- ======================================================
 
-variable TXT_ID number;
-insert into TEXT_HEADERS (ID, TAB_ALIAS) values (TXT_SEQ.nextval, 'TXTT') returning ID into :TXT_ID;
-insert into TEXT_TYPES (CODE, TXT_ID) values ('DESCR', TXT_SEQ.currval);
-insert into TEXT_TYPE_PROPERTIES (TXTT_CODE, TAB_ALIAS, MANDATORY_FLAG, MULTI_INSTANCE_FLAG, LONG_TEXT_FLAG) values ('DESCR', 'TXTT', 'Y', 'N', 'N');
-insert into TEXT_TYPE_PROPERTIES (TXTT_CODE, TAB_ALIAS, MANDATORY_FLAG, MULTI_INSTANCE_FLAG, LONG_TEXT_FLAG) values ('DESCR', 'LANG', 'Y', 'N', 'N');
-insert into TEXT_TYPE_HEADERS (TXT_ID, TXTT_CODE, TAB_ALIAS, TXI_SEQ_NBR_MAX) values (TXT_SEQ.currval, 'DESCR', 'TXTT', 1);
-insert into TEXT_HEADERS (ID, TAB_ALIAS) values (TXT_SEQ.nextval, 'LANG');
-insert into TEXT_TYPE_HEADERS (TXT_ID, TXTT_CODE, TAB_ALIAS, TXI_SEQ_NBR_MAX) values (TXT_SEQ.currval, 'DESCR', 'LANG', 1);
-insert into LANGUAGES (CODE, DISPLAY_SEQ, TXT_ID) values ('en', 1, TXT_SEQ.currval);
-insert into TEXT_ITEMS (TXT_ID, TXTT_CODE, SEQ_NBR, LANG_CODE, TAB_ALIAS, TEXT) values (:TXT_ID, 'DESCR', 1, 'en', 'TXTT', 'Description');
-insert into TEXT_ITEMS (TXT_ID, TXTT_CODE, SEQ_NBR, LANG_CODE, TAB_ALIAS, TEXT) values (TXT_SEQ.currval, 'DESCR', 1, 'en', 'LANG', 'English');
+variable ITM_ID number;
+insert into T_DATA_ITEMS (ID, TAB_ALIAS) values (ITM_SEQ.nextval, 'TXTT') returning ID into :ITM_ID;
+insert into T_TEXT_TYPES (CODE, ITM_ID) values ('DESCR', ITM_SEQ.currval);
+insert into T_TEXT_TYPE_PROPERTIES (TXTT_CODE, TAB_ALIAS, MANDATORY_FLAG, MULTI_INSTANCE_FLAG, LONG_TEXT_FLAG) values ('DESCR', 'TXTT', 'Y', 'N', 'N');
+insert into T_TEXT_TYPE_PROPERTIES (TXTT_CODE, TAB_ALIAS, MANDATORY_FLAG, MULTI_INSTANCE_FLAG, LONG_TEXT_FLAG) values ('DESCR', 'LANG', 'Y', 'N', 'N');
+insert into T_TEXT_TYPE_HEADERS (ITM_ID, TXTT_CODE, TAB_ALIAS, TXT_SEQ_NBR_MAX) values (ITM_SEQ.currval, 'DESCR', 'TXTT', 1);
+insert into T_DATA_ITEMS (ID, TAB_ALIAS) values (ITM_SEQ.nextval, 'LANG');
+insert into T_TEXT_TYPE_HEADERS (ITM_ID, TXTT_CODE, TAB_ALIAS, TXT_SEQ_NBR_MAX) values (ITM_SEQ.currval, 'DESCR', 'LANG', 1);
+insert into T_LANGUAGES (CODE, DISPLAY_SEQ, ITM_ID) values ('en', 1, ITM_SEQ.currval);
+insert into T_TEXT_ITEMS (ITM_ID, TXTT_CODE, SEQ_NBR, LANG_CODE, TAB_ALIAS, TEXT) values (:ITM_ID, 'DESCR', 1, 'en', 'TXTT', 'Description');
+insert into T_TEXT_ITEMS (ITM_ID, TXTT_CODE, SEQ_NBR, LANG_CODE, TAB_ALIAS, TEXT) values (ITM_SEQ.currval, 'DESCR', 1, 'en', 'LANG', 'English');
 
 
 -- Languages
