@@ -7,7 +7,7 @@ create or replace package P_LOCATION is
 --   relationships and relationship types.
 --
 --  Change History:
---  11-Apr-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  30-Apr-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -209,8 +209,8 @@ create or replace package P_LOCATION is
 --  psLANG_CODE - Language code of the location name (mandatory).
 --  psName - Location name text (mandatory).
 --  psLOCT_CODE - Location type code (mandatory).
---  psCOUNTRY_CODE - Country code (not allowed when the location type is not country; mandatory for
---    a new location of type country).
+--  psCountryCode - Country code, usually ISO 3166-1 alpha-3 code (not allowed when the location
+--    type is not country; mandatory for a new location of type country).
 --  pdSTART_DATE - Effective start date of details of this location (optional, the absence of a
 --    start date, or a null value, indicates that the effectivity starts indefinitely far in the
 --    past).
@@ -222,7 +222,7 @@ create or replace package P_LOCATION is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psName in P_BASE.tmsText,
     psLOCT_CODE in P_BASE.tmsLOCT_CODE,
-    psCOUNTRY_CODE in P_BASE.tsLOC_COUNTRY_CODE := null,
+    psCountryCode in P_BASE.tsCountryCode := null,
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null);
 --
@@ -239,8 +239,11 @@ create or replace package P_LOCATION is
 --  psLANG_CODE - Language code of the location name (optional, but must be specified if psName is
 --    specified).
 --  psName - Location name text (optional, if not specified, the name is not changed).
---  psCOUNTRY_CODE - Country code (not allowed when the location type is not country; if not
---    specified when updating an existing country, the existing value is left unchanged).
+--  pnLOCTV_ID - Identifier of associated location type variant (optional: if not specified, the
+--    existing location type variant association is left unchanged; a null value removes any
+--    existing location type variant association).
+--  psCountryCode - Country code, usually ISO 3166-1 alpha-3 code (not allowed when the location
+--    type is not country; if not specified or null, the existing value is left unchanged).
 --  pdSTART_DATE - Effective start date of details of this location (optional: if not specified, the
 --    existing start date is left unchanged; a null value indicates that the effectivity starts
 --    indefinitely far in the past).
@@ -253,7 +256,8 @@ create or replace package P_LOCATION is
     pnVERSION_NBR in out P_BASE.tnLOC_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psName in P_BASE.tsText := null,
-    psCOUNTRY_CODE in P_BASE.tsLOC_COUNTRY_CODE := null,
+    pnLOCTV_ID in P_BASE.tnLOCTV_ID := -1,
+    psCountryCode in P_BASE.tsCountryCode := null,
     pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE);
 --
@@ -273,9 +277,14 @@ create or replace package P_LOCATION is
 --    existing location: if not specified, the name is not changed).
 --  psLOCT_CODE - Location type code (mandatory when creating an new location; ignored when updating
 --    an existing location, since the location type my not be changed).
---  psCOUNTRY_CODE - Country code (not allowed when the location type is not country; mandatory when
---    creating a new location of type country; if not specified when updating an existing country,
---    the existing value is left unchanged).
+--  pnLOCTV_ID - Identifier of associated location type variant (ignored when creating a new
+--    location, since associating a location type variant requires a pre-existing location
+--    relationship; optional when updating an existing location: if not specified, the existing
+--    location type variant association is left unchanged; a null value removes any existing
+--    location type variant association).
+--  psCountryCode - Country code, usually ISO 3166-1 alpha-3 code (not allowed when the location
+--    type is not country; mandatory for a new location of type country; if not specified or null
+--    when updating an existing country, the existing value is left unchanged).
 --  pdSTART_DATE - Effective start date of details of this location (optional: for a new location,
 --    the absence of a start date, or a null value, indicates that the effectivity starts
 --    indefinitely far in the past; when updating an existing location, the absence of a start date
@@ -293,7 +302,8 @@ create or replace package P_LOCATION is
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psName in P_BASE.tsText := null,
     psLOCT_CODE in P_BASE.tsLOCT_CODE := null,
-    psCOUNTRY_CODE in P_BASE.tsLOC_COUNTRY_CODE := null,
+    pnLOCTV_ID in P_BASE.tnLOCTV_ID := -1,
+    psCountryCode in P_BASE.tsCountryCode := null,
     pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE);
 --
@@ -1049,6 +1059,301 @@ create or replace package P_LOCATION is
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
+    psTXTT_CODE in P_BASE.tmsTXTT_CODE,
+    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null);
+--
+-- ----------------------------------------
+-- INSERT_LOC_TYPE_RELATIONSHIP
+-- ----------------------------------------
+--
+-- Create a relationship between two location types.
+--
+-- Parameters:
+--  psLOCT_CODE_FROM - From location type code (mandatory).
+--  psLOCT_CODE_TO - To location type code (mandatory).
+--  psLOCRT_CODE - Location relationship type code (mandatory).
+--
+  procedure INSERT_LOC_TYPE_RELATIONSHIP
+   (psLOCT_CODE_FROM in P_BASE.tmsLOCT_CODE,
+    psLOCT_CODE_TO in P_BASE.tmsLOCT_CODE,
+    psLOCRT_CODE in P_BASE.tmsLOCRT_CODE);
+--
+-- ----------------------------------------
+-- DELETE_LOC_TYPE_RELATIONSHIP
+-- ----------------------------------------
+--
+-- Delete a relationship between two location types.
+--
+-- Parameters:
+--  psLOCT_CODE_FROM - From location type code (mandatory).
+--  psLOCT_CODE_TO - To location type code (mandatory).
+--  psLOCRT_CODE - Location relationship type code (mandatory).
+--
+  procedure DELETE_LOC_TYPE_RELATIONSHIP
+   (psLOCT_CODE_FROM in P_BASE.tmsLOCT_CODE,
+    psLOCT_CODE_TO in P_BASE.tmsLOCT_CODE,
+    psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
+    pnVERSION_NBR in out P_BASE.tnLOCTR_VERSION_NBR);
+--
+-- ----------------------------------------
+-- SET_LOCTR_TEXT
+-- ----------------------------------------
+--
+-- Create or update a general text item in a given language for the relationship between two
+--  location types.
+--
+-- Parameters:
+--  psLOCT_CODE_FROM - From location type code (mandatory).
+--  psLOCT_CODE_TO - To location type code (mandatory).
+--  psLOCRT_CODE - Location relationship type code (mandatory).
+--  pnVERSION_NBR - Update version number of location relationship (mandatory: new version number is
+--    returned).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
+--  psLANG_CODE - Language code of the text item (mandatory).
+--  psText - Text associated with location relationship (mandatory).
+--
+  procedure SET_LOCTR_TEXT
+   (psLOCT_CODE_FROM in P_BASE.tmsLOCT_CODE,
+    psLOCT_CODE_TO in P_BASE.tmsLOCT_CODE,
+    psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
+    pnVERSION_NBR in out P_BASE.tnLOCTR_VERSION_NBR,
+    psTXTT_CODE in P_BASE.tmsTXTT_CODE,
+    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psText in P_BASE.tmsText);
+--
+-- ----------------------------------------
+-- REMOVE_LOCTR_TEXT
+-- ----------------------------------------
+--
+-- Remove a general text item from a location type relationship record. The following cases arise:
+-- 1. All text of the given type is deleted for the given location relationship type (neither
+--    psSEQ_NBR nor psLANG_CODE is specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given combination of location relationship type,
+--    text type and text item sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The
+--    action fails if this is the last text item for this text type and the text type is mandatory.
+-- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
+--    action fails if this is the last language variant of the last text item for this text type and
+--    the text type is mandatory.
+--
+-- Parameters:
+--  psLOCT_CODE_FROM - From location type code (mandatory).
+--  psLOCT_CODE_TO - To location type code (mandatory).
+--  psLOCRT_CODE - Location relationship type code (mandatory).
+--  pnVERSION_NBR - Update version number of location relationship (mandatory: new version number is
+--    returned).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
+--
+  procedure REMOVE_LOCTR_TEXT
+   (psLOCT_CODE_FROM in P_BASE.tmsLOCT_CODE,
+    psLOCT_CODE_TO in P_BASE.tmsLOCT_CODE,
+    psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
+    pnVERSION_NBR in out P_BASE.tnLOCTR_VERSION_NBR,
+    psTXTT_CODE in P_BASE.tmsTXTT_CODE,
+    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null);
+--
+-- ----------------------------------------
+-- INSERT_LOCATION_TYPE_VARIANT
+-- ----------------------------------------
+--
+-- Create a new location type variant record.
+--
+-- Parameters:
+--  pnID - New location type variant identifier (returned).
+--  psLANG_CODE - Language code for the textual description (mandatory).
+--  psDescription - Textual description of location type variant (mandatory).
+--  psLOCT_CODE - Code of location type (mandatory).
+--  pnLOC_CODE - Code of related location (mandatory).
+--  psLOCRT_CODE - Code of location relationship type (mandatory).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of location type variants
+--    (optional).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the location type variant is currently available
+--    for use (optional: defaults to Y).
+--
+  procedure INSERT_LOCATION_TYPE_VARIANT
+   (pnID out P_BASE.tnLOCTV_ID,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psDescription in P_BASE.tmsText,
+    psLOCT_CODE in P_BASE.tmsLOCT_CODE,
+    pnLOC_CODE in P_BASE.tmnLOC_CODE,
+    psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
+    pnDISPLAY_SEQ in P_BASE.tnLOCTV_DISPLAY_SEQ := null,
+    psACTIVE_FLAG in P_BASE.tsLOCTV_ACTIVE_FLAG := 'Y');
+--
+-- ----------------------------------------
+-- UPDATE_LOCATION_TYPE_VARIANT
+-- ----------------------------------------
+--
+-- Update an existing location type variant record.
+--
+-- Parameters:
+--  pnID - Location type variant identifier (mandatory).
+--  pnVERSION_NBR - Update version number of location type variant (mandatory: new version number is
+--    returned).
+--  psLANG_CODE - Language code for the textual description (optional, but must be specified if
+--    psDescription is specified).
+--  psDescription - Textual description of location type variant (optional, if not specified, the
+--    description is not changed).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of location type variants (optional:
+--    if not specified, an existing display sequence is not changed; if null is specified, the
+--    display sequence is set to null).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the location type variant is currently available
+--    for use (optional: if not specified, the existing value is not changed).
+--
+  procedure UPDATE_LOCATION_TYPE_VARIANT
+   (pnID in P_BASE.tmnLOCTV_ID,
+    pnVERSION_NBR in out P_BASE.tnLOCTV_VERSION_NBR,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null,
+    psDescription in P_BASE.tsText := null,
+    pnDISPLAY_SEQ in P_BASE.tnLOCTV_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in P_BASE.tsLOCTV_ACTIVE_FLAG := null);
+--
+-- ----------------------------------------
+-- SET_LOCATION_TYPE_VARIANT
+-- ----------------------------------------
+--
+-- Create a new location type variant record or update an existing one.
+--
+-- Parameters:
+--  pnID - Location type variant identifier (optional: if null, a new one is generated and
+--    returned).
+--  pnVERSION_NBR - Update version number of location type variant (mandatory: new version number is
+--    returned; for a new location type variant, null must be specified and 1 will be returned).
+--  psLANG_CODE - Language code for the textual description (optional when updating an existing
+--    location type variant but must be specified if psDescription is specified).
+--  psDescription - Textual description of location type variant (optional when updating an existing
+--    location type variant; if not specified, the description is not changed).
+--  psLOCT_CODE - Location type code (mandatory when creating a new location type variant; ignored
+--    when updating an existing location type variant, since the location type code may not be
+--    changed).
+--  pnLOC_CODE - Code of related location (mandatory when creating a new location type variant;
+--     ignored when updating an existing location type variant, since the related location code may
+--     not be changed).
+--  psLOCRT_CODE - Location relationship type code (mandatory when creating a new location type
+--    variant; ignored when updating an existing location type variant, since the location
+--    relationship type code may not be changed).
+--  pnDISPLAY_SEQ - Sequence number to control display ordering of location type variants (optional:
+--    if not specified, an existing display sequence is not changed and a new one is set to null; if
+--    null is specified, the display sequence is set to null).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the location type variant is currently available
+--    for use (optional: if not specified, the existing value is not changed; a new value defaults
+--    to Y).
+--
+  procedure SET_LOCATION_TYPE_VARIANT
+   (pnID in out P_BASE.tnLOCTV_ID,
+    pnVERSION_NBR in out P_BASE.tnLOCTV_VERSION_NBR,
+    psLANG_CODE in P_BASE.tsLANG_CODE := null,
+    psDescription in P_BASE.tsText := null,
+    psLOCT_CODE in P_BASE.tsLOCT_CODE := null,
+    pnLOC_CODE in P_BASE.tnLOC_CODE := null,
+    psLOCRT_CODE in P_BASE.tsLOCRT_CODE := null,
+    pnDISPLAY_SEQ in P_BASE.tnLOCTV_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in P_BASE.tsLOCTV_ACTIVE_FLAG := null);
+--
+-- ----------------------------------------
+-- DELETE_LOCATION_TYPE_VARIANT
+-- ----------------------------------------
+--
+-- Delete a location type variant record.
+--
+-- Parameters:
+--  pnID - Location type variant identifier (mandatory).
+--  pnVERSION_NBR - Update version number of location type variant (mandatory).
+--
+  procedure DELETE_LOCATION_TYPE_VARIANT
+   (pnID in P_BASE.tmnLOCTV_ID,
+    pnVERSION_NBR in P_BASE.tnLOCTV_VERSION_NBR);
+--
+-- ----------------------------------------
+-- SET_LOCTV_DESCRIPTION
+-- ----------------------------------------
+--
+-- Create or update a description in a given language for a location type variant record.
+--
+-- Parameters:
+--  pnID - Location type variant identifier (mandatory).
+--  pnVERSION_NBR - Update version number of location type variant (mandatory: new version number is
+--    returned).
+--  psLANG_CODE - Language code for the textual description (mandatory).
+--  psDescription - Textual description of location type variant (mandatory).
+--
+  procedure SET_LOCTV_DESCRIPTION
+   (pnID in P_BASE.tmnLOCTV_ID,
+    pnVERSION_NBR in out P_BASE.tnLOCTV_VERSION_NBR,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psDescription in P_BASE.tmsText);
+--
+-- ----------------------------------------
+-- REMOVE_LOCTV_DESCRIPTION
+-- ----------------------------------------
+--
+-- Remove a description in a given language from a location type variant. Note that it is not
+--  possible to remove the last language variant of the description.
+--
+-- Parameters:
+--  pnID - Location type variant identifier (mandatory).
+--  pnVERSION_NBR - Update version number of location type variant (mandatory: new version number is
+--    returned).
+--  psLANG_CODE - Language code for the textual description to be removed (mandatory).
+--
+  procedure REMOVE_LOCTV_DESCRIPTION
+   (pnID in P_BASE.tmnLOCTV_ID,
+    pnVERSION_NBR in out P_BASE.tnLOCTV_VERSION_NBR,
+    psLANG_CODE in P_BASE.tmsLANG_CODE);
+--
+-- ----------------------------------------
+-- SET_LOCTV_TEXT
+-- ----------------------------------------
+--
+-- Create or update a general text item in a given language for a location type variant record.
+--
+-- Parameters:
+--  pnID - Location type variant identifier (mandatory).
+--  pnVERSION_NBR - Update version number of location type variant (mandatory: new version number is
+--    returned).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional: if null, a new one is generated and returned).
+--  psLANG_CODE - Language code of the text item (mandatory).
+--  psText - Text associated with location type variant (mandatory).
+--
+  procedure SET_LOCTV_TEXT
+   (pnID in P_BASE.tmnLOCTV_ID,
+    pnVERSION_NBR in out P_BASE.tnLOCTV_VERSION_NBR,
+    psTXTT_CODE in P_BASE.tmsTXTT_CODE,
+    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psText in P_BASE.tmsText);
+--
+-- ----------------------------------------
+-- REMOVE_LOCTV_TEXT
+-- ----------------------------------------
+--
+-- Remove a general text item from a location type variant record. The following cases arise:
+-- 1. All text of the given type is deleted for the given location type variant (neither psSEQ_NBR
+--    nor psLANG_CODE is specified). This action fails if the text type is mandatory.
+-- 2. All language variants are deleted for the given location type variant, text type and text item
+--    sequence number (pnSEQ_NBR is specified but psLANG_CODE is not). The action fails if this is
+--    the last text item for this text type and the text type is mandatory.
+-- 3. A single language variant is deleted (both pnSEQ_NBR and psLANG_CODE are specified). This
+--    action fails if this is the last language variant of the last text item for this text type and
+--    the text type is mandatory.
+--
+-- Parameters:
+--  pnID - Location type variant identifier (mandatory).
+--  pnVERSION_NBR - Update version number of location type variant (mandatory: new version number is
+--    returned).
+--  psTXTT_CODE - Type of text item (mandatory).
+--  pnSEQ_NBR - Text item sequence number (optional if psLANG_CODE is not specified).
+--  psLANG_CODE - Language code of the text item to be removed (optional).
+--
+  procedure REMOVE_LOCTV_TEXT
+   (pnID in P_BASE.tmnLOCTV_ID,
+    pnVERSION_NBR in out P_BASE.tnLOCTV_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
