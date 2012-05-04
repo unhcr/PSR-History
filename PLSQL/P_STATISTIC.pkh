@@ -26,10 +26,10 @@ create or replace package P_STATISTIC is
 -- Parameters:
 --  pnID - New statistic identifier (returned).
 --  psSTCT_CODE - Statistic type code (mandatory).
---  pnLOC_CODE - Code of residence location of persons of concern (mandatory).
---  pnLOC_CODE_COUNTRY - Location code of country of residence of persons of concern (mandatory).
---  pnLOC_CODE_ORIGIN - Code of location of origin of persons of concern (optional).
---  pnOGN_CODE - Code of origin of persons of concern (optional).
+--  pnLOC_CODE_COUNTRY - Location code of country of asylum of persons of concern (mandatory).
+--  pnLOC_CODE_ASYLUM - Code of asylum location of persons of concern (mandatory).
+--  pnLOC_CODE_ORIGIN - Location code of (country of) origin of persons of concern (optional).
+--  pnLOC_CODE_SOURCE - Code of location of origin of persons of concern (optional).
 --  pnPPG_ID - PPG identifier (optional).
 --  psPOPC_CODE - Population category code (optional).
 --  pnPER_ID - Time period identifier (optional).
@@ -45,10 +45,10 @@ create or replace package P_STATISTIC is
   procedure INSERT_STATISTIC
    (pnID out P_BASE.tnSTC_ID,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
-    pnLOC_CODE in P_BASE.tmnLOC_CODE,
     pnLOC_CODE_COUNTRY in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_ASYLUM in P_BASE.tmnLOC_CODE,
     pnLOC_CODE_ORIGIN in P_BASE.tnLOC_CODE := null,
-    psOGN_CODE in P_BASE.tsOGN_CODE := null,
+    pnLOC_CODE_SOURCE in P_BASE.tnLOC_CODE := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
     psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
     pnPER_ID in P_BASE.tnPER_ID := null,

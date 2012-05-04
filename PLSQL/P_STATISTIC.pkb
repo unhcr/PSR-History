@@ -11,10 +11,10 @@ create or replace package body P_STATISTIC is
   procedure INSERT_STATISTIC
    (pnID out P_BASE.tnSTC_ID,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
-    pnLOC_CODE in P_BASE.tmnLOC_CODE,
     pnLOC_CODE_COUNTRY in P_BASE.tmnLOC_CODE,
+    pnLOC_CODE_ASYLUM in P_BASE.tmnLOC_CODE,
     pnLOC_CODE_ORIGIN in P_BASE.tnLOC_CODE := null,
-    psOGN_CODE in P_BASE.tsOGN_CODE := null,
+    pnLOC_CODE_SOURCE in P_BASE.tnLOC_CODE := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
     psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
     pnPER_ID in P_BASE.tnPER_ID := null,
@@ -27,15 +27,14 @@ create or replace package body P_STATISTIC is
     pnDIM_ID5 in P_BASE.tnDIM_ID := null,
     pnVALUE in P_BASE.tmnSTC_VALUE)
   is
-    sCOUNTRY_CODE P_BASE.tsLOC_COUNTRY_CODE;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_STATISTIC',
       psSTCT_CODE || '~' ||
-        to_char(pnLOC_CODE) || '~' ||
         to_char(pnLOC_CODE_COUNTRY) || '~' ||
+        to_char(pnLOC_CODE_ASYLUM) || '~' ||
         to_char(pnLOC_CODE_ORIGIN) || '~' ||
-        psOGN_CODE || '~' ||
+        to_char(pnLOC_CODE_SOURCE) || '~' ||
         to_char(pnPPG_ID) || '~' ||
         psPOPC_CODE || '~' ||
         to_char(pnPER_ID) || '~' ||
@@ -47,47 +46,17 @@ create or replace package body P_STATISTIC is
         to_char(pnDIM_ID5) || '~' ||
         to_char(pnVALUE));
   --
-    select COUNTRY_CODE
-    into sCOUNTRY_CODE
-    from LOCATIONS
-    where CODE = pnLOC_CODE_COUNTRY
-    and LOCT_CODE = 'COUNTRY';
-  --
     insert into STATISTICS
-     (ID,
-      STCT_CODE,
-      LOC_CODE,
-      LOC_CODE_COUNTRY, COUNTRY_CODE,
-      LOC_CODE_ORIGIN,
-      OGN_CODE,
-      PPG_ID,
-      POPC_CODE,
-      PER_ID,
-      SEX_CODE,
-      AGR_ID,
-      DIM_ID1,
-      DIM_ID2,
-      DIM_ID3,
-      DIM_ID4,
-      DIM_ID5,
+     (ID, STCT_CODE,
+      LOC_CODE_COUNTRY, LOC_CODE_ASYLUM, LOC_CODE_ORIGIN, LOC_CODE_SOURCE,
+      PPG_ID, POPC_CODE, PER_ID, SEX_CODE, AGR_ID,
+      DIM_ID1, DIM_ID2, DIM_ID3, DIM_ID4, DIM_ID5,
       VALUE)
     values
-     (STC_SEQ.nextval,
-      psSTCT_CODE,
-      pnLOC_CODE,
-      pnLOC_CODE_COUNTRY, sCOUNTRY_CODE,
-      pnLOC_CODE_ORIGIN,
-      psOGN_CODE,
-      pnPPG_ID,
-      psPOPC_CODE,
-      pnPER_ID,
-      psSEX_CODE,
-      pnAGR_ID,
-      pnDIM_ID1,
-      pnDIM_ID2,
-      pnDIM_ID3,
-      pnDIM_ID4,
-      pnDIM_ID5,
+     (STC_SEQ.nextval, psSTCT_CODE,
+      pnLOC_CODE_COUNTRY, pnLOC_CODE_ASYLUM, pnLOC_CODE_ORIGIN, pnLOC_CODE_SOURCE,
+      pnPPG_ID, psPOPC_CODE, pnPER_ID, psSEX_CODE, pnAGR_ID,
+      pnDIM_ID1, pnDIM_ID2, pnDIM_ID3, pnDIM_ID4, pnDIM_ID5,
       pnVALUE)
     returning ID into pnID;
   --
