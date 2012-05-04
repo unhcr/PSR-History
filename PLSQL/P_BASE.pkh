@@ -6,7 +6,7 @@ create or replace package P_BASE is
 --  Type definitions and data values used throughout the PSR system.
 --
 --  Change History:
---  11-Apr-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  27-Apr-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -23,6 +23,7 @@ create or replace package P_BASE is
   subtype tmsText is tsText not null;
   subtype tdDate is date;
   subtype tmdDate is tdDate not null;
+  subtype tsCountryCode is varchar2(3);
 --
 -- AGE_PROFILES
 --
@@ -99,11 +100,29 @@ create or replace package P_BASE is
 --
 -- LOCATION_RELATIONSHIP_TYPES
 --
-  subtype tmsLOCRT_CODE is LOCATION_RELATIONSHIP_TYPES.CODE%type not null;
+  subtype tsLOCRT_CODE is LOCATION_RELATIONSHIP_TYPES.CODE%type;
+  subtype tmsLOCRT_CODE is tsLOCRT_CODE not null;
   subtype tnLOCRT_DISPLAY_SEQ is LOCATION_RELATIONSHIP_TYPES.DISPLAY_SEQ%type;
   subtype tsLOCRT_ACTIVE_FLAG is LOCATION_RELATIONSHIP_TYPES.ACTIVE_FLAG%type;
   subtype tmsLOCRT_ACTIVE_FLAG is tsLOCRT_ACTIVE_FLAG not null;
   subtype tnLOCRT_VERSION_NBR is LOCATION_RELATIONSHIP_TYPES.VERSION_NBR%type;
+--
+-- LOCATION_RELATIONSHIPS
+--
+  subtype tnLOCR_VERSION_NBR is LOCATION_RELATIONSHIPS.VERSION_NBR%type;
+--
+-- LOCATION_TYPE_RELATIONSHIPS
+--
+  subtype tnLOCTR_VERSION_NBR is LOCATION_TYPE_RELATIONSHIPS.VERSION_NBR%type;
+--
+-- LOCATION_TYPE_VARIANTS
+--
+  subtype tnLOCTV_ID is LOCATION_TYPE_VARIANTS.ID%type;
+  subtype tmnLOCTV_ID is tnLOCTV_ID not null;
+  subtype tnLOCTV_DISPLAY_SEQ is LOCATION_TYPE_VARIANTS.DISPLAY_SEQ%type;
+  subtype tsLOCTV_ACTIVE_FLAG is LOCATION_TYPE_VARIANTS.ACTIVE_FLAG%type;
+  subtype tmsLOCTV_ACTIVE_FLAG is tsLOCTV_ACTIVE_FLAG not null;
+  subtype tnLOCTV_VERSION_NBR is LOCATION_TYPE_VARIANTS.VERSION_NBR%type;
 --
 -- LOCATION_TYPES
 --
@@ -114,16 +133,10 @@ create or replace package P_BASE is
   subtype tmsLOCT_ACTIVE_FLAG is tsLOCT_ACTIVE_FLAG not null;
   subtype tnLOCT_VERSION_NBR is LOCATION_TYPES.VERSION_NBR%type;
 --
--- LOCATION_RELATIONSHIPS
---
-  subtype tnLOCR_VERSION_NBR is LOCATION_RELATIONSHIPS.VERSION_NBR%type;
---
 -- LOCATIONS
 --
   subtype tnLOC_CODE is LOCATIONS.CODE%type;
   subtype tmnLOC_CODE is tnLOC_CODE not null;
-  subtype tsLOC_COUNTRY_CODE is LOCATIONS.COUNTRY_CODE%type;
-  subtype tmsLOC_COUNTRY_CODE is tsLOC_COUNTRY_CODE not null;
   subtype tnLOC_VERSION_NBR is LOCATIONS.VERSION_NBR%type;
 --
 -- MESSAGES
@@ -131,14 +144,6 @@ create or replace package P_BASE is
   subtype tnMSG_SEQ_NBR is MESSAGES.SEQ_NBR%type;
   subtype tsMSG_SEVERITY is MESSAGES.SEVERITY%type;
   subtype tnMSG_VERSION_NBR is MESSAGES.VERSION_NBR%type;
---
--- ORIGINS
---
-  subtype tsOGN_CODE is ORIGINS.CODE%type;
-  subtype tmsOGN_CODE is tsOGN_CODE not null;
-  subtype tsOGN_ACTIVE_FLAG is ORIGINS.ACTIVE_FLAG%type;
-  subtype tmsOGN_ACTIVE_FLAG is tsOGN_ACTIVE_FLAG not null;
-  subtype tnOGN_VERSION_NBR is ORIGINS.VERSION_NBR%type;
 --
 -- POPULATION_CATEGORIES
 --
