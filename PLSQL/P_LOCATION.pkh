@@ -165,7 +165,7 @@ create or replace package P_LOCATION is
    (psCODE in P_BASE.tmsLOCT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -195,7 +195,7 @@ create or replace package P_LOCATION is
    (psCODE in P_BASE.tmsLOCT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------
@@ -374,7 +374,7 @@ create or replace package P_LOCATION is
    (pnID in P_BASE.tmnLOC_ID,
     pnVERSION_NBR in out P_BASE.tnLOC_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE,
     psText in P_BASE.tsText);
 --
@@ -403,7 +403,7 @@ create or replace package P_LOCATION is
    (pnID in P_BASE.tmnLOC_ID,
     pnVERSION_NBR in out P_BASE.tnLOC_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------
@@ -566,7 +566,7 @@ create or replace package P_LOCATION is
    (psCODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCAT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -596,7 +596,7 @@ create or replace package P_LOCATION is
    (psCODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCAT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------
@@ -612,7 +612,7 @@ create or replace package P_LOCATION is
 --  pnNUM_VALUE - Value for attribute of data type numeric (optional).
 --  pdDATE_VALUE - Value for attribute of data type date (optional).
 -- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
---  depending on the value of USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
+--  depending on the value of T_USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
 --
   procedure INSERT_LOCATION_ATTRIBUTE
    (pnLOC_ID in P_BASE.tmnLOC_ID,
@@ -636,7 +636,7 @@ create or replace package P_LOCATION is
 --  pnNUM_VALUE - Value for attribute of data type numeric (optional).
 --  pdDATE_VALUE - Value for attribute of data type date (optional).
 -- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
---  depending on the value of USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
+--  depending on the value of T_USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
 --
   procedure UPDATE_LOCATION_ATTRIBUTE
    (pnLOC_ID in P_BASE.tmnLOC_ID,
@@ -661,7 +661,7 @@ create or replace package P_LOCATION is
 --  pnNUM_VALUE - Value for attribute of data type numeric (optional).
 --  pdDATE_VALUE - Value for attribute of data type date (optional).
 -- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
---  depending on the value of USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
+--  depending on the value of T_USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
 --
   procedure SET_LOCATION_ATTRIBUTE
    (pnLOC_ID in P_BASE.tmnLOC_ID,
@@ -708,7 +708,7 @@ create or replace package P_LOCATION is
     psLOCAT_CODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCA_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -740,7 +740,7 @@ create or replace package P_LOCATION is
     psLOCAT_CODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCA_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------
@@ -893,7 +893,7 @@ create or replace package P_LOCATION is
    (psCODE in P_BASE.tmsLOCRT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCRT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -923,7 +923,7 @@ create or replace package P_LOCATION is
    (psCODE in P_BASE.tmsLOCRT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCRT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------
@@ -1024,7 +1024,7 @@ create or replace package P_LOCATION is
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -1060,7 +1060,7 @@ create or replace package P_LOCATION is
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------
@@ -1120,7 +1120,7 @@ create or replace package P_LOCATION is
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCTR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -1154,7 +1154,7 @@ create or replace package P_LOCATION is
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCTR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------
@@ -1325,7 +1325,7 @@ create or replace package P_LOCATION is
    (pnID in P_BASE.tmnLOCTV_ID,
     pnVERSION_NBR in out P_BASE.tnLOCTV_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -1355,7 +1355,7 @@ create or replace package P_LOCATION is
    (pnID in P_BASE.tmnLOCTV_ID,
     pnVERSION_NBR in out P_BASE.tnLOCTV_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 /*
 --
@@ -1382,13 +1382,13 @@ create or replace package P_LOCATION is
 --
 --
   procedure SET_COUNTRY
-   (psCODE in LOCATIONS.CODE%type,
-    psLANG_CODE in LANGUAGES.CODE%type := null,
+   (psCODE in T_LOCATIONS.CODE%type,
+    psLANG_CODE in T_LANGUAGES.CODE%type := null,
     psName in P_BASE.tsText := null,
     psLOCT_CODE in P_BASE.tsLOCT_CODE := null,
     psCOUNTRY_CODE in P_BASE.tsLOC_COUNTRY_CODE := null,
-    pdSTART_DATE in LOCATIONS.START_DATE%type := null,
-    pdEND_DATE in LOCATIONS.END_DATE%type := null);
+    pdSTART_DATE in T_LOCATIONS.START_DATE%type := null,
+    pdEND_DATE in T_LOCATIONS.END_DATE%type := null);
 */
 --
 end P_LOCATION;

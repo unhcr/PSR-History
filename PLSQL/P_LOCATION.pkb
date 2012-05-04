@@ -29,18 +29,18 @@ create or replace package body P_LOCATION is
     pnDISPLAY_SEQ in P_BASE.tnLOCT_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tmsLOCT_ACTIVE_FLAG := 'Y')
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_LOCATION_TYPE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'LOCT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    P_TEXT.SET_TEXT(nITM_ID, 'LOCT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into LOCATION_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
-    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
+    insert into T_LOCATION_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
+    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -61,10 +61,10 @@ create or replace package body P_LOCATION is
     pnDISPLAY_SEQ in P_BASE.tnLOCT_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsLOCT_ACTIVE_FLAG := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCT_VERSION_NBR;
     xLOCT_ROWID rowid;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_LOCATION_TYPE',
@@ -72,19 +72,19 @@ create or replace package body P_LOCATION is
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCT_ROWID
-    from LOCATION_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCT_ROWID
+    from T_LOCATION_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
       if psDescription is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'LOCT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      then P_TEXT.SET_TEXT(nITM_ID, 'LOCT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      update LOCATION_TYPES
+      update T_LOCATION_TYPES
       set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
@@ -147,7 +147,7 @@ create or replace package body P_LOCATION is
    (psCODE in P_BASE.tmsLOCT_CODE,
     pnVERSION_NBR in P_BASE.tnLOCT_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCT_VERSION_NBR;
     xLOCT_ROWID rowid;
   begin
@@ -155,17 +155,17 @@ create or replace package body P_LOCATION is
      (sVersion || '-' || sComponent || '.DELETE_LOCATION_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCT_ROWID
-    from LOCATION_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCT_ROWID
+    from T_LOCATION_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from TEXT_TYPES where rowid = xLOCT_ROWID;
+      delete from T_TEXT_TYPES where rowid = xLOCT_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('LOC', 1, 'Location type has been updated by another user');
     end if;
@@ -187,7 +187,7 @@ create or replace package body P_LOCATION is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOCT_DESCRIPTION',
@@ -234,11 +234,11 @@ create or replace package body P_LOCATION is
    (psCODE in P_BASE.tmsLOCT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCT_VERSION_NBR;
     xLOCT_ROWID rowid;
   begin
@@ -248,17 +248,17 @@ create or replace package body P_LOCATION is
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCT_ROWID
-    from LOCATION_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCT_ROWID
+    from T_LOCATION_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'LOCT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'LOCT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update LOCATION_TYPES
+      update T_LOCATION_TYPES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -281,10 +281,10 @@ create or replace package body P_LOCATION is
    (psCODE in P_BASE.tmsLOCT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCT_VERSION_NBR;
     xLOCT_ROWID rowid;
   begin
@@ -293,17 +293,17 @@ create or replace package body P_LOCATION is
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCT_ROWID
-    from LOCATION_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCT_ROWID
+    from T_LOCATION_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update LOCATION_TYPES
+      update T_LOCATION_TYPES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -331,8 +331,8 @@ create or replace package body P_LOCATION is
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_LOCATION',
@@ -357,8 +357,8 @@ create or replace package body P_LOCATION is
         begin
           select 'x'
           into sDummy
-          from LOCATION_ATTRIBUTES LOCA
-          join LOCATIONS LOC
+          from T_LOCATION_ATTRIBUTES LOCA
+          join T_LOCATIONS LOC
             on LOC.ID = LOCA.LOC_ID
           where LOCA.CHAR_VALUE = psCountryCode
           and LOCA.LOCAT_CODE = gsCOUNTRY_LOCAT_CODE
@@ -384,14 +384,14 @@ create or replace package body P_LOCATION is
         (gnLOC_ID_CHECK_INCREMENT -
           mod(pnID * gnLOC_ID_CHECK_MULTIPLIER, gnLOC_ID_CHECK_MODULUS)) * 1e8;
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'LOC', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
+    P_TEXT.SET_TEXT(nITM_ID, 'LOC', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
   --
-    insert into LOCATIONS
+    insert into T_LOCATIONS
      (ID, LOCT_CODE,
-      START_DATE, END_DATE, TXT_ID)
+      START_DATE, END_DATE, ITM_ID)
     values
      (pnID, psLOCT_CODE,
-      nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE), nTXT_ID);
+      nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE), nITM_ID);
   --
   -- Create location attribute for country code if necessary.
   --
@@ -424,14 +424,14 @@ create or replace package body P_LOCATION is
     nLOCTV_ID P_BASE.tnLOCTV_ID;
     dSTART_DATE P_BASE.tdDate;
     dEND_DATE P_BASE.tdDate;
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
     xLOC_ROWID rowid;
     dSTART_DATE_NEW P_BASE.tdDate;
     dEND_DATE_NEW P_BASE.tdDate;
     sCOUNTRY_CODE P_BASE.tsCountryCode;
     nLOCA_VERSION_NBR P_BASE.tnLOCA_VERSION_NBR;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_LOCATION',
@@ -441,9 +441,9 @@ create or replace package body P_LOCATION is
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
   --
-    select LOCT_CODE, LOCTV_ID, START_DATE, END_DATE, TXT_ID, VERSION_NBR, rowid
-    into sLOCT_CODE, nLOCTV_ID, dSTART_DATE, dEND_DATE, nTXT_ID, nVERSION_NBR, xLOC_ROWID
-    from LOCATIONS
+    select LOCT_CODE, LOCTV_ID, START_DATE, END_DATE, ITM_ID, VERSION_NBR, rowid
+    into sLOCT_CODE, nLOCTV_ID, dSTART_DATE, dEND_DATE, nITM_ID, nVERSION_NBR, xLOC_ROWID
+    from T_LOCATIONS
     where ID = pnID
     for update;
   --
@@ -478,7 +478,7 @@ create or replace package body P_LOCATION is
         --
           select CHAR_VALUE, VERSION_NBR
           into sCOUNTRY_CODE, nLOCA_VERSION_NBR
-          from LOCATION_ATTRIBUTES
+          from T_LOCATION_ATTRIBUTES
           where LOC_ID = pnID
           and LOCAT_CODE = gsCOUNTRY_LOCAT_CODE;
         --
@@ -496,8 +496,8 @@ create or replace package body P_LOCATION is
             begin
               select 'x'
               into sDummy
-              from LOCATION_ATTRIBUTES LOCA
-              join LOCATIONS LOC
+              from T_LOCATION_ATTRIBUTES LOCA
+              join T_LOCATIONS LOC
                 on LOC.ID = LOCA.LOC_ID
               where LOCA.CHAR_VALUE = nvl(psCountryCode, sCOUNTRY_CODE)
               and LOCA.LOCAT_CODE = gsCOUNTRY_LOCAT_CODE
@@ -536,8 +536,8 @@ create or replace package body P_LOCATION is
         begin
           select 'x'
           into sDummy
-          from LOCATION_TYPE_VARIANTS LOCTV
-          join LOCATION_RELATIONSHIPS LOCR
+          from T_LOCATION_TYPE_VARIANTS LOCTV
+          join T_LOCATION_RELATIONSHIPS LOCR
             on LOCR.LOC_ID_FROM = LOCTV.LOC_ID
             and LOCR.LOC_ID_TO = pnID
             and LOCR.LOCRT_CODE = LOCTV.LOCRT_CODE
@@ -550,10 +550,10 @@ create or replace package body P_LOCATION is
       end if;
     --
       if psName is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'LOC', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
+      then P_TEXT.SET_TEXT(nITM_ID, 'LOC', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
       end if;
     --
-      update LOCATIONS
+      update T_LOCATIONS
       set LOCTV_ID = case when pnLOCTV_ID = -1 then LOCTV_ID else pnLOCTV_ID end,
         START_DATE = dSTART_DATE,
         END_DATE = dEND_DATE,
@@ -622,7 +622,7 @@ create or replace package body P_LOCATION is
    (pnID in P_BASE.tmnLOC_ID,
     pnVERSION_NBR in P_BASE.tnLOC_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
     xLOC_ROWID rowid;
   begin
@@ -630,17 +630,17 @@ create or replace package body P_LOCATION is
      (sVersion || '-' || sComponent || '.DELETE_LOCATION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOC_ROWID
-    from LOCATIONS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOC_ROWID
+    from T_LOCATIONS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from LOCATIONS where rowid = xLOC_ROWID;
+      delete from T_LOCATIONS where rowid = xLOC_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('LOC', 2, 'Location has been updated by another user');
     end if;
@@ -662,7 +662,7 @@ create or replace package body P_LOCATION is
     psLANG_CODE in P_BASE.tsLANG_CODE,
     psName in P_BASE.tsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOC_NAME',
@@ -709,11 +709,11 @@ create or replace package body P_LOCATION is
    (pnID in P_BASE.tmnLOC_ID,
     pnVERSION_NBR in out P_BASE.tnLOC_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE,
     psText in P_BASE.tsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
     xLOC_ROWID rowid;
   begin
@@ -723,17 +723,17 @@ create or replace package body P_LOCATION is
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOC_ROWID
-    from LOCATIONS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOC_ROWID
+    from T_LOCATIONS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'LOC', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'LOC', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update LOCATIONS
+      update T_LOCATIONS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOC_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -756,10 +756,10 @@ create or replace package body P_LOCATION is
    (pnID in P_BASE.tmnLOC_ID,
     pnVERSION_NBR in out P_BASE.tnLOC_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
     xLOC_ROWID rowid;
   begin
@@ -768,17 +768,17 @@ create or replace package body P_LOCATION is
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOC_ROWID
-    from LOCATIONS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOC_ROWID
+    from T_LOCATIONS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update LOCATIONS
+      update T_LOCATIONS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOC_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -805,8 +805,8 @@ create or replace package body P_LOCATION is
     pnDISPLAY_SEQ in P_BASE.tnLOCAT_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tsLOCAT_ACTIVE_FLAG := 'Y')
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_LOCATION_ATTRIBUTE_TYPE',
@@ -814,10 +814,10 @@ create or replace package body P_LOCATION is
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'LOCAT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    P_TEXT.SET_TEXT(nITM_ID, 'LOCAT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into LOCATION_ATTRIBUTE_TYPES (CODE, DATA_TYPE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
-    values (psCODE, psDATA_TYPE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
+    insert into T_LOCATION_ATTRIBUTE_TYPES (CODE, DATA_TYPE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
+    values (psCODE, psDATA_TYPE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -840,10 +840,10 @@ create or replace package body P_LOCATION is
     psACTIVE_FLAG in P_BASE.tsLOCAT_ACTIVE_FLAG := null)
   is
     sDATA_TYPE P_BASE.tsLOCAT_DATA_TYPE;
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCAT_VERSION_NBR;
     xLOCAT_ROWID rowid;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_LOCATION_ATTRIBUTE_TYPE',
@@ -851,9 +851,9 @@ create or replace package body P_LOCATION is
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    select DATA_TYPE, TXT_ID, VERSION_NBR, rowid
-    into sDATA_TYPE, nTXT_ID, nVERSION_NBR, xLOCAT_ROWID
-    from LOCATION_ATTRIBUTE_TYPES
+    select DATA_TYPE, ITM_ID, VERSION_NBR, rowid
+    into sDATA_TYPE, nITM_ID, nVERSION_NBR, xLOCAT_ROWID
+    from T_LOCATION_ATTRIBUTE_TYPES
     where CODE = psCODE
     for update;
   --
@@ -867,7 +867,7 @@ create or replace package body P_LOCATION is
         declare
           sDummy varchar2(1);
         begin
-          select 'x' into sDummy from LOCATION_ATTRIBUTES where LOCAT_CODE = psCODE;
+          select 'x' into sDummy from T_LOCATION_ATTRIBUTES where LOCAT_CODE = psCODE;
         --
           raise TOO_MANY_ROWS;
         exception
@@ -879,10 +879,10 @@ create or replace package body P_LOCATION is
       end if;
     --
       if psDescription is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'LOCAT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      then P_TEXT.SET_TEXT(nITM_ID, 'LOCAT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      update LOCATION_ATTRIBUTE_TYPES
+      update T_LOCATION_ATTRIBUTE_TYPES
       set DATA_TYPE = nvl(psDATA_TYPE, DATA_TYPE),
         DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
@@ -948,7 +948,7 @@ create or replace package body P_LOCATION is
    (psCODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in P_BASE.tnLOCAT_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCAT_VERSION_NBR;
     xLOCAT_ROWID rowid;
   begin
@@ -956,17 +956,17 @@ create or replace package body P_LOCATION is
      (sVersion || '-' || sComponent || '.DELETE_LOCATION_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCAT_ROWID
-    from LOCATION_ATTRIBUTE_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCAT_ROWID
+    from T_LOCATION_ATTRIBUTE_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from LOCATION_ATTRIBUTE_TYPES where rowid = xLOCAT_ROWID;
+      delete from T_LOCATION_ATTRIBUTE_TYPES where rowid = xLOCAT_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('LOC', 3, 'Location attribute type has been updated by another user');
     end if;
@@ -988,7 +988,7 @@ create or replace package body P_LOCATION is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOCAT_DESCRIPTION',
@@ -1035,11 +1035,11 @@ create or replace package body P_LOCATION is
    (psCODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCAT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCAT_VERSION_NBR;
     xLOCAT_ROWID rowid;
   begin
@@ -1049,17 +1049,17 @@ create or replace package body P_LOCATION is
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCAT_ROWID
-    from LOCATION_ATTRIBUTE_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCAT_ROWID
+    from T_LOCATION_ATTRIBUTE_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'LOCAT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'LOCAT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update LOCATION_ATTRIBUTE_TYPES
+      update T_LOCATION_ATTRIBUTE_TYPES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -1082,10 +1082,10 @@ create or replace package body P_LOCATION is
    (psCODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCAT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCAT_VERSION_NBR;
     xLOCAT_ROWID rowid;
   begin
@@ -1094,17 +1094,17 @@ create or replace package body P_LOCATION is
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCAT_ROWID
-    from LOCATION_ATTRIBUTE_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCAT_ROWID
+    from T_LOCATION_ATTRIBUTE_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update LOCATION_ATTRIBUTE_TYPES
+      update T_LOCATION_ATTRIBUTE_TYPES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -1140,7 +1140,7 @@ create or replace package body P_LOCATION is
   --
     select DATA_TYPE, ACTIVE_FLAG
     into sDATA_TYPE, sACTIVE_FLAG
-    from LOCATION_ATTRIBUTE_TYPES
+    from T_LOCATION_ATTRIBUTE_TYPES
     where CODE = psLOCAT_CODE;
   --
     if sACTIVE_FLAG = 'N'
@@ -1154,7 +1154,7 @@ create or replace package body P_LOCATION is
       else P_MESSAGE.DISPLAY_MESSAGE('LOC', 12, 'Attribute of the correct type must be specified');
     end case;
   --
-    insert into LOCATION_ATTRIBUTES (LOC_ID, LOCAT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
+    insert into T_LOCATION_ATTRIBUTES (LOC_ID, LOCAT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
     values (pnLOC_ID, psLOCAT_CODE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
   --
     PLS_UTILITY.END_MODULE;
@@ -1188,7 +1188,7 @@ create or replace package body P_LOCATION is
   --
     select CHAR_VALUE, VERSION_NBR, rowid
     into sCHAR_VALUE, nVERSION_NBR, xLOCA_ROWID
-    from LOCATION_ATTRIBUTES
+    from T_LOCATION_ATTRIBUTES
     where LOC_ID = pnLOC_ID
     and LOCAT_CODE = psLOCAT_CODE
     for update;
@@ -1206,12 +1206,12 @@ create or replace package body P_LOCATION is
         begin
           select 'x'
           into sDummy
-          from LOCATIONS LOC1
-          join LOCATION_ATTRIBUTES LOCA
+          from T_LOCATIONS LOC1
+          join T_LOCATION_ATTRIBUTES LOCA
             on LOCA.LOC_ID != LOC1.ID
             and LOCA.CHAR_VALUE = psCHAR_VALUE
             and LOCA.LOCAT_CODE = gsCOUNTRY_LOCAT_CODE
-          join LOCATIONS LOC2
+          join T_LOCATIONS LOC2
             on LOC2.ID = LOCA.LOC_ID
             and LOC2.START_DATE < LOC1.END_DATE
             and LOC2.END_DATE > LOC1.START_DATE
@@ -1226,7 +1226,7 @@ create or replace package body P_LOCATION is
         end;
       end if;
     --
-      update LOCATION_ATTRIBUTES
+      update T_LOCATION_ATTRIBUTES
       set CHAR_VALUE = psCHAR_VALUE,
         NUM_VALUE = pnNUM_VALUE,
         DATE_VALUE = pdDATE_VALUE,
@@ -1290,7 +1290,7 @@ create or replace package body P_LOCATION is
     psLOCAT_CODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in P_BASE.tnLOCA_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCA_VERSION_NBR;
     xLOCA_ROWID rowid;
   begin
@@ -1302,19 +1302,19 @@ create or replace package body P_LOCATION is
     then P_MESSAGE.DISPLAY_MESSAGE('LOC', 999, 'Cannot delete the primary country code');
     end if;
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCA_ROWID
-    from LOCATION_ATTRIBUTES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCA_ROWID
+    from T_LOCATION_ATTRIBUTES
     where LOC_ID = pnLOC_ID
     and LOCAT_CODE = psLOCAT_CODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from LOCATION_ATTRIBUTES where rowid = xLOCA_ROWID;
+      delete from T_LOCATION_ATTRIBUTES where rowid = xLOCA_ROWID;
     --
-      if nTXT_ID is not null
-      then P_TEXT.DELETE_TEXT(nTXT_ID);
+      if nITM_ID is not null
+      then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
       P_MESSAGE.DISPLAY_MESSAGE('LOC', 4, 'Location attribute has been updated by another user');
@@ -1336,11 +1336,11 @@ create or replace package body P_LOCATION is
     psLOCAT_CODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCA_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCA_VERSION_NBR;
     xLOCA_ROWID rowid;
   begin
@@ -1350,19 +1350,19 @@ create or replace package body P_LOCATION is
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCA_ROWID
-    from LOCATION_ATTRIBUTES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCA_ROWID
+    from T_LOCATION_ATTRIBUTES
     where LOC_ID = pnLOC_ID
     and LOCAT_CODE = psLOCAT_CODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'LOCA', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'LOCA', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update LOCATION_ATTRIBUTES
-      set TXT_ID = nTXT_ID,
+      update T_LOCATION_ATTRIBUTES
+      set ITM_ID = nITM_ID,
         VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCA_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -1386,10 +1386,10 @@ create or replace package body P_LOCATION is
     psLOCAT_CODE in P_BASE.tmsLOCAT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCA_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCA_VERSION_NBR;
     xLOCA_ROWID rowid;
   begin
@@ -1398,18 +1398,18 @@ create or replace package body P_LOCATION is
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCA_ROWID
-    from LOCATION_ATTRIBUTES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCA_ROWID
+    from T_LOCATION_ATTRIBUTES
     where LOC_ID = pnLOC_ID
     and LOCAT_CODE = psLOCAT_CODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update LOCATION_ATTRIBUTES
+      update T_LOCATION_ATTRIBUTES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCA_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -1435,18 +1435,18 @@ create or replace package body P_LOCATION is
     pnDISPLAY_SEQ in P_BASE.tnLOCRT_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tsLOCRT_ACTIVE_FLAG := 'Y')
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_LOC_RELATIONSHIP_TYPE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'LOCRT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    P_TEXT.SET_TEXT(nITM_ID, 'LOCRT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into LOCATION_RELATIONSHIP_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
-    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
+    insert into T_LOCATION_RELATIONSHIP_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
+    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -1467,10 +1467,10 @@ create or replace package body P_LOCATION is
     pnDISPLAY_SEQ in P_BASE.tnLOCRT_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsLOCRT_ACTIVE_FLAG := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCRT_VERSION_NBR;
     xLOCRT_ROWID rowid;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_LOC_RELATIONSHIP_TYPE',
@@ -1478,19 +1478,19 @@ create or replace package body P_LOCATION is
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCRT_ROWID
-    from LOCATION_RELATIONSHIP_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCRT_ROWID
+    from T_LOCATION_RELATIONSHIP_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
       if psDescription is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'LOCRT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      then P_TEXT.SET_TEXT(nITM_ID, 'LOCRT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      update LOCATION_RELATIONSHIP_TYPES
+      update T_LOCATION_RELATIONSHIP_TYPES
       set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
@@ -1553,7 +1553,7 @@ create or replace package body P_LOCATION is
    (psCODE in P_BASE.tmsLOCRT_CODE,
     pnVERSION_NBR in P_BASE.tnLOCRT_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCRT_VERSION_NBR;
     xLOCRT_ROWID rowid;
   begin
@@ -1561,17 +1561,17 @@ create or replace package body P_LOCATION is
      (sVersion || '-' || sComponent || '.DELETE_LOC_RELATIONSHIP_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCRT_ROWID
-    from LOCATION_RELATIONSHIP_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCRT_ROWID
+    from T_LOCATION_RELATIONSHIP_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from LOCATION_RELATIONSHIP_TYPES where rowid = xLOCRT_ROWID;
+      delete from T_LOCATION_RELATIONSHIP_TYPES where rowid = xLOCRT_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('LOC', 5, 'Location relationship type has been updated by another user');
     end if;
@@ -1593,7 +1593,7 @@ create or replace package body P_LOCATION is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOCRT_DESCRIPTION',
@@ -1640,11 +1640,11 @@ create or replace package body P_LOCATION is
    (psCODE in P_BASE.tmsLOCRT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCRT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCRT_VERSION_NBR;
     xLOCRT_ROWID rowid;
   begin
@@ -1654,17 +1654,17 @@ create or replace package body P_LOCATION is
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCRT_ROWID
-    from LOCATION_RELATIONSHIP_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCRT_ROWID
+    from T_LOCATION_RELATIONSHIP_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'LOCRT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'LOCRT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update LOCATION_RELATIONSHIP_TYPES
+      update T_LOCATION_RELATIONSHIP_TYPES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCRT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -1687,10 +1687,10 @@ create or replace package body P_LOCATION is
    (psCODE in P_BASE.tmsLOCRT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCRT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCRT_VERSION_NBR;
     xLOCRT_ROWID rowid;
   begin
@@ -1699,17 +1699,17 @@ create or replace package body P_LOCATION is
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCRT_ROWID
-    from LOCATION_RELATIONSHIP_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCRT_ROWID
+    from T_LOCATION_RELATIONSHIP_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update LOCATION_RELATIONSHIP_TYPES
+      update T_LOCATION_RELATIONSHIP_TYPES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCRT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -1743,7 +1743,7 @@ create or replace package body P_LOCATION is
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
   --
-    select ACTIVE_FLAG into sACTIVE_FLAG from LOCATION_RELATIONSHIP_TYPES where CODE = psLOCRT_CODE;
+    select ACTIVE_FLAG into sACTIVE_FLAG from T_LOCATION_RELATIONSHIP_TYPES where CODE = psLOCRT_CODE;
   --
     if sACTIVE_FLAG = 'N'
     then P_MESSAGE.DISPLAY_MESSAGE('LOC', 13, 'Inactive location relationship type');
@@ -1757,7 +1757,7 @@ create or replace package body P_LOCATION is
     begin
       select 'x'
       into sDummy
-      from LOCATION_RELATIONSHIPS
+      from T_LOCATION_RELATIONSHIPS
       where LOC_ID_FROM = pnLOC_ID_FROM
       and LOC_ID_TO = pnLOC_ID_TO
       and LOCRT_CODE = psLOCRT_CODE
@@ -1772,7 +1772,7 @@ create or replace package body P_LOCATION is
       then P_MESSAGE.DISPLAY_MESSAGE('LOC', 14, 'Overlapping location relationship already exists');
     end;
   --
-    insert into LOCATION_RELATIONSHIPS
+    insert into T_LOCATION_RELATIONSHIPS
      (LOC_ID_FROM, LOC_ID_TO, LOCRT_CODE, START_DATE,
       END_DATE)
     values
@@ -1814,7 +1814,7 @@ create or replace package body P_LOCATION is
   --
     select END_DATE, VERSION_NBR, rowid
     into dEND_DATE, nVERSION_NBR, xLOCR_ROWID
-    from LOCATION_RELATIONSHIPS
+    from T_LOCATION_RELATIONSHIPS
     where LOC_ID_FROM = pnLOC_ID_FROM
     and LOC_ID_TO = pnLOC_ID_TO
     and LOCRT_CODE = psLOCRT_CODE
@@ -1843,7 +1843,7 @@ create or replace package body P_LOCATION is
       begin
         select 'x'
         into sDummy
-        from LOCATION_RELATIONSHIPS
+        from T_LOCATION_RELATIONSHIPS
         where LOC_ID_FROM = pnLOC_ID_FROM
         and LOC_ID_TO = pnLOC_ID_TO
         and LOCRT_CODE = psLOCRT_CODE
@@ -1859,7 +1859,7 @@ create or replace package body P_LOCATION is
         then P_MESSAGE.DISPLAY_MESSAGE('LOC', 14, 'Overlapping location relationship already exists');
       end;
     --
-      update LOCATION_RELATIONSHIPS
+      update T_LOCATION_RELATIONSHIPS
       set START_DATE = dSTART_DATE_NEW,
         END_DATE = dEND_DATE_NEW,
         VERSION_NBR = VERSION_NBR + 1
@@ -1887,7 +1887,7 @@ create or replace package body P_LOCATION is
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in P_BASE.tnLOCR_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCR_VERSION_NBR;
     xLOCR_ROWID rowid;
   begin
@@ -1897,9 +1897,9 @@ create or replace package body P_LOCATION is
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCR_ROWID
-    from LOCATION_RELATIONSHIPS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCR_ROWID
+    from T_LOCATION_RELATIONSHIPS
     where LOC_ID_FROM = pnLOC_ID_FROM
     and LOC_ID_TO = pnLOC_ID_TO
     and LOCRT_CODE = psLOCRT_CODE
@@ -1908,10 +1908,10 @@ create or replace package body P_LOCATION is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from LOCATION_RELATIONSHIPS where rowid = xLOCR_ROWID;
+      delete from T_LOCATION_RELATIONSHIPS where rowid = xLOCR_ROWID;
     --
-      if nTXT_ID is not null
-      then P_TEXT.DELETE_TEXT(nTXT_ID);
+      if nITM_ID is not null
+      then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
       P_MESSAGE.DISPLAY_MESSAGE('LOC', 6, 'Location relationship has been updated by another user');
@@ -1935,11 +1935,11 @@ create or replace package body P_LOCATION is
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCR_VERSION_NBR;
     xLOCR_ROWID rowid;
   begin
@@ -1950,9 +1950,9 @@ create or replace package body P_LOCATION is
         to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCR_ROWID
-    from LOCATION_RELATIONSHIPS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCR_ROWID
+    from T_LOCATION_RELATIONSHIPS
     where LOC_ID_FROM = pnLOC_ID_FROM
     and LOC_ID_TO = pnLOC_ID_TO
     and LOCRT_CODE = psLOCRT_CODE
@@ -1961,10 +1961,10 @@ create or replace package body P_LOCATION is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'LOCR', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'LOCR', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update LOCATION_RELATIONSHIPS
-      set TXT_ID = nTXT_ID,
+      update T_LOCATION_RELATIONSHIPS
+      set ITM_ID = nITM_ID,
         VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -1990,10 +1990,10 @@ create or replace package body P_LOCATION is
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCR_VERSION_NBR;
     xLOCR_ROWID rowid;
   begin
@@ -2003,9 +2003,9 @@ create or replace package body P_LOCATION is
         '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || to_char(pnVERSION_NBR) ||
         '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCR_ROWID
-    from LOCATION_RELATIONSHIPS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCR_ROWID
+    from T_LOCATION_RELATIONSHIPS
     where LOC_ID_FROM = pnLOC_ID_FROM
     and LOC_ID_TO = pnLOC_ID_TO
     and LOCRT_CODE = psLOCRT_CODE
@@ -2014,9 +2014,9 @@ create or replace package body P_LOCATION is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update LOCATION_RELATIONSHIPS
+      update T_LOCATION_RELATIONSHIPS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -2046,13 +2046,13 @@ create or replace package body P_LOCATION is
      (sVersion || '-' || sComponent || '.INSERT_LOC_TYPE_RELATIONSHIP',
       psLOCT_CODE_FROM || '~' || psLOCT_CODE_TO || '~' || psLOCRT_CODE);
   --
-    select ACTIVE_FLAG into sACTIVE_FLAG from LOCATION_RELATIONSHIP_TYPES where CODE = psLOCRT_CODE;
+    select ACTIVE_FLAG into sACTIVE_FLAG from T_LOCATION_RELATIONSHIP_TYPES where CODE = psLOCRT_CODE;
   --
     if sACTIVE_FLAG = 'N'
     then P_MESSAGE.DISPLAY_MESSAGE('LOC', 13, 'Inactive location relationship type');
     end if;
   --
-    insert into LOCATION_TYPE_RELATIONSHIPS (LOCT_CODE_FROM, LOCT_CODE_TO, LOCRT_CODE)
+    insert into T_LOCATION_TYPE_RELATIONSHIPS (LOCT_CODE_FROM, LOCT_CODE_TO, LOCRT_CODE)
     values (psLOCT_CODE_FROM, psLOCT_CODE_TO, psLOCRT_CODE);
   --
     PLS_UTILITY.END_MODULE;
@@ -2072,7 +2072,7 @@ create or replace package body P_LOCATION is
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCTR_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCTR_VERSION_NBR;
     xLOCTR_ROWID rowid;
   begin
@@ -2080,9 +2080,9 @@ create or replace package body P_LOCATION is
      (sVersion || '-' || sComponent || '.DELETE_LOC_TYPE_RELATIONSHIP',
       psLOCT_CODE_FROM || '~' || psLOCT_CODE_TO || '~' || psLOCRT_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCTR_ROWID
-    from LOCATION_TYPE_RELATIONSHIPS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCTR_ROWID
+    from T_LOCATION_TYPE_RELATIONSHIPS
     where LOCT_CODE_FROM = psLOCT_CODE_FROM
     and LOCT_CODE_TO = psLOCT_CODE_TO
     and LOCRT_CODE = psLOCRT_CODE
@@ -2090,10 +2090,10 @@ create or replace package body P_LOCATION is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from LOCATION_TYPE_RELATIONSHIPS where rowid = xLOCTR_ROWID;
+      delete from T_LOCATION_TYPE_RELATIONSHIPS where rowid = xLOCTR_ROWID;
     --
-      if nTXT_ID is not null
-      then P_TEXT.DELETE_TEXT(nTXT_ID);
+      if nITM_ID is not null
+      then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
       P_MESSAGE.DISPLAY_MESSAGE('LOC', 999, 'Location relationship type has been updated by another user');
@@ -2116,11 +2116,11 @@ create or replace package body P_LOCATION is
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCTR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCTR_VERSION_NBR;
     xLOCTR_ROWID rowid;
   begin
@@ -2130,9 +2130,9 @@ create or replace package body P_LOCATION is
         to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCTR_ROWID
-    from LOCATION_TYPE_RELATIONSHIPS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCTR_ROWID
+    from T_LOCATION_TYPE_RELATIONSHIPS
     where LOCT_CODE_FROM = psLOCT_CODE_FROM
     and LOCT_CODE_TO = psLOCT_CODE_TO
     and LOCRT_CODE = psLOCRT_CODE
@@ -2140,10 +2140,10 @@ create or replace package body P_LOCATION is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'LOCR', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'LOCR', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update LOCATION_TYPE_RELATIONSHIPS
-      set TXT_ID = nTXT_ID,
+      update T_LOCATION_TYPE_RELATIONSHIPS
+      set ITM_ID = nITM_ID,
         VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCTR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -2168,10 +2168,10 @@ create or replace package body P_LOCATION is
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
     pnVERSION_NBR in out P_BASE.tnLOCTR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCTR_VERSION_NBR;
     xLOCTR_ROWID rowid;
   begin
@@ -2181,9 +2181,9 @@ create or replace package body P_LOCATION is
         to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCTR_ROWID
-    from LOCATION_TYPE_RELATIONSHIPS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCTR_ROWID
+    from T_LOCATION_TYPE_RELATIONSHIPS
     where LOCT_CODE_FROM = psLOCT_CODE_FROM
     and LOCT_CODE_TO = psLOCT_CODE_TO
     and LOCRT_CODE = psLOCRT_CODE
@@ -2191,9 +2191,9 @@ create or replace package body P_LOCATION is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update LOCATION_TYPE_RELATIONSHIPS
+      update T_LOCATION_TYPE_RELATIONSHIPS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCTR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -2222,8 +2222,8 @@ create or replace package body P_LOCATION is
     pnDISPLAY_SEQ in P_BASE.tnLOCTV_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tsLOCTV_ACTIVE_FLAG := 'Y')
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_LOCATION_TYPE_VARIANT',
@@ -2231,14 +2231,14 @@ create or replace package body P_LOCATION is
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'LOCTV', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    P_TEXT.SET_TEXT(nITM_ID, 'LOCTV', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into LOCATION_TYPE_VARIANTS
+    insert into T_LOCATION_TYPE_VARIANTS
      (ID, LOCT_CODE, LOC_ID, LOCRT_CODE, DISPLAY_SEQ, ACTIVE_FLAG,
-      TXT_ID)
+      ITM_ID)
     values
      (LOCTV_SEQ.nextval, psLOCT_CODE, pnLOC_ID, psLOCRT_CODE, pnDISPLAY_SEQ, psACTIVE_FLAG,
-      nTXT_ID)
+      nITM_ID)
     returning ID into pnID;
   --
     PLS_UTILITY.END_MODULE;
@@ -2260,10 +2260,10 @@ create or replace package body P_LOCATION is
     pnDISPLAY_SEQ in P_BASE.tnLOCTV_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsLOCTV_ACTIVE_FLAG := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCTV_VERSION_NBR;
     xLOCTV_ROWID rowid;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_LOCATION_TYPE_VARIANT',
@@ -2271,19 +2271,19 @@ create or replace package body P_LOCATION is
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCTV_ROWID
-    from LOCATION_TYPE_VARIANTS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCTV_ROWID
+    from T_LOCATION_TYPE_VARIANTS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
       if psDescription is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'LOCTV', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      then P_TEXT.SET_TEXT(nITM_ID, 'LOCTV', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      update LOCATION_TYPE_VARIANTS
+      update T_LOCATION_TYPE_VARIANTS
       set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
@@ -2350,7 +2350,7 @@ create or replace package body P_LOCATION is
    (pnID in P_BASE.tmnLOCTV_ID,
     pnVERSION_NBR in P_BASE.tnLOCTV_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCTV_VERSION_NBR;
     xLOCTV_ROWID rowid;
   begin
@@ -2358,17 +2358,17 @@ create or replace package body P_LOCATION is
      (sVersion || '-' || sComponent || '.DELETE_LOCATION_TYPE_VARIANT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCTV_ROWID
-    from LOCATION_TYPE_VARIANTS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCTV_ROWID
+    from T_LOCATION_TYPE_VARIANTS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from LOCATION_TYPE_VARIANTS where rowid = xLOCTV_ROWID;
+      delete from T_LOCATION_TYPE_VARIANTS where rowid = xLOCTV_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('LOC', 999, 'Location type variant has been updated by another user');
     end if;
@@ -2390,7 +2390,7 @@ create or replace package body P_LOCATION is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_LOCTV_DESCRIPTION',
@@ -2437,11 +2437,11 @@ create or replace package body P_LOCATION is
    (pnID in P_BASE.tmnLOCTV_ID,
     pnVERSION_NBR in out P_BASE.tnLOCTV_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCTV_VERSION_NBR;
     xLOCTV_ROWID rowid;
   begin
@@ -2451,17 +2451,17 @@ create or replace package body P_LOCATION is
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCTV_ROWID
-    from LOCATION_TYPE_VARIANTS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCTV_ROWID
+    from T_LOCATION_TYPE_VARIANTS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'LOCTV', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'LOCTV', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update LOCATION_TYPE_VARIANTS
+      update T_LOCATION_TYPE_VARIANTS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCTV_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -2484,10 +2484,10 @@ create or replace package body P_LOCATION is
    (pnID in P_BASE.tmnLOCTV_ID,
     pnVERSION_NBR in out P_BASE.tnLOCTV_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCTV_VERSION_NBR;
     xLOCTV_ROWID rowid;
   begin
@@ -2496,17 +2496,17 @@ create or replace package body P_LOCATION is
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xLOCTV_ROWID
-    from LOCATION_TYPE_VARIANTS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCTV_ROWID
+    from T_LOCATION_TYPE_VARIANTS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update LOCATION_TYPE_VARIANTS
+      update T_LOCATION_TYPE_VARIANTS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOCTV_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -2536,32 +2536,32 @@ begin
 --
   select CHAR_VALUE
   into gsCOUNTRY_LOCAT_CODE
-  from SYSTEM_PARAMETERS
+  from T_SYSTEM_PARAMETERS
   where CODE = 'COUNTRY LOCAT CODE';
 --
   select NUM_VALUE
   into gnLOC_ID_MULTIPLIER
-  from SYSTEM_PARAMETERS
+  from T_SYSTEM_PARAMETERS
   where CODE = 'LOCATION ID MULTIPLIER';
 --
   select NUM_VALUE
   into gnLOC_ID_INCREMENT
-  from SYSTEM_PARAMETERS
+  from T_SYSTEM_PARAMETERS
   where CODE = 'LOCATION ID INCREMENT';
 --
   select NUM_VALUE
   into gnLOC_ID_CHECK_MULTIPLIER
-  from SYSTEM_PARAMETERS
+  from T_SYSTEM_PARAMETERS
   where CODE = 'LOCATION ID CHECK MULTIPLIER';
 --
   select NUM_VALUE
   into gnLOC_ID_CHECK_INCREMENT
-  from SYSTEM_PARAMETERS
+  from T_SYSTEM_PARAMETERS
   where CODE = 'LOCATION ID CHECK INCREMENT';
 --
   select NUM_VALUE
   into gnLOC_ID_CHECK_MODULUS
-  from SYSTEM_PARAMETERS
+  from T_SYSTEM_PARAMETERS
   where CODE = 'LOCATION ID CHECK MODULUS';
 --
 end P_LOCATION;

@@ -17,8 +17,8 @@ create or replace package body P_SYSTEM_PARAMETER is
     pnNUM_VALUE in P_BASE.tnSYP_NUM_VALUE := null,
     pdDATE_VALUE in P_BASE.tdSYP_DATE_VALUE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_SYSTEM_PARAMETER',
@@ -26,10 +26,10 @@ create or replace package body P_SYSTEM_PARAMETER is
         to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS') || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'SYP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    P_TEXT.SET_TEXT(nITM_ID, 'SYP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into SYSTEM_PARAMETERS (CODE, DATA_TYPE, CHAR_VALUE, NUM_VALUE, DATE_VALUE, TXT_ID)
-    values (psCODE, psDATA_TYPE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE, nTXT_ID);
+    insert into T_SYSTEM_PARAMETERS (CODE, DATA_TYPE, CHAR_VALUE, NUM_VALUE, DATE_VALUE, ITM_ID)
+    values (psCODE, psDATA_TYPE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE, nITM_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -52,10 +52,10 @@ create or replace package body P_SYSTEM_PARAMETER is
     pnNUM_VALUE in P_BASE.tnSYP_NUM_VALUE := null,
     pdDATE_VALUE in P_BASE.tdSYP_DATE_VALUE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnSYP_VERSION_NBR;
     xSYP_ROWID rowid;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_SYSTEM_PARAMETER',
@@ -63,19 +63,19 @@ create or replace package body P_SYSTEM_PARAMETER is
         to_char(pnNUM_VALUE) || '~' || to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xSYP_ROWID
-    from SYSTEM_PARAMETERS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xSYP_ROWID
+    from T_SYSTEM_PARAMETERS
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
       if psDescription is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'SYP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      then P_TEXT.SET_TEXT(nITM_ID, 'SYP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      update SYSTEM_PARAMETERS
+      update T_SYSTEM_PARAMETERS
       set DATA_TYPE = nvl(psDATA_TYPE, DATA_TYPE),
         CHAR_VALUE = psCHAR_VALUE,
         NUM_VALUE = pnNUM_VALUE,
@@ -141,7 +141,7 @@ create or replace package body P_SYSTEM_PARAMETER is
    (psCODE in P_BASE.tmsSYP_CODE,
     pnVERSION_NBR in P_BASE.tnSYP_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnSYP_VERSION_NBR;
     xSYP_ROWID rowid;
   begin
@@ -149,17 +149,17 @@ create or replace package body P_SYSTEM_PARAMETER is
      (sVersion || '-' || sComponent || '.DELETE_SYSTEM_PARAMETER',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xSYP_ROWID
-    from SYSTEM_PARAMETERS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xSYP_ROWID
+    from T_SYSTEM_PARAMETERS
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from SYSTEM_PARAMETERS where rowid = xSYP_ROWID;
+      delete from T_SYSTEM_PARAMETERS where rowid = xSYP_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('SYP', 1, 'System parameter has been updated by another user');
     end if;
@@ -181,7 +181,7 @@ create or replace package body P_SYSTEM_PARAMETER is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_SYP_DESCRIPTION',
@@ -228,11 +228,11 @@ create or replace package body P_SYSTEM_PARAMETER is
    (psCODE in P_BASE.tmsSYP_CODE,
     pnVERSION_NBR in out P_BASE.tnSYP_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnSYP_VERSION_NBR;
     xSYP_ROWID rowid;
   begin
@@ -242,17 +242,17 @@ create or replace package body P_SYSTEM_PARAMETER is
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xSYP_ROWID
-    from SYSTEM_PARAMETERS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xSYP_ROWID
+    from T_SYSTEM_PARAMETERS
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'SYP', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'SYP', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update SYSTEM_PARAMETERS
+      update T_SYSTEM_PARAMETERS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xSYP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -275,10 +275,10 @@ create or replace package body P_SYSTEM_PARAMETER is
    (psCODE in P_BASE.tmsSYP_CODE,
     pnVERSION_NBR in out P_BASE.tnSYP_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnSYP_VERSION_NBR;
     xSYP_ROWID rowid;
   begin
@@ -287,17 +287,17 @@ create or replace package body P_SYSTEM_PARAMETER is
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xSYP_ROWID
-    from SYSTEM_PARAMETERS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xSYP_ROWID
+    from T_SYSTEM_PARAMETERS
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update SYSTEM_PARAMETERS
+      update T_SYSTEM_PARAMETERS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xSYP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;

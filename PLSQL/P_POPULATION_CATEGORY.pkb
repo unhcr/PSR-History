@@ -15,18 +15,18 @@ create or replace package body P_POPULATION_CATEGORY is
     pnDISPLAY_SEQ in P_BASE.tnPOPC_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tmsPOPC_ACTIVE_FLAG := 'Y')
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_POPULATION_CATEGORY',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'POPC', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    P_TEXT.SET_TEXT(nITM_ID, 'POPC', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into POPULATION_CATEGORIES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
-    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
+    insert into T_POPULATION_CATEGORIES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
+    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -47,10 +47,10 @@ create or replace package body P_POPULATION_CATEGORY is
     pnDISPLAY_SEQ in P_BASE.tnPOPC_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsPOPC_ACTIVE_FLAG := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPOPC_VERSION_NBR;
     xPOPC_ROWID rowid;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_POPULATION_CATEGORY',
@@ -58,19 +58,19 @@ create or replace package body P_POPULATION_CATEGORY is
         '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPOPC_ROWID
-    from POPULATION_CATEGORIES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPOPC_ROWID
+    from T_POPULATION_CATEGORIES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
       if psDescription is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'POPC', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      then P_TEXT.SET_TEXT(nITM_ID, 'POPC', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      update POPULATION_CATEGORIES
+      update T_POPULATION_CATEGORIES
       set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
@@ -133,7 +133,7 @@ create or replace package body P_POPULATION_CATEGORY is
    (psCODE in P_BASE.tmsPOPC_CODE,
     pnVERSION_NBR in P_BASE.tnPOPC_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPOPC_VERSION_NBR;
     xPOPC_ROWID rowid;
   begin
@@ -141,17 +141,17 @@ create or replace package body P_POPULATION_CATEGORY is
      (sVersion || '-' || sComponent || '.DELETE_POPULATION_CATEGORY',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPOPC_ROWID
-    from POPULATION_CATEGORIES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPOPC_ROWID
+    from T_POPULATION_CATEGORIES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from POPULATION_CATEGORIES where rowid = xPOPC_ROWID;
+      delete from T_POPULATION_CATEGORIES where rowid = xPOPC_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('POPC', 1, 'Population category has been updated by another user');
     end if;
@@ -173,7 +173,7 @@ create or replace package body P_POPULATION_CATEGORY is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_POPC_DESCRIPTION',
@@ -220,11 +220,11 @@ create or replace package body P_POPULATION_CATEGORY is
    (psCODE in P_BASE.tmsPOPC_CODE,
     pnVERSION_NBR in out P_BASE.tnPOPC_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPOPC_VERSION_NBR;
     xPOPC_ROWID rowid;
   begin
@@ -233,17 +233,17 @@ create or replace package body P_POPULATION_CATEGORY is
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPOPC_ROWID
-    from POPULATION_CATEGORIES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPOPC_ROWID
+    from T_POPULATION_CATEGORIES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'POPC', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'POPC', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update POPULATION_CATEGORIES
+      update T_POPULATION_CATEGORIES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xPOPC_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -266,10 +266,10 @@ create or replace package body P_POPULATION_CATEGORY is
    (psCODE in P_BASE.tmsPOPC_CODE,
     pnVERSION_NBR in out P_BASE.tnPOPC_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPOPC_VERSION_NBR;
     xPOPC_ROWID rowid;
   begin
@@ -278,17 +278,17 @@ create or replace package body P_POPULATION_CATEGORY is
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPOPC_ROWID
-    from POPULATION_CATEGORIES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPOPC_ROWID
+    from T_POPULATION_CATEGORIES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update POPULATION_CATEGORIES
+      update T_POPULATION_CATEGORIES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xPOPC_ROWID
       returning VERSION_NBR into pnVERSION_NBR;

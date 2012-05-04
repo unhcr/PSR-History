@@ -15,18 +15,18 @@ create or replace package body P_TIME_PERIOD is
     pnDISPLAY_SEQ in P_BASE.tnPERT_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tmsPERT_ACTIVE_FLAG := 'Y')
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_TIME_PERIOD_TYPE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'PERT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    P_TEXT.SET_TEXT(nITM_ID, 'PERT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into TIME_PERIOD_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
-    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
+    insert into T_TIME_PERIOD_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
+    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -47,10 +47,10 @@ create or replace package body P_TIME_PERIOD is
     pnDISPLAY_SEQ in P_BASE.tnPERT_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsPERT_ACTIVE_FLAG := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPERT_VERSION_NBR;
     xPERT_ROWID rowid;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_TIME_PERIOD_TYPE',
@@ -58,19 +58,19 @@ create or replace package body P_TIME_PERIOD is
         '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPERT_ROWID
-    from TIME_PERIOD_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPERT_ROWID
+    from T_TIME_PERIOD_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
       if psDescription is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'PERT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      then P_TEXT.SET_TEXT(nITM_ID, 'PERT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      update TIME_PERIOD_TYPES
+      update T_TIME_PERIOD_TYPES
       set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
@@ -133,7 +133,7 @@ create or replace package body P_TIME_PERIOD is
    (psCODE in P_BASE.tmsPERT_CODE,
     pnVERSION_NBR in P_BASE.tnPERT_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPERT_VERSION_NBR;
     xPERT_ROWID rowid;
   begin
@@ -141,17 +141,17 @@ create or replace package body P_TIME_PERIOD is
      (sVersion || '-' || sComponent || '.DELETE_TIME_PERIOD_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPERT_ROWID
-    from TIME_PERIOD_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPERT_ROWID
+    from T_TIME_PERIOD_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from TIME_PERIOD_TYPES where rowid = xPERT_ROWID;
+      delete from T_TIME_PERIOD_TYPES where rowid = xPERT_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('PER', 1, 'Time period type has been updated by another user');
     end if;
@@ -173,7 +173,7 @@ create or replace package body P_TIME_PERIOD is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_PERT_DESCRIPTION',
@@ -220,11 +220,11 @@ create or replace package body P_TIME_PERIOD is
    (psCODE in P_BASE.tmsPERT_CODE,
     pnVERSION_NBR in out P_BASE.tnPERT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPERT_VERSION_NBR;
     xPERT_ROWID rowid;
   begin
@@ -233,17 +233,17 @@ create or replace package body P_TIME_PERIOD is
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPERT_ROWID
-    from TIME_PERIOD_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPERT_ROWID
+    from T_TIME_PERIOD_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'PERT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'PERT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update TIME_PERIOD_TYPES
+      update T_TIME_PERIOD_TYPES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xPERT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -266,10 +266,10 @@ create or replace package body P_TIME_PERIOD is
    (psCODE in P_BASE.tmsPERT_CODE,
     pnVERSION_NBR in out P_BASE.tnPERT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPERT_VERSION_NBR;
     xPERT_ROWID rowid;
   begin
@@ -278,17 +278,17 @@ create or replace package body P_TIME_PERIOD is
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPERT_ROWID
-    from TIME_PERIOD_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPERT_ROWID
+    from T_TIME_PERIOD_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update TIME_PERIOD_TYPES
+      update T_TIME_PERIOD_TYPES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xPERT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -326,7 +326,7 @@ create or replace package body P_TIME_PERIOD is
     begin
       select 'x'
       into sDummy
-      from TIME_PERIODS
+      from T_TIME_PERIODS
       where PERT_CODE = psPERT_CODE
       and START_DATE < pdEND_DATE
       and END_DATE > pdSTART_DATE;
@@ -339,7 +339,7 @@ create or replace package body P_TIME_PERIOD is
       then P_MESSAGE.DISPLAY_MESSAGE('PER', 3, 'Date range overlaps with another time period of the same type');
     end;
   --
-    insert into TIME_PERIODS (ID, PERT_CODE, START_DATE, END_DATE)
+    insert into T_TIME_PERIODS (ID, PERT_CODE, START_DATE, END_DATE)
     values (PER_SEQ.nextval, psPERT_CODE, pdSTART_DATE, pdEND_DATE)
     returning ID into pnID;
   --
@@ -363,7 +363,7 @@ create or replace package body P_TIME_PERIOD is
     sPERT_CODE P_BASE.tsPERT_CODE;
     dSTART_DATE P_BASE.tdDate;
     dEND_DATE P_BASE.tdDate;
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPER_VERSION_NBR;
     xPER_ROWID rowid;
   begin
@@ -373,9 +373,9 @@ create or replace package body P_TIME_PERIOD is
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
   --
-    select PERT_CODE, START_DATE, END_DATE, TXT_ID, VERSION_NBR, rowid
-    into sPERT_CODE, dSTART_DATE, dEND_DATE, nTXT_ID, nVERSION_NBR, xPER_ROWID
-    from TIME_PERIODS
+    select PERT_CODE, START_DATE, END_DATE, ITM_ID, VERSION_NBR, rowid
+    into sPERT_CODE, dSTART_DATE, dEND_DATE, nITM_ID, nVERSION_NBR, xPER_ROWID
+    from T_TIME_PERIODS
     where ID = pnID
     for update;
   --
@@ -389,7 +389,7 @@ create or replace package body P_TIME_PERIOD is
         declare
           sDummy varchar2(1);
         begin
-          select 'x' into sDummy from STATISTICS where PER_ID = pnID;
+          select 'x' into sDummy from T_STATISTICS where PER_ID = pnID;
         --
           raise TOO_MANY_ROWS;
         exception
@@ -406,7 +406,7 @@ create or replace package body P_TIME_PERIOD is
         begin
           select 'x'
           into sDummy
-          from TIME_PERIODS
+          from T_TIME_PERIODS
           where PERT_CODE = sPERT_CODE
           and START_DATE < nvl(pdEND_DATE, dEND_DATE)
           and END_DATE > nvl(pdSTART_DATE, dSTART_DATE)
@@ -421,7 +421,7 @@ create or replace package body P_TIME_PERIOD is
         end;
       end if;
     --
-      update TIME_PERIODS
+      update T_TIME_PERIODS
       set START_DATE = nvl(pdSTART_DATE, START_DATE),
         END_DATE = nvl(pdEND_DATE, END_DATE),
         VERSION_NBR = VERSION_NBR + 1
@@ -480,7 +480,7 @@ create or replace package body P_TIME_PERIOD is
    (pnID in P_BASE.tmnPER_ID,
     pnVERSION_NBR in P_BASE.tnPER_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPER_VERSION_NBR;
     xPER_ROWID rowid;
   begin
@@ -488,18 +488,18 @@ create or replace package body P_TIME_PERIOD is
      (sVersion || '-' || sComponent || '.DELETE_TIME_PERIOD',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPER_ROWID
-    from TIME_PERIODS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPER_ROWID
+    from T_TIME_PERIODS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from TIME_PERIODS where rowid = xPER_ROWID;
+      delete from T_TIME_PERIODS where rowid = xPER_ROWID;
     --
-      if nTXT_ID is not null
-      then P_TEXT.DELETE_TEXT(nTXT_ID);
+      if nITM_ID is not null
+      then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
       P_MESSAGE.DISPLAY_MESSAGE('PER', 2, 'Time period has been updated by another user');
@@ -520,11 +520,11 @@ create or replace package body P_TIME_PERIOD is
    (pnID in P_BASE.tmnPER_ID,
     pnVERSION_NBR in out P_BASE.tnPER_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPER_VERSION_NBR;
     xPER_ROWID rowid;
   begin
@@ -534,17 +534,17 @@ create or replace package body P_TIME_PERIOD is
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPER_ROWID
-    from TIME_PERIODS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPER_ROWID
+    from T_TIME_PERIODS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'PER', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'PER', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update TIME_PERIODS
+      update T_TIME_PERIODS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xPER_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -567,10 +567,10 @@ create or replace package body P_TIME_PERIOD is
    (pnID in P_BASE.tmnPER_ID,
     pnVERSION_NBR in out P_BASE.tnPER_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPER_VERSION_NBR;
     xPER_ROWID rowid;
   begin
@@ -579,17 +579,17 @@ create or replace package body P_TIME_PERIOD is
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPER_ROWID
-    from TIME_PERIODS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPER_ROWID
+    from T_TIME_PERIODS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update TIME_PERIODS
+      update T_TIME_PERIODS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xPER_ROWID
       returning VERSION_NBR into pnVERSION_NBR;

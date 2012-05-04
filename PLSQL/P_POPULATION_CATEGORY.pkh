@@ -169,7 +169,7 @@ create or replace package P_POPULATION_CATEGORY is
    (psCODE in P_BASE.tmsPOPC_CODE,
     pnVERSION_NBR in out P_BASE.tnPOPC_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -199,7 +199,7 @@ create or replace package P_POPULATION_CATEGORY is
    (psCODE in P_BASE.tmsPOPC_CODE,
     pnVERSION_NBR in out P_BASE.tnPOPC_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 end P_POPULATION_CATEGORY;

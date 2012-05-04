@@ -17,8 +17,8 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_PPG',
@@ -34,7 +34,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     begin
       select 'x'
       into sDummy
-      from LOCATIONS
+      from T_LOCATIONS
       where ID = pnLOC_ID
       and START_DATE < nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)
       and END_DATE > nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
@@ -47,7 +47,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     begin
       select 'x'
       into sDummy
-      from POPULATION_PLANNING_GROUPS
+      from T_POPULATION_PLANNING_GROUPS
       where PPG_CODE = psPPG_CODE
       and START_DATE < nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
       and END_DATE > nvl(pdSTART_DATE, P_BASE.gdMIN_DATE);
@@ -60,14 +60,14 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       then P_MESSAGE.DISPLAY_MESSAGE('PPG', 2, 'PPG with overlapping dates already exists');
     end;
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'PPG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    P_TEXT.SET_TEXT(nITM_ID, 'PPG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into POPULATION_PLANNING_GROUPS
+    insert into T_POPULATION_PLANNING_GROUPS
      (ID, LOC_ID, PPG_CODE,
-      START_DATE, END_DATE, TXT_ID)
+      START_DATE, END_DATE, ITM_ID)
     values
      (PPG_SEQ.nextval, pnLOC_ID, psPPG_CODE,
-      nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE), nTXT_ID)
+      nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE), nITM_ID)
     returning ID into pnID;
   --
     PLS_UTILITY.END_MODULE;
@@ -95,12 +95,12 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     sPPG_CODE P_BASE.tsPPG_CODE;
     dSTART_DATE P_BASE.tdDate;
     dEND_DATE P_BASE.tdDate;
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPPG_VERSION_NBR;
     xPPG_ROWID rowid;
     dSTART_DATE_NEW P_BASE.tdDate;
     dEND_DATE_NEW P_BASE.tdDate;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_PPG',
@@ -109,9 +109,9 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    select LOC_ID, PPG_CODE, START_DATE, END_DATE, TXT_ID, VERSION_NBR, rowid
-    into nLOC_ID, sPPG_CODE, dSTART_DATE, dEND_DATE, nTXT_ID, nVERSION_NBR, xPPG_ROWID
-    from POPULATION_PLANNING_GROUPS
+    select LOC_ID, PPG_CODE, START_DATE, END_DATE, ITM_ID, VERSION_NBR, rowid
+    into nLOC_ID, sPPG_CODE, dSTART_DATE, dEND_DATE, nITM_ID, nVERSION_NBR, xPPG_ROWID
+    from T_POPULATION_PLANNING_GROUPS
     where ID = pnID
     for update;
   --
@@ -140,7 +140,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
         begin
           select 'x'
           into sDummy
-          from LOCATIONS
+          from T_LOCATIONS
           where ID = pnLOC_ID
           and START_DATE < dSTART_DATE_NEW
           and END_DATE > dEND_DATE_NEW;
@@ -156,7 +156,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
         begin
           select 'x'
           into sDummy
-          from POPULATION_PLANNING_GROUPS
+          from T_POPULATION_PLANNING_GROUPS
           where PPG_CODE = psPPG_CODE
           and START_DATE < dEND_DATE_NEW
           and END_DATE > dSTART_DATE_NEW
@@ -172,10 +172,10 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       end if;
     --
       if psDescription is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'PPG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      then P_TEXT.SET_TEXT(nITM_ID, 'PPG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      update POPULATION_PLANNING_GROUPS
+      update T_POPULATION_PLANNING_GROUPS
       set LOC_ID = nvl(pnLOC_ID, LOC_ID),
         PPG_CODE = nvl(psPPG_CODE, PPG_CODE),
         START_DATE = dSTART_DATE_NEW,
@@ -243,7 +243,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
    (pnID in P_BASE.tmnPPG_ID,
     pnVERSION_NBR in P_BASE.tnPPG_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPPG_VERSION_NBR;
     xPPG_ROWID rowid;
   begin
@@ -251,17 +251,17 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
      (sVersion || '-' || sComponent || '.DELETE_SYSTEM_PARAMETER',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPPG_ROWID
-    from POPULATION_PLANNING_GROUPS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPPG_ROWID
+    from T_POPULATION_PLANNING_GROUPS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from POPULATION_PLANNING_GROUPS where rowid = xPPG_ROWID;
+      delete from T_POPULATION_PLANNING_GROUPS where rowid = xPPG_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('PPG', 1, 'PPG has been updated by another user');
     end if;
@@ -283,7 +283,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_PPG_DESCRIPTION',
@@ -331,11 +331,11 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
    (pnID in P_BASE.tmnPPG_ID,
     pnVERSION_NBR in out P_BASE.tnPPG_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPPG_VERSION_NBR;
     xPPG_ROWID rowid;
   begin
@@ -345,17 +345,17 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPPG_ROWID
-    from POPULATION_PLANNING_GROUPS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPPG_ROWID
+    from T_POPULATION_PLANNING_GROUPS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'PPG', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'PPG', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update POPULATION_PLANNING_GROUPS
+      update T_POPULATION_PLANNING_GROUPS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xPPG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -378,10 +378,10 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
    (pnID in P_BASE.tmnPPG_ID,
     pnVERSION_NBR in out P_BASE.tnPPG_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnPPG_VERSION_NBR;
     xPPG_ROWID rowid;
   begin
@@ -390,17 +390,17 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xPPG_ROWID
-    from POPULATION_PLANNING_GROUPS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xPPG_ROWID
+    from T_POPULATION_PLANNING_GROUPS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update POPULATION_PLANNING_GROUPS
+      update T_POPULATION_PLANNING_GROUPS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xPPG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;

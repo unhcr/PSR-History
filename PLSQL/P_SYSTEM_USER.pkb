@@ -15,18 +15,18 @@ create or replace package body P_SYSTEM_USER is
     psLOCKED_FLAG in P_BASE.tmsUSR_LOCKED_FLAG := 'N',
     psTEMPLATE_FLAG in P_BASE.tmsUSR_TEMPLATE_FLAG := 'N')
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_SYSTEM_USER',
       psUSERID || '~' || psLOCKED_FLAG || '~' || psTEMPLATE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psName)) || ':' || psName);
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'USR', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
+    P_TEXT.SET_TEXT(nITM_ID, 'USR', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
   --
-    insert into SYSTEM_USERS (USERID, LOCKED_FLAG, TEMPLATE_FLAG, TXT_ID)
-    values (psUSERID, psLOCKED_FLAG, psTEMPLATE_FLAG, nTXT_ID);
+    insert into T_SYSTEM_USERS (USERID, LOCKED_FLAG, TEMPLATE_FLAG, ITM_ID)
+    values (psUSERID, psLOCKED_FLAG, psTEMPLATE_FLAG, nITM_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -47,29 +47,29 @@ create or replace package body P_SYSTEM_USER is
     psLOCKED_FLAG in P_BASE.tsUSR_LOCKED_FLAG := null,
     psTEMPLATE_FLAG in P_BASE.tsUSR_TEMPLATE_FLAG := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnUSR_VERSION_NBR;
     xUSR_ROWID rowid;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_SYSTEM_USER',
       psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psLOCKED_FLAG || '~' ||
         psTEMPLATE_FLAG || '~' || psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xUSR_ROWID
-    from SYSTEM_USERS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xUSR_ROWID
+    from T_SYSTEM_USERS
     where USERID = psUSERID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
       if psName is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'USR', 'DESCR', nSEQ_NBR, psLANG_CODE, psName);
+      then P_TEXT.SET_TEXT(nITM_ID, 'USR', 'DESCR', nSEQ_NBR, psLANG_CODE, psName);
       end if;
     --
-      update SYSTEM_USERS
+      update T_SYSTEM_USERS
       set LOCKED_FLAG = nvl(psLOCKED_FLAG, LOCKED_FLAG),
         TEMPLATE_FLAG = nvl(psTEMPLATE_FLAG, TEMPLATE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
@@ -130,7 +130,7 @@ create or replace package body P_SYSTEM_USER is
    (psUSERID in P_BASE.tmsUSR_USERID,
     pnVERSION_NBR in P_BASE.tnUSR_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnUSR_VERSION_NBR;
     xUSR_ROWID rowid;
   begin
@@ -138,17 +138,17 @@ create or replace package body P_SYSTEM_USER is
      (sVersion || '-' || sComponent || '.DELETE_SYSTEM_USER',
       psUSERID || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xUSR_ROWID
-    from SYSTEM_USERS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xUSR_ROWID
+    from T_SYSTEM_USERS
     where USERID = psUSERID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from SYSTEM_USERS where rowid = xUSR_ROWID;
+      delete from T_SYSTEM_USERS where rowid = xUSR_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('USR', 1, 'System user has been updated by another user');
     end if;
@@ -170,7 +170,7 @@ create or replace package body P_SYSTEM_USER is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psName in P_BASE.tmsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_USR_NAME',
@@ -217,11 +217,11 @@ create or replace package body P_SYSTEM_USER is
    (psUSERID in P_BASE.tmsUSR_USERID,
     pnVERSION_NBR in out P_BASE.tnUSR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnUSR_VERSION_NBR;
     xUSR_ROWID rowid;
   begin
@@ -231,17 +231,17 @@ create or replace package body P_SYSTEM_USER is
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xUSR_ROWID
-    from SYSTEM_USERS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xUSR_ROWID
+    from T_SYSTEM_USERS
     where USERID = psUSERID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'USR', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'USR', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update SYSTEM_USERS
+      update T_SYSTEM_USERS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xUSR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -264,10 +264,10 @@ create or replace package body P_SYSTEM_USER is
    (psUSERID in P_BASE.tmsUSR_USERID,
     pnVERSION_NBR in out P_BASE.tnUSR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnUSR_VERSION_NBR;
     xUSR_ROWID rowid;
   begin
@@ -276,17 +276,17 @@ create or replace package body P_SYSTEM_USER is
       psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xUSR_ROWID
-    from SYSTEM_USERS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xUSR_ROWID
+    from T_SYSTEM_USERS
     where USERID = psUSERID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update SYSTEM_USERS
+      update T_SYSTEM_USERS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xUSR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -313,18 +313,18 @@ create or replace package body P_SYSTEM_USER is
     pnDISPLAY_SEQ in P_BASE.tnUATT_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tsUATT_ACTIVE_FLAG := 'Y')
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_USER_ATTRIBUTE_TYPE',
       psCODE || '~' || psDATA_TYPE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG ||
         '~' || psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'UATT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    P_TEXT.SET_TEXT(nITM_ID, 'UATT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into USER_ATTRIBUTE_TYPES (CODE, DATA_TYPE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
-    values (psCODE, psDATA_TYPE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
+    insert into T_USER_ATTRIBUTE_TYPES (CODE, DATA_TYPE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
+    values (psCODE, psDATA_TYPE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -347,10 +347,10 @@ create or replace package body P_SYSTEM_USER is
     psACTIVE_FLAG in P_BASE.tsUATT_ACTIVE_FLAG := null)
   is
     sDATA_TYPE P_BASE.tsUATT_DATA_TYPE;
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnUATT_VERSION_NBR;
     xUATT_ROWID rowid;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
     sDummy varchar2(1);
   begin
     PLS_UTILITY.START_MODULE
@@ -359,9 +359,9 @@ create or replace package body P_SYSTEM_USER is
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
-    select DATA_TYPE, TXT_ID, VERSION_NBR, rowid
-    into sDATA_TYPE, nTXT_ID, nVERSION_NBR, xUATT_ROWID
-    from USER_ATTRIBUTE_TYPES
+    select DATA_TYPE, ITM_ID, VERSION_NBR, rowid
+    into sDATA_TYPE, nITM_ID, nVERSION_NBR, xUATT_ROWID
+    from T_USER_ATTRIBUTE_TYPES
     where CODE = psCODE
     for update;
   --
@@ -370,7 +370,7 @@ create or replace package body P_SYSTEM_USER is
     if psDATA_TYPE != sDATA_TYPE
     then
       begin
-        select 'x' into sDummy from USER_ATTRIBUTES where UATT_CODE = psCODE;
+        select 'x' into sDummy from T_USER_ATTRIBUTES where UATT_CODE = psCODE;
       --
         raise TOO_MANY_ROWS;
       exception
@@ -384,10 +384,10 @@ create or replace package body P_SYSTEM_USER is
     if pnVERSION_NBR = nVERSION_NBR
     then
       if psDescription is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'USR', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      then P_TEXT.SET_TEXT(nITM_ID, 'USR', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      update USER_ATTRIBUTE_TYPES
+      update T_USER_ATTRIBUTE_TYPES
       set DATA_TYPE = nvl(psDATA_TYPE, DATA_TYPE),
         DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
@@ -452,7 +452,7 @@ create or replace package body P_SYSTEM_USER is
    (psCODE in P_BASE.tmsUATT_CODE,
     pnVERSION_NBR in P_BASE.tnUATT_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnUATT_VERSION_NBR;
     xUATT_ROWID rowid;
   begin
@@ -460,17 +460,17 @@ create or replace package body P_SYSTEM_USER is
      (sVersion || '-' || sComponent || '.DELETE_USER_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xUATT_ROWID
-    from USER_ATTRIBUTE_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xUATT_ROWID
+    from T_USER_ATTRIBUTE_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from USER_ATTRIBUTE_TYPES where rowid = xUATT_ROWID;
+      delete from T_USER_ATTRIBUTE_TYPES where rowid = xUATT_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('USR', 2, 'User attribute type has been updated by another user');
     end if;
@@ -492,7 +492,7 @@ create or replace package body P_SYSTEM_USER is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_UATT_DESCRIPTION',
@@ -539,11 +539,11 @@ create or replace package body P_SYSTEM_USER is
    (psCODE in P_BASE.tmsUATT_CODE,
     pnVERSION_NBR in out P_BASE.tnUATT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnUATT_VERSION_NBR;
     xUATT_ROWID rowid;
   begin
@@ -552,17 +552,17 @@ create or replace package body P_SYSTEM_USER is
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xUATT_ROWID
-    from USER_ATTRIBUTE_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xUATT_ROWID
+    from T_USER_ATTRIBUTE_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'TXTT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'TXTT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update USER_ATTRIBUTE_TYPES
+      update T_USER_ATTRIBUTE_TYPES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xUATT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -585,10 +585,10 @@ create or replace package body P_SYSTEM_USER is
    (psCODE in P_BASE.tmsUATT_CODE,
     pnVERSION_NBR in out P_BASE.tnUATT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnUATT_VERSION_NBR;
     xUATT_ROWID rowid;
   begin
@@ -597,17 +597,17 @@ create or replace package body P_SYSTEM_USER is
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xUATT_ROWID
-    from USER_ATTRIBUTE_TYPES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xUATT_ROWID
+    from T_USER_ATTRIBUTE_TYPES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update USER_ATTRIBUTE_TYPES
+      update T_USER_ATTRIBUTE_TYPES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xUATT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -643,7 +643,7 @@ create or replace package body P_SYSTEM_USER is
   --
     select DATA_TYPE, ACTIVE_FLAG
     into sDATA_TYPE, sACTIVE_FLAG
-    from USER_ATTRIBUTE_TYPES
+    from T_USER_ATTRIBUTE_TYPES
     where CODE = psUATT_CODE;
   --
     if sACTIVE_FLAG = 'N'
@@ -657,7 +657,7 @@ create or replace package body P_SYSTEM_USER is
       else P_MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Attribute of the correct type must be specified');
     end case;
   --
-    insert into USER_ATTRIBUTES (USERID, UATT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
+    insert into T_USER_ATTRIBUTES (USERID, UATT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
     values (psUSERID, psUATT_CODE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
   --
     PLS_UTILITY.END_MODULE;
@@ -693,7 +693,7 @@ create or replace package body P_SYSTEM_USER is
     begin
       select DATA_TYPE, ACTIVE_FLAG
       into sDATA_TYPE, sACTIVE_FLAG
-      from USER_ATTRIBUTE_TYPES
+      from T_USER_ATTRIBUTE_TYPES
       where CODE = psUATT_CODE;
     exception
       when NO_DATA_FOUND
@@ -713,14 +713,14 @@ create or replace package body P_SYSTEM_USER is
   --
     select VERSION_NBR, rowid
     into nVERSION_NBR, xUAT_ROWID
-    from USER_ATTRIBUTES
+    from T_USER_ATTRIBUTES
     where USERID = psUSERID
     and UATT_CODE = psUATT_CODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      update USER_ATTRIBUTES
+      update T_USER_ATTRIBUTES
       set CHAR_VALUE = nvl(psCHAR_VALUE, CHAR_VALUE),
         NUM_VALUE = nvl(pnNUM_VALUE, NUM_VALUE),
         DATE_VALUE = nvl(pdDATE_VALUE, DATE_VALUE),
@@ -783,26 +783,26 @@ create or replace package body P_SYSTEM_USER is
     psUATT_CODE in P_BASE.tmsUATT_CODE,
     pnVERSION_NBR in P_BASE.tnUAT_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnUAT_VERSION_NBR;
     xUAT_ROWID rowid;
   begin
     PLS_UTILITY.START_MODULE(sVersion || '-' || sComponent || '.DELETE_USER_ATTRIBUTE',
                              psUSERID || '~' || psUATT_CODE || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xUAT_ROWID
-    from USER_ATTRIBUTES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xUAT_ROWID
+    from T_USER_ATTRIBUTES
     where USERID = psUSERID
     and UATT_CODE = psUATT_CODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from USER_ATTRIBUTES where rowid = xUAT_ROWID;
+      delete from T_USER_ATTRIBUTES where rowid = xUAT_ROWID;
     --
-      if nTXT_ID is not null
-      then P_TEXT.DELETE_TEXT(nTXT_ID);
+      if nITM_ID is not null
+      then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
       P_MESSAGE.DISPLAY_MESSAGE('USR', 3, 'User attribute has been updated by another user');
@@ -824,11 +824,11 @@ create or replace package body P_SYSTEM_USER is
     psUATT_CODE in P_BASE.tmsUATT_CODE,
     pnVERSION_NBR in out P_BASE.tnUAT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnUAT_VERSION_NBR;
     xUAT_ROWID rowid;
   begin
@@ -838,19 +838,19 @@ create or replace package body P_SYSTEM_USER is
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xUAT_ROWID
-    from USER_ATTRIBUTES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xUAT_ROWID
+    from T_USER_ATTRIBUTES
     where USERID = psUSERID
     and UATT_CODE = psUATT_CODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'UAT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'UAT', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update USER_ATTRIBUTES
-      set TXT_ID = nTXT_ID,
+      update T_USER_ATTRIBUTES
+      set ITM_ID = nITM_ID,
         VERSION_NBR = VERSION_NBR + 1
       where rowid = xUAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -874,10 +874,10 @@ create or replace package body P_SYSTEM_USER is
     psUATT_CODE in P_BASE.tmsUATT_CODE,
     pnVERSION_NBR in out P_BASE.tnUAT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnUAT_VERSION_NBR;
     xUAT_ROWID rowid;
   begin
@@ -886,18 +886,18 @@ create or replace package body P_SYSTEM_USER is
       psUSERID || '~' || psUATT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xUAT_ROWID
-    from USER_ATTRIBUTES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xUAT_ROWID
+    from T_USER_ATTRIBUTES
     where USERID = psUSERID
     and UATT_CODE = psUATT_CODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update USER_ATTRIBUTES
+      update T_USER_ATTRIBUTES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xUAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -927,13 +927,13 @@ create or replace package body P_SYSTEM_USER is
      (sVersion || '-' || sComponent || '.INSERT_USER_LANG_PREFERENCE',
       psUSERID || '~' || psLANG_CODE || '~' || to_char(pnPREF_SEQ));
   --
-    select ACTIVE_FLAG into sACTIVE_FLAG from LANGUAGES where CODE = psLANG_CODE;
+    select ACTIVE_FLAG into sACTIVE_FLAG from T_LANGUAGES where CODE = psLANG_CODE;
   --
     if sACTIVE_FLAG = 'N'
     then P_MESSAGE.DISPLAY_MESSAGE('USR', 9, 'Inactive preference language');
     end if;
   --
-    insert into USER_LANGUAGE_PREFERENCES (USERID, LANG_CODE, PREF_SEQ)
+    insert into T_USER_LANGUAGE_PREFERENCES (USERID, LANG_CODE, PREF_SEQ)
     values (psUSERID, psLANG_CODE, pnPREF_SEQ);
   --
     PLS_UTILITY.END_MODULE;
@@ -963,14 +963,14 @@ create or replace package body P_SYSTEM_USER is
   --
     select VERSION_NBR, rowid
     into nVERSION_NBR, xULP_ROWID
-    from USER_LANGUAGE_PREFERENCES
+    from T_USER_LANGUAGE_PREFERENCES
     where USERID = psUSERID
     and LANG_CODE = psLANG_CODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      update USER_LANGUAGE_PREFERENCES
+      update T_USER_LANGUAGE_PREFERENCES
       set PREF_SEQ = pnPREF_SEQ,
         VERSION_NBR = VERSION_NBR + 1
       where rowid = xULP_ROWID
@@ -1040,14 +1040,14 @@ create or replace package body P_SYSTEM_USER is
     then
       select VERSION_NBR, rowid
       into nVERSION_NBR, xULP_ROWID
-      from USER_LANGUAGE_PREFERENCES
+      from T_USER_LANGUAGE_PREFERENCES
       where USERID = psUSERID
       and LANG_CODE = psLANG_CODE
       for update;
     else
       select VERSION_NBR, rowid
       into nVERSION_NBR, xULP_ROWID
-      from USER_LANGUAGE_PREFERENCES
+      from T_USER_LANGUAGE_PREFERENCES
       where USERID = psUSERID
       and PREF_SEQ = pnPREF_SEQ
       for update;
@@ -1055,7 +1055,7 @@ create or replace package body P_SYSTEM_USER is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from USER_LANGUAGE_PREFERENCES where rowid = xULP_ROWID;
+      delete from T_USER_LANGUAGE_PREFERENCES where rowid = xULP_ROWID;
     else
       P_MESSAGE.DISPLAY_MESSAGE('USR', 4, 'User language preference has been updated by another user');
     end if;

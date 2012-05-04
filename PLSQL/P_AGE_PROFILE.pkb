@@ -15,18 +15,18 @@ create or replace package body P_AGE_PROFILE is
     pnDISPLAY_SEQ in P_BASE.tnAGP_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tmsAGP_ACTIVE_FLAG := 'Y')
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_AGE_PROFILE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'AGP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    P_TEXT.SET_TEXT(nITM_ID, 'AGP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into AGE_PROFILES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, TXT_ID)
-    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nTXT_ID);
+    insert into T_AGE_PROFILES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
+    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -47,10 +47,10 @@ create or replace package body P_AGE_PROFILE is
     pnDISPLAY_SEQ in P_BASE.tnAGP_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsAGP_ACTIVE_FLAG := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnAGP_VERSION_NBR;
     xAGP_ROWID rowid;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_AGE_PROFILE',
@@ -58,19 +58,19 @@ create or replace package body P_AGE_PROFILE is
         '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xAGP_ROWID
-    from AGE_PROFILES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xAGP_ROWID
+    from T_AGE_PROFILES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
       if psDescription is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'AGP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      then P_TEXT.SET_TEXT(nITM_ID, 'AGP', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      update AGE_PROFILES
+      update T_AGE_PROFILES
       set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
@@ -133,7 +133,7 @@ create or replace package body P_AGE_PROFILE is
    (psCODE in P_BASE.tmsAGP_CODE,
     pnVERSION_NBR in P_BASE.tnAGP_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnAGP_VERSION_NBR;
     xAGP_ROWID rowid;
   begin
@@ -141,17 +141,17 @@ create or replace package body P_AGE_PROFILE is
      (sVersion || '-' || sComponent || '.DELETE_AGE_PROFILE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xAGP_ROWID
-    from AGE_PROFILES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xAGP_ROWID
+    from T_AGE_PROFILES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from AGE_PROFILES where rowid = xAGP_ROWID;
+      delete from T_AGE_PROFILES where rowid = xAGP_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('AGP', 1, 'Age profile has been updated by another user');
     end if;
@@ -173,7 +173,7 @@ create or replace package body P_AGE_PROFILE is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_AGP_DESCRIPTION',
@@ -220,11 +220,11 @@ create or replace package body P_AGE_PROFILE is
    (psCODE in P_BASE.tmsAGP_CODE,
     pnVERSION_NBR in out P_BASE.tnAGP_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnAGP_VERSION_NBR;
     xAGP_ROWID rowid;
   begin
@@ -233,17 +233,17 @@ create or replace package body P_AGE_PROFILE is
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xAGP_ROWID
-    from AGE_PROFILES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xAGP_ROWID
+    from T_AGE_PROFILES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'AGP', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'AGP', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update AGE_PROFILES
+      update T_AGE_PROFILES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xAGP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -266,10 +266,10 @@ create or replace package body P_AGE_PROFILE is
    (psCODE in P_BASE.tmsAGP_CODE,
     pnVERSION_NBR in out P_BASE.tnAGP_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnAGP_VERSION_NBR;
     xAGP_ROWID rowid;
   begin
@@ -278,17 +278,17 @@ create or replace package body P_AGE_PROFILE is
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xAGP_ROWID
-    from AGE_PROFILES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xAGP_ROWID
+    from T_AGE_PROFILES
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update AGE_PROFILES
+      update T_AGE_PROFILES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xAGP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -315,18 +315,18 @@ create or replace package body P_AGE_PROFILE is
     pnAGE_FROM in P_BASE.tmnAGR_AGE_FROM,
     pnAGE_TO in P_BASE.tmnAGR_AGE_TO)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_AGE_RANGE',
       psAGP_CODE || '~' || to_char(pnAGE_FROM) || '~' || to_char(pnAGE_TO) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    P_TEXT.SET_TEXT(nTXT_ID, 'AGR', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    P_TEXT.SET_TEXT(nITM_ID, 'AGR', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into AGE_RANGES (ID, AGP_CODE, AGE_FROM, AGE_TO, TXT_ID)
-    values (AGR_SEQ.nextval, psAGP_CODE, pnAGE_FROM, pnAGE_TO, nTXT_ID)
+    insert into T_AGE_RANGES (ID, AGP_CODE, AGE_FROM, AGE_TO, ITM_ID)
+    values (AGR_SEQ.nextval, psAGP_CODE, pnAGE_FROM, pnAGE_TO, nITM_ID)
     returning ID into pnID;
   --
     PLS_UTILITY.END_MODULE;
@@ -351,10 +351,10 @@ create or replace package body P_AGE_PROFILE is
     sAGP_CODE P_BASE.tsAGP_CODE;
     nAGE_FROM P_BASE.tnAGR_AGE_FROM;
     nAGE_TO P_BASE.tnAGR_AGE_TO;
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnAGR_VERSION_NBR;
     xAGR_ROWID rowid;
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_AGE_RANGE',
@@ -362,9 +362,9 @@ create or replace package body P_AGE_PROFILE is
         to_char(pnAGE_FROM) || '~' || to_char(pnAGE_TO) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    select AGP_CODE, AGE_FROM, AGE_TO, TXT_ID, VERSION_NBR, rowid
-    into sAGP_CODE, nAGE_FROM, nAGE_TO, nTXT_ID, nVERSION_NBR, xAGR_ROWID
-    from AGE_RANGES
+    select AGP_CODE, AGE_FROM, AGE_TO, ITM_ID, VERSION_NBR, rowid
+    into sAGP_CODE, nAGE_FROM, nAGE_TO, nITM_ID, nVERSION_NBR, xAGR_ROWID
+    from T_AGE_RANGES
     where ID = pnID
     for update;
   --
@@ -378,7 +378,7 @@ create or replace package body P_AGE_PROFILE is
         declare
           sDummy varchar2(1);
         begin
-          select 'x' into sDummy from STATISTICS where AGR_ID = pnID;
+          select 'x' into sDummy from T_STATISTICS where AGR_ID = pnID;
         --
           raise TOO_MANY_ROWS;
         exception
@@ -395,7 +395,7 @@ create or replace package body P_AGE_PROFILE is
         begin
           select 'x'
           into sDummy
-          from AGE_RANGES
+          from T_AGE_RANGES
           where AGP_CODE = sAGP_CODE
           and AGE_FROM <= nvl(pnAGE_TO, nAGE_TO)
           and AGE_TO >= nvl(pnAGE_FROM, nAGE_FROM)
@@ -411,10 +411,10 @@ create or replace package body P_AGE_PROFILE is
       end if;
     --
       if psDescription is not null
-      then P_TEXT.SET_TEXT(nTXT_ID, 'AGR', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      then P_TEXT.SET_TEXT(nITM_ID, 'AGR', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      update AGE_RANGES
+      update T_AGE_RANGES
       set AGE_FROM = nvl(pnAGE_FROM, AGE_FROM),
         AGE_TO = nvl(pnAGE_TO, AGE_TO),
         VERSION_NBR = VERSION_NBR + 1
@@ -475,7 +475,7 @@ create or replace package body P_AGE_PROFILE is
    (pnID in P_BASE.tmnAGR_ID,
     pnVERSION_NBR in P_BASE.tnAGR_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnAGR_VERSION_NBR;
     xAGR_ROWID rowid;
   begin
@@ -483,17 +483,17 @@ create or replace package body P_AGE_PROFILE is
      (sVersion || '-' || sComponent || '.DELETE_AGE_RANGE',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xAGR_ROWID
-    from AGE_RANGES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xAGR_ROWID
+    from T_AGE_RANGES
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from AGE_RANGES where rowid = xAGR_ROWID;
+      delete from T_AGE_RANGES where rowid = xAGR_ROWID;
     --
-      P_TEXT.DELETE_TEXT(nTXT_ID);
+      P_TEXT.DELETE_TEXT(nITM_ID);
     else
       P_MESSAGE.DISPLAY_MESSAGE('AGP', 2, 'Age range has been updated by another user');
     end if;
@@ -515,7 +515,7 @@ create or replace package body P_AGE_PROFILE is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
   is
-    nSEQ_NBR P_BASE.tnTXI_SEQ_NBR := 1;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_AGR_DESCRIPTION',
@@ -562,11 +562,11 @@ create or replace package body P_AGE_PROFILE is
    (pnID in P_BASE.tmnAGR_ID,
     pnVERSION_NBR in out P_BASE.tnAGR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnAGR_VERSION_NBR;
     xAGR_ROWID rowid;
   begin
@@ -576,17 +576,17 @@ create or replace package body P_AGE_PROFILE is
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xAGR_ROWID
-    from AGE_RANGES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xAGR_ROWID
+    from T_AGE_RANGES
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'AGR', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'AGR', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update AGE_RANGES
+      update T_AGE_RANGES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xAGR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -609,10 +609,10 @@ create or replace package body P_AGE_PROFILE is
    (pnID in P_BASE.tmnAGR_ID,
     pnVERSION_NBR in out P_BASE.tnAGR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnAGR_VERSION_NBR;
     xAGR_ROWID rowid;
   begin
@@ -621,17 +621,17 @@ create or replace package body P_AGE_PROFILE is
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xAGR_ROWID
-    from AGE_RANGES
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xAGR_ROWID
+    from T_AGE_RANGES
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update AGE_RANGES
+      update T_AGE_RANGES
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xAGR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;

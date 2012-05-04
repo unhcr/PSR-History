@@ -46,7 +46,7 @@ create or replace package body P_STATISTIC is
         to_char(pnDIM_ID5) || '~' ||
         to_char(pnVALUE));
   --
-    insert into STATISTICS
+    insert into T_STATISTICS
      (ID, STCT_CODE,
       LOC_ID_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN, LOC_ID_SOURCE,
       PPG_ID, POPC_CODE, PER_ID, SEX_CODE, AGR_ID,
@@ -75,7 +75,7 @@ create or replace package body P_STATISTIC is
    (pnID in P_BASE.tmsPOPC_CODE,
     pnVERSION_NBR in P_BASE.tnSTC_VERSION_NBR)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnSTC_VERSION_NBR;
     xSTC_ROWID rowid;
   begin
@@ -83,18 +83,18 @@ create or replace package body P_STATISTIC is
      (sVersion || '-' || sComponent || '.DELETE_STATISTIC',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xSTC_ROWID
-    from STATISTICS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xSTC_ROWID
+    from T_STATISTICS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from STATISTICS where rowid = xSTC_ROWID;
+      delete from T_STATISTICS where rowid = xSTC_ROWID;
     --
-      if nTXT_ID is not null
-      then P_TEXT.DELETE_TEXT(nTXT_ID);
+      if nITM_ID is not null
+      then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
       P_MESSAGE.DISPLAY_MESSAGE('STC', 1, 'Statistic has been updated by another user');
@@ -115,11 +115,11 @@ create or replace package body P_STATISTIC is
    (pnID in P_BASE.tmnSTC_ID,
     pnVERSION_NBR in out P_BASE.tnSTC_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnSTC_VERSION_NBR;
     xSTC_ROWID rowid;
   begin
@@ -129,17 +129,17 @@ create or replace package body P_STATISTIC is
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xSTC_ROWID
-    from STATISTICS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xSTC_ROWID
+    from T_STATISTICS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nTXT_ID, 'STC', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'STC', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update STATISTICS
+      update T_STATISTICS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xSTC_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -162,10 +162,10 @@ create or replace package body P_STATISTIC is
    (pnID in P_BASE.tmnSTC_ID,
     pnVERSION_NBR in out P_BASE.tnSTC_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
-    nTXT_ID P_BASE.tnTXT_ID;
+    nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnSTC_VERSION_NBR;
     xSTC_ROWID rowid;
   begin
@@ -174,19 +174,19 @@ create or replace package body P_STATISTIC is
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
-    select TXT_ID, VERSION_NBR, rowid
-    into nTXT_ID, nVERSION_NBR, xSTC_ROWID
-    from STATISTICS
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xSTC_ROWID
+    from T_STATISTICS
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      if nTXT_ID is not null
-      then P_TEXT.DELETE_TEXT(nTXT_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
+      if nITM_ID is not null
+      then P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
       end if;
     --
-      update STATISTICS
+      update T_STATISTICS
       set VERSION_NBR = VERSION_NBR + 1
       where rowid = xSTC_ROWID
       returning VERSION_NBR into pnVERSION_NBR;

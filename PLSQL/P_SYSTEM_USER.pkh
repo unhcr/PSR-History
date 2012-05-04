@@ -166,7 +166,7 @@ create or replace package P_SYSTEM_USER is
    (psUSERID in P_BASE.tmsUSR_USERID,
     pnVERSION_NBR in out P_BASE.tnUSR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -196,7 +196,7 @@ create or replace package P_SYSTEM_USER is
    (psUSERID in P_BASE.tmsUSR_USERID,
     pnVERSION_NBR in out P_BASE.tnUSR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------
@@ -357,7 +357,7 @@ create or replace package P_SYSTEM_USER is
    (psCODE in P_BASE.tmsUATT_CODE,
     pnVERSION_NBR in out P_BASE.tnUATT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -387,7 +387,7 @@ create or replace package P_SYSTEM_USER is
    (psCODE in P_BASE.tmsUATT_CODE,
     pnVERSION_NBR in out P_BASE.tnUATT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------
@@ -403,7 +403,7 @@ create or replace package P_SYSTEM_USER is
 --  pnNUM_VALUE - Value for attribute of data type numeric (optional).
 --  pdDATE_VALUE - Value for attribute of data type date (optional).
 -- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
---  depending on the value of USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
+--  depending on the value of T_USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
 --
   procedure INSERT_USER_ATTRIBUTE
    (psUSERID in P_BASE.tmsUSR_USERID,
@@ -427,7 +427,7 @@ create or replace package P_SYSTEM_USER is
 --  pnNUM_VALUE - Value for attribute of data type numeric (optional).
 --  pdDATE_VALUE - Value for attribute of data type date (optional).
 -- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
---  depending on the value of USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
+--  depending on the value of T_USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
 --
   procedure UPDATE_USER_ATTRIBUTE
    (psUSERID in P_BASE.tmsUSR_USERID,
@@ -452,7 +452,7 @@ create or replace package P_SYSTEM_USER is
 --  pnNUM_VALUE - Value for attribute of data type numeric (optional).
 --  pdDATE_VALUE - Value for attribute of data type date (optional).
 -- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
---  depending on the value of USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
+--  depending on the value of T_USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
 --
   procedure SET_USER_ATTRIBUTE
    (psUSERID in P_BASE.tmsUSR_USERID,
@@ -499,7 +499,7 @@ create or replace package P_SYSTEM_USER is
     psUATT_CODE in P_BASE.tmsUATT_CODE,
     pnVERSION_NBR in out P_BASE.tnUAT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -531,7 +531,7 @@ create or replace package P_SYSTEM_USER is
     psUATT_CODE in P_BASE.tmsUATT_CODE,
     pnVERSION_NBR in out P_BASE.tnUAT_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------

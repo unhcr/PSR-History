@@ -160,7 +160,7 @@ create or replace package P_MESSAGE is
    (psCODE in P_BASE.tmsCOMP_CODE,
     pnVERSION_NBR in out P_BASE.tnCOMP_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -189,7 +189,7 @@ create or replace package P_MESSAGE is
    (psCODE in P_BASE.tmsCOMP_CODE,
     pnVERSION_NBR in out P_BASE.tnCOMP_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------
@@ -340,7 +340,7 @@ create or replace package P_MESSAGE is
     pnSEQ_NBR in P_BASE.tnMSG_SEQ_NBR,
     pnVERSION_NBR in out P_BASE.tnMSG_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnTXI_SEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnTXI_SEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -371,7 +371,7 @@ create or replace package P_MESSAGE is
     pnSEQ_NBR in P_BASE.tnMSG_SEQ_NBR,
     pnVERSION_NBR in out P_BASE.tnMSG_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnTXI_SEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnTXI_SEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------
@@ -387,7 +387,7 @@ create or replace package P_MESSAGE is
 --  psEnglishMessage - Message text (optional: if specified, it is checked against the English
 --    message text for the message with the given component code and sequence number).
 --  psSEVERITY - Severity of event associated with message: E - Error, W - Warning or
---    I - Information (optional: if not specified the severity stored in the MESSAGES table is
+--    I - Information (optional: if not specified the severity stored in the T_MESSAGES table is
 --    used).
 --
   procedure DISPLAY_MESSAGE

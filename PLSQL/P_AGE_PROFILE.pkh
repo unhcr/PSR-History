@@ -164,7 +164,7 @@ create or replace package P_AGE_PROFILE is
    (psCODE in P_BASE.tmsAGP_CODE,
     pnVERSION_NBR in out P_BASE.tnAGP_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -194,7 +194,7 @@ create or replace package P_AGE_PROFILE is
    (psCODE in P_BASE.tmsAGP_CODE,
     pnVERSION_NBR in out P_BASE.tnAGP_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 -- ----------------------------------------
@@ -352,7 +352,7 @@ create or replace package P_AGE_PROFILE is
    (pnID in P_BASE.tmnAGR_ID,
     pnVERSION_NBR in out P_BASE.tnAGR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in out P_BASE.tnTXI_SEQ_NBR,
+    pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText);
 --
@@ -382,7 +382,7 @@ create or replace package P_AGE_PROFILE is
    (pnID in P_BASE.tmnAGR_ID,
     pnVERSION_NBR in out P_BASE.tnAGR_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
-    pnSEQ_NBR in P_BASE.tnTXI_SEQ_NBR := null,
+    pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
 --
 end P_AGE_PROFILE;
