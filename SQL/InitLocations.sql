@@ -95,7 +95,7 @@ execute P_LOCATION.INSERT_LOCATION(:LOC_ID1, 'en', 'Europe (RBE)', 'HCRBUR');
 declare
   nLOC_ID_COU P_BASE.tnLOC_ID;
   nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
-  nSEQ_NBR P_BASE.tnTXI_SEQ_NBR;
+  nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   nCount pls_integer := 0;
 begin
   for rCOU in
