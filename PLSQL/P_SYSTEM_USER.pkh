@@ -133,8 +133,8 @@ create or replace package P_SYSTEM_USER is
 -- REMOVE_USR_NAME
 -- ----------------------------------------
 --
--- Remove a variant in a given language from name of a system user. Note that it is not possible to
---  remove the last language variant of the system user name.
+-- Remove a variant in a given language of the name of a system user. Note that it is not possible
+--  to remove the last language variant of the system user name.
 --
 -- Parameters:
 --  psUSERID - User identifier (mandatory).
