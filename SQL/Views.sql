@@ -1,4 +1,4 @@
-create or replace view L_PIVOTED_STATISTICS
+create or replace view PIVOTED_STATISTICS
 as
 select ISO_COUNTRY_CODE COUNTRY_CODE, UNHCR_COUNTRY_CODE, LOC_NAME_COUNTRY,
   LOC_NAME_ASYLUM LOC_NAME,
@@ -44,7 +44,7 @@ from
     nvl(SEX_CODE, 'X') SEX_CODE,
     nvl(AGE_FROM, -1) AGE_FROM,
     VALUE
-  from L_STATISTICS)
+  from STATISTICS)
 pivot
  (sum(VALUE)
   for (SEX_CODE, AGE_FROM)
