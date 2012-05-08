@@ -642,20 +642,20 @@ create or replace package body P_MESSAGE is
     psSEVERITY in P_BASE.tsMSG_SEVERITY := null)
   is
     sSEVERITY P_BASE.tsMSG_SEVERITY;
-    sMESSAGE L_MESSAGES.MESSAGE%type;
-    sTEXT_EN T_TEXT_ITEMS.TEXT%type;
+    sMESSAGE P_BASE.tsNormalText;
+    sTEXT_EN P_BASE.tsNormalText;
     nSQLCODE integer;
     sMessagePrefix varchar2(100) := psCOMP_CODE || to_char(-pnSEQ_NBR, 'S0999') || ': ';
   --
     function GET_MESSAGE
-     (pnSEQ_NBR in L_MESSAGES.SEQ_NBR%type)
-      return L_MESSAGES.MESSAGE%type
+     (pnSEQ_NBR in P_BASE.tnMSG_SEQ_NBR)
+      return P_BASE.tsText
     is
-      sMESSAGE L_MESSAGES.MESSAGE%type;
+      sMESSAGE P_BASE.tsNormalText;
     begin
       select MESSAGE
       into sMESSAGE
-      from L_MESSAGES
+      from MESSAGES
       where COMP_CODE = 'MSG'
       and SEQ_NBR = pnSEQ_NBR;
     --
@@ -670,7 +670,7 @@ create or replace package body P_MESSAGE is
     begin
       select MSG.SEVERITY, MSG.MESSAGE, TXI.TEXT
       into sSEVERITY, sMESSAGE, sTEXT_EN
-      from L_MESSAGES MSG
+      from MESSAGES MSG
       left outer join T_TEXT_ITEMS TXI
         on TXI.ITM_ID = MSG.ITM_ID
         and TXI.TXTT_CODE = 'MSG'

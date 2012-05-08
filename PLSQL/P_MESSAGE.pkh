@@ -6,7 +6,7 @@ create or replace package P_MESSAGE is
 --  Procedures for maintenance of system messages and their associated components.
 --
 --  Change History:
---  29-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  08-May-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
