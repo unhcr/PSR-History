@@ -6,7 +6,7 @@ create or replace package P_BASE is
 --  Type definitions and data values used throughout the PSR system.
 --
 --  Change History:
---  04-May-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  08-May-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -21,6 +21,7 @@ create or replace package P_BASE is
 --
   subtype tsText is varchar2;
   subtype tmsText is tsText not null;
+  subtype tsNormalText is varchar2(1000);
   subtype tdDate is date;
   subtype tmdDate is tdDate not null;
   subtype tsCountryCode is varchar2(3);
