@@ -48,15 +48,15 @@ begin
       unpivot
        (VALUE for SEX_AGE in (F0_4 as 'F00', F5_11 as 'F05', F12_17 as 'F12', F18_59 as 'F18', F60, FTOTAL as 'F',
                               M0_4 as 'M00', M5_11 as 'M05', M12_17 as 'M12', M18_59 as 'M18', M60, MTOTAL as 'M', TOTAL as ''))) DEM
-    join L_COUNTRIES COU
+    join COUNTRIES COU
     on COU.UNHCR_COUNTRY_CODE = DEM.COUNTRY_CODE
-    join L_HIERARCHICAL_LOCATIONS HLOC
+    join HIERARCHICAL_LOCATIONS HLOC
     on HLOC.LOC_ID_FROM = COU.ID
     and nlssort(HLOC.NAME, 'NLS_SORT=BINARY_AI') = nlssort(DEM.LOC_NAME, 'NLS_SORT=BINARY_AI')
     left outer join T_LOCATION_ATTRIBUTES LOCA
     on LOCA.CHAR_VALUE = DEM.COUNTRY_CODE_ORIGIN
     and LOCA.LOCAT_CODE = 'UNHCRCC'
-    left outer join L_LOCATIONS LOC
+    left outer join LOCATIONS LOC
     on LOC.ID = LOCA.LOC_ID
     and LOC.LOCT_CODE in ('COUNTRY', 'OTHORIGIN')
     cross join
@@ -71,7 +71,7 @@ begin
     join T_DIMENSION_VALUES DIM1
     on DIM1.CODE = DEM.RCX_CODE
     and DIM1.DIMT_CODE = 'UR'
-    join L_DIMENSION_VALUES DIM2
+    join DIMENSION_VALUES DIM2
     on DIM2.DESCRIPTION = DEM.ACMT_DESCRIPTION
     and DIM2.DIMT_CODE = 'ACMT')
   loop
