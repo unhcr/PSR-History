@@ -101,10 +101,10 @@ begin
   for rCOU in
    (select COU.COUNTRY_NAME, COU.NAME_LANGUAGE, COU.ISO_A3, COU.ISO_A2, COU.ISO_N, COU.UNHCR, COU.FORMAL_NAME, SUB.ID LOC_ID_SUB, BOP.ID LOC_ID_BOP
     from STAGE.COUNTRIES COU
-    left outer join L_LOCATIONS SUB
+    left outer join LOCATIONS SUB
     on SUB.NAME = COU.UN_SUBREGION
     and SUB.LOCT_CODE = 'UNSUBREG'
-    left outer join L_LOCATIONS BOP
+    left outer join LOCATIONS BOP
     on BOP.NAME = COU.UNHCR_BUR_OPN
     and BOP.LOCT_CODE in ('HCRBUR', 'HCROPN')
     order by COU.COUNTRY_NAME)
@@ -155,7 +155,7 @@ begin
   for rDIV in
    (select distinct DIV.ISO3166_1_A3, DIV.LEVEL_NAME, COU.ID
     from STAGE.SUBDIVISIONS DIV
-    join L_COUNTRIES COU
+    join COUNTRIES COU
       on COU.ISO3166_ALPHA3_CODE = DIV.ISO3166_1_A3
     where DIV.LEVEL_NAME is not null
     order by ISO3166_1_A3, LEVEL_NAME)
@@ -172,9 +172,9 @@ begin
   for rDIV in
    (select DIV.ISO3166_2, nvl(DIV.NAME, 'Unknown') NAME, COU.ID, LOCTV.ID LOCTV_ID
     from STAGE.SUBDIVISIONS DIV
-    join L_COUNTRIES COU
+    join COUNTRIES COU
     on COU.ISO3166_ALPHA3_CODE = DIV.ISO3166_1_A3
-    left outer join L_LOCATION_TYPE_VARIANTS LOCTV
+    left outer join LOCATION_TYPE_VARIANTS LOCTV
       on LOCTV.LOCT_CODE = 'ADMIN1'
       and LOCTV.LOC_ID = COU.ID
       and LOCTV.LOCRT_CODE = 'WITHIN'
@@ -209,11 +209,11 @@ begin
     from
      (select distinct regexp_replace(nvl(DEM.LOC_NAME, DEM.LOC_NAME_NEW), ' : .*$', '') NAME, COU.ID
       from STAGE.DEMOGRAPHICS_2010 DEM
-      join L_COUNTRIES COU
+      join COUNTRIES COU
       on COU.UNHCR_COUNTRY_CODE = DEM.COUNTRY_CODE) DEM1
     where not exists
      (select null
-      from L_HIERARCHICAL_LOCATIONS HLOC
+      from HIERARCHICAL_LOCATIONS HLOC
       where HLOC.LOC_ID_FROM = DEM1.ID
       and nlssort(HLOC.NAME, 'NLS_SORT=BINARY_AI') = nlssort(DEM1.NAME, 'NLS_SORT=BINARY_AI'))
     order by 2, 1)
