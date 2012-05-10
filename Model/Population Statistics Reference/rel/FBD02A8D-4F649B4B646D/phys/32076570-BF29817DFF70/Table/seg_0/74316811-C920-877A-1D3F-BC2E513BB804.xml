@@ -1,0 +1,74 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="T_PERMISSIONS" id="74316811-C920-877A-1D3F-BC2E513BB804" directorySegmentName="seg_0">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<logging>YES</logging>
+<columnProxies>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="WRITE_FLAG" id="04D0244C-A93B-37F2-7EAD-864D4226540D">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>Y</defaultValue>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="ANNOTATE_FLAG" id="13F06AA2-3CD2-603D-2111-B398618DAF83">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>Y</defaultValue>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="ID" id="43258031-03B3-F515-1622-6137B2302B30">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="ITM_ID" id="8BC15A67-8F94-7A12-2758-24B24D910EDE">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="UPDATE_USERID" id="BA3E9322-4FF2-139C-D5A0-860E4FF112C1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>nvl(sys_context(&apos;PSR&apos;, &apos;USERID&apos;), &apos;*&apos; || user)</defaultValue>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="UPDATE_TIMESTAMP" id="E14163C2-384F-1E89-41B4-93F9655437A0">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>systimestamp</defaultValue>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="VERSION_NBR" id="E5EAAC2C-39A3-4ABF-77CC-6B1881136D00">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>1</defaultValue>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_PRM_ITM" id="C7E3018A-ABBD-A24E-45D5-ED1FD3D47FB8">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PK_PRM" id="B9905F4E-EDE8-3C78-BC8C-A7BC40B6B4C5">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<sortedRows>SORTED</sortedRows>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="UK_PRM_ITM_ID" id="D601501F-2028-0262-D5F1-771BD68E2E12">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<sortedRows>SORTED</sortedRows>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev11g>

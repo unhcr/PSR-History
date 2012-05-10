@@ -1,0 +1,6 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableViewProxyOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TableViewProxyOraclev10g" name="DESCRIPTIONS" id="A9691207-12F4-0919-B6B7-9F03DD91E9D1" directorySegmentName="seg_0">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</TableViewProxyOraclev10g>

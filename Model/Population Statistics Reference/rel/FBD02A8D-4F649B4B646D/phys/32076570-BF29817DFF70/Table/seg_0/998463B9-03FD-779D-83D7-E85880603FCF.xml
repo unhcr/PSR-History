@@ -1,0 +1,107 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="T_USER_ATTRIBUTES" id="998463B9-03FD-779D-83D7-E85880603FCF" directorySegmentName="seg_0">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<logging>YES</logging>
+<columnProxies>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="DATE_VALUE" id="0D3993A9-28AB-3512-BDF7-E8C90F4EC52C">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="ITM_ID" id="512F26CE-05AC-2305-5375-5322DEDCD5DD">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="UATT_CODE" id="5754F68F-85FF-3CBB-4997-8D237A4FA48B">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="UPDATE_USERID" id="5F87387D-3152-3112-C698-BFED3006C420">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>nvl(sys_context(&apos;PSR&apos;, &apos;USERID&apos;), &apos;*&apos; || user)</defaultValue>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="NUM_VALUE" id="885CC14A-348E-6EA2-0B2E-6859C47AAF60">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="CHAR_VALUE" id="C06A9944-62CB-4F06-448B-52FE868C3C7D">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="USERID" id="C1575267-EF95-75F5-5235-541CD5089335">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="VERSION_NBR" id="ED9B2407-EEC1-333B-F629-4D27D583F0A0">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>1</defaultValue>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="UPDATE_TIMESTAMP" id="F51FCB46-612A-B5A8-4D6C-A766AA98A959">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>systimestamp</defaultValue>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="IX_UAT_UATT" id="8DA360DB-9DCD-A91D-870F-2CB09829A375">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<sortedRows>SORTED</sortedRows>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_UAT_ITM" id="168C47E0-18E7-E425-A8BD-9B0613B487C2">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_UAT_USR" id="D2E0B786-426A-CE6A-AA80-3BE328011A0F">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_UAT_UATT" id="E093A12E-38B3-F85F-DD49-5743738CF60E">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PK_UAT" id="167D2AA1-0709-03BA-4BD8-EA310BC8CF23">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<sortedRows>SORTED</sortedRows>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+<tableCheckConstraints>
+<TableCheckConstraint class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TableCheckConstraintOraclev10g" name="CH_UAT_VALUE" id="C8D8F3DE-960E-A437-D6E7-13989BB6FB57">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</TableCheckConstraint>
+</tableCheckConstraints>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="UK_UAT_ITM_ID" id="B765C674-D45C-23A5-3D14-314BFFBDE546">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-13 13:46:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<sortedRows>SORTED</sortedRows>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev11g>

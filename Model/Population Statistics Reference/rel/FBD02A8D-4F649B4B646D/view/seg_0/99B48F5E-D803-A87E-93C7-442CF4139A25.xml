@@ -1,0 +1,134 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableView class="oracle.dbtools.crest.model.design.relational.TableView" id="99B48F5E-D803-A87E-93C7-442CF4139A25" directorySegmentName="seg_0" name="LOCATION_ATTRIBUTES">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:49:57 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<userDefined>true</userDefined>
+<userDefinedSQL>SELECT LOCA.LOC_ID,&lt;br/&gt;  LOCA.LOCAT_CODE,&lt;br/&gt;  LOCA.CHAR_VALUE,&lt;br/&gt;  LOCA.NUM_VALUE,&lt;br/&gt;  LOCA.DATE_VALUE,&lt;br/&gt;  LOCA.VERSION_NBR,&lt;br/&gt;  LOCA.ITM_ID&lt;br/&gt;FROM T_LOCATION_ATTRIBUTES LOCA</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select LOCA.LOC_ID, LOCA.LOCAT_CODE, LOCA.CHAR_VALUE, LOCA.NUM_VALUE, LOCA.DATE_VALUE, LOCA.VERSION_NBR, LOCA.ITM_ID From T_LOCATION_ATTRIBUTES LOCA&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select LOCA.LOC_ID, LOCA.LOCAT_CODE, LOCA.CHAR_VALUE, LOCA.NUM_VALUE, LOCA.DATE_VALUE, LOCA.VERSION_NBR, LOCA.ITM_ID From T_LOCATION_ATTRIBUTES LOCA&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_LOCATION_ATTRIBUTES LOCA&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<parsed>true</parsed>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+</fonts>
+<usedContainers>
+<container alias="LOCA" containerID="F5023194-12A8-C67F-AE7A-AB7A6EDDBE94"/>
+</usedContainers>
+<viewElements>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOC_ID" id="7C444275-99F0-6697-B688-C9836A52E9CC">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:50:27 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>NUMBER (10)</dataType>
+<reference>false</reference>
+<referencedColumn>C97DB6BD-BEC9-4DE2-8C3F-D991D2145C46</referencedColumn>
+<table>F5023194-12A8-C67F-AE7A-AB7A6EDDBE94</table>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOCAT_CODE" id="79C68921-340A-8C1C-7273-946FA3CC2678">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:50:27 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (10)</dataType>
+<reference>false</reference>
+<referencedColumn>19C09A45-B0DE-CB35-2642-931CB49AF250</referencedColumn>
+<table>F5023194-12A8-C67F-AE7A-AB7A6EDDBE94</table>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="CHAR_VALUE" id="9C9A444C-9F04-9DB9-3F23-EA489A1C1BC9">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:50:27 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (1000)</dataType>
+<reference>false</reference>
+<referencedColumn>10A83935-5307-5C40-B6D9-49EE5C6BF752</referencedColumn>
+<table>F5023194-12A8-C67F-AE7A-AB7A6EDDBE94</table>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="NUM_VALUE" id="41D3FF8E-7056-2903-B037-6D35A69296FB">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:50:27 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>NUMBER</dataType>
+<reference>false</reference>
+<referencedColumn>52F11E46-5F7B-A3A1-128E-8C1BFFCB4D57</referencedColumn>
+<table>F5023194-12A8-C67F-AE7A-AB7A6EDDBE94</table>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="DATE_VALUE" id="ACD48F33-D4F0-5B82-BFC1-57AFDF5855AC">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:50:27 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>DATE</dataType>
+<reference>false</reference>
+<referencedColumn>5BE9905A-1145-1B59-F247-CC2836E2BA1F</referencedColumn>
+<table>F5023194-12A8-C67F-AE7A-AB7A6EDDBE94</table>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="VERSION_NBR" id="4F9BF58C-7ACB-5AFD-595F-075F79D40CF1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:50:27 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>INTEGER</dataType>
+<reference>false</reference>
+<referencedColumn>43D2FB3F-50FA-06A4-DE7A-9D8E296BA2BB</referencedColumn>
+<table>F5023194-12A8-C67F-AE7A-AB7A6EDDBE94</table>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ITM_ID" id="62B3DC98-C298-4E97-EC6B-937AAD75EA11">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:50:27 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>INTEGER</dataType>
+<reference>false</reference>
+<referencedColumn>B121631A-B080-6293-6160-1B0781B88298</referencedColumn>
+<table>F5023194-12A8-C67F-AE7A-AB7A6EDDBE94</table>
+</viewElement>
+</viewElements>
+<usedObjects>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="F5023194-12A8-C67F-AE7A-AB7A6EDDBE94">
+<container>true</container>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C97DB6BD-BEC9-4DE2-8C3F-D991D2145C46">
+<columnName>LOC_ID</columnName>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="19C09A45-B0DE-CB35-2642-931CB49AF250">
+<columnName>LOCAT_CODE</columnName>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="10A83935-5307-5C40-B6D9-49EE5C6BF752">
+<columnName>CHAR_VALUE</columnName>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="52F11E46-5F7B-A3A1-128E-8C1BFFCB4D57">
+<columnName>NUM_VALUE</columnName>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="5BE9905A-1145-1B59-F247-CC2836E2BA1F">
+<columnName>DATE_VALUE</columnName>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="43D2FB3F-50FA-06A4-DE7A-9D8E296BA2BB">
+<columnName>VERSION_NBR</columnName>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="B121631A-B080-6293-6160-1B0781B88298">
+<columnName>ITM_ID</columnName>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+</usedObjects>
+</TableView>

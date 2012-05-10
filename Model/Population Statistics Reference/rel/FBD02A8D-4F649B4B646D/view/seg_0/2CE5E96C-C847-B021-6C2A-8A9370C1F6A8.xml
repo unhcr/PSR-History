@@ -1,0 +1,111 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableView class="oracle.dbtools.crest.model.design.relational.TableView" id="2CE5E96C-C847-B021-6C2A-8A9370C1F6A8" directorySegmentName="seg_0" name="LOCATION_TYPE_RELATIONSHIPS">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:53:03 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<userDefined>true</userDefined>
+<userDefinedSQL>SELECT LOCTR.LOCT_CODE_FROM,&lt;br/&gt;  LOCTR.LOCT_CODE_TO,&lt;br/&gt;  LOCTR.LOCRT_CODE,&lt;br/&gt;  LOCTR.ITM_ID,&lt;br/&gt;  LOCTR.VERSION_NBR&lt;br/&gt;FROM T_LOCATION_TYPE_RELATIONSHIPS LOCTR</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select LOCTR.LOCT_CODE_FROM, LOCTR.LOCT_CODE_TO, LOCTR.LOCRT_CODE, LOCTR.ITM_ID, LOCTR.VERSION_NBR From T_LOCATION_TYPE_RELATIONSHIPS LOCTR&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select LOCTR.LOCT_CODE_FROM, LOCTR.LOCT_CODE_TO, LOCTR.LOCRT_CODE, LOCTR.ITM_ID, LOCTR.VERSION_NBR From T_LOCATION_TYPE_RELATIONSHIPS LOCTR&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_LOCATION_TYPE_RELATIONSHIPS LOCTR&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;135&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<parsed>true</parsed>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+</fonts>
+<usedContainers>
+<container alias="LOCTR" containerID="D5DF495A-A9D2-9774-98AE-BB8B476FA879"/>
+</usedContainers>
+<viewElements>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOCT_CODE_FROM" id="9C79010A-89D2-7089-9A9F-66E0784AEB34">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:53:48 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (10)</dataType>
+<reference>false</reference>
+<referencedColumn>3408FD61-521D-3435-BFD4-75611883507B</referencedColumn>
+<table>D5DF495A-A9D2-9774-98AE-BB8B476FA879</table>
+<tableAlias>LOCTR</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOCT_CODE_TO" id="DA5B1F6C-9F36-EB31-8704-BDC01F747306">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:53:48 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (10)</dataType>
+<reference>false</reference>
+<referencedColumn>6042D004-8469-F3E7-107C-BFC2B2B37371</referencedColumn>
+<table>D5DF495A-A9D2-9774-98AE-BB8B476FA879</table>
+<tableAlias>LOCTR</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOCRT_CODE" id="937DFA4A-CFAD-54E3-5DFA-B65C206206B4" directorySegmentName="seg_1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:53:48 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (10)</dataType>
+<reference>false</reference>
+<referencedColumn>01CBC3CC-63DB-59E9-ABFD-39F7892F7EDF</referencedColumn>
+<table>D5DF495A-A9D2-9774-98AE-BB8B476FA879</table>
+<tableAlias>LOCTR</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ITM_ID" id="A16F4BF1-8FC0-1A84-DC6F-AAB86D1EFBFC" directorySegmentName="seg_1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:53:48 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>INTEGER</dataType>
+<reference>false</reference>
+<referencedColumn>7DABA6B5-3E7D-4C73-F8B7-313A51957637</referencedColumn>
+<table>D5DF495A-A9D2-9774-98AE-BB8B476FA879</table>
+<tableAlias>LOCTR</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="VERSION_NBR" id="D456AEAB-2BF6-9A66-B8BF-2486A4D804AB" directorySegmentName="seg_1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:53:48 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>INTEGER</dataType>
+<reference>false</reference>
+<referencedColumn>250C67F4-B8A0-03BA-E66C-E30E56786911</referencedColumn>
+<table>D5DF495A-A9D2-9774-98AE-BB8B476FA879</table>
+<tableAlias>LOCTR</tableAlias>
+</viewElement>
+</viewElements>
+<usedObjects>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="D5DF495A-A9D2-9774-98AE-BB8B476FA879">
+<container>true</container>
+<tableName>T_LOCATION_TYPE_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="3408FD61-521D-3435-BFD4-75611883507B">
+<columnName>LOCT_CODE_FROM</columnName>
+<tableName>T_LOCATION_TYPE_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="6042D004-8469-F3E7-107C-BFC2B2B37371">
+<columnName>LOCT_CODE_TO</columnName>
+<tableName>T_LOCATION_TYPE_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="01CBC3CC-63DB-59E9-ABFD-39F7892F7EDF">
+<columnName>LOCRT_CODE</columnName>
+<tableName>T_LOCATION_TYPE_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="7DABA6B5-3E7D-4C73-F8B7-313A51957637">
+<columnName>ITM_ID</columnName>
+<tableName>T_LOCATION_TYPE_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="250C67F4-B8A0-03BA-E66C-E30E56786911">
+<columnName>VERSION_NBR</columnName>
+<tableName>T_LOCATION_TYPE_RELATIONSHIPS</tableName>
+</UsedObject>
+</usedObjects>
+</TableView>

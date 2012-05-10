@@ -1,0 +1,96 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="27A50457-F336-8519-C2D5-A40AED9780B4" directorySegmentName="seg_0" name="AGE_PROFILE">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-18 14:38:58 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
+</engineerTo>
+<pkName>AGE PROFILE UI</pkName>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<shortName>AGP</shortName>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Attribute</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>PK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>FK Element</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>UK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Not Null</foType>
+<colorRGB>-65536</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Key</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+</fonts>
+<attributes>
+<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Code" id="D676DA10-E282-0D97-605D-4483BB1B2556">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-26 09:38:05 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+</Attribute>
+<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Description" id="78EB1A6D-7898-1AEB-5D3C-BFD6535443DA">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-26 09:38:28 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+</Attribute>
+</attributes>
+<identifiers>
+<identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="E8571961-BF14-742C-A258-2521317E35F9" name="AGE PROFILE UI">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-26 09:38:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>D676DA10-E282-0D97-605D-4483BB1B2556</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

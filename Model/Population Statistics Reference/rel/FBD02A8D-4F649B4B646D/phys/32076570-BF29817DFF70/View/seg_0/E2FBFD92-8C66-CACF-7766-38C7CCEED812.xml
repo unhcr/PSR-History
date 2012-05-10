@@ -1,0 +1,6 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableViewProxyOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TableViewProxyOraclev10g" name="HIERARCHICAL_LOCATIONS" id="E2FBFD92-8C66-CACF-7766-38C7CCEED812" directorySegmentName="seg_0">
+<createdBy>Scott</createdBy>
+<createdTime>2011-11-21 08:39:40 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</TableViewProxyOraclev10g>

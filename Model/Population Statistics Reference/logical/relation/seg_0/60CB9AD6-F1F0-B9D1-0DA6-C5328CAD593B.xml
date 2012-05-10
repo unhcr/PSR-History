@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Location Type" id="60CB9AD6-F1F0-B9D1-0DA6-C5328CAD593B" directorySegmentName="seg_0">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-18 14:45:18 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>5416BED3-9818-007E-3630-F82FE91264C9</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>83DA5461-2D7B-4F73-F05A-94002E4B9857</targetEntity>
+<transferable>true</transferable>
+</Relation>

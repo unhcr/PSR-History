@@ -1,0 +1,63 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="T_MESSAGES" id="3F140724-94A5-A30D-1D74-4B14AEE0582D" directorySegmentName="seg_0">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-19 09:06:48 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<logging>YES</logging>
+<columnProxies>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="ITM_ID" id="252EF824-B80E-1F82-47C3-1D55BD18E37B">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-19 09:08:01 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="COMP_CODE" id="2AE37A8A-EFF7-4EE1-EDBF-52554E98119E">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-19 09:07:17 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="SEQ_NBR" id="8676BC9D-C344-EFFC-CF26-AEF3AA1747D6">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-19 09:08:01 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="SEVERITY" id="DF045376-5316-0494-50D2-B4EFC7DE7416">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-19 09:08:01 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>E</defaultValue>
+</ColumnProxy>
+<ColumnProxy class="oracle.dbtools.crest.model.design.storage.oracle.v11g.ColumnProxyOraclev11g" name="VERSION_NBR" id="EFCB3606-625E-3CB1-B9F3-71185CE8DEFE">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-10 13:52:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>1</defaultValue>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_MSG_ITM" id="1AC64784-FBE6-3DC9-1F78-1BB6413537E2">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-19 09:09:45 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_MSG_COMP" id="6BD9216D-4345-EB58-11F2-8D7AA0F7EE67">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-19 09:19:10 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PK_MSG" id="09F55267-258B-909E-7EB3-1691A2F78D96">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-19 09:08:25 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexSort>NO</indexSort>
+</PrimaryKey>
+</primaryKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="UK_MSG_ITM_ID" id="6A8BF90E-4910-7928-8061-A52F3DBBBA19">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-19 09:10:59 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev11g>
