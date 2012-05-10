@@ -1,10 +1,20 @@
+create or replace trigger TR_DIP_RBU_AUDIT
+before update on T_DATA_ITEM_PERMISSIONS
+for each row
+begin
+  :new.UPDATE_TIMESTAMP := systimestamp;
+  :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
+end TR_DIP_RBU_AUDIT;
+/
+
+
 create or replace trigger TR_LOC_RBU_AUDIT
 before update on T_LOCATIONS
 for each row
 begin
   :new.UPDATE_TIMESTAMP := systimestamp;
   :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
-end TR_LOC_RBU_VERSION;
+end TR_LOC_RBU_AUDIT;
 /
 
 
@@ -14,7 +24,7 @@ for each row
 begin
   :new.UPDATE_TIMESTAMP := systimestamp;
   :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
-end TR_LOCA_RBU_VERSION;
+end TR_LOCA_RBU_AUDIT;
 /
 
 
@@ -24,7 +34,37 @@ for each row
 begin
   :new.UPDATE_TIMESTAMP := systimestamp;
   :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
-end TR_LOCR_RBU_VERSION;
+end TR_LOCR_RBU_AUDIT;
+/
+
+
+create or replace trigger TR_ROL_RBU_AUDIT
+before update on T_ROLES
+for each row
+begin
+  :new.UPDATE_TIMESTAMP := systimestamp;
+  :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
+end TR_ROL_RBU_AUDIT;
+/
+
+
+create or replace trigger TR_PIR_RBU_AUDIT
+before update on T_PERMISSIONS_IN_ROLES
+for each row
+begin
+  :new.UPDATE_TIMESTAMP := systimestamp;
+  :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
+end TR_PIR_RBU_AUDIT;
+/
+
+
+create or replace trigger TR_PRM_RBU_AUDIT
+before update on T_PERMISSIONS
+for each row
+begin
+  :new.UPDATE_TIMESTAMP := systimestamp;
+  :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
+end TR_PRM_RBU_AUDIT;
 /
 
 
@@ -34,7 +74,17 @@ for each row
 begin
   :new.UPDATE_TIMESTAMP := systimestamp;
   :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
-end TR_USR_RBU_VERSION;
+end TR_STC_RBU_AUDIT;
+/
+
+
+create or replace trigger TR_UIR_RBU_AUDIT
+before update on T_USERS_IN_ROLES
+for each row
+begin
+  :new.UPDATE_TIMESTAMP := systimestamp;
+  :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
+end TR_UIR_RBU_AUDIT;
 /
 
 
@@ -44,17 +94,17 @@ for each row
 begin
   :new.UPDATE_TIMESTAMP := systimestamp;
   :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
-end TR_USR_RBU_VERSION;
+end TR_USR_RBU_AUDIT;
 /
 
 
-create or replace trigger TR_TXI_RBU_AUDIT
+create or replace trigger TR_TXT_RBU_AUDIT
 before update on T_TEXT_ITEMS
 for each row
 begin
   :new.UPDATE_TIMESTAMP := systimestamp;
   :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
-end TR_TXI_RBU_VERSION;
+end TR_TXT_RBU_AUDIT;
 /
 
 
