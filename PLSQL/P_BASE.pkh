@@ -73,6 +73,15 @@ create or replace package P_BASE is
   subtype tmsDIM_ACTIVE_FLAG is tsDIM_ACTIVE_FLAG not null;
   subtype tnDIM_VERSION_NBR is T_DIMENSION_VALUES.VERSION_NBR%type;
 --
+-- T_DISPLACEMENT_STATUSES
+--
+  subtype tsDST_CODE is T_DISPLACEMENT_STATUSES.CODE%type;
+  subtype tmsDST_CODE is tsDST_CODE not null;
+  subtype tnDST_DISPLAY_SEQ is T_DISPLACEMENT_STATUSES.DISPLAY_SEQ%type;
+  subtype tsDST_ACTIVE_FLAG is T_DISPLACEMENT_STATUSES.ACTIVE_FLAG%type;
+  subtype tmsDST_ACTIVE_FLAG is tsDST_ACTIVE_FLAG not null;
+  subtype tnDST_VERSION_NBR is T_DISPLACEMENT_STATUSES.VERSION_NBR%type;
+--
 -- T_LANGUAGES
 --
   subtype tsLANG_CODE is T_LANGUAGES.CODE%type;
@@ -145,15 +154,6 @@ create or replace package P_BASE is
   subtype tnMSG_SEQ_NBR is T_MESSAGES.SEQ_NBR%type;
   subtype tsMSG_SEVERITY is T_MESSAGES.SEVERITY%type;
   subtype tnMSG_VERSION_NBR is T_MESSAGES.VERSION_NBR%type;
---
--- T_POPULATION_CATEGORIES
---
-  subtype tsPOPC_CODE is T_POPULATION_CATEGORIES.CODE%type;
-  subtype tmsPOPC_CODE is tsPOPC_CODE not null;
-  subtype tnPOPC_DISPLAY_SEQ is T_POPULATION_CATEGORIES.DISPLAY_SEQ%type;
-  subtype tsPOPC_ACTIVE_FLAG is T_POPULATION_CATEGORIES.ACTIVE_FLAG%type;
-  subtype tmsPOPC_ACTIVE_FLAG is tsPOPC_ACTIVE_FLAG not null;
-  subtype tnPOPC_VERSION_NBR is T_POPULATION_CATEGORIES.VERSION_NBR%type;
 --
 -- T_POPULATION_PLANNING_GROUPS
 --

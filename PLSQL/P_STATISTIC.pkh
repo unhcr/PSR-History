@@ -31,7 +31,7 @@ create or replace package P_STATISTIC is
 --  pnLOC_ID_ORIGIN - Location identifier of (country of) origin of persons of concern (optional).
 --  pnLOC_ID_SOURCE - Identifier of location of origin of persons of concern (optional).
 --  pnPPG_ID - PPG identifier (optional).
---  psPOPC_CODE - Population category code (optional).
+--  psDST_CODE - Displacement status code (optional).
 --  pnPER_ID - Time period identifier (optional).
 --  psSEX_CODE - Sex code (optional).
 --  pnAGR_ID - Age range identifier (optional).
@@ -50,7 +50,7 @@ create or replace package P_STATISTIC is
     pnLOC_ID_ORIGIN in P_BASE.tnLOC_ID := null,
     pnLOC_ID_SOURCE in P_BASE.tnLOC_ID := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
-    psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
+    psDST_CODE in P_BASE.tsDST_CODE := null,
     pnPER_ID in P_BASE.tnPER_ID := null,
     psSEX_CODE in P_BASE.tsSEX_CODE := null,
     pnAGR_ID in P_BASE.tnAGR_ID := null,
@@ -80,7 +80,7 @@ create or replace package P_STATISTIC is
 --  pnLOC_ID_PPG - Code of location associated with PPG (optional).
 --  psPPG_CODE - PPG code (optional).
 --  pdPPG_START_DATE - Start date of effectivity of PPG (optional).
---  psPOPC_CODE - Population category code (optional).
+--  psDST_CODE - Population category code (optional).
 --  pdPER_START_DATE - Start date of period (optional).
 --  pdPER_END_DATE - Day after end date of period (optional).
 --  psRCX_CODE - Residence context code (optional).
@@ -106,7 +106,7 @@ create or replace package P_STATISTIC is
     pnLOC_ID_PPG in P_BASE.tnLOC_ID := null,
     psPPG_CODE in P_BASE.tsPPG_CODE := null,
     pdPPG_START_DATE in P_BASE.tdDate := null,
-    psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
+    psDST_CODE in P_BASE.tsDST_CODE := null,
     pdPER_START_DATE in P_BASE.tdDate := null,
     pdPER_END_DATE in P_BASE.tdDate := null,
     psRCX_CODE in P_BASE.tsRCX_CODE := null,
@@ -135,7 +135,7 @@ create or replace package P_STATISTIC is
 --  pnLOC_ID_PPG - Code of location associated with PPG (optional).
 --  psPPG_CODE - PPG code (optional).
 --  psPPG_START_DATE - Start date of effectivity of PPG (optional).
---  psPOPC_CODE - Population category code (optional).
+--  psDST_CODE - Population category code (optional).
 --  pdPER_START_DATE - Start date of period (optional).
 --  pdPER_END_DATE - Day after end date of period (optional).
 --  psRCX_CODE - Residence context code (optional).
@@ -159,7 +159,7 @@ create or replace package P_STATISTIC is
     pnLOC_ID_PPG in P_BASE.tnLOC_ID := null,
     psPPG_CODE in P_BASE.tsPPG_CODE := null,
     psPPG_START_DATE in P_BASE.tdDate := null,
-    psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
+    psDST_CODE in P_BASE.tsDST_CODE := null,
     pdPER_START_DATE in P_BASE.tdDate := null,
     pdPER_END_DATE in P_BASE.tdDate := null,
     psRCX_CODE in P_BASE.tsRCX_CODE := null,
@@ -182,7 +182,7 @@ create or replace package P_STATISTIC is
 --  pnVERSION_NBR - Update version number of statistic record (mandatory).
 --
   procedure DELETE_STATISTIC
-   (pnID in P_BASE.tmsPOPC_CODE,
+   (pnID in P_BASE.tmnSTC_ID,
     pnVERSION_NBR in P_BASE.tnSTC_VERSION_NBR);
 --
 -- ----------------------------------------

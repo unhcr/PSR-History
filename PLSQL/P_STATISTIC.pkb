@@ -16,7 +16,7 @@ create or replace package body P_STATISTIC is
     pnLOC_ID_ORIGIN in P_BASE.tnLOC_ID := null,
     pnLOC_ID_SOURCE in P_BASE.tnLOC_ID := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
-    psPOPC_CODE in P_BASE.tsPOPC_CODE := null,
+    psDST_CODE in P_BASE.tsDST_CODE := null,
     pnPER_ID in P_BASE.tnPER_ID := null,
     psSEX_CODE in P_BASE.tsSEX_CODE := null,
     pnAGR_ID in P_BASE.tnAGR_ID := null,
@@ -36,7 +36,7 @@ create or replace package body P_STATISTIC is
         to_char(pnLOC_ID_ORIGIN) || '~' ||
         to_char(pnLOC_ID_SOURCE) || '~' ||
         to_char(pnPPG_ID) || '~' ||
-        psPOPC_CODE || '~' ||
+        psDST_CODE || '~' ||
         to_char(pnPER_ID) || '~' ||
         psSEX_CODE || '~' ||
         to_char(pnDIM_ID1) || '~' ||
@@ -49,13 +49,13 @@ create or replace package body P_STATISTIC is
     insert into T_STATISTICS
      (ID, STCT_CODE,
       LOC_ID_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN, LOC_ID_SOURCE,
-      PPG_ID, POPC_CODE, PER_ID, SEX_CODE, AGR_ID,
+      PPG_ID, DST_CODE, PER_ID, SEX_CODE, AGR_ID,
       DIM_ID1, DIM_ID2, DIM_ID3, DIM_ID4, DIM_ID5,
       VALUE)
     values
      (STC_SEQ.nextval, psSTCT_CODE,
       pnLOC_ID_COUNTRY, pnLOC_ID_ASYLUM, pnLOC_ID_ORIGIN, pnLOC_ID_SOURCE,
-      pnPPG_ID, psPOPC_CODE, pnPER_ID, psSEX_CODE, pnAGR_ID,
+      pnPPG_ID, psDST_CODE, pnPER_ID, psSEX_CODE, pnAGR_ID,
       pnDIM_ID1, pnDIM_ID2, pnDIM_ID3, pnDIM_ID4, pnDIM_ID5,
       pnVALUE)
     returning ID into pnID;
@@ -72,7 +72,7 @@ create or replace package body P_STATISTIC is
 -- ----------------------------------------
 --
   procedure DELETE_STATISTIC
-   (pnID in P_BASE.tmsPOPC_CODE,
+   (pnID in P_BASE.tmnSTC_ID,
     pnVERSION_NBR in P_BASE.tnSTC_VERSION_NBR)
   is
     nITM_ID P_BASE.tnITM_ID;
