@@ -29,12 +29,12 @@ prompt ==============
 prompt InitLanguages
 prompt =============
 @InitLanguages
-prompt InitStatTypes
+prompt InitStatisticTypes
 prompt =============
-@InitStatTypes
-prompt InitPopCats
+@InitStatisticTypes
+prompt InitDisplacementStatuses
 prompt ===========
-@InitPopCats
+@InitDisplacementStatuses
 prompt InitSexes
 prompt =========
 @InitSexes
