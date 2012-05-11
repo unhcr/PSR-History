@@ -85,7 +85,7 @@
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 09:57:19 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<constraintName>CH_TTH_TXI_SEQ_NBR_MAX</constraintName>
+<constraintName>CH_TTH_TXT_SEQ_NBR_MAX</constraintName>
 <useDomainConstraints>false</useDomainConstraints>
 <defaultValue>0</defaultValue>
 <use>0</use>

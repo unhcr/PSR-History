@@ -142,7 +142,7 @@
 <colAssociation fkAssociation="581ED344-6D7E-84CF-E43B-715990F895A2" referredColumn="C7ACAFAE-78E9-4B29-A0F5-69822CBD910F"/>
 </associations>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="POPC_CODE" id="A27911EE-DBCE-B07D-F05F-D041DB0612FF">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DST_CODE" id="A27911EE-DBCE-B07D-F05F-D041DB0612FF">
 <createdBy>Scott</createdBy>
 <createdTime>2011-11-03 16:11:56 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -418,7 +418,7 @@
 <colUsage columnID="7F16941E-0450-0982-F034-DF334E5BB70B"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="32C6E65C-95E0-F387-DBB4-8BBCFA743131" name="FK_STC_POPC">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="32C6E65C-95E0-F387-DBB4-8BBCFA743131" name="FK_STC_DST">
 <createdBy>Scott</createdBy>
 <createdTime>2011-11-03 16:16:16 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>

@@ -295,8 +295,8 @@
 <Connector class="oracle.dbtools.crest.swingui.relational.TVFKRelation" oid="B37DEADC-D330-5047-27CE-21F914F06B96" otype="FKIndexAssociation" vid_source="149E90F5-D7B9-9873-794A-38BDD407879A" vid_target="9AC4683E-4709-C7EB-CCCE-806D6D5D765F">
 <lineWidth>1</lineWidth>
 <points>
-<point x="565" y="561"/>
-<point x="565" y="630"/>
+<point x="560" y="561"/>
+<point x="560" y="630"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.relational.TVFKRelation" oid="B6D5389D-975A-0B32-F604-6A3DD7D164D3" otype="FKIndexAssociation" vid_source="3B078BFB-0720-B060-CAFC-D084377349B3" vid_target="534FA84F-BEA6-095E-0F16-F67F09E6B7E3">

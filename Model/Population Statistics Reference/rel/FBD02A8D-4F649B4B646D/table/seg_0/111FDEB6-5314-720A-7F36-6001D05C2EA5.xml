@@ -98,6 +98,17 @@
 <logicalDatatype>LOGDT007</logicalDatatype>
 <domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
 </Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PPGR_SEQ_NBR_MAX" id="0B9EC9AB-3C1D-62EB-83EC-8991713321FD">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-11 08:31:25 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>1</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>4DEE2B98-924B-3C9C-5F42-8D1F2F4A8E54</domain>
+<usesDefaultValue>true</usesDefaultValue>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="E7B7F7D0-A078-697A-B9FC-80B7C6FB5905">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-08 07:17:50 UTC</createdTime>

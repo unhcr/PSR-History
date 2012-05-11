@@ -73,7 +73,7 @@
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 12:37:55 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<constraintName>CH_TXI_SEQ_NBR</constraintName>
+<constraintName>CH_TXT_SEQ_NBR</constraintName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
@@ -144,7 +144,7 @@
 </Column>
 </columns>
 <indexes>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="FC752D47-8770-E1C6-9B68-9EA220FC12DB" name="PK_TXI">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="FC752D47-8770-E1C6-9B68-9EA220FC12DB" name="PK_TXT">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 12:37:55 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>

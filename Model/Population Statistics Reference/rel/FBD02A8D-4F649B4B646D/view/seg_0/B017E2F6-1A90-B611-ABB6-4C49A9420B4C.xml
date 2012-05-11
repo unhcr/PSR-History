@@ -4,8 +4,8 @@
 <createdTime>2012-05-04 13:55:20 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <userDefined>true</userDefined>
-<userDefinedSQL>SELECT T_STATISTIC_TYPES_IN_GROUPS.STCG_CODE,&lt;br/&gt;  T_STATISTIC_TYPES_IN_GROUPS.STCT_CODE,&lt;br/&gt;  T_STATISTIC_TYPES_IN_GROUPS.ITM_ID,&lt;br/&gt;  T_STATISTIC_TYPES_IN_GROUPS.VERSION_NBR&lt;br/&gt;FROM T_STATISTIC_TYPES_IN_GROUPS</userDefinedSQL>
-<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select T_STATISTIC_TYPES_IN_GROUPS.STCG_CODE, T_STATISTIC_TYPES_IN_GROUPS.STCT_CODE, T_STATISTIC_TYPES_IN_GROUPS.ITM_ID, T_STATISTIC_TYPES_IN_GROUPS.VERSION_NBR From T_STATISTIC_TYPES_IN_GROUPS&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select T_STATISTIC_TYPES_IN_GROUPS.STCG_CODE, T_STATISTIC_TYPES_IN_GROUPS.STCT_CODE, T_STATISTIC_TYPES_IN_GROUPS.ITM_ID, T_STATISTIC_TYPES_IN_GROUPS.VERSION_NBR From T_STATISTIC_TYPES_IN_GROUPS&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_STATISTIC_TYPES_IN_GROUPS&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;117&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<userDefinedSQL>SELECT STCTG.STCG_CODE,&lt;br/&gt;  STCTG.STCT_CODE,&lt;br/&gt;  STCTG.ITM_ID,&lt;br/&gt;  STCTG.VERSION_NBR&lt;br/&gt;FROM T_STATISTIC_TYPES_IN_GROUPS STCTG</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select STCTG.STCG_CODE, STCTG.STCT_CODE, STCTG.ITM_ID, STCTG.VERSION_NBR From T_STATISTIC_TYPES_IN_GROUPS STCTG&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select STCTG.STCG_CODE, STCTG.STCT_CODE, STCTG.ITM_ID, STCTG.VERSION_NBR From T_STATISTIC_TYPES_IN_GROUPS STCTG&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_STATISTIC_TYPES_IN_GROUPS STCTG&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;117&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
 <parsed>true</parsed>
 <fonts>
 <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
@@ -23,7 +23,7 @@
 </FontObject>
 </fonts>
 <usedContainers>
-<container containerID="7FD42201-B423-AA54-74ED-F3AD5A365E39"/>
+<container alias="STCTG" containerID="7FD42201-B423-AA54-74ED-F3AD5A365E39"/>
 </usedContainers>
 <viewElements>
 <viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="STCG_CODE" id="40594E26-CDEC-6CC2-3686-49C3A9EC1D64">

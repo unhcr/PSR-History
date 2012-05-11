@@ -1,11 +1,11 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" id="DA0CA017-C04A-FF9B-5716-DE27A3255042" directorySegmentName="seg_0" name="T_POPULATION_CATEGORIES">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="DA0CA017-C04A-FF9B-5716-DE27A3255042" directorySegmentName="seg_0" name="T_DISPLACEMENT_STATUSES">
 <createdBy>Scott</createdBy>
 <createdTime>2011-11-03 16:08:55 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <pkName>PK_POPC</pkName>
 <typeID>2</typeID>
-<abbreviation>POPC</abbreviation>
+<abbreviation>DST</abbreviation>
 <fonts>
 <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
 <foType>Title</foType>
@@ -114,7 +114,7 @@
 <colUsage columnID="2358118F-DE2E-2C47-F319-27049B5D3BEA"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="D3917482-56B3-FC8F-31B2-4C0041BD3EBE" name="FK_POPC_ITM">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="D3917482-56B3-FC8F-31B2-4C0041BD3EBE" name="FK_DST_ITM">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-08 07:17:04 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
