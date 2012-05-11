@@ -1,16 +1,16 @@
 variable VERSION_NBR number;
-variable TXI_SEQ_NBR number;
+variable TXT_SEQ_NBR number;
 variable MSG_SEQ_NBR number;
 
 execute P_MESSAGE.INSERT_COMPONENT('GEN', 'en', 'General');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('GEN', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used across all packages');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('GEN', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used across all packages');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('GEN', :MSG_SEQ_NBR, 'en', 'Module name mismatch');
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('GEN', :MSG_SEQ_NBR, 'en', 'Module version mismatch');
 
 
 execute P_MESSAGE.INSERT_COMPONENT('AGP', 'en', 'Age profiles and ranges');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('AGP', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_AGE_PROFILE');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('AGP', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_AGE_PROFILE');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('AGP', :MSG_SEQ_NBR, 'en', 'Age profile has been updated by another user');
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('AGP', :MSG_SEQ_NBR, 'en', 'Age range has been updated by another user');
@@ -19,13 +19,13 @@ execute :MSG_SEQ_NBR := null /* 4 */; P_MESSAGE.INSERT_MESSAGE('AGP', :MSG_SEQ_N
 
 
 execute P_MESSAGE.INSERT_COMPONENT('LANG', 'en', 'Languages');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('LANG', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_LANGUAGE');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('LANG', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_LANGUAGE');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('LANG', :MSG_SEQ_NBR, 'en', 'Language has been updated by another user');
 
 
 execute P_MESSAGE.INSERT_COMPONENT('LOC', 'en', 'Locations, location attributes and location relationships');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('LOC', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_LOCATION');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('LOC', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_LOCATION');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Location type has been updated by another user');
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_NBR, 'en', 'Location has been updated by another user');
@@ -44,7 +44,7 @@ execute :MSG_SEQ_NBR := null /* 14 */; P_MESSAGE.INSERT_MESSAGE('LOC', :MSG_SEQ_
 
 
 execute P_MESSAGE.INSERT_COMPONENT('MSG', 'en', 'Messages and Components');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('MSG', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_MESSAGE');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('MSG', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_MESSAGE');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('MSG', :MSG_SEQ_NBR, 'en', 'Message not found', 'S');
 execute :VERSION_NBR := 1; P_MESSAGE.SET_MSG_MESSAGE('MSG', :MSG_SEQ_NBR, :VERSION_NBR, 'fr', 'Message introuvable');
@@ -61,13 +61,13 @@ execute :MSG_SEQ_NBR := null /* 8 */; P_MESSAGE.INSERT_MESSAGE('MSG', :MSG_SEQ_N
 
 
 execute P_MESSAGE.INSERT_COMPONENT('OGN', 'en', 'Origins');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('OGN', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_ORIGIN');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('OGN', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_ORIGIN');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('OGN', :MSG_SEQ_NBR, 'en', 'Origin has been updated by another user');
 
 
 execute P_MESSAGE.INSERT_COMPONENT('PER', 'en', 'Time periods');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('PER', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_TIME_PERIOD');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('PER', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_TIME_PERIOD');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('PER', :MSG_SEQ_NBR, 'en', 'Time period type has been updated by another user');
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('PER', :MSG_SEQ_NBR, 'en', 'Time period has been updated by another user');
@@ -75,27 +75,27 @@ execute :MSG_SEQ_NBR := null /* 3 */; P_MESSAGE.INSERT_MESSAGE('PER', :MSG_SEQ_N
 execute :MSG_SEQ_NBR := null /* 4 */; P_MESSAGE.INSERT_MESSAGE('PER', :MSG_SEQ_NBR, 'en', 'Cannot change time period already in use');
 
 
-execute P_MESSAGE.INSERT_COMPONENT('POPC', 'en', 'Population categories');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('POPC', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_POPULATION_CATEGORY');
+execute P_MESSAGE.INSERT_COMPONENT('DST', 'en', 'Displacement statuses');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('DST', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_DISPLACEMENT_STATUS');
 
-execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('POPC', :MSG_SEQ_NBR, 'en', 'Population category has been updated by another user');
+execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('DST', :MSG_SEQ_NBR, 'en', 'Displacement status has been updated by another user');
 
 
 execute P_MESSAGE.INSERT_COMPONENT('PPG', 'en', 'Population planning groups');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('PPG', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_POPULATION_PLANNING_GROUP');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('PPG', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_POPULATION_PLANNING_GROUP');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('PPG', :MSG_SEQ_NBR, 'en', 'PPG has been updated by another user');
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('PPG', :MSG_SEQ_NBR, 'en', 'PPG with overlapping dates already exists');
 
 
 execute P_MESSAGE.INSERT_COMPONENT('STC', 'en', 'Statistics');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('STC', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_STATISTIC');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('STC', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_STATISTIC');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('STC', :MSG_SEQ_NBR, 'en', 'Statistic has been updated by another user');
 
 
 execute P_MESSAGE.INSERT_COMPONENT('STCT', 'en', 'Statistic types and groups');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('STCT', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_STATISTIC_TYPE');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('STCT', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_STATISTIC_TYPE');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('STCT', :MSG_SEQ_NBR, 'en', 'Statistic type has been updated by another user');
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('STCT', :MSG_SEQ_NBR, 'en', 'Statistic group has been updated by another user');
@@ -103,13 +103,13 @@ execute :MSG_SEQ_NBR := null /* 3 */; P_MESSAGE.INSERT_MESSAGE('STCT', :MSG_SEQ_
 
 
 execute P_MESSAGE.INSERT_COMPONENT('SYP', 'en', 'System parameters');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('SYP', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_SYSTEM_PARAMETER');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('SYP', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_SYSTEM_PARAMETER');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('SYP', :MSG_SEQ_NBR, 'en', 'System parameter has been updated by another user');
 
 
 execute P_MESSAGE.INSERT_COMPONENT('TXT', 'en', 'Text');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('TXT', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_TEXT');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('TXT', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_TEXT');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('TXT', :MSG_SEQ_NBR, 'en', 'Unknown text type');
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('TXT', :MSG_SEQ_NBR, 'en', 'Inactive text type');
@@ -126,14 +126,14 @@ execute :MSG_SEQ_NBR := null /* 12 */; P_MESSAGE.INSERT_MESSAGE('TXT', :MSG_SEQ_
 
 
 execute P_MESSAGE.INSERT_COMPONENT('TXTT', 'en', 'Text Types');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('TXTT', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_TEXT_TYPE');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('TXTT', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_TEXT_TYPE');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('TXTT', :MSG_SEQ_NBR, 'en', 'Text type has been updated by another user');
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('TXTT', :MSG_SEQ_NBR, 'en', 'Text type property has been updated by another user');
 
 
 execute P_MESSAGE.INSERT_COMPONENT('USR', 'en', 'System users, user attributes and user preferences');
-execute :VERSION_NBR := 1; :TXI_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('USR', :VERSION_NBR, 'NOTE', :TXI_SEQ_NBR, 'en', 'Used in package P_SYSTEM_USER');
+execute :VERSION_NBR := 1; :TXT_SEQ_NBR := null; P_MESSAGE.SET_COMP_TEXT('USR', :VERSION_NBR, 'NOTE', :TXT_SEQ_NBR, 'en', 'Used in package P_SYSTEM_USER');
 
 execute :MSG_SEQ_NBR := null /* 1 */; P_MESSAGE.INSERT_MESSAGE('USR', :MSG_SEQ_NBR, 'en', 'System user has been updated by another user');
 execute :MSG_SEQ_NBR := null /* 2 */; P_MESSAGE.INSERT_MESSAGE('USR', :MSG_SEQ_NBR, 'en', 'User attribute type has been updated by another user');
