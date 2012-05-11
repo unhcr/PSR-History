@@ -226,13 +226,6 @@
 <point x="781" y="200"/>
 </points>
 </Connector>
-<Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="A20CA41C-982D-4D21-5FB7-EF29496CF3AD" otype="Relation" vid_source="8FDA6A73-2898-DEFE-C532-CAE1AE7404D7" vid_target="5D162787-3C4A-BFBB-70CA-8E532FBB3168">
-<lineWidth>1</lineWidth>
-<points>
-<point x="781" y="110"/>
-<point x="590" y="110"/>
-</points>
-</Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="A9039E67-E2A7-1C45-E2F8-0220CF49798E" otype="Relation" vid_source="C35789C7-2BA6-B1E2-EFC0-BCBDB7BA9AA1" vid_target="A4D494D4-E691-32D5-0EB6-FC88033ED6B3">
 <lineWidth>1</lineWidth>
 <points>
