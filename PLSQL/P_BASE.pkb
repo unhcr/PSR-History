@@ -1,5 +1,42 @@
 create or replace package body P_BASE is
 --
+-- ========================================
+-- Public program units
+-- ========================================
+--
+-- ----------------------------------------
+-- MIN_DATE
+-- ----------------------------------------
+--
+  function MIN_DATE
+    return tdDate
+  is
+  begin
+    return gdMIN_DATE;
+  end;
+--
+-- ----------------------------------------
+-- MAX_DATE
+-- ----------------------------------------
+--
+  function MAX_DATE
+    return tdDate
+  is
+  begin
+    return gdMAX_DATE;
+  end;
+--
+-- ----------------------------------------
+-- FALSE_DATE
+-- ----------------------------------------
+--
+  function FALSE_DATE
+    return tdDate
+  is
+  begin
+    return gdFALSE_DATE;
+  end;
+--
 -- =====================================
 -- Initialisation
 -- =====================================

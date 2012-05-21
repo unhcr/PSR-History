@@ -6,7 +6,7 @@ create or replace package P_BASE is
 --  Type definitions and data values used throughout the PSR system.
 --
 --  Change History:
---  08-May-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  14-May-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -296,6 +296,37 @@ create or replace package P_BASE is
   gdMIN_DATE tdDate;  -- Minimum date value (earlier than any possible practical date).
   gdMAX_DATE tdDate;  -- Maximum date value (later than any possible practical date).
   gdFALSE_DATE tdDate;  -- Impossible date value (used for parameter default values).
+--
+-- ========================================
+-- Program unit definitions
+-- ========================================
+--
+-- ----------------------------------------
+-- MIN_DATE
+-- ----------------------------------------
+--
+-- Return the minimum date value.
+--
+  function MIN_DATE
+    return tdDate;
+--
+-- ----------------------------------------
+-- MAX_DATE
+-- ----------------------------------------
+--
+-- Return the maximum date value.
+--
+  function MAX_DATE
+    return tdDate;
+--
+-- ----------------------------------------
+-- FALSE_DATE
+-- ----------------------------------------
+--
+-- Return the impossible date value.
+--
+  function FALSE_DATE
+    return tdDate;
 --
 end P_BASE;
 /
