@@ -36,8 +36,8 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       into sDummy
       from T_LOCATIONS
       where ID = pnLOC_ID
-      and START_DATE < nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)
-      and END_DATE > nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
+      and START_DATE <= nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)
+      and END_DATE >= nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
     end;
   --
   -- Check for an existing PPG with the same code and overlapping effective date range.
