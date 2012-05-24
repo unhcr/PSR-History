@@ -30,7 +30,11 @@ create or replace package body P_TEXT is
   -- Ensure required text type is active.
   --
     begin
-      select ACTIVE_FLAG into sTXTT_ACTIVE_FLAG from T_TEXT_TYPES where CODE = psTXTT_CODE for update;
+      select ACTIVE_FLAG
+      into sTXTT_ACTIVE_FLAG
+      from T_TEXT_TYPES
+      where CODE = psTXTT_CODE
+      for update;
     exception
       when NO_DATA_FOUND
       then P_MESSAGE.DISPLAY_MESSAGE('TXT', 1, 'Unknown text type');
@@ -43,7 +47,11 @@ create or replace package body P_TEXT is
   -- Ensure required language is active.
   --
     begin
-      select ACTIVE_FLAG into sLANG_ACTIVE_FLAG from T_LANGUAGES where CODE = psLANG_CODE for update;
+      select ACTIVE_FLAG
+      into sLANG_ACTIVE_FLAG
+      from T_LANGUAGES
+      where CODE = psLANG_CODE
+      for update;
     exception
       when NO_DATA_FOUND
       then P_MESSAGE.DISPLAY_MESSAGE('TXT', 3, 'Unknown text language');
@@ -56,10 +64,10 @@ create or replace package body P_TEXT is
     if pnITM_ID is null
     then
     --
-    -- Text is to be created for a new entity.
+    -- Text is to be created for a new data item.
     --
       if pnSEQ_NBR is not null
-      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 5, 'Cannot specify a text item sequence number without a text identifier');
+      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 5, 'Cannot specify a text item sequence number without a data item identifier');
       end if;
     --
     -- Create new T_DATA_ITEMS row.
@@ -84,12 +92,12 @@ create or replace package body P_TEXT is
     --
     else
     --
-    -- Text already exists for this entity.
+    -- Text already exists for this data item.
     --
       select TAB_ALIAS into sTAB_ALIAS from T_DATA_ITEMS TXT where TXT.ID = pnITM_ID;
     --
       if sTAB_ALIAS != psTAB_ALIAS
-      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 6, 'Wrong table for this text identifier');
+      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 6, 'Wrong table for this data item identifier');
       end if;
     --
       if pnSEQ_NBR is null
@@ -112,7 +120,7 @@ create or replace package body P_TEXT is
         if sql%rowcount = 0
         then
         --
-        -- Entity has no existing text items of this type: create new T_TEXT_TYPE_HEADERS row.
+        -- Data item has no existing text items of this type: create new T_TEXT_TYPE_HEADERS row.
         --
           insert into T_TEXT_TYPE_HEADERS (ITM_ID, TXTT_CODE, TAB_ALIAS, TXT_SEQ_NBR_MAX)
           values (pnITM_ID, psTXTT_CODE, sTAB_ALIAS, 1);
