@@ -1,55 +1,122 @@
 set serveroutput on
 
--- Countries (from spreadsheet constructed from CommonDataHub "ISO 3166 Country Codes", UNHCR Style Companion, and UNHCR Global Trends 2010 Annexes, Table 26)
 declare
-  nLOC_ID_COU P_BASE.tnLOC_ID;
+  type tanLOC_ID is table of P_BASE.tnLOC_ID index by pls_integer;
+  anLOC_ID tanLOC_ID;
+  nLOC_ID P_BASE.tnLOC_ID;
   nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
   nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
-  nCount pls_integer := 0;
+  iCount1 pls_integer := 0;
+  iCount2 pls_integer := 0;
 begin
-  for rCOU in
-   (select COU.COUNTRY_NAME, COU.NAME_LANGUAGE, COU.ISO_A3, COU.ISO_A2, COU.ISO_N, COU.UNHCR, COU.FORMAL_NAME, SUB.ID LOC_ID_SUB, BOP.ID LOC_ID_BOP
-    from STAGE.COUNTRIES COU
-    left outer join LOCATIONS SUB
-    on SUB.NAME = COU.UN_SUBREGION
-    and SUB.LOCT_CODE = 'UNSUBREG'
-    left outer join LOCATIONS BOP
-    on BOP.NAME = COU.UNHCR_BUR_OPN
-    and BOP.LOCT_CODE in ('HCRBUR', 'HCRREGOP')
-    order by COU.COUNTRY_NAME)
+  for rLOC in
+   (select LOC.KEY, LOC.IS03166A3, LOC.ISO_NAME_EN, LOC.LOCT_CODE, LOC.START_DATE, LOC.END_DATE,
+      LOC.IS03166A2, LOC.IS03166NUM, LOC.HCRCC,
+      LOC.ISO_NAME_FR, LOC.ISO_FULL_NAME_EN, LOC.ISO_FULL_NAME_FR,
+      LOC.GAWCC, LOC.GAACC, LOC.GAHCC, LOC.NOTES,
+      LOCA1.LOC_ID as LOC_ID_UNSD, LOCA2.LOC_ID as LOC_ID_HCRRESP
+    from STAGE.S_LOCATIONS_COUNTRIES LOC
+    left outer join T_LOCATION_ATTRIBUTES LOCA1
+      on LOCA1.LOCAT_CODE = 'UNSDNUM'
+      and LOCA1.CHAR_VALUE = LOC.UNSD_FROM
+    left outer join T_LOCATION_ATTRIBUTES LOCA2
+      on LOCA2.LOCAT_CODE = 'HCRBC'
+      and LOCA2.CHAR_VALUE = LOC.HCRRESP_FROM
+    order by LOC.ISO_NAME_EN)
   loop
-    nCount := nCount + 1;
+    iCount1 := iCount1 + 1;
   --
-    P_LOCATION.INSERT_LOCATION(nLOC_ID_COU, rCOU.NAME_LANGUAGE, rCOU.COUNTRY_NAME, 'COUNTRY', rCOU.ISO_A3);
-  --
-    P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID_COU, 'IS03166A2', rCOU.ISO_A2);
-    P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID_COU, 'IS03166NUM', lpad(rCOU.ISO_N, 3, '0'));
-    if rCOU.UNHCR is not null
-    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID_COU, 'UNHCRCC', rCOU.UNHCR);
-    end if;
-  --
+    P_LOCATION.INSERT_LOCATION
+     (nLOC_ID, 'en', rLOC.ISO_NAME_EN, rLOC.LOCT_CODE, rLOC.IS03166A3,
+      rLOC.START_DATE, rLOC.END_DATE);
+    anLOC_ID(rLOC.KEY) := nLOC_ID;
     nVERSION_NBR := 1;
-    nSEQ_NBR := null;
-    P_LOCATION.SET_LOC_TEXT(nLOC_ID_COU, nVERSION_NBR, 'FORMALNAME', nSEQ_NBR, 'en', rCOU.FORMAL_NAME);
   --
-    if rCOU.LOC_ID_SUB is not null
-    then P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rCOU.LOC_ID_SUB, nLOC_ID_COU, 'WITHIN');
+    if rLOC.IS03166A2 is not null
+    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'IS03166A2', rLOC.IS03166A2);
     end if;
   --
-    if rCOU.LOC_ID_BOP is not null
-    then P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rCOU.LOC_ID_BOP, nLOC_ID_COU, 'RESP');
+    if rLOC.IS03166NUM is not null
+    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'IS03166NUM', rLOC.IS03166NUM);
+    end if;
+  --
+    if rLOC.HCRCC is not null
+    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'HCRCC', upper(rLOC.HCRCC));
+    end if;
+  --
+    if rLOC.ISO_NAME_FR is not null
+    then P_LOCATION.SET_LOC_NAME(nLOC_ID, nVERSION_NBR, 'fr', rLOC.ISO_NAME_FR);
+    end if;
+  --
+    if rLOC.ISO_FULL_NAME_EN is not null or rLOC.ISO_FULL_NAME_FR is not null
+    then
+      nSEQ_NBR := null;
+    --
+      if rLOC.ISO_FULL_NAME_EN is not null
+      then P_LOCATION.SET_LOC_TEXT(nLOC_ID, nVERSION_NBR, 'FORMALNAME', nSEQ_NBR, 'en', rLOC.ISO_FULL_NAME_EN);
+      end if;
+    --
+      if rLOC.ISO_FULL_NAME_FR is not null
+      then P_LOCATION.SET_LOC_TEXT(nLOC_ID, nVERSION_NBR, 'FORMALNAME', nSEQ_NBR, 'fr', rLOC.ISO_FULL_NAME_FR);
+      end if;
+    end if;
+  --
+    if rLOC.GAWCC is not null
+    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'GAWCC', upper(rLOC.GAWCC));
+    end if;
+  --
+    if rLOC.GAACC is not null
+    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'GAACC', upper(rLOC.GAACC));
+    end if;
+  --
+    if rLOC.GAHCC is not null
+    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'GAHCC', upper(rLOC.GAHCC));
+    end if;
+  --
+    if rLOC.NOTES is not null
+    then
+      nSEQ_NBR := null;
+      P_LOCATION.SET_LOC_TEXT(nLOC_ID, nVERSION_NBR, 'NOTE', nSEQ_NBR, 'en', rLOC.NOTES);
+    end if;
+  --
+    if rLOC.LOC_ID_UNSD is not null
+    then
+      P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rLOC.LOC_ID_UNSD, nLOC_ID, 'UNSD');
+      iCount2 := iCount2 + 1;
+    end if;
+  --
+    if rLOC.LOC_ID_HCRRESP is not null
+    then
+      P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rLOC.LOC_ID_HCRRESP, nLOC_ID, 'HCRRESP');
+      iCount2 := iCount2 + 1;
     end if;
   end loop;
 --
-  P_LOCATION.INSERT_LOCATION(nLOC_ID_COU, 'en', 'Tibetan', 'OTHORIGIN');
-  P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID_COU, 'UNHCRCC', 'TIB');
-  P_LOCATION.INSERT_LOCATION(nLOC_ID_COU, 'en', 'Chechnyan', 'OTHORIGIN');
-  P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID_COU, 'UNHCRCC', 'CHY');
-  P_LOCATION.INSERT_LOCATION(nLOC_ID_COU, 'en', 'Kosovo (S/RES/1244 (1999))', 'OTHORIGIN');
-  P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID_COU, 'UNHCRCC', 'KOS');
-  P_LOCATION.INSERT_LOCATION(nLOC_ID_COU, 'en', 'Stateless', 'OTHORIGIN');
-  P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID_COU, 'UNHCRCC', 'STA');
+  dbms_output.put_line(to_char(iCount1) || ' LOCATIONS records inserted');
 --
-  dbms_output.put_line(to_char(nCount) || ' country records inserted');
+  for rLOC in
+   (select KEY, CSPLIT_FROM_KEY, CMERGE_TO_KEY, CCHANGE_FROM_KEY
+    from STAGE.S_LOCATIONS_COUNTRIES)
+  loop
+    if rLOC.CSPLIT_FROM_KEY is not null
+    then
+      iCount2 := iCount2 + 1;
+      P_LOCATION.INSERT_LOCATION_RELATIONSHIP(anLOC_ID(rLOC.CSPLIT_FROM_KEY), anLOC_ID(rLOC.KEY), 'CSPLIT');
+    end if;
+  --
+    if rLOC.CMERGE_TO_KEY is not null
+    then
+      iCount2 := iCount2 + 1;
+      P_LOCATION.INSERT_LOCATION_RELATIONSHIP(anLOC_ID(rLOC.KEY), anLOC_ID(rLOC.CMERGE_TO_KEY), 'CMERGE');
+    end if;
+  --
+    if rLOC.CCHANGE_FROM_KEY is not null
+    then
+      iCount2 := iCount2 + 1;
+      P_LOCATION.INSERT_LOCATION_RELATIONSHIP(anLOC_ID(rLOC.CCHANGE_FROM_KEY), anLOC_ID(rLOC.KEY), 'CCHANGE');
+    end if;
+  end loop;PLS_UTILITY.DISABLE_TRACE;
+--
+  dbms_output.put_line(to_char(iCount2) || ' LOCATION_RELATIONSHIPS records inserted');
 end;
 /
