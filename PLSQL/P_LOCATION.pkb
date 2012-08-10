@@ -1736,6 +1736,8 @@ create or replace package body P_LOCATION is
     pdEND_DATE in P_BASE.tdDate := null)
   is
     sACTIVE_FLAG P_BASE.tsLOCRT_ACTIVE_FLAG;
+    dSTART_DATE P_BASE.tdDate;
+    dEND_DATE P_BASE.tdDate;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_LOCATION_RELATIONSHIP',
@@ -1749,8 +1751,29 @@ create or replace package body P_LOCATION is
     then P_MESSAGE.DISPLAY_MESSAGE('LOC', 13, 'Inactive location relationship type');
     end if;
   --
-  -- Check for an existing relationship of the same type between these locations with overlapping
-  --  effective date range.
+  -- Determine effective date range of the combined related locations.
+  --
+    select max(START_DATE), min(END_DATE)
+    into dSTART_DATE, dEND_DATE
+    from LOCATIONS
+    where ID in (pnLOC_ID_FROM, pnLOC_ID_TO);
+  --
+  -- Check that effective date parameters (if specified) fall within the effective date range of the
+  --  related locations, or default them if not specified.
+  --
+    if pdSTART_DATE < dSTART_DATE or pdEND_DATE > dEND_DATE
+    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 999, 'Location relationship effective date range outside effective date range of related locations');
+    else
+      dSTART_DATE := nvl(pdSTART_DATE, dSTART_DATE);
+      dEND_DATE := nvl(pdEND_DATE, dEND_DATE);
+    end if;
+    PLS_UTILITY.TRACE_POINT
+     ('Dates', to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
+        psLOCRT_CODE || '~' || to_char(dSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(dEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
+  --
+  -- Check for an existing relationship between these locations of the same type and with an
+  --  overlapping effective date range.
   --
     declare
       sDummy varchar2(1);
@@ -1761,8 +1784,8 @@ create or replace package body P_LOCATION is
       where LOC_ID_FROM = pnLOC_ID_FROM
       and LOC_ID_TO = pnLOC_ID_TO
       and LOCRT_CODE = psLOCRT_CODE
-      and START_DATE <= pdEND_DATE
-      and END_DATE >= pdSTART_DATE;
+      and START_DATE <= dEND_DATE
+      and END_DATE >= dSTART_DATE;
     --
       raise TOO_MANY_ROWS;
     exception
@@ -1773,11 +1796,9 @@ create or replace package body P_LOCATION is
     end;
   --
     insert into T_LOCATION_RELATIONSHIPS
-     (LOC_ID_FROM, LOC_ID_TO, LOCRT_CODE, START_DATE,
-      END_DATE)
+     (LOC_ID_FROM, LOC_ID_TO, LOCRT_CODE, START_DATE, END_DATE)
     values
-     (pnLOC_ID_FROM, pnLOC_ID_TO, psLOCRT_CODE, nvl(pdSTART_DATE, P_BASE.gdMIN_DATE),
-      nvl(pdEND_DATE, P_BASE.gdMAX_DATE));
+     (pnLOC_ID_FROM, pnLOC_ID_TO, psLOCRT_CODE, dSTART_DATE, dEND_DATE);
   --
     PLS_UTILITY.END_MODULE;
   exception

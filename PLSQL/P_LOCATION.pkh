@@ -7,7 +7,7 @@ create or replace package P_LOCATION is
 --   attribute types, relationships and relationship types.
 --
 --  Change History:
---  04-May-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  06-Aug-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -937,10 +937,13 @@ create or replace package P_LOCATION is
 --  pnLOC_ID_TO - To location identifier (mandatory).
 --  psLOCRT_CODE - Location relationship type code (mandatory).
 --  pdSTART_DATE - Effective start date of this location relationship (optional, the absence of a
---    start date, or a null value, indicates that the effectivity starts indefinitely far in the
---    past).
+--    start date, or a null value, indicates that the effectivity starts at the latest effective
+--    start date of the two related locations).
 --  pdEND_DATE - Effective end date of this location relationship (optional, the absence of an end
---    date, or a null value, indicates that the effectivity extends indefinitely into the future).
+--    date, or a null value, indicates that the effectivity ends at the earliest effective end date
+--    of the two related locations).
+-- Note that the effective date range for a location relationship cannot extend outside the
+--  effective range of either of the related locations.
 --
   procedure INSERT_LOCATION_RELATIONSHIP
    (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
