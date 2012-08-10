@@ -11,8 +11,8 @@ create or replace package body P_STATISTIC is
   procedure INSERT_STATISTIC
    (pnID out P_BASE.tnSTC_ID,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
-    pnLOC_ID_COUNTRY in P_BASE.tmnLOC_ID,
-    pnLOC_ID_ASYLUM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_COUNTRY in P_BASE.tnLOC_ID := null,
+    pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ORIGIN in P_BASE.tnLOC_ID := null,
     pnLOC_ID_SOURCE in P_BASE.tnLOC_ID := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,

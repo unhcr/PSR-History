@@ -26,8 +26,8 @@ create or replace package P_STATISTIC is
 -- Parameters:
 --  pnID - New statistic identifier (returned).
 --  psSTCT_CODE - Statistic type code (mandatory).
---  pnLOC_ID_COUNTRY - Location identifier of country of asylum of persons of concern (mandatory).
---  pnLOC_ID_ASYLUM - Identifier of asylum location of persons of concern (mandatory).
+--  pnLOC_ID_COUNTRY - Location identifier of country of asylum of persons of concern (optional).
+--  pnLOC_ID_ASYLUM - Identifier of asylum location of persons of concern (optional).
 --  pnLOC_ID_ORIGIN - Location identifier of (country of) origin of persons of concern (optional).
 --  pnLOC_ID_SOURCE - Identifier of location of origin of persons of concern (optional).
 --  pnPPG_ID - PPG identifier (optional).
@@ -45,8 +45,8 @@ create or replace package P_STATISTIC is
   procedure INSERT_STATISTIC
    (pnID out P_BASE.tnSTC_ID,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
-    pnLOC_ID_COUNTRY in P_BASE.tmnLOC_ID,
-    pnLOC_ID_ASYLUM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_COUNTRY in P_BASE.tnLOC_ID := null,
+    pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ORIGIN in P_BASE.tnLOC_ID := null,
     pnLOC_ID_SOURCE in P_BASE.tnLOC_ID := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
