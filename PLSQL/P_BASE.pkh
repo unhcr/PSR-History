@@ -22,6 +22,7 @@ create or replace package P_BASE is
   subtype tsText is varchar2;
   subtype tmsText is tsText not null;
   subtype tsNormalText is varchar2(1000);
+  subtype tnNumber is number;
   subtype tdDate is date;
   subtype tmdDate is tdDate not null;
   subtype tsCountryCode is varchar2(3);
@@ -47,11 +48,16 @@ create or replace package P_BASE is
 --
 -- T_COMPONENTS
 --
-  subtype tmsCOMP_CODE is T_COMPONENTS.CODE%type not null;
+  subtype tsCOMP_CODE is T_COMPONENTS.CODE%type;
+  subtype tmsCOMP_CODE is tsCOMP_CODE not null;
   subtype tnCOMP_DISPLAY_SEQ is T_COMPONENTS.DISPLAY_SEQ%type;
   subtype tsCOMP_ACTIVE_FLAG is T_COMPONENTS.ACTIVE_FLAG%type;
   subtype tmsCOMP_ACTIVE_FLAG is tsCOMP_ACTIVE_FLAG not null;
   subtype tnCOMP_VERSION_NBR is T_COMPONENTS.VERSION_NBR%type;
+--
+-- T_DATA_ITEMS
+--
+  subtype tnITM_ID is T_DATA_ITEMS.ID%type;
 --
 -- T_DIMENSION_TYPES
 --
@@ -221,9 +227,36 @@ create or replace package P_BASE is
   subtype tsTAB_ALIAS is T_TABLE_ALIASES.ALIAS%type;
   subtype tmsTAB_ALIAS is tsTAB_ALIAS not null;
 --
--- T_DATA_ITEMS
+-- T_TESTS
 --
-  subtype tnITM_ID is T_DATA_ITEMS.ID%type;
+  subtype tsTST_CODE is T_TESTS.CODE%type;
+  subtype tsTST_DESCRIPTION is T_TESTS.DESCRIPTION%type;
+--
+-- T_TEST_STEPS
+--
+  subtype tsSTP_SEQ_NBR is T_TEST_STEPS.SEQ_NBR%type;
+  subtype tsSTP_DESCRIPTION is T_TEST_STEPS.DESCRIPTION%type;
+--
+-- T_TEST_CASES
+--
+  subtype tsTCS_PACKAGE_NAME is T_TEST_CASES.PACKAGE_NAME%type;
+  subtype tsTCS_PROGRAM_UNIT_NAME is T_TEST_CASES.PROGRAM_UNIT_NAME%type;
+  subtype tnTCS_EXCEPTION_NBR is T_TEST_CASES.EXCEPTION_NBR%type;
+  subtype tsTCS_VARIABLE_NAME is T_TEST_CASES.VARIABLE_NAME%type;
+  subtype tsTCS_CHAR_VALUE is T_TEST_CASES.CHAR_VALUE%type;
+  subtype tnTCS_NUM_VALUE is T_TEST_CASES.NUM_VALUE%type;
+  subtype tdTCS_DATE_VALUE is T_TEST_CASES.DATE_VALUE%type;
+--
+-- T_TEST_CASE_ARGUMENTS
+--
+  subtype tsTCA_PARAMETER_NAME is T_TEST_CASE_ARGUMENTS.PARAMETER_NAME%type;
+  subtype tsTCA_VARIABLE_NAME is T_TEST_CASE_ARGUMENTS.VARIABLE_NAME%type;
+  subtype tsTCA_CHAR_VALUE_IN is T_TEST_CASE_ARGUMENTS.CHAR_VALUE_IN%type;
+  subtype tsTCA_CHAR_VALUE_OUT is T_TEST_CASE_ARGUMENTS.CHAR_VALUE_OUT%type;
+  subtype tnTCA_NUM_VALUE_IN is T_TEST_CASE_ARGUMENTS.NUM_VALUE_IN%type;
+  subtype tnTCA_NUM_VALUE_OUT is T_TEST_CASE_ARGUMENTS.NUM_VALUE_OUT%type;
+  subtype tdTCA_DATE_VALUE_IN is T_TEST_CASE_ARGUMENTS.DATE_VALUE_IN%type;
+  subtype tdTCA_DATE_VALUE_OUT is T_TEST_CASE_ARGUMENTS.DATE_VALUE_OUT%type;
 --
 -- T_TEXT_ITEMS
 --
