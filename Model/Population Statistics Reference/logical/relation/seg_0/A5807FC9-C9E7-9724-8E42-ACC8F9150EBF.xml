@@ -1,11 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Country of Asylum" id="1BB24886-CA0A-7AF0-C8F0-A72BF5BC5741" directorySegmentName="seg_0">
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Country of Asylum" id="A5807FC9-C9E7-9724-8E42-ACC8F9150EBF" directorySegmentName="seg_0">
 <createdBy>Scott</createdBy>
-<createdTime>2011-10-18 14:42:01 UTC</createdTime>
+<createdTime>2012-09-05 14:25:40 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <identifying>true</identifying>
 <optionalSource>true</optionalSource>
@@ -13,6 +12,6 @@
 <sourceCardinality>1</sourceCardinality>
 <sourceEntity>BB3D0A02-0F5E-B1E8-3C17-FA27F421F5C3</sourceEntity>
 <targetCardinalityString>*</targetCardinalityString>
-<targetEntity>4322327C-468C-22CC-2C1F-D48612BD13EC</targetEntity>
+<targetEntity>F31AD90A-1C29-BA43-DE06-91DD800AE95C</targetEntity>
 <transferable>true</transferable>
 </Relation>
