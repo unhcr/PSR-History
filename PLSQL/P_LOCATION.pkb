@@ -64,7 +64,7 @@ create or replace package body P_LOCATION is
     nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnLOCT_VERSION_NBR;
     xLOCT_ROWID rowid;
-    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_LOCATION_TYPE',
@@ -163,7 +163,7 @@ create or replace package body P_LOCATION is
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from T_TEXT_TYPES where rowid = xLOCT_ROWID;
+      delete from T_LOCATION_TYPES where rowid = xLOCT_ROWID;
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
