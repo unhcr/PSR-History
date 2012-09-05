@@ -37,9 +37,9 @@ prompt LoadLanguages
 prompt =============
 @LoadLanguages
 
-prompt InitStatisticTypes
+prompt LoadStatisticTypes
 prompt =============
-@InitStatisticTypes
+@LoadStatisticTypes
 
 prompt InitDisplacementStatuses
 prompt ===========
@@ -57,32 +57,48 @@ prompt InitTimePeriods
 prompt ===============
 @InitTimePeriods
 
-prompt InitDimensions
-prompt ==============
-@InitDimensions
+prompt LoadDimensionTypes
+prompt ==================
+@LoadDimensionTypes
 
-prompt InitLocations
-prompt =============
-@InitLocations
+prompt LoadLocationTypes
+prompt =================
+@LoadLocationTypes
 
-prompt LoadLocations_Countries
-prompt =======================
-@LoadLocations_Countries
-
-prompt LoadLocations_Subdivisions
+prompt LoadLocationAttributeTypes
 prompt ==========================
-@LoadLocations_Subdivisions
+@LoadLocationAttributeTypes
 
-prompt LoadPPGs
-prompt ========
-@LoadPPGs
+prompt LoadLocationRelationshipTypes
+prompt =============================
+@LoadLocationRelationshipTypes
+
+prompt LoadLocationsRegions
+prompt ====================
+@LoadLocationsRegions
+
+prompt LoadLocationsCountries
+prompt ======================
+@LoadLocationsCountries
+
+--prompt LoadLocations_Subdivisions
+--prompt ==========================
+--@LoadLocations_Subdivisions
+
+--prompt LoadPPGs
+--prompt ========
+--@LoadPPGs
 
 prompt LoadStatistics
 prompt ==============
 @LoadStatistics
 
+--prompt InitTests
+--prompt =========
+--@InitTests
+
 commit;
 
-execute dbms_stats.gather_schema_stats(user);
+--execute dbms_stats.gather_schema_stats(user);
 
 spool off
