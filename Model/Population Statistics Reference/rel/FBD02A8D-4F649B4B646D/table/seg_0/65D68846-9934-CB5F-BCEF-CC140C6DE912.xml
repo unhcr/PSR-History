@@ -2,6 +2,7 @@
 <Table class="oracle.dbtools.crest.model.design.relational.Table" id="65D68846-9934-CB5F-BCEF-CC140C6DE912" directorySegmentName="seg_0" name="T_TEXT_TYPE_HEADERS">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 09:49:44 UTC</createdTime>
+<comment>Header records for all text items of a particular type associated with a given general data item</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <pkName>PK_TXI</pkName>
 <abbreviation>TTH</abbreviation>
@@ -44,11 +45,11 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="43152BBD-BC61-AE6E-7993-B98FCD0DE7B2">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 09:57:19 UTC</createdTime>
+<comment>General data item identifier</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="4FD491DB-5F38-5E1F-4F96-8E5530F477A1" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
@@ -57,6 +58,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="TXTT_CODE" id="1C091073-347D-D467-0190-0FE43BFAE93F">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 10:01:24 UTC</createdTime>
+<comment>Text type code</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
@@ -71,6 +73,8 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="TAB_ALIAS" id="84EB0E73-5998-E220-AFD0-C54563A7B0EC">
 <createdBy>Scott</createdBy>
 <createdTime>2012-01-09 15:38:23 UTC</createdTime>
+<comment>Table alias code</comment>
+<notes>Denormalised from  T_DATA_ITEMS</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
@@ -84,6 +88,8 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="TXT_SEQ_NBR_MAX" id="4CEE3E0C-39C8-E00C-3A6A-7E7DE5FA3629">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 09:57:19 UTC</createdTime>
+<comment>Current maximum text item sequence number for text items of this type for this general data item</comment>
+<notes>The value in this column is used to populate the T_TEXT_ITEMS.SEQ_NBR column when creating a new text item (and is then incremented)</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_TTH_TXT_SEQ_NBR_MAX</constraintName>
 <useDomainConstraints>false</useDomainConstraints>

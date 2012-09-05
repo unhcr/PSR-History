@@ -1,12 +1,12 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Diagram class="oracle.dbtools.crest.swingui.relational.DPVRelationalSubView" name="PSR - Infrastructure Tables" id="C091D45B-737C-F9C7-AED4-3C9AD7E3E5F5">
+<Diagram class="oracle.dbtools.crest.swingui.relational.DPVRelationalSubView" name="PSR - T1. Infrastructure Tables" id="C091D45B-737C-F9C7-AED4-3C9AD7E3E5F5">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 10:25:58 UTC</createdTime>
 <autoRoute>false</autoRoute>
 <boxInbox>true</boxInbox>
 <showLegend>true</showLegend>
 <showLabels>false</showLabels>
-<showGrid>true</showGrid>
+<showGrid>false</showGrid>
 <diagramColor>-1</diagramColor>
 <legendPosX>39</legendPosX>
 <legendPosY>11</legendPosY>

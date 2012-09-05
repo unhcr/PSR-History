@@ -2,10 +2,10 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="27A50457-F336-8519-C2D5-A40AED9780B4" directorySegmentName="seg_0" name="AGE_PROFILE">
 <createdBy>Scott</createdBy>
 <createdTime>2011-10-18 14:38:58 UTC</createdTime>
+<comment>A non-overlapping set of age ranges, normally covering the whole range of possible ages of persons of concern. The standard set of age ranges (in years) for UNHCR statistics is as follows: 0-4; 5-11; 12-17; 18-59; 60 and over.</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <pkName>AGE PROFILE UI</pkName>
 <adequatelyNormalized>NO</adequatelyNormalized>
@@ -59,7 +59,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -71,7 +70,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -85,7 +83,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>

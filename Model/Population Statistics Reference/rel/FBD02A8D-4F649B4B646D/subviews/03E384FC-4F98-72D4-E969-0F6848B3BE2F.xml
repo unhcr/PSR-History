@@ -1,0 +1,33 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Diagram class="oracle.dbtools.crest.swingui.relational.DPVRelationalSubView" name="PSR - V2. Complex Views" id="03E384FC-4F98-72D4-E969-0F6848B3BE2F">
+<createdBy>Scott</createdBy>
+<createdTime>2012-07-24 14:56:57 UTC</createdTime>
+<autoRoute>false</autoRoute>
+<boxInbox>true</boxInbox>
+<showLegend>false</showLegend>
+<showLabels>false</showLabels>
+<showGrid>false</showGrid>
+<diagramColor>-1</diagramColor>
+<display>false</display>
+<notation>1</notation>
+<objectViews>
+<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="3A1361CD-BEB2-D42F-CB5B-1CBCBE44B16D" otype="View" vid="A52D8729-67C1-B6DB-345F-01D10B3570BB">
+<bounds x="940" y="50" width="291" height="1071"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="713860DD-DCFF-3958-7F6F-5980202BB960" otype="View" vid="34B6894C-ED9C-BFD4-F085-C7E4A61F1E89">
+<bounds x="42" y="350" width="349" height="381"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="B08CEC94-BFEA-85DD-C5BD-8DBA8FC4A8B5" otype="View" vid="16432282-2EB1-0891-44EF-A1AA1B963D31">
+<bounds x="47" y="52" width="294" height="259"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="D41DF684-22D6-5EDD-5ED4-91086679104A" otype="View" vid="F4B86431-41C3-F37E-4018-C53C58EAF414">
+<bounds x="444" y="348" width="307" height="243"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="DFCF15DB-6E00-1E8A-0EC1-BA63F3306DA0" otype="View" vid="BC56237E-465E-A7FD-B132-3591B568700B">
+<bounds x="370" y="50" width="301" height="261"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="E2FBFD92-8C66-CACF-7766-38C7CCEED812" otype="View" vid="9A6419D7-FB02-2233-191A-47149F4E8A20">
+<bounds x="695" y="51" width="226" height="210"/>
+</OView>
+</objectViews>
+</Diagram>

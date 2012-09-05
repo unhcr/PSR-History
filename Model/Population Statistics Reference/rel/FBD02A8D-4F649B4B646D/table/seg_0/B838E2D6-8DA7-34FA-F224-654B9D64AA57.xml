@@ -2,6 +2,7 @@
 <Table class="oracle.dbtools.crest.model.design.relational.Table" id="B838E2D6-8DA7-34FA-F224-654B9D64AA57" directorySegmentName="seg_0" name="T_AGE_RANGES">
 <createdBy>Scott</createdBy>
 <createdTime>2011-10-26 10:37:49 UTC</createdTime>
+<comment>Age ranges forming part of age profiles</comment>
 <generatorID>3343CBAC-2CA6-2A37-8B10-1A3E55032850</generatorID>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <pkName>PK_AGE RANGE</pkName>
@@ -46,6 +47,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ID" id="E887FD2B-4164-C0ED-B1AC-5A298B0AAA7E">
 <createdBy>Scott</createdBy>
 <createdTime>2012-04-10 10:54:50 UTC</createdTime>
+<comment>Age range identifier</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_AGR_ID</constraintName>
 <use>0</use>
@@ -61,6 +63,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="AGP_CODE" id="0F169528-51D5-2E96-A990-8BD3EEFC0CFE">
 <createdBy>Scott</createdBy>
 <createdTime>2011-10-26 10:37:49 UTC</createdTime>
+<comment>Age profile code</comment>
 <generatorID>09E82348-2BA5-4F82-A16A-DE1FA35231D4</generatorID>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
@@ -76,6 +79,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="AGE_FROM" id="068F6115-B087-D780-023D-49F8921EC422">
 <createdBy>Scott</createdBy>
 <createdTime>2011-10-26 10:37:49 UTC</createdTime>
+<comment>Minimum age in years in this age range</comment>
 <generatorID>319FF97E-177A-5DB0-FE19-C9B8124BA7CE</generatorID>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <use>0</use>
@@ -86,6 +90,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="AGE_TO" id="3C65977C-79BE-BA03-C74A-CAA5BB01FE78">
 <createdBy>Scott</createdBy>
 <createdTime>2011-10-26 10:37:49 UTC</createdTime>
+<comment>Maximum age in years in this age range</comment>
 <generatorID>19074341-7B2A-6F3F-0B68-D04728D59476</generatorID>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <use>0</use>
@@ -96,11 +101,11 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="490B5E29-FE79-542D-80C7-353CB334F53D">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-08 07:49:59 UTC</createdTime>
+<comment>General data item identifier of this age range</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="9EB97983-D8DF-09F7-5E46-2DA19D6B589F" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
@@ -109,6 +114,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="F28B30FF-D9D6-E9C4-4469-7D9C867D60B4">
 <createdBy>Scott</createdBy>
 <createdTime>2012-03-27 10:20:32 UTC</createdTime>
+<comment>Update version number of this age range</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <defaultValue>1</defaultValue>
 <use>0</use>

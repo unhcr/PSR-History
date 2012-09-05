@@ -5,8 +5,8 @@
 <autoRoute>false</autoRoute>
 <boxInbox>true</boxInbox>
 <showLegend>true</showLegend>
-<showLabels>true</showLabels>
-<showGrid>true</showGrid>
+<showLabels>false</showLabels>
+<showGrid>false</showGrid>
 <diagramColor>-1</diagramColor>
 <legendPosX>943</legendPosX>
 <legendPosY>455</legendPosY>
@@ -71,7 +71,7 @@
 <bounds x="600" y="153" width="161" height="81"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="CADA1781-F505-266A-3506-174FE5B483A9" otype="Entity" vid="EAE802C9-22A3-6C3B-19B9-55BABE4B44EF">
-<bounds x="600" y="240" width="155" height="21"/>
+<bounds x="600" y="240" width="161" height="21"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="CC15EC13-FA57-1351-0FFF-3191C8B5709D" otype="Entity" vid="A4D494D4-E691-32D5-0EB6-FC88033ED6B3">
 <bounds x="610" y="330" width="141" height="51"/>
@@ -97,8 +97,8 @@
 <Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="1BB24886-CA0A-7AF0-C8F0-A72BF5BC5741" otype="Relation" vid_source="0FB31640-9C0D-E397-9716-B1E06B15A3CF" vid_target="C35789C7-2BA6-B1E2-EFC0-BCBDB7BA9AA1">
 <lineWidth>1</lineWidth>
 <points>
-<point x="600" y="200"/>
-<point x="501" y="200"/>
+<point x="600" y="202"/>
+<point x="501" y="202"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="21339E8F-7896-F659-B7E0-51D6678AEBEB" otype="Relation" vid_source="C35789C7-2BA6-B1E2-EFC0-BCBDB7BA9AA1" vid_target="8FDA6A73-2898-DEFE-C532-CAE1AE7404D7">

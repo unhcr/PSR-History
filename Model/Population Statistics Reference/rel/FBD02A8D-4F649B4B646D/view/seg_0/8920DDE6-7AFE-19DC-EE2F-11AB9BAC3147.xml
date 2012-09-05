@@ -4,8 +4,8 @@
 <createdTime>2012-05-04 13:51:37 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <userDefined>true</userDefined>
-<userDefinedSQL>SELECT LOCR.LOC_ID_FROM,&lt;br/&gt;  LOCR.LOCRT_CODE,&lt;br/&gt;  LOCR.LOC_ID_TO,&lt;br/&gt;  LOCR.START_DATE,&lt;br/&gt;  LOCR.END_DATE,&lt;br/&gt;  LOCR.ITM_ID,&lt;br/&gt;  LOCR.VERSION_NBR&lt;br/&gt;FROM T_LOCATION_RELATIONSHIPS LOCR</userDefinedSQL>
-<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select LOCR.LOC_ID_FROM, LOCR.LOCRT_CODE, LOCR.LOC_ID_TO, LOCR.START_DATE, LOCR.END_DATE, LOCR.ITM_ID, LOCR.VERSION_NBR From T_LOCATION_RELATIONSHIPS LOCR&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select LOCR.LOC_ID_FROM, LOCR.LOCRT_CODE, LOCR.LOC_ID_TO, LOCR.START_DATE, LOCR.END_DATE, LOCR.ITM_ID, LOCR.VERSION_NBR From T_LOCATION_RELATIONSHIPS LOCR&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_LOCATION_RELATIONSHIPS LOCR&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<userDefinedSQL>SELECT LOCR.LOC_ID_FROM,&lt;br/&gt;  LOCR.LOC_ID_TO,&lt;br/&gt;  LOCR.LOCRT_CODE,&lt;br/&gt;  LOCR.START_DATE,&lt;br/&gt;  LOCR.END_DATE,&lt;br/&gt;  LOCR.ITM_ID,&lt;br/&gt;  LOCR.VERSION_NBR&lt;br/&gt;FROM T_LOCATION_RELATIONSHIPS LOCR</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select LOCR.LOC_ID_FROM, LOCR.LOC_ID_TO, LOCR.LOCRT_CODE, LOCR.START_DATE, LOCR.END_DATE, LOCR.ITM_ID, LOCR.VERSION_NBR From T_LOCATION_RELATIONSHIPS LOCR&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select LOCR.LOC_ID_FROM, LOCR.LOC_ID_TO, LOCR.LOCRT_CODE, LOCR.START_DATE, LOCR.END_DATE, LOCR.ITM_ID, LOCR.VERSION_NBR From T_LOCATION_RELATIONSHIPS LOCR&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_LOCATION_RELATIONSHIPS LOCR&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
 <parsed>true</parsed>
 <fonts>
 <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
@@ -37,17 +37,6 @@
 <table>5B700547-AABE-51F4-EB6B-25D46CF0A2E0</table>
 <tableAlias>LOCR</tableAlias>
 </viewElement>
-<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOCRT_CODE" id="9A9379BD-1938-6A67-6DD4-D6940CF94633">
-<createdBy>Scott</createdBy>
-<createdTime>2012-05-04 13:52:02 UTC</createdTime>
-<ownerDesignName>Population Statistics Reference</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<dataType>VARCHAR2 (10)</dataType>
-<reference>false</reference>
-<referencedColumn>97E87BE5-5DA2-5C65-C77E-8CFDF296BE34</referencedColumn>
-<table>5B700547-AABE-51F4-EB6B-25D46CF0A2E0</table>
-<tableAlias>LOCR</tableAlias>
-</viewElement>
 <viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOC_ID_TO" id="5484ABA9-8484-74FC-4582-C69DCA0D1254">
 <createdBy>Scott</createdBy>
 <createdTime>2012-05-04 13:52:02 UTC</createdTime>
@@ -56,6 +45,17 @@
 <dataType>NUMBER (10)</dataType>
 <reference>false</reference>
 <referencedColumn>D26295E8-75BA-CAFB-440B-63E67F9DE68A</referencedColumn>
+<table>5B700547-AABE-51F4-EB6B-25D46CF0A2E0</table>
+<tableAlias>LOCR</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOCRT_CODE" id="9A9379BD-1938-6A67-6DD4-D6940CF94633">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:52:02 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (10)</dataType>
+<reference>false</reference>
+<referencedColumn>97E87BE5-5DA2-5C65-C77E-8CFDF296BE34</referencedColumn>
 <table>5B700547-AABE-51F4-EB6B-25D46CF0A2E0</table>
 <tableAlias>LOCR</tableAlias>
 </viewElement>
@@ -113,12 +113,12 @@
 <columnName>LOC_ID_FROM</columnName>
 <tableName>T_LOCATION_RELATIONSHIPS</tableName>
 </UsedObject>
-<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="97E87BE5-5DA2-5C65-C77E-8CFDF296BE34">
-<columnName>LOCRT_CODE</columnName>
-<tableName>T_LOCATION_RELATIONSHIPS</tableName>
-</UsedObject>
 <UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="D26295E8-75BA-CAFB-440B-63E67F9DE68A">
 <columnName>LOC_ID_TO</columnName>
+<tableName>T_LOCATION_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="97E87BE5-5DA2-5C65-C77E-8CFDF296BE34">
+<columnName>LOCRT_CODE</columnName>
 <tableName>T_LOCATION_RELATIONSHIPS</tableName>
 </UsedObject>
 <UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C00BC483-40FF-B729-1375-BC9A9E00C708">

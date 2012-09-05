@@ -2,10 +2,10 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="83DA5461-2D7B-4F73-F05A-94002E4B9857" directorySegmentName="seg_0" name="LOCATION">
 <createdBy>Scott</createdBy>
 <createdTime>2011-10-18 14:32:13 UTC</createdTime>
+<comment>A general geographical location or geographical-related organisational unit of interest in measuring populations of concern. There are a number of sub-types of this entity identifying locations of particular significance, e.g. countries, operations, origins.</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <pkName>LOCATION UI</pkName>
 <adequatelyNormalized>NO</adequatelyNormalized>
@@ -59,7 +59,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
@@ -71,7 +70,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -83,7 +81,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
@@ -95,7 +92,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -109,7 +105,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <referedAttribute>02302FE6-04A9-7523-BB50-BCD11FE66C77</referedAttribute>
 <use>0</use>
@@ -123,7 +118,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <referedAttribute>1F4EE9ED-479B-245B-68DF-00398F971A4A</referedAttribute>
@@ -138,7 +132,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <referedAttribute>88ABF7A6-1D06-0C6E-7806-E55802A97E03</referedAttribute>
@@ -153,7 +146,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <referedAttribute>D2A37096-34BD-E946-FB3A-3420AF3BECBC</referedAttribute>
@@ -169,7 +161,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>

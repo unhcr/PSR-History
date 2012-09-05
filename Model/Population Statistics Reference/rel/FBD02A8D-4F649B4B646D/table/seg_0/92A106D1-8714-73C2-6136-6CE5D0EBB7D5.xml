@@ -2,6 +2,7 @@
 <Table class="oracle.dbtools.crest.model.design.relational.Table" id="92A106D1-8714-73C2-6136-6CE5D0EBB7D5" directorySegmentName="seg_0" name="T_LANGUAGES">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 10:32:00 UTC</createdTime>
+<comment>Languages in which text items can be expressed</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <pkName>PK_LANG</pkName>
 <abbreviation>LANG</abbreviation>
@@ -44,6 +45,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="CODE" id="A16EEFAB-1230-4A27-2F9C-6AF0DCC10F03">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 10:33:52 UTC</createdTime>
+<comment>Language code</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_LANG_CODE</constraintName>
 <useDomainConstraints>false</useDomainConstraints>
@@ -57,6 +59,8 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="7FEA94C8-B60A-1E4A-8275-3EF81EB341A1">
 <createdBy>Scott</createdBy>
 <createdTime>2012-01-04 14:53:03 UTC</createdTime>
+<comment>Number controlling the sequence of display of languages</comment>
+<notes>This column determines the global (system-wide) language preferences. If a user has not defined individual language preferences, or if a text item is not available in any of his/her preferred languages, then the text item chosen is the one with lowest value of this column. If none of the languages associated with available text items has a value in this column, then an arbitrary text item is chosen.</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -66,6 +70,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ACTIVE_FLAG" id="B200B4BA-A37C-8B70-CE3A-C874D115E603">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 10:33:52 UTC</createdTime>
+<comment>Is this language currently active (Y/N)?</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_LANG_ACTIVE_FLAG</constraintName>
 <useDomainConstraints>false</useDomainConstraints>
@@ -81,11 +86,11 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="718F3A1F-1EA5-C321-F3E4-12B321682346">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 10:33:52 UTC</createdTime>
+<comment>General data item identifier of this language</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="82641CCF-8F47-4E56-EBAD-E3CD4A3E9E19" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
@@ -94,6 +99,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="E342B848-9BBE-C4EA-53D8-5AB228298B6B">
 <createdBy>Scott</createdBy>
 <createdTime>2012-02-28 12:54:30 UTC</createdTime>
+<comment>Update version number of this language</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <defaultValue>1</defaultValue>
 <use>0</use>

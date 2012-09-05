@@ -2,10 +2,10 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="BB3D0A02-0F5E-B1E8-3C17-FA27F421F5C3" directorySegmentName="seg_0" name="COUNTRY">
 <createdBy>Scott</createdBy>
 <createdTime>2011-10-18 14:00:29 UTC</createdTime>
+<comment>A country as recognised by the United Nations (but not necessarily a member of the UN) to which ISO 3166-1 identifying codes have been allocated. It may also have a UNHCR code, the same as or different from the ISO 3166-1 3-character alphabetic code.</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <pkName>COUNTRY UI</pkName>
 <adequatelyNormalized>NO</adequatelyNormalized>
@@ -60,7 +60,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -72,7 +71,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -84,7 +82,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -96,8 +93,8 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
+<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>253FECEE-343C-8962-95FC-B5964C23F022</domain>
@@ -110,7 +107,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>

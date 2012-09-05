@@ -77,6 +77,7 @@
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-08 08:27:12 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
 <domain>C2DB2BE5-AB16-8043-FD9B-177C536DC077</domain>
@@ -90,6 +91,7 @@
 <createdTime>2011-10-26 10:37:49 UTC</createdTime>
 <generatorID>A0E61754-73B2-C657-FD12-5CADB47F0076</generatorID>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
 <domain>C2DB2BE5-AB16-8043-FD9B-177C536DC077</domain>

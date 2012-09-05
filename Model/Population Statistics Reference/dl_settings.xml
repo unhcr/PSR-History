@@ -229,6 +229,9 @@
 			<property name="Default Value" selected="true"/>
 			<property name="Check Constraint Name" selected="true"/>
 			<property name="Use Domain Constraint" selected="true"/>
+			<property name="Check Constraint" selected="true"/>
+			<property name="Range Constraint" selected="true"/>
+			<property name="LOV Constraint" selected="true"/>
 			<property name="Comment" selected="true"/>
 			<property name="Comment in RDBMS" selected="true"/>
 			<property name="Notes" selected="true"/>
@@ -264,14 +267,6 @@
 		</entityview_view>
 	</eng_compare>
 	<naming_options>
-		<model_options objectid="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E">
-			<naming_option class_name="oracle.dbtools.crest.model.design.relational.Table" max_name_length="30" case_type="2" valid_characters="null" all_valid="true" />
-			<naming_option class_name="oracle.dbtools.crest.model.design.relational.Column" max_name_length="30" case_type="2" valid_characters="null" all_valid="true" />
-			<naming_option class_name="oracle.dbtools.crest.model.design.relational.TableView" max_name_length="30" case_type="2" valid_characters="null" all_valid="true" />
-			<naming_option class_name="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint" max_name_length="30" case_type="2" valid_characters="null" all_valid="true" />
-			<naming_option class_name="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" max_name_length="30" case_type="2" valid_characters="" all_valid="true" />
-			<naming_option class_name="oracle.dbtools.crest.model.design.relational.Index" max_name_length="30" case_type="2" valid_characters="null" all_valid="true" />
-		</model_options>
 		<model_options objectid="FBD02A8D-CBD7-8148-58A8-4F649B4B646D">
 			<naming_option class_name="oracle.dbtools.crest.model.design.relational.Table" max_name_length="30" case_type="0" valid_characters="null" all_valid="true" />
 			<naming_option class_name="oracle.dbtools.crest.model.design.relational.Column" max_name_length="30" case_type="0" valid_characters="null" all_valid="true" />

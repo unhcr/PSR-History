@@ -2,10 +2,10 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="6B9672D7-35F4-3A56-BD32-B2C5E04E059C" directorySegmentName="seg_0" name="DIMENSION TYPE">
 <createdBy>Scott</createdBy>
 <createdTime>2012-04-13 06:51:02 UTC</createdTime>
+<comment>A general characteristic of a population group which may be used in categorising persons of concern.</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <pkName>DIMENSION TYPE UI</pkName>
 <adequatelyNormalized>NO</adequatelyNormalized>
@@ -58,7 +58,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -70,7 +69,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -84,7 +82,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>

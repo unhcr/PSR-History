@@ -2,6 +2,7 @@
 <Table class="oracle.dbtools.crest.model.design.relational.Table" id="5B700547-AABE-51F4-EB6B-25D46CF0A2E0" directorySegmentName="seg_0" name="T_LOCATION_RELATIONSHIPS">
 <createdBy>Scott</createdBy>
 <createdTime>2011-11-03 14:03:23 UTC</createdTime>
+<notes>It is possible for START_DATE and END_DATE to be equal in this table, i.e. the period of effectivity is zero. This occurs with a relationship which records the transition from one location to another, e.g. relationship type CSPLIT which records one country splitting into two or more others. The period of effectivity of the location of the &quot;from&quot; country ends on the same date as the start of the period of effectivity of the location of the &quot;to&quot; counties. Since the effective period of relationship between these two locations is not allowed to extend outside the effective period of either of the related locations, the start and end date of the relationship must necessarily be the same. This is reasonable, because the relationship represents an instantaneous event, rather than a relationship over a period of time.</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <pkName>PK_LOCR</pkName>
 <abbreviation>LOCR</abbreviation>
@@ -100,9 +101,8 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="EA17EB4A-233E-B19E-8F26-4200EA2272C6" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
@@ -206,7 +206,7 @@
 <createdBy>Scott</createdBy>
 <createdTime>2012-03-27 14:52:51 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<rule>END_DATE &gt; START_DATE</rule>
+<rule>END_DATE &gt;= START_DATE</rule>
 </tableCheckConstraint>
 </tableCheckConstraints>
 </Table>

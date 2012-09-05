@@ -1,6 +1,15 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <DomainFile class="oracle.dbtools.crest.model.design.DomainFileWrapper" fileName="defaultdomains">
    <domains>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Variable Namev1" id="05F2A504-0687-B53F-A131-4CA7AB3606B9">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-09-05 13:32:55 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>25</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
       <Domain class="oracle.dbtools.crest.model.design.Domain" name="Update User Id" id="1B3AF57E-8DA8-A2E2-DAC5-0A66F68D2FBE">
          <createdBy>Scott</createdBy>
          <createdTime>2012-02-27 11:20:11 UTC</createdTime>
@@ -39,6 +48,16 @@
          <importedID>383B7890-E22E-BD7E-0EDF-6938FBD88467</importedID>
          <avTSortOrder>0</avTSortOrder>
          <dataTypeSize>30</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Flagv1" id="3B91463A-AACE-D95D-B376-EDAC835F2D90">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-09-05 13:27:09 UTC</createdTime>
+         <comment>Single-character flag value</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>1</dataTypeSize>
          <fileName>defaultdomains</fileName>
          <logicalDatatype>LOGDT024</logicalDatatype>
       </Domain>

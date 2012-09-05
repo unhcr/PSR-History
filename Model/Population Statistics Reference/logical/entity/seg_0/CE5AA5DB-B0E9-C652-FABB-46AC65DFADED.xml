@@ -2,10 +2,10 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="CE5AA5DB-B0E9-C652-FABB-46AC65DFADED" directorySegmentName="seg_0" name="TIME PERIOD">
 <createdBy>Scott</createdBy>
 <createdTime>2011-10-25 08:27:45 UTC</createdTime>
+<comment>A period of time to which a population statistic relates, defined by its start and end dates. For stock figures, this should represent the day on which the statistic is measured, e.g. the last day of the year for ASR stock figures. For flow figures, it should represent the period of time over which the flow is measured, e.g. 1 January to 31 December in a given year for ASR flow figures.</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <pkName>TIME PERIOD UI</pkName>
 <adequatelyNormalized>NO</adequatelyNormalized>
@@ -59,7 +59,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
@@ -71,7 +70,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -84,7 +82,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -98,7 +95,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <referedAttribute>603F0A07-DE1E-D06B-AECB-C0EA98DCB7A1</referedAttribute>
 <use>0</use>
@@ -113,7 +109,6 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>

@@ -1,13 +1,3 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <report_templates>
-	<report_template id="5A0B1973-C6BB-1D67-4CDB-2977F2ADB1C7" name="RTemplate_1" type="1" >
-		<description_notes>true</description_notes>
-		<quantitative_info>true</quantitative_info>
-		<table_columns>true</table_columns>
-		<table_columns_comments>true</table_columns_comments>
-		<table_constraints>true</table_constraints>
-		<table_fk_rf>true</table_fk_rf>
-		<table_fk_rt>true</table_fk_rt>
-		<table_indexes>true</table_indexes>
-	</report_template>
 </report_templates>

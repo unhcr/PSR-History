@@ -2,6 +2,8 @@
 <Table class="oracle.dbtools.crest.model.design.relational.Table" id="5FA0D75E-1EDA-F057-08B8-83521D65F7C5" directorySegmentName="seg_0" name="T_TEXT_TYPE_PROPERTIES">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 13:59:51 UTC</createdTime>
+<comment>Validity and characteristics of text types associated with particular tables</comment>
+<notes>Text of a given type cannot be associated with a given table unless a row for that combination (table/text type) exists in this table. The flags place constraints on how text of the given type is associated with rows in the table and how it is stored.</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <pkName>PK_TTXT</pkName>
 <abbreviation>TTP</abbreviation>
@@ -44,6 +46,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="TXTT_CODE" id="B1B69FB1-4C8B-8916-9A57-25802E9502CC">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 14:01:00 UTC</createdTime>
+<comment>Text type code</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
@@ -58,6 +61,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="TAB_ALIAS" id="1B2A132F-4219-41AA-236C-307391F58ED9">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 14:00:41 UTC</createdTime>
+<comment>Table alias code</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
@@ -72,7 +76,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="MANDATORY_FLAG" id="B85309EC-9030-920D-3547-209689C3874C">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 14:03:34 UTC</createdTime>
-<commentInRDBMS>Is a text item of this type mandatory for all rows of this table?</commentInRDBMS>
+<comment>Is a text item of this type mandatory for all rows of this table?</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_TTP_MANDATORY_FLAG</constraintName>
 <defaultValue>N</defaultValue>
@@ -83,7 +87,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="MULTI_INSTANCE_FLAG" id="DB166CBD-47B0-AAAD-0311-A1EFD49AA3E2">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 14:05:21 UTC</createdTime>
-<commentInRDBMS>Can there be multiple instances of text values of this type for a row in this table?</commentInRDBMS>
+<comment>Can there be multiple instances of text values of this type for a row in this table?</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_TTP_MULTI_INSTANCE_FLAG</constraintName>
 <defaultValue>Y</defaultValue>
@@ -94,7 +98,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="LONG_TEXT_FLAG" id="1C1CEEB4-25E2-2755-6FC3-552FE0FA4332">
 <createdBy>Scott</createdBy>
 <createdTime>2012-02-22 09:11:14 UTC</createdTime>
-<commentInRDBMS>Can text values of this type be longer than 1000 characters in this table (i.e. stored as CLOB)?</commentInRDBMS>
+<comment>Can text values of this type be longer than 1000 characters in this table (i.e. stored as CLOB)?</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_TTP_LONG_TEXT_FLAG</constraintName>
 <defaultValue>Y</defaultValue>
@@ -107,12 +111,12 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="E700DD52-486D-9EFD-65D8-9F3FC5F9B0BC">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 14:05:42 UTC</createdTime>
+<comment>General data item identifier of this text type property</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="68FF7B00-A027-EE8B-A12C-D4BE9A6E72A0" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
@@ -121,6 +125,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="C3662060-82A1-01AA-D4ED-A35043D169D6">
 <createdBy>Scott</createdBy>
 <createdTime>2012-02-28 11:02:02 UTC</createdTime>
+<comment>Update version number of this text type property</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <defaultValue>1</defaultValue>
 <use>0</use>

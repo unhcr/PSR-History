@@ -1,0 +1,176 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableView class="oracle.dbtools.crest.model.design.relational.TableView" id="D41DF684-22D6-5EDD-5ED4-91086679104A" directorySegmentName="seg_0" name="COUNTRY_RETURNED_STATISTICS">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<userDefined>true</userDefined>
+<userDefinedSQL>SELECT LOC_ID_COUNTRY,&lt;br/&gt;  LOC_NAME_COUNTRY,&lt;br/&gt;  ISO_COUNTRY_CODE,&lt;br/&gt;  UNHCR_COUNTRY_CODE,&lt;br/&gt;  LOC_ID_ORIGIN,&lt;br/&gt;  LOC_NAME_ORIGIN,&lt;br/&gt;  ISO_ORIGIN_CODE,&lt;br/&gt;  UNHCR_ORIGIN_CODE,&lt;br/&gt;  RETURNEES,&lt;br/&gt;  RETURNEES_ASSISTED,&lt;br/&gt;  REPATRIATED,&lt;br/&gt;  REPATRIATED_ASSISTED,&lt;br/&gt;  RETURNED,&lt;br/&gt;  RETURNED_ASSISTED&lt;br/&gt;FROM&lt;br/&gt;  (SELECT LOC_ID_COUNTRY,&lt;br/&gt;    LOC_NAME_COUNTRY,&lt;br/&gt;    ISO_COUNTRY_CODE,&lt;br/&gt;    UNHCR_COUNTRY_CODE,&lt;br/&gt;    LOC_ID_ORIGIN,&lt;br/&gt;    LOC_NAME_ORIGIN,&lt;br/&gt;    ISO_ORIGIN_CODE,&lt;br/&gt;    UNHCR_ORIGIN_CODE,&lt;br/&gt;    RETURNEES,&lt;br/&gt;    RETURNEES_ASSISTED,&lt;br/&gt;    REPATRIATED,&lt;br/&gt;    REPATRIATED_ASSISTED,&lt;br/&gt;    greatest(NVL(RETURNEES, REPATRIATED), NVL(REPATRIATED, RETURNEES)) RETURNED,&lt;br/&gt;    greatest(NVL(RETURNEES_ASSISTED, REPATRIATED_ASSISTED), NVL(REPATRIATED_ASSISTED, RETURNEES_ASSISTED)) RETURNED_ASSISTED&lt;br/&gt;  FROM&lt;br/&gt;    (SELECT STC.LOC_ID_COUNTRY,&lt;br/&gt;      LOC_NAME_COUNTRY,&lt;br/&gt;      ISO_COUNTRY_CODE,&lt;br/&gt;      UNHCR_COUNTRY_CODE,&lt;br/&gt;      STC.LOC_ID_ORIGIN,&lt;br/&gt;      LOC_NAME_ORIGIN,&lt;br/&gt;      ISO_ORIGIN_CODE,&lt;br/&gt;      UNHCR_ORIGIN_CODE,&lt;br/&gt;      SUM(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES,&lt;br/&gt;      SUM(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES_ASSISTED,&lt;br/&gt;      SUM(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED,&lt;br/&gt;      SUM(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED_ASSISTED&lt;br/&gt;    FROM STATISTICS STC&lt;br/&gt;    WHERE STC.DST_CODE IN (&apos;RET&apos;, &apos;RPT&apos;)&lt;br/&gt;    GROUP BY STC.LOC_ID_COUNTRY,&lt;br/&gt;      LOC_NAME_COUNTRY,&lt;br/&gt;      ISO_COUNTRY_CODE,&lt;br/&gt;      UNHCR_COUNTRY_CODE,&lt;br/&gt;      STC.LOC_ID_ORIGIN,&lt;br/&gt;      LOC_NAME_ORIGIN,&lt;br/&gt;      ISO_ORIGIN_CODE,&lt;br/&gt;      UNHCR_ORIGIN_CODE&lt;br/&gt;    )&lt;br/&gt;  )</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, RETURNEES, RETURNEES_ASSISTED, REPATRIATED, REPATRIATED_ASSISTED, RETURNED, RETURNED_ASSISTED From (Select LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, RETURNEES, RETURNEES_ASSISTED, REPATRIATED, REPATRIATED_ASSISTED, greatest(NVL(RETURNEES, REPATRIATED), NVL(REPATRIATED, RETURNEES)) RETURNED, greatest(NVL(RETURNEES_ASSISTED, REPATRIATED_ASSISTED), NVL(REPATRIATED_ASSISTED, RETURNEES_ASSISTED)) RETURNED_ASSISTED From (Select STC.LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, STC.LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, Sum(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES, Sum(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES_ASSISTED, Sum(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED, Sum(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED_ASSISTED From STATISTICS STC Where STC.DST_CODE In (&apos;RET&apos;, &apos;RPT&apos;) Group By STC.LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, STC.LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE))&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, RETURNEES, RETURNEES_ASSISTED, REPATRIATED, REPATRIATED_ASSISTED, RETURNED, RETURNED_ASSISTED From (Select LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, RETURNEES, RETURNEES_ASSISTED, REPATRIATED, REPATRIATED_ASSISTED, greatest(NVL(RETURNEES, REPATRIATED), NVL(REPATRIATED, RETURNEES)) RETURNED, greatest(NVL(RETURNEES_ASSISTED, REPATRIATED_ASSISTED), NVL(REPATRIATED_ASSISTED, RETURNEES_ASSISTED)) RETURNED_ASSISTED From (Select STC.LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, STC.LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, Sum(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES, Sum(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES_ASSISTED, Sum(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED, Sum(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED_ASSISTED From STATISTICS STC Where STC.DST_CODE In (&apos;RET&apos;, &apos;RPT&apos;) Group By STC.LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, STC.LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE))&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;(Select LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, RETURNEES, RETURNEES_ASSISTED, REPATRIATED, REPATRIATED_ASSISTED, greatest(NVL(RETURNEES, REPATRIATED), NVL(REPATRIATED, RETURNEES)) RETURNED, greatest(NVL(RETURNEES_ASSISTED, REPATRIATED_ASSISTED), NVL(REPATRIATED_ASSISTED, RETURNEES_ASSISTED)) RETURNED_ASSISTED From (Select STC.LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, STC.LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, Sum(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES, Sum(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES_ASSISTED, Sum(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED, Sum(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED_ASSISTED From STATISTICS STC Where STC.DST_CODE In (&apos;RET&apos;, &apos;RPT&apos;) Group By STC.LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, STC.LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE))&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;297&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, RETURNEES, RETURNEES_ASSISTED, REPATRIATED, REPATRIATED_ASSISTED, greatest(NVL(RETURNEES, REPATRIATED), NVL(REPATRIATED, RETURNEES)) RETURNED, greatest(NVL(RETURNEES_ASSISTED, REPATRIATED_ASSISTED), NVL(REPATRIATED_ASSISTED, RETURNEES_ASSISTED)) RETURNED_ASSISTED From (Select STC.LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, STC.LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, Sum(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES, Sum(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES_ASSISTED, Sum(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED, Sum(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED_ASSISTED From STATISTICS STC Where STC.DST_CODE In (&apos;RET&apos;, &apos;RPT&apos;) Group By STC.LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, STC.LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE)&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;(Select STC.LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, STC.LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, Sum(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES, Sum(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES_ASSISTED, Sum(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED, Sum(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED_ASSISTED From STATISTICS STC Where STC.DST_CODE In (&apos;RET&apos;, &apos;RPT&apos;) Group By STC.LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, STC.LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE)&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;261&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select STC.LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, STC.LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, Sum(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES, Sum(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RET&apos;, STC.VALUE))) RETURNEES_ASSISTED, Sum(DECODE(STC.STCT_CODE, &apos;POCPOP&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED, Sum(DECODE(STC.STCT_CODE, &apos;POCASSIST&apos;, DECODE(STC.DST_CODE, &apos;RPT&apos;, STC.VALUE))) REPATRIATED_ASSISTED From STATISTICS STC Where STC.DST_CODE In (&apos;RET&apos;, &apos;RPT&apos;) Group By STC.LOC_ID_COUNTRY, LOC_NAME_COUNTRY, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, STC.LOC_ID_ORIGIN, LOC_NAME_ORIGIN, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;STATISTICS STC&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;850&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<parsed>true</parsed>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+</fonts>
+<viewElements>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOC_ID_COUNTRY" id="9516A596-E33F-7BEA-5E44-F63398FACCF5">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>NUMBER (10)</dataType>
+<expression>LOC_ID_COUNTRY</expression>
+<reference>false</reference>
+<viewID>D41DF684-22D6-5EDD-5ED4-91086679104A</viewID>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOC_NAME_COUNTRY" id="DB7B001A-4AB1-F638-D36C-A973F84C7E57">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>LOC_NAME_COUNTRY</expression>
+<reference>false</reference>
+<viewID>D41DF684-22D6-5EDD-5ED4-91086679104A</viewID>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ISO_COUNTRY_CODE" id="0A0C0AD8-6649-BBDC-5AFF-83584905C6CF">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>ISO_COUNTRY_CODE</expression>
+<reference>false</reference>
+<viewID>D41DF684-22D6-5EDD-5ED4-91086679104A</viewID>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="UNHCR_COUNTRY_CODE" id="CED06BD4-88A9-2FDA-6A90-F2CC1C579679">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>UNHCR_COUNTRY_CODE</expression>
+<reference>false</reference>
+<viewID>D41DF684-22D6-5EDD-5ED4-91086679104A</viewID>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOC_ID_ORIGIN" id="562B5BF0-67BC-EC71-7C2F-8A3FAF851BAF">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>NUMBER (10)</dataType>
+<expression>LOC_ID_ORIGIN</expression>
+<reference>false</reference>
+<viewID>D41DF684-22D6-5EDD-5ED4-91086679104A</viewID>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOC_NAME_ORIGIN" id="D633A3B9-C7E1-5C36-211C-D9048996B5B1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>LOC_NAME_ORIGIN</expression>
+<reference>false</reference>
+<viewID>D41DF684-22D6-5EDD-5ED4-91086679104A</viewID>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ISO_ORIGIN_CODE" id="BAB55125-3BA1-BB55-A160-424CA5DD6E9A">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>ISO_ORIGIN_CODE</expression>
+<reference>false</reference>
+<viewID>D41DF684-22D6-5EDD-5ED4-91086679104A</viewID>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="UNHCR_ORIGIN_CODE" id="4AFF7B55-46F1-A917-946F-D9C6F250AABF">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>UNHCR_ORIGIN_CODE</expression>
+<reference>false</reference>
+<viewID>D41DF684-22D6-5EDD-5ED4-91086679104A</viewID>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="RETURNEES" id="9E29CBC4-1A88-DFA6-69B9-174AEB44DFE2">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:46 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>RETURNEES</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="RETURNEES_ASSISTED" id="B7881FB1-BF6E-41D9-3C53-43C978D4A4D3">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:46 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>RETURNEES_ASSISTED</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="REPATRIATED" id="3A0DA21C-4E5A-120A-6337-439EBC61A4FF">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:46 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>REPATRIATED</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="REPATRIATED_ASSISTED" id="925E990A-8DCF-1C27-09D3-0C653F53AA94">
+<createdBy>Scott</createdBy>
+<createdTime>2012-06-20 06:13:46 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>REPATRIATED_ASSISTED</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="RETURNED" id="8830CE5F-BAF7-9D19-8F00-2E309122AFAC">
+<createdBy>Scott</createdBy>
+<createdTime>2012-07-24 10:02:17 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>RETURNED</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="RETURNED_ASSISTED" id="7EBF8776-C349-1DD9-8004-2AC4A6ADCF23">
+<createdBy>Scott</createdBy>
+<createdTime>2012-07-24 10:02:17 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>RETURNED_ASSISTED</expression>
+<reference>false</reference>
+</viewElement>
+</viewElements>
+<usedObjects>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="3A1361CD-BEB2-D42F-CB5B-1CBCBE44B16D">
+<container>true</container>
+<tableName>STATISTICS</tableName>
+<view>true</view>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="8E092E5A-52D6-9B5B-29FC-39F446170ED2">
+<columnName>LOC_ID_COUNTRY</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="6B9FD94B-EDE9-1E8B-E0DC-57B53D3735D2">
+<columnName>LOC_ID_ORIGIN</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="B075AE6E-52CD-BFD7-1CF5-389C50015570">
+<columnName>STCT_CODE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="55012A10-A220-DC03-BB12-2D3CC208C6BF">
+<columnName>DST_CODE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="16D4D9C6-F518-8F0E-5085-AB22AF0316C3">
+<columnName>VALUE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+</usedObjects>
+</TableView>

@@ -2,6 +2,8 @@
 <Table class="oracle.dbtools.crest.model.design.relational.Table" id="C6EF9F7D-47DE-E234-EDC3-DE29E06A570D" directorySegmentName="seg_0" name="T_TEXT_ITEMS">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 12:17:44 UTC</createdTime>
+<comment>General text items</comment>
+<notes>This table supports text items in multiple languages. Note that there is nothing to enforce that a text item declared to be in a particular language is actually in that language.</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <pkName>PK_TXI</pkName>
 <abbreviation>TXT</abbreviation>
@@ -44,11 +46,11 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="51D3FAE8-03BC-CA88-2E1C-F13FA7B605C3">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 12:19:11 UTC</createdTime>
+<comment>General data item identifier</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>43152BBD-BC61-AE6E-7993-B98FCD0DE7B2</delegate>
 <previousColumn>false</previousColumn>
 <associations>
@@ -58,6 +60,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="TXTT_CODE" id="62976973-9CB7-22BF-8254-C402BE09D18B">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 12:31:23 UTC</createdTime>
+<comment>Text type code</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
@@ -72,6 +75,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="SEQ_NBR" id="C17D7429-4995-4DCF-7552-3DB5FE1408E1">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 12:37:55 UTC</createdTime>
+<comment>Text item sequence number</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_TXT_SEQ_NBR</constraintName>
 <useDomainConstraints>false</useDomainConstraints>
@@ -85,6 +89,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="LANG_CODE" id="B5DA6C77-B602-95BE-01F7-6D6D96B396DE">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 12:38:28 UTC</createdTime>
+<comment>Language code</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -97,6 +102,8 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="TAB_ALIAS" id="D30C8479-8947-230C-E1B3-D457DC359EFF">
 <createdBy>Scott</createdBy>
 <createdTime>2012-02-27 12:57:08 UTC</createdTime>
+<comment>Table alias code</comment>
+<notes>Denormalised from T_TEXT_TYPE_HEADERS (and T_DATA_ITEMS)</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
@@ -107,6 +114,8 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="TEXT" id="AB45B7A8-6535-BB9C-ADAB-8DAD4FB538C8">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 12:38:44 UTC</createdTime>
+<comment>General text</comment>
+<notes>Maximum standard text length is 1000 characters (allowing for strings of 4-byte UTF8 characters to fit in the varchar2(4000) column). This column is used for text types where T_TEXT_TYPE_PROPERTIES.LONG_TEXT_FLAG has the value &apos;N&apos;.</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -116,6 +125,8 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="LONG_TEXT" id="9E8BCD02-3AFA-28C2-7815-D2B075B287A8">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 14:54:56 UTC</createdTime>
+<comment>General long text</comment>
+<notes>Long text is used when the text length may exceed 1000 characters, necessitating use of the CLOB data type. This column is used for text types where T_TEXT_TYPE_PROPERTIES.LONG_TEXT_FLAG has the value &apos;Y&apos;.</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -125,6 +136,8 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="UPDATE_TIMESTAMP" id="2D7A8D35-5877-A948-06DB-B2BD90034C98">
 <createdBy>Scott</createdBy>
 <createdTime>2012-02-27 12:58:49 UTC</createdTime>
+<comment>Date and time of last update</comment>
+<notes>Maintained by trigger</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <defaultValue>systimestamp</defaultValue>
 <use>0</use>
@@ -135,6 +148,8 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="UPDATE_USERID" id="E5B6B9E2-C098-4402-1706-9F579FB4468D">
 <createdBy>Scott</createdBy>
 <createdTime>2012-02-27 12:58:49 UTC</createdTime>
+<comment>Identifier of user who made the last update</comment>
+<notes>Maintained by trigger</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <defaultValue>nvl(sys_context(&apos;PSR&apos;, &apos;USERID&apos;), &apos;*&apos; || user)</defaultValue>
 <use>0</use>
