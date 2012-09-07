@@ -7,7 +7,6 @@
 <notes>The PPG code and description are maintained authoritatively in MSRP and PSR should maintain synchronisation with those values</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <pkName>POPULATION PLANNING GROUP UI</pkName>
-<typeID>2</typeID>
 <abbreviation>PPG</abbreviation>
 <fonts>
 <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">

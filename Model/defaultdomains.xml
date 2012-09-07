@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <DomainFile class="oracle.dbtools.crest.model.design.DomainFileWrapper" fileName="defaultdomains">
    <domains>
-      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Variable Namev1" id="05F2A504-0687-B53F-A131-4CA7AB3606B9">
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Variable Name" id="05F2A504-0687-B53F-A131-4CA7AB3606B9">
          <createdBy>Scott</createdBy>
          <createdTime>2012-09-05 13:32:55 UTC</createdTime>
          <ownerDesignName>System</ownerDesignName>
@@ -51,7 +51,7 @@
          <fileName>defaultdomains</fileName>
          <logicalDatatype>LOGDT024</logicalDatatype>
       </Domain>
-      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Flagv1" id="3B91463A-AACE-D95D-B376-EDAC835F2D90">
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Flag" id="3B91463A-AACE-D95D-B376-EDAC835F2D90">
          <createdBy>Scott</createdBy>
          <createdTime>2012-09-05 13:27:09 UTC</createdTime>
          <comment>Single-character flag value</comment>

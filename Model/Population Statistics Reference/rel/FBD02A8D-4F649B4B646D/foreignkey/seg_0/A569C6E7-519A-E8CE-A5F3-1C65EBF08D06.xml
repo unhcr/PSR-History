@@ -7,6 +7,6 @@
 <deleteRule>RESTRICT</deleteRule>
 <localFKIndex>2EB02C21-1B7E-E4E2-49AD-0A0ECE12CB97</localFKIndex>
 <keyObject>19D702B9-5F80-9519-B158-5B0E90F0BD00</keyObject>
-<mandatory>false</mandatory>
+<mandatory>true</mandatory>
 <transferable>false</transferable>
 </FKIndexAssociation>

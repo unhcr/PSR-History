@@ -114,7 +114,6 @@
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <referedAttribute>50FBD249-2B28-A42A-F225-9EEE84C09924</referedAttribute>
 <use>0</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
@@ -148,24 +147,11 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <domain>B2776615-B740-D5D5-01EA-BC8A0DAC24D2</domain>
 </Attribute>
-<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="ISO alpha-3 country code" id="98595CDD-5B07-9DCB-134C-014E77504F2F">
-<createdBy>Scott</createdBy>
-<createdTime>2012-09-05 14:39:25 UTC</createdTime>
-<generatorID>E552E101-6E06-F090-7AEB-506878ECDBA2</generatorID>
-<ownerDesignName>Population Statistics Reference</ownerDesignName>
-<engineerTo>
-<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
-</engineerTo>
-<referedAttribute>B0B228C7-DD0D-78CC-28AE-99B16E81AFCC</referedAttribute>
-<use>0</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<domain>8A9C9816-0977-3A07-D461-D379AA619002</domain>
-</Attribute>
 </attributes>
 <identifiers>
-<identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="B61CAF90-A58C-AFB7-7887-5E3ED482488B" name="PK_STATISTIC">
+<identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="B9430A6A-B29B-FE8D-E313-E0C858E956A4" name="PK_STATISTIC">
 <createdBy>Scott</createdBy>
-<createdTime>2011-10-26 08:22:00 UTC</createdTime>
+<createdTime>2012-09-07 07:05:52 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <engineerTo>
 <item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
