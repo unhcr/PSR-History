@@ -1,0 +1,142 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="5E76E307-0AF6-9679-448C-16298DADBD45" directorySegmentName="seg_0" name="T_POPSEG_ATTRIBUTE_TYPES">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-07 08:53:05 UTC</createdTime>
+<comment>Types of population segment attributes</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pkName>PK_LOCAT</pkName>
+<abbreviation>PSGAT</abbreviation>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>PK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>FK Element</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>UK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Not Null</foType>
+<colorRGB>-65536</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Key</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+</fonts>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="CODE" id="33E0298A-B40F-9F49-8DDA-F461581DE28C">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-07 08:53:05 UTC</createdTime>
+<comment>Population segment attribute type code</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PSGAT_CODE</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DATA_TYPE" id="79F3A231-0678-C52F-34F1-44CE389B7E2B">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-07 08:53:05 UTC</createdTime>
+<comment>Data type of attribute (Character, Numeric or Date)</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PSGAT_DATA_TYPE</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>F2A12E7B-C038-7C36-8F01-016AC24AA1FE</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="F835A659-6FAF-5DA8-1F0D-48F8F0377CDF">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-07 08:53:05 UTC</createdTime>
+<comment>Number controlling the sequence of display of population segment attribute types</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>840F48B2-9E9B-88BD-9B9C-8728A6AABAE2</domain>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ACTIVE_FLAG" id="712F8049-A091-5C1B-E53F-C142664DF6A1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-07 08:53:05 UTC</createdTime>
+<comment>Is this population segment attribute type active (Y/N)?</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PSGAT_ACTIVE_FLAG</constraintName>
+<defaultValue>Y</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>6841C73E-E27A-83E1-4728-25113B8D2A58</domain>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="9A0E74F5-F85A-F2CB-0E7C-8907DC1D3E96">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-07 08:53:05 UTC</createdTime>
+<comment>General data item identifier of this population segment attribute type</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
+<associations>
+<colAssociation fkAssociation="493D9448-E669-C66D-5DF5-FA33BA78512B" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="5678291A-57F2-A51F-4974-BF778EF1E9F2">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-07 08:53:05 UTC</createdTime>
+<comment>Update version number of population segment attribute type</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>1</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>C708458E-1701-E597-89A0-AB5975C13369</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="A6A3D00C-366D-37C1-7F02-1BDF7C6924F2" name="PK_PSGAT">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-07 08:53:05 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="33E0298A-B40F-9F49-8DDA-F461581DE28C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="2E91204F-04AB-4F8E-E9E1-255B35E16C57" name="UK_PSGAT_ITM_ID">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-07 08:53:05 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="9A0E74F5-F85A-F2CB-0E7C-8907DC1D3E96"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="8FFE82A6-06A3-0A28-684D-A14E1D26B0B0" name="FK_PSGAT_ITM">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-07 08:53:05 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="9A0E74F5-F85A-F2CB-0E7C-8907DC1D3E96"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
