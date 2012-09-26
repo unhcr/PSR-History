@@ -38,6 +38,16 @@ end TR_LOCR_RBU_AUDIT;
 /
 
 
+create or replace trigger TR_PSG_RBU_AUDIT
+before update on T_POPULATION_SEGMENTS
+for each row
+begin
+  :new.UPDATE_TIMESTAMP := systimestamp;
+  :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
+end TR_PSG_RBU_AUDIT;
+/
+
+
 create or replace trigger TR_ROL_RBU_AUDIT
 before update on T_ROLES
 for each row
