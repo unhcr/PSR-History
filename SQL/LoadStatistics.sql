@@ -1,3 +1,499 @@
-@@LoadT2Statistics
-@@LoadT5Statistics
-@@LoadT7Statistics
+set serveroutput on size 1000000
+
+declare
+  nPSG_ID P_BASE.tnPSG_ID;
+  nSTC_ID P_BASE.tnSTC_ID;
+  iCount1 pls_integer := 0;
+  iCount2 pls_integer := 0;
+  sCOU_CODE_ASYLUM P_BASE.tsDST_CODE;
+begin
+  for rSTC in
+   (with
+    UNPIVOTED_STATISTICS as
+     (--
+      -- Table II
+      --
+      select TABLE_NUMBER,
+        STATSYEAR,
+        decode(nvl(upper(DISPLACEMENT_STATUS), 'REF'),
+               'REF', 'REF', 'REF-LIKE', 'ROC', 'XXX') as DST_CODE,
+        upper(COU_CODE_ASYLUM) as COU_CODE_ASYLUM,
+        null as LOCATION_NAME,
+        upper(COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
+        null as DIMT_CODE1,
+        null as DIM_CODE1,
+        null as DIMT_CODE2,
+        null as DIM_CODE2,
+        null as SUB_SEGMENT_NAME,
+        SOURCE,
+        BASIS,
+        substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
+        substr(COLUMN_CODE, 3) as STCT_CODE,
+        null as SEX_CODE,
+        to_number(null) as AGE_FROM,
+        VALUE
+      from STAGE.S_ASR_T2
+      unpivot
+       (VALUE for COLUMN_CODE in
+         (POP_START as 'S/POP',
+          POP_AH_START as 'S/POP-AH',
+          ARR_GRP as 'F/ARR-GRP',
+          ARR_IND as 'F/ARR-IND',
+          ARR_RESTL as 'F/ARR-RESTL',
+          BIRTH as 'F/BIRTH',
+          REFOTHINC as 'F/REFOTHINC',
+          VOLREP as 'F/VOLREP',
+          VOLREP_AH as 'F/VOLREP-AH',
+          RESTL as 'F/RESTL',
+          RESTL_AH as 'F/RESTL-AH',
+          CESSATION as 'F/CESSATION',
+          NATURLZN as 'F/NATURLZN',
+          DEATH as 'F/DEATH',
+          REFOTHDEC as 'F/REFOTHDEC',
+          POP_END as 'E/POP',
+          POP_AH_END as 'E/POP-AH'))
+      union all
+      --
+      -- Table III
+      --
+      select TABLE_NUMBER,
+        STATSYEAR,
+        upper(DISPLACEMENT_STATUS) as DST_CODE,
+        upper(COU_CODE_ASYLUM) as COU_CODE_ASYLUM,
+        LOCATION_NAME,
+        COU_CODE_ORIGIN,
+        'UR' as DIMT_CODE1,
+        URBAN_RURAL_STATUS as DIM_CODE1,
+        'ACMT' as DIMT_CODE2,
+        case ACCOMMODATION_TYPE
+          when 'Camp' then 'CAMP'
+          when 'Centre' then 'CENTRE'
+          when 'Dispersed' then 'DISPERSED'
+          when 'Individual accommodation' then 'INDIVIDUAL'
+          when 'Settlement' then 'SETTLEMENT'
+          when 'Undefined' then 'UNDEFINED'
+        end as DIM_CODE2,
+        null as SUB_SEGMENT_NAME,
+        null as SOURCE,
+        BASIS,
+        'E' as PERIOD_FLAG,
+        'POP' as STCT_CODE,
+        substr(COLUMN_CODE, 1, 1) as SEX_CODE,
+        to_number(substr(COLUMN_CODE, 2)) as AGE_FROM,
+        VALUE
+      from
+       (select ASR.TABLE_NUMBER, ASR.STATSYEAR,
+          ASR.COU_CODE_ASYLUM,
+          coalesce(LCOR.CORRECTED_LOCATION_NAME,
+                   ASR.NEW_LOCATION_NAME, ASR.LOCATION_NAME) as LOCATION_NAME,
+          ASR.URBAN_RURAL_STATUS, ASR.ACCOMMODATION_TYPE, ASR.DISPLACEMENT_STATUS,
+          ASR.COU_CODE_ORIGIN,
+          ASR.F0_4, ASR.F5_11, ASR.F12_17, ASR.F18_59, ASR.F60,
+          case
+            when ASR.F0_4 is null and ASR.F5_11 is null and ASR.F12_17 is null and
+              ASR.F18_59 is null and ASR.F60 is null and ASR.FOTHER is null
+            then ASR.FTOTAL
+            else ASR.FOTHER
+          end as FOTHER,
+          ASR.M0_4, ASR.M5_11, ASR.M12_17, ASR.M18_59, ASR.M60,
+          case
+            when ASR.M0_4 is null and ASR.M5_11 is null and ASR.M12_17 is null and
+              ASR.M18_59 is null and ASR.M60 is null and ASR.MOTHER is null
+            then ASR.MTOTAL
+            else ASR.MOTHER
+          end as MOTHER,
+          case
+            when ASR.F0_4 is null and ASR.F5_11 is null and ASR.F12_17 is null and
+              ASR.F18_59 is null and ASR.F60 is null and ASR.FOTHER is null
+              and ASR.FTOTAL is null and
+              ASR.M0_4 is null and ASR.M5_11 is null and ASR.M12_17 is null and
+              ASR.M18_59 is null and ASR.M60 is null and ASR.MOTHER is null
+              and ASR.MTOTAL is null
+            then ASR.TOTAL
+          end as TOTAL,
+          ASR.BASIS
+        from STAGE.S_ASR_T3 ASR
+        left outer join STAGE.S_LOCATION_NAME_CORRECTIONS LCOR
+          on LCOR.LOCATION_NAME = ASR.LOCATION_NAME
+          and (LCOR.NEW_LOCATION_NAME = ASR.NEW_LOCATION_NAME
+            or (LCOR.NEW_LOCATION_NAME is null
+              and ASR.NEW_LOCATION_NAME is null)))
+      unpivot
+       (VALUE for COLUMN_CODE in
+         (F0_4 as 'F00',
+          F5_11 as 'F05',
+          F12_17 as 'F12',
+          F18_59 as 'F18',
+          F60 as 'F60',
+          FOTHER as 'F',
+          M0_4 as 'M00',
+          M5_11 as 'M05',
+          M12_17 as 'M12',
+          M18_59 as 'M18',
+          M60 as 'M60',
+          MOTHER as 'M',
+          TOTAL as ''))
+      union all
+      --
+      -- Table IV
+      --
+      select TABLE_NUMBER, STATSYEAR,
+        decode(nvl(upper(DISPLACEMENT_STATUS), 'REF'), 'REF', 'REF', 'REF-LIKE', 'ROC', 'XXX') as DST_CODE,
+        upper(COU_CODE_ASYLUM) as COU_CODE_ASYLUM,
+        null as LOCATION_NAME,
+        COU_CODE_ORIGIN,
+        'LGLBASIS' as DIMT_CODE1,
+        LEGAL_BASIS as DIM_CODE1,
+        null as DIMT_CODE2,
+        null as DIM_CODE2,
+        null as SUB_SEGMENT_NAME,
+        null as SOURCE,
+        null as BASIS,
+        'E' as PERIOD_FLAG,
+        'POP-LB' as STCT_CODE,
+        null as SEX_CODE,
+        to_number(null) as AGE_FROM,
+        VALUE
+      from STAGE.S_ASR_T4
+      unpivot
+       (VALUE for LEGAL_BASIS in
+         (UNCONV51 as 'UNCONV51',
+          OAUCONV69 as 'OAUCONV69',
+          HCRSTAT as 'HCRSTAT',
+          COMPPROT as 'COMPPROT',
+          TEMPPROT as 'TEMPPROT',
+          OTHER as 'OTHER',
+          UNKNOWN as 'UNKNOWN'))
+      union all
+      --
+      -- Table V
+      --
+      select TABLE_NUMBER, STATSYEAR, DST_CODE,
+        upper(COU_CODE_ASYLUM) as COU_CODE_ASYLUM,
+        null as LOCATION_NAME,
+        COU_CODE_ORIGIN,
+        'RSDTYPE' as DIMT_CODE1,
+        DIM_RSDTYPE_VALUE as DIM_CODE1,
+        'RSDLEVEL' as DIMT_CODE2,
+        DIM_RSDLEVEL_VALUE as DIM_CODE2,
+        null as SUB_SEGMENT_NAME,
+        null as SOURCE,
+        null as BASIS,
+        substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
+        substr(COLUMN_CODE, 3) as STCT_CODE,
+        null as SEX_CODE,
+        to_number(null) as AGE_FROM,
+        VALUE
+      from STAGE.S_ASR_T5
+      unpivot
+       (VALUE for COLUMN_CODE in
+         (ASY_START as 'S/ASY',
+          ASY_AH_START as 'S/ASY-AH',
+          ASYAPP as 'F/ASYAPP',
+          ASYREC_CV as 'F/ASYREC-CV',
+          ASYREC_CP as 'F/ASYREC-CP',
+          ASYREJ as 'F/ASYREJ',
+          ASYOTHCL as 'F/ASYOTHCL',
+          ASY_END as 'E/ASY',
+          ASY_AH_END as 'E/ASY-AH'))
+      union all
+      --
+      -- Table VI
+      --
+      select TABLE_NUMBER, STATSYEAR, DST_CODE,
+        upper(COU_CODE_ORIGIN) as COU_CODE_ASYLUM,
+        LOCATION_NAME,
+        COU_CODE_ORIGIN,
+        'DISPCAUSE' as DIMT_CODE1,
+        DISPLACEMENT_CAUSE as DIM_CODE1,
+        null as DIMT_CODE2,
+        null as DIM_CODE2,
+        null as SUB_SEGMENT_NAME,
+        SOURCE,
+        BASIS,
+        substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
+        substr(COLUMN_CODE, 3) as STCT_CODE,
+        null as SEX_CODE,
+        to_number(null) as AGE_FROM,
+        VALUE
+      from
+       (select ASR.TABLE_NUMBER, ASR.STATSYEAR,
+          ASR.DISPLACEMENT_CAUSE, ASR.DST_CODE,
+          ASR.COU_CODE_ORIGIN,
+          coalesce(LCOR.CORRECTED_LOCATION_NAME, ASR.LOCATION_NAME) as LOCATION_NAME,
+          ASR.POP_START, ASR.POP_AH_START,
+          ASR.IDPNEW, ASR.IDPOTHINC,
+          ASR.RETURN, ASR.RETURN_AH, ASR.IDPRELOC, ASR.IDPOTHDEC,
+          ASR.POP_END, ASR.POP_AH_END,
+          ASR.SOURCE, ASR.BASIS
+        from STAGE.S_ASR_T6 ASR
+        left outer join STAGE.S_LOCATION_NAME_CORRECTIONS LCOR
+          on LCOR.LOCATION_NAME = ASR.LOCATION_NAME)
+      unpivot
+       (VALUE for COLUMN_CODE in
+         (POP_START as 'S/POP',
+          POP_AH_START as 'S/POP-AH',
+          IDPNEW as 'F/IDPNEW',
+          IDPOTHINC as 'F/IDPOTHINC',
+          RETURN as 'F/RETURN',
+          RETURN_AH as 'F/RETURN-AH',
+          IDPRELOC as 'F/IDPRELOC',
+          IDPOTHDEC as 'F/IDPOTHDEC',
+          POP_END as 'E/POP',
+          POP_AH_END as 'E/POP-AH'))
+      union all
+      --
+      -- Table VII.A and VII.B
+      --
+      select TABLE_NUMBER, STATSYEAR, DST_CODE,
+        upper(COU_CODE_ASYLUM) as COU_CODE_ASYLUM,
+        null as LOCATION_NAME,
+        COU_CODE_ORIGIN,
+        null as DIMT_CODE1,
+        null as DIM_CODE1,
+        null as DIMT_CODE2,
+        null as DIM_CODE2,
+        null as SUB_SEGMENT_NAME,
+        SOURCE,
+        BASIS,
+        substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
+        substr(COLUMN_CODE, 3) as STCT_CODE,
+        null as SEX_CODE,
+        to_number(null) as AGE_FROM,
+        VALUE
+      from STAGE.S_ASR_T7AB
+      unpivot
+       (VALUE for COLUMN_CODE in
+         (RETURN as 'F/RETURN',
+          RETURN_AH as 'F/RETURN-AH'))
+      union all
+      --
+      -- Table VII.C
+      --
+      select TABLE_NUMBER, STATSYEAR, DST_CODE,
+        upper(COU_CODE_ASYLUM) as COU_CODE_ASYLUM,
+        null as LOCATION_NAME,
+        COU_CODE_ORIGIN,
+        null as DIMT_CODE1,
+        null as DIM_CODE1,
+        null as DIMT_CODE2,
+        null as DIM_CODE2,
+        DESCRIPTION as SUB_SEGMENT_NAME,
+        SOURCE,
+        BASIS,
+        substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
+        substr(COLUMN_CODE, 3) as STCT_CODE,
+        null as SEX_CODE,
+        to_number(null) as AGE_FROM,
+        VALUE
+      from STAGE.S_ASR_T7C
+      unpivot
+       (VALUE for COLUMN_CODE in
+         (POP_START as 'S/POP',
+          POP_AH_START as 'S/POP-AH',
+          NATLOSS as 'F/NATLOSS',
+          STAOTHINC as 'F/STAOTHINC',
+          NATACQ as 'F/NATACQ',
+          STAOTHDEC as 'F/STAOTHDEC',
+          POP_END as 'E/POP',
+          POP_AH_END as 'E/POP-AH'))
+      union all
+      --
+      -- Table VII.D
+      --
+      select TABLE_NUMBER, STATSYEAR, DST_CODE,
+        COU_CODE_ASYLUM,
+        null as LOCATION_NAME,
+        COU_CODE_ORIGIN,
+        null as DIMT_CODE1,
+        null as DIM_CODE1,
+        null as DIMT_CODE2,
+        null as DIM_CODE2,
+        DESCRIPTION as SUB_SEGMENT_NAME,
+        SOURCE,
+        BASIS,
+        substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
+        substr(COLUMN_CODE, 3) as STCT_CODE,
+        null as SEX_CODE,
+        to_number(null) as AGE_FROM,
+        VALUE
+      from STAGE.S_ASR_T7D
+      unpivot
+       (VALUE for COLUMN_CODE in
+         (POP_START as 'S/POP',
+          POP_AH_START as 'S/POP-AH',
+          OOCARR as 'F/OOCARR',
+          OOCOTHINC as 'F/OOCOTHINC',
+          OOCRTN as 'F/OOCRTN',
+          OOCOTHDEC as 'F/OOCOTHDEC',
+          POP_END as 'E/POP',
+          POP_AH_END as 'E/POP-AH'))),
+  --
+    AGGREGATED_STATISTICS as
+     (select TABLE_NUMBER, STATSYEAR, DST_CODE,
+        COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
+        DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUB_SEGMENT_NAME,
+        SOURCE, BASIS,
+        PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
+        sum(VALUE) as VALUE
+      from
+       (select TABLE_NUMBER, STATSYEAR, DST_CODE,
+          COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
+          DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUB_SEGMENT_NAME,
+          STAGE.CHARAGG(SOURCE) over
+           (partition by TABLE_NUMBER, STATSYEAR, DST_CODE,
+            COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
+            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUB_SEGMENT_NAME) as SOURCE,
+          STAGE.CHARAGG(BASIS) over
+           (partition by TABLE_NUMBER, STATSYEAR, DST_CODE,
+            COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
+            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUB_SEGMENT_NAME) as BASIS,
+          PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
+          VALUE
+        from
+         (select TABLE_NUMBER, STATSYEAR, DST_CODE,
+            upper(COU_CODE_ASYLUM) as COU_CODE_ASYLUM, LOCATION_NAME,
+            decode(upper(COU_CODE_ORIGIN), 'YUG', 'SRB', upper(COU_CODE_ORIGIN)) as COU_CODE_ORIGIN,
+            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUB_SEGMENT_NAME,
+            SOURCE, BASIS,
+            PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
+            VALUE
+          from UNPIVOTED_STATISTICS
+          where VALUE != 0))
+      group by TABLE_NUMBER, STATSYEAR, DST_CODE,
+        COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
+        DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUB_SEGMENT_NAME,
+        SOURCE, BASIS,
+        PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM)
+  --
+    select STC.TABLE_NUMBER,
+      STC.STATSYEAR,
+      STC.DST_CODE,
+      STC.COU_CODE_ASYLUM,
+      STC.LOCATION_NAME,
+      STC.COU_CODE_ORIGIN,
+      STC.DIMT_CODE1,
+      STC.DIM_CODE1,
+      STC.DIMT_CODE2,
+      STC.DIM_CODE2,
+      STC.SUB_SEGMENT_NAME,
+      STC.SOURCE,
+      STC.BASIS,
+      STC.PERIOD_FLAG,
+      STC.STCT_CODE,
+      STC.SEX_CODE,
+      STC.AGE_FROM,
+      STC.VALUE,
+      PER.ID as PER_ID,
+      nvl(COU.ID, case when STC.COU_CODE_ASYLUM != 'VAR' then -1 end) as LOC_ID_COUNTRY,
+      LOC.LOC_ID as LOC_ID_ASYLUM,
+      nvl(OGN.ID, case when STC.COU_CODE_ORIGIN != 'VAR' then -1 end) as LOC_ID_ORIGIN,
+      DIM1.ID as DIM_ID1,
+      DIM2.ID as DIM_ID2,
+      AGR.ID as AGR_ID,
+      row_number() over
+       (partition by STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID, DIM1.ID, DIM2.ID,
+          STC.SUB_SEGMENT_NAME
+        order by STC.STATSYEAR desc, STC.PERIOD_FLAG desc, STC.STCT_CODE,
+          STC.SEX_CODE, STC.AGE_FROM) as PSG_CHILD_NUMBER
+    from AGGREGATED_STATISTICS STC
+    join TIME_PERIODS PER
+      on PER.START_DATE =
+        case STC.PERIOD_FLAG
+          when 'S' then trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY')
+          when 'E' then add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
+          when 'F' then trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY')
+        end
+      and PER.PERT_CODE = decode(STC.PERIOD_FLAG, 'S', 'DAY', 'E', 'DAY', 'F', 'YEAR')
+    left outer join COUNTRIES COU
+      on COU.UNHCR_COUNTRY_CODE = STC.COU_CODE_ASYLUM
+      and COU.START_DATE <= add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
+      and COU.END_DATE > add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
+    left outer join
+     (select LOCR.LOC_ID_FROM, LOCR.LOCRT_CODE, LOCR.START_DATE, LOCR.END_DATE,
+        LOC.ID LOC_ID, LOC.NAME
+      from LOCATION_RELATIONSHIPS LOCR
+      join LOCATIONS LOC
+        on LOC.ID = LOCR.LOC_ID_TO) LOC
+      on LOC.LOC_ID_FROM = COU.ID
+      and LOC.LOCRT_CODE = 'WITHIN'
+      and LOC.START_DATE <= add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
+      and LOC.END_DATE > add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
+      and LOC.NAME = trim(regexp_replace(STC.LOCATION_NAME, ':.*$', ''))
+    left outer join ORIGINS OGN
+      on OGN.UNHCR_COUNTRY_CODE = STC.COU_CODE_ORIGIN
+      and OGN.START_DATE <= add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
+      and OGN.END_DATE > add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
+    left outer join DIMENSION_VALUES DIM1
+      on DIM1.DIMT_CODE = STC.DIMT_CODE1
+      and DIM1.CODE = STC.DIM_CODE1
+    left outer join DIMENSION_VALUES DIM2
+      on DIM2.DIMT_CODE = STC.DIMT_CODE2
+      and DIM2.CODE = STC.DIM_CODE2
+    left outer join T_AGE_RANGES AGR
+      on AGR.AGP_CODE = 'STD'
+      and AGR.AGE_FROM = STC.AGE_FROM
+    order by STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID, DIM1.ID, DIM2.ID, STC.SUB_SEGMENT_NAME,
+      STC.STATSYEAR desc, STC.PERIOD_FLAG desc, STC.STCT_CODE, STC.SEX_CODE, STC.AGE_FROM)
+  loop
+    PLS_UTILITY.TRACE_POINT
+     ('Trace',
+      rSTC.TABLE_NUMBER || '|' || rSTC.STATSYEAR || '|' || rSTC.DST_CODE || '|' ||
+        rSTC.COU_CODE_ASYLUM || '|' || rSTC.LOCATION_NAME || '|' ||
+        --trim(regexp_replace(rSTC.LOCATION_NAME, ':.*$', '')) || '|' ||
+        to_char(rSTC.LOC_ID_ASYLUM) || '|' || rSTC.COU_CODE_ORIGIN || '|' ||
+        rSTC.DIMT_CODE1 || '|' || rSTC.DIM_CODE1 || '|' ||
+        rSTC.DIMT_CODE2 || '|' || rSTC.DIM_CODE2 || '|' ||
+        rSTC.SUB_SEGMENT_NAME || '|' || rSTC.STCT_CODE || '|' ||
+        rSTC.PERIOD_FLAG || '|' || rSTC.SEX_CODE || '|' || to_char(rSTC.AGE_FROM));
+  --
+    if rSTC.LOC_ID_COUNTRY = -1
+    then
+      dbms_output.put_line
+       ('Invalid country of asylum: ' || rSTC.TABLE_NUMBER || '|' || rSTC.STATSYEAR || '|' ||
+          rSTC.COU_CODE_ASYLUM);
+    elsif rSTC.LOC_ID_ORIGIN = -1
+    then
+      dbms_output.put_line
+       ('Invalid origin: ' || rSTC.TABLE_NUMBER || '|' || rSTC.STATSYEAR || '|' ||
+          rSTC.COU_CODE_ORIGIN);
+    else
+      if rSTC.PSG_CHILD_NUMBER = 1
+      then
+        P_POPULATION_SEGMENT.INSERT_POPULATION_SEGMENT
+         (nPSG_ID,
+          psDST_CODE => rSTC.DST_CODE,
+          pnLOC_ID_COUNTRY => rSTC.LOC_ID_COUNTRY,
+          pnLOC_ID_ASYLUM => rSTC.LOC_ID_ASYLUM,
+          pnLOC_ID_ORIGIN => rSTC.LOC_ID_ORIGIN,
+          pnDIM_ID1 => rSTC.DIM_ID1,
+          pnDIM_ID2 => rSTC.DIM_ID2,
+          psLANG_CODE => case when rSTC.SUB_SEGMENT_NAME is not null then 'en' end,
+          psSUB_SEGMENT_NAME => rSTC.SUB_SEGMENT_NAME);
+        iCount1 := iCount1 + 1;
+      --
+        if rSTC.SOURCE is not null
+        then P_POPULATION_SEGMENT.INSERT_POPSEG_ATTRIBUTE(nPSG_ID, 'SOURCE', rSTC.SOURCE);
+        end if;
+      --
+        if rSTC.BASIS is not null
+        then P_POPULATION_SEGMENT.INSERT_POPSEG_ATTRIBUTE(nPSG_ID, 'BASIS', rSTC.BASIS);
+        end if;
+      end if;
+    --
+      P_STATISTIC.INSERT_STATISTIC
+       (nSTC_ID,
+        pnPSG_ID => nPSG_ID,
+        psSTCT_CODE => rSTC.STCT_CODE,
+        pnPER_ID => rSTC.PER_ID,
+        psSEX_CODE => rSTC.SEX_CODE,
+        pnAGR_ID => rSTC.AGR_ID,
+        pnVALUE => rSTC.VALUE);
+      iCount2 := iCount2 + 1;
+    end if;
+  end loop;
+--
+  dbms_output.put_line(to_char(iCount1) || ' population segment records inserted');
+  dbms_output.put_line(to_char(iCount2) || ' statistic records inserted');
+end;
+/
