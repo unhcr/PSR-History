@@ -8,5 +8,5 @@
 <localFKIndex>57FC7734-BF21-AF72-BEBE-CF6ADA59FD73</localFKIndex>
 <keyObject>ED74A763-5C21-F882-CE97-16277AE88529</keyObject>
 <mandatory>true</mandatory>
-<transferable>true</transferable>
+<transferable>false</transferable>
 </FKIndexAssociation>

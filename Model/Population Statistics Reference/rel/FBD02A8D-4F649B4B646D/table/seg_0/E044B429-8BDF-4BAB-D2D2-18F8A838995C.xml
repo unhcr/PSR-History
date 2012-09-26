@@ -200,9 +200,10 @@
 <colAssociation fkAssociation="045785B9-5B59-5D75-819A-27C8ECE0ACB2" referredColumn="52E6D966-5575-D77E-A8B9-BC8B1C323F87"/>
 </associations>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="SUB_GROUP_SEQ" id="C612EA49-A316-DC41-0097-8955A89E52B5">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="SEQ_NBR" id="C612EA49-A316-DC41-0097-8955A89E52B5">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-05 15:37:00 UTC</createdTime>
+<comment>Population sub-segment sequence number</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -279,25 +280,6 @@
 <colUsage columnID="AEB0255B-BEA7-2999-B8A3-E334130E7989"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="2CF18F31-F0D3-8D50-B7B6-35C5534D47F5" name="UK_PSG">
-<createdBy>Scott</createdBy>
-<createdTime>2012-09-05 14:52:04 UTC</createdTime>
-<ownerDesignName>Population Statistics Reference</ownerDesignName>
-<indexState>Unique Constraint</indexState>
-<indexColumnUsage>
-<colUsage columnID="EA63B773-11E4-F79C-7236-99E4FF9332C0"/>
-<colUsage columnID="296CBE5F-94ED-648A-4ED7-20AB3FD5C7CF"/>
-<colUsage columnID="8FF9369B-4591-2685-CFD9-E64CF8E52B8A"/>
-<colUsage columnID="37158990-D571-7031-6C5D-C9F14299188F"/>
-<colUsage columnID="2007BC00-6415-FBFE-FD06-7A4EE76B8C8C"/>
-<colUsage columnID="DBE86C76-9F8D-CE5C-10C1-D7C8817B231F"/>
-<colUsage columnID="6961367B-33BF-5858-9F3C-B05E9D30DE0C"/>
-<colUsage columnID="DC1F5C30-B937-7A7D-71D1-6B98AE4C0878"/>
-<colUsage columnID="0C20CB63-0395-3E2D-612B-D01453E18DF9"/>
-<colUsage columnID="E6B8F282-21D2-2482-566A-074353837AE0"/>
-<colUsage columnID="C612EA49-A316-DC41-0097-8955A89E52B5"/>
-</indexColumnUsage>
-</ind_PK_UK>
 <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="5DACB547-8CE9-082A-4243-E0F359352D55" name="UK_PSG_ITM_ID">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-05 14:52:04 UTC</createdTime>
@@ -306,6 +288,13 @@
 <indexColumnUsage>
 <colUsage columnID="596763E6-2C52-3E2C-CB28-CA4A31ACA5F6"/>
 </indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="7C3F8DC8-7C27-803A-EED5-15EF0DDC5561" name="IX_PSG">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-11 09:18:47 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexExpression>DST_CODE, nvl(LOC_ID_COUNTRY, 0), nvl(LOC_ID_ORIGIN, 0), nvl(LOC_ID_ASYLUM, 0), nvl(LOC_ID_SOURCE, 0), nvl(DIM_ID1, 0), nvl(DIM_ID2, 0), nvl(DIM_ID3, 0), nvl(DIM_ID4, 0), nvl(DIM_ID5, 0), SEQ_NBR</indexExpression>
+<indexState>Unique Plain Index</indexState>
 </ind_PK_UK>
 <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="D88D3808-A552-F3F8-5FFE-F300668C35E8" name="FK_PSG_DIM1">
 <createdBy>Scott</createdBy>

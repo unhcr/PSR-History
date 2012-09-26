@@ -54,7 +54,7 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <domain>C2DB2BE5-AB16-8043-FD9B-177C536DC077</domain>
 <checkConstraint>
-<implementationDef dbType="Generic Constraint" definition="ID &gt; 0"/>
+<implementationDef dbType="Generic Constraint" definition="ID &gt;= 1e9"/>
 </checkConstraint>
 <previousColumn>false</previousColumn>
 <autoIncrementColumn>true</autoIncrementColumn>
@@ -117,9 +117,8 @@
 <createdTime>2011-12-08 07:38:59 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="2BC385B9-2318-201B-1A8E-CA12E5DA19EC" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
