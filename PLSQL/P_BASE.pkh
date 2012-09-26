@@ -6,7 +6,7 @@ create or replace package P_BASE is
 --  Type definitions and data values used throughout the PSR system.
 --
 --  Change History:
---  14-May-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  13-Sep-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -23,6 +23,7 @@ create or replace package P_BASE is
   subtype tmsText is tsText not null;
   subtype tsNormalText is varchar2(1000);
   subtype tnNumber is number;
+  subtype tnInteger is integer;
   subtype tdDate is date;
   subtype tmdDate is tdDate not null;
   subtype tsCountryCode is varchar2(3);
@@ -161,6 +162,23 @@ create or replace package P_BASE is
   subtype tsMSG_SEVERITY is T_MESSAGES.SEVERITY%type;
   subtype tnMSG_VERSION_NBR is T_MESSAGES.VERSION_NBR%type;
 --
+-- T_POPSEG_ATTRIBUTE_TYPES
+--
+  subtype tmsPSGAT_CODE is T_POPSEG_ATTRIBUTE_TYPES.CODE%type not null;
+  subtype tsPSGAT_DATA_TYPE is T_POPSEG_ATTRIBUTE_TYPES.DATA_TYPE%type;
+  subtype tmsPSGAT_DATA_TYPE is tsPSGAT_DATA_TYPE not null;
+  subtype tnPSGAT_DISPLAY_SEQ is T_POPSEG_ATTRIBUTE_TYPES.DISPLAY_SEQ%type;
+  subtype tsPSGAT_ACTIVE_FLAG is T_POPSEG_ATTRIBUTE_TYPES.ACTIVE_FLAG%type;
+  subtype tmsPSGAT_ACTIVE_FLAG is tsPSGAT_ACTIVE_FLAG not null;
+  subtype tnPSGAT_VERSION_NBR is T_POPSEG_ATTRIBUTE_TYPES.VERSION_NBR%type;
+--
+-- T_POPSEG_ATTRIBUTES
+--
+  subtype tsPSGA_CHAR_VALUE is T_POPSEG_ATTRIBUTES.CHAR_VALUE%type;
+  subtype tnPSGA_NUM_VALUE is T_POPSEG_ATTRIBUTES.NUM_VALUE%type;
+  subtype tdPSGA_DATE_VALUE is T_POPSEG_ATTRIBUTES.DATE_VALUE%type;
+  subtype tnPSGA_VERSION_NBR is T_POPSEG_ATTRIBUTES.VERSION_NBR%type;
+--
 -- T_POPULATION_PLANNING_GROUPS
 --
   subtype tnPPG_ID is T_POPULATION_PLANNING_GROUPS.ID%type;
@@ -168,6 +186,13 @@ create or replace package P_BASE is
   subtype tsPPG_CODE is T_POPULATION_PLANNING_GROUPS.PPG_CODE%type;
   subtype tmsPPG_CODE is tsPPG_CODE not null;
   subtype tnPPG_VERSION_NBR is T_POPULATION_PLANNING_GROUPS.VERSION_NBR%type;
+--
+-- T_POPULATION_SEGMENTS
+--
+  subtype tnPSG_ID is T_POPULATION_SEGMENTS.ID%type;
+  subtype tmnPSG_ID is tnPSG_ID not null;
+  subtype tnPSG_SEQ_NBR is T_POPULATION_SEGMENTS.SEQ_NBR%type;
+  subtype tnPSG_VERSION_NBR is T_POPULATION_SEGMENTS.VERSION_NBR%type;
 --
 -- T_SEXES
 --
@@ -198,7 +223,6 @@ create or replace package P_BASE is
 --
   subtype tnSTC_ID is T_STATISTICS.ID%type;
   subtype tmnSTC_ID is tnSTC_ID not null;
-  subtype tsSTC_SEX is T_STATISTICS.SEX_CODE%type;
   subtype tnSTC_VALUE is T_STATISTICS.VALUE%type;
   subtype tmnSTC_VALUE is tnSTC_VALUE not null;
   subtype tnSTC_VERSION_NBR is T_STATISTICS.VERSION_NBR%type;
