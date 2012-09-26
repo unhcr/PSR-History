@@ -6,7 +6,7 @@ create or replace package P_STATISTIC is
 --  Procedures for maintenance of statistics.
 --
 --  Change History:
---  04-May-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  13-Sep-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -21,7 +21,32 @@ create or replace package P_STATISTIC is
 -- INSERT_STATISTIC
 -- ----------------------------------------
 --
--- Create a new statistic.
+-- Create a new statistic when a population segment already exists.
+--
+-- Parameters:
+--  pnID - New statistic identifier (returned).
+--  pnPSG_ID - Population segment identifier (mandatory).
+--  psSTCT_CODE - Statistic type code (mandatory).
+--  pnPER_ID - Time period identifier (optional).
+--  psSEX_CODE - Sex code (optional).
+--  pnAGR_ID - Age range identifier (optional).
+--  pnVALUE - The value of the statistic (mandatory).
+--
+  procedure INSERT_STATISTIC
+   (pnID out P_BASE.tnSTC_ID,
+    pnPSG_ID in P_BASE.tmnPSG_ID,
+    psSTCT_CODE in P_BASE.tmsSTCT_CODE,
+    pnPER_ID in P_BASE.tnPER_ID := null,
+    psSEX_CODE in P_BASE.tsSEX_CODE := null,
+    pnAGR_ID in P_BASE.tnAGR_ID := null,
+    pnVALUE in P_BASE.tmnSTC_VALUE);
+/*
+--
+-- ----------------------------------------
+-- INSERT_STATISTIC
+-- ----------------------------------------
+--
+-- Create a new statistic and a new population segment if necessary.
 --
 -- Parameters:
 --  pnID - New statistic identifier (returned).
@@ -60,7 +85,6 @@ create or replace package P_STATISTIC is
     pnDIM_ID4 in P_BASE.tnDIM_ID := null,
     pnDIM_ID5 in P_BASE.tnDIM_ID := null,
     pnVALUE in P_BASE.tmnSTC_VALUE);
-/*
 --
 -- ----------------------------------------
 -- UPDATE_STATISTIC

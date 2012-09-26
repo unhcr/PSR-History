@@ -10,6 +10,39 @@ create or replace package body P_STATISTIC is
 --
   procedure INSERT_STATISTIC
    (pnID out P_BASE.tnSTC_ID,
+    pnPSG_ID in P_BASE.tmnPSG_ID,
+    psSTCT_CODE in P_BASE.tmsSTCT_CODE,
+    pnPER_ID in P_BASE.tnPER_ID := null,
+    psSEX_CODE in P_BASE.tsSEX_CODE := null,
+    pnAGR_ID in P_BASE.tnAGR_ID := null,
+    pnVALUE in P_BASE.tmnSTC_VALUE)
+  is
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sComponent || '.INSERT_STATISTIC',
+      to_char(pnPSG_ID) || '~' || psSTCT_CODE || '~' || to_char(pnPER_ID) || '~' ||
+        psSEX_CODE || '~' || to_char(pnAGR_ID) || '~' || to_char(pnVALUE));
+  --
+    insert into T_STATISTICS
+     (ID, PSG_ID, STCT_CODE, PER_ID, SEX_CODE, AGR_ID, VALUE)
+    values
+     (STC_SEQ.nextval, pnPSG_ID, psSTCT_CODE, pnPER_ID, psSEX_CODE, pnAGR_ID, pnVALUE)
+    returning ID into pnID;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.END_MODULE;
+      raise;
+  end INSERT_STATISTIC;
+/*
+--
+-- ----------------------------------------
+-- INSERT_STATISTIC
+-- ----------------------------------------
+--
+  procedure INSERT_STATISTIC
+   (pnID out P_BASE.tnSTC_ID,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
     pnLOC_ID_COUNTRY in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
@@ -30,21 +63,12 @@ create or replace package body P_STATISTIC is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_STATISTIC',
-      psSTCT_CODE || '~' ||
-        to_char(pnLOC_ID_COUNTRY) || '~' ||
-        to_char(pnLOC_ID_ASYLUM) || '~' ||
-        to_char(pnLOC_ID_ORIGIN) || '~' ||
-        to_char(pnLOC_ID_SOURCE) || '~' ||
-        to_char(pnPPG_ID) || '~' ||
-        psDST_CODE || '~' ||
-        to_char(pnPER_ID) || '~' ||
-        psSEX_CODE || '~' ||
-        to_char(pnDIM_ID1) || '~' ||
-        to_char(pnDIM_ID2) || '~' ||
-        to_char(pnDIM_ID3) || '~' ||
-        to_char(pnDIM_ID4) || '~' ||
-        to_char(pnDIM_ID5) || '~' ||
-        to_char(pnVALUE));
+      psSTCT_CODE || '~' || to_char(pnLOC_ID_COUNTRY) || '~' || to_char(pnLOC_ID_ASYLUM) || '~' ||
+        to_char(pnLOC_ID_ORIGIN) || '~' || to_char(pnLOC_ID_SOURCE) || '~' ||
+        to_char(pnPPG_ID) || '~' || psDST_CODE || '~' || to_char(pnPER_ID) || '~' ||
+        psSEX_CODE || '~' || to_char(pnAGR_ID) || '~' ||
+        to_char(pnDIM_ID1) || '~' || to_char(pnDIM_ID2) || '~' || to_char(pnDIM_ID3) || '~' ||
+        to_char(pnDIM_ID4) || '~' || to_char(pnDIM_ID5) || '~' || to_char(pnVALUE));
   --
     insert into T_STATISTICS
      (ID, STCT_CODE,
@@ -66,6 +90,7 @@ create or replace package body P_STATISTIC is
     then PLS_UTILITY.END_MODULE;
       raise;
   end INSERT_STATISTIC;
+*/
 --
 -- ----------------------------------------
 -- DELETE_STATISTIC
