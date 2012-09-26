@@ -315,7 +315,7 @@ create or replace package P_LOCATION is
 --
 -- Parameters:
 --  pnID - Location identifier (mandatory).
---  pnVERSION_NBR - Update version number of system user record (mandatory).
+--  pnVERSION_NBR - Update version number of location record (mandatory).
 --
   procedure DELETE_LOCATION
    (pnID in P_BASE.tmnLOC_ID,
@@ -612,7 +612,8 @@ create or replace package P_LOCATION is
 --  pnNUM_VALUE - Value for attribute of data type numeric (optional).
 --  pdDATE_VALUE - Value for attribute of data type date (optional).
 -- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
---  depending on the value of T_USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
+--  depending on the value of T_LOCATION_ATTRIBUTE_TYPES.DATA_TYPE for the specified location
+--  attribute type.
 --
   procedure INSERT_LOCATION_ATTRIBUTE
    (pnLOC_ID in P_BASE.tmnLOC_ID,
@@ -636,7 +637,8 @@ create or replace package P_LOCATION is
 --  pnNUM_VALUE - Value for attribute of data type numeric (optional).
 --  pdDATE_VALUE - Value for attribute of data type date (optional).
 -- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
---  depending on the value of T_USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
+--  depending on the value of T_LOCATION_ATTRIBUTE_TYPES.DATA_TYPE for the specified location
+--  attribute type.
 --
   procedure UPDATE_LOCATION_ATTRIBUTE
    (pnLOC_ID in P_BASE.tmnLOC_ID,
@@ -661,7 +663,8 @@ create or replace package P_LOCATION is
 --  pnNUM_VALUE - Value for attribute of data type numeric (optional).
 --  pdDATE_VALUE - Value for attribute of data type date (optional).
 -- One and only one of the parameters psCHAR_VALUE, pnNUM_VALUE and pdDATE_VALUE must be specified
---  depending on the value of T_USER_ATTRIBUTE_TYPES.DATA_TYPE for the specified user attribute type.
+--  depending on the value of T_LOCATION_ATTRIBUTE_TYPES.DATA_TYPE for the specified location
+--  attribute type.
 --
   procedure SET_LOCATION_ATTRIBUTE
    (pnLOC_ID in P_BASE.tmnLOC_ID,
