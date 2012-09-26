@@ -1,5 +1,7 @@
 create table S_ASR_T7C_2004_2011 
- (STATSYEAR varchar2(4),
+ (TABLE_NUMBER varchar2(5),
+  STATSYEAR varchar2(4),
+  DST_CODE varchar2(3),
   COU_CODE_ASYLUM varchar2(3),
   COU_CODE_ORIGIN varchar2(3),
   DESCRIPTION varchar2(1000),
@@ -12,7 +14,7 @@ create table S_ASR_T7C_2004_2011
   POP_END integer,
   POP_AH_END integer,
   SOURCE varchar2(4),
-  BASIS varchar2(2))
+  BASIS varchar2(5))
 organization external
  (type oracle_loader
   default directory PSRDATA
@@ -41,7 +43,10 @@ organization external
       POP_END char(4000),
       POP_AH_END char(4000),
       SOURCE char(4000),
-      BASIS char(4000)))
+      BASIS char(4000))
+    column transforms
+     (TABLE_NUMBER from constant '7C',
+      DST_CODE from constant 'STA'))
   location ('ASR_T7C_2004_2011.csv'))
 reject limit unlimited;
 

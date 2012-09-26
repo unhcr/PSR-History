@@ -1,5 +1,8 @@
 create table S_ASR_T5_2011 
- (COU_CODE_ASYLUM varchar2(3),
+ (TABLE_NUMBER varchar2(5),
+  STATSYEAR varchar2(4),
+  DST_CODE varchar2(3),
+  COU_CODE_ASYLUM varchar2(3),
   DIM_RSDTYPE_VALUE varchar2(1),
   PROCEDURE_LEVEL varchar2(3),
   APPLICATION_IND_GROUP varchar2(1),
@@ -55,8 +58,12 @@ organization external
       ASYOTHCL char(4000),
       TOTAL_DECISIONS char(4000),
       ASY_END char(4000),
-      ASY_AH_END char(4000)))
+      ASY_AH_END char(4000))
+    column transforms
+     (TABLE_NUMBER from constant '5',
+      STATSYEAR from constant '2011',
+      DST_CODE from constant 'ASY'))
   location ('ASR_T5_2011.csv'))
 reject limit unlimited;
-  
+
 grant select on S_ASR_T5_2011 to PSR_STAGE;

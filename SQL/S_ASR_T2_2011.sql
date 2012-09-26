@@ -1,7 +1,9 @@
 create table S_ASR_T2_2011 
- (COU_CODE_ASYLUM varchar2(3),
+ (TABLE_NUMBER varchar2(5),
+  STATSYEAR varchar2(4),
+  COU_CODE_ASYLUM varchar2(3),
   COU_CODE_ORIGIN varchar2(3),
-  DISPLACEMENT_STATUS varchar2(10),
+  DISPLACEMENT_STATUS varchar2(8),
   POP_START integer,
   POP_AH_START integer,
   ARR_GRP integer,
@@ -36,7 +38,6 @@ organization external
     optionally enclosed by '"' and '"'
     lrtrim
     missing field values are null
-    reject rows with all null fields
      (FILLER1 char(4000),
       FILLER2 char(4000),
       FILLER3 char(4000),
@@ -65,7 +66,10 @@ organization external
       POP_END char(4000),
       POP_AH_END char(4000),
       SOURCE char(4000),
-      BASIS char(4000)))
+      BASIS char(4000))
+    column transforms
+     (TABLE_NUMBER from constant '2',
+      STATSYEAR from constant '2011'))
   location ('ASR_T2_REF_2011.csv', 'ASR_T2_REFLIKE_2011.csv'))
 reject limit unlimited;
   

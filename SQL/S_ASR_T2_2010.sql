@@ -1,7 +1,9 @@
 create table S_ASR_T2_2010 
- (COU_CODE_ASYLUM varchar2(3),
+ (TABLE_NUMBER varchar2(5),
+  STATSYEAR varchar2(4),
+  COU_CODE_ASYLUM varchar2(3),
   COU_CODE_ORIGIN varchar2(3),
-  DISPLACEMENT_STATUS varchar2(10),
+  DISPLACEMENT_STATUS varchar2(8),
   POP_START integer,
   POP_AH_START integer,
   ARR_GRP integer,
@@ -21,8 +23,8 @@ create table S_ASR_T2_2010
   TOTAL_DECREASE integer,
   POP_END integer,
   POP_AH_END integer,
-  SOURCE varchar2(2),
-  BASIS varchar2(2))
+  SOURCE varchar2(4),
+  BASIS varchar2(5))
 organization external
  (type oracle_loader
   default directory PSRDATA
@@ -36,7 +38,6 @@ organization external
     optionally enclosed by '"' and '"'
     lrtrim
     missing field values are null
-    reject rows with all null fields
      (FILLER1 char(4000),
       FILLER2 char(4000),
       FILLER3 char(4000),
@@ -65,8 +66,11 @@ organization external
       POP_END char(4000),
       POP_AH_END char(4000),
       SOURCE char(4000),
-      BASIS char(4000)))
+      BASIS char(4000))
+    column transforms
+     (TABLE_NUMBER from constant '2',
+      STATSYEAR from constant '2010'))
   location ('ASR_T2_REF_2010.csv', 'ASR_T2_REFLIKE_2010.csv'))
 reject limit unlimited;
-  
+
 grant select on S_ASR_T2_2010 to PSR_STAGE;

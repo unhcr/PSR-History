@@ -1,6 +1,9 @@
 create table S_ASR_T7B_2011 
- (COU_CODE_ASYLUM varchar2(3),
+ (TABLE_NUMBER varchar2(5),
+  STATSYEAR varchar2(4),
+  COU_CODE_ASYLUM varchar2(3),
   COU_CODE_ORIGIN varchar2(3),
+  DST_CODE varchar2(3),
   RETURN integer,
   RETURN_AH integer,
   SOURCE varchar2(2),
@@ -19,14 +22,17 @@ organization external
     optionally enclosed by '"' and '"'
     lrtrim
     missing field values are null
-    reject rows with all null fields
      (FILLER1 char(4000),
       COU_CODE_ASYLUM char(4000),
       COU_CODE_ORIGIN char(4000),
       RETURN char(4000),
       RETURN_AH char(4000),
       SOURCE char(4000),
-      BASIS char(4000)))
+      BASIS char(4000))
+    column transforms
+     (TABLE_NUMBER from constant '7B',
+      STATSYEAR from constant '2011',
+      DST_CODE from constant 'ROC'))
   location ('ASR_T7B_2011.csv'))
 reject limit unlimited;
   
