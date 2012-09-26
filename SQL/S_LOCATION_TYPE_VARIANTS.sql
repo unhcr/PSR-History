@@ -20,7 +20,6 @@ organization external
     optionally enclosed by '"' and '"'
     lrtrim
     missing field values are null
-    reject rows with all null fields
      (LOCT_CODE char(4000),
       HCRCC char(4000),
       LOCRT_CODE char(4000),
