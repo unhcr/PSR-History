@@ -19,7 +19,6 @@ organization external
     optionally enclosed by '"' and '"'
     lrtrim
     missing field values are null
-    reject rows with all null fields
      (CODE char(4000),
       DESCRIPTION_EN char(4000),
       DATA_TYPE char(4000),

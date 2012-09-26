@@ -18,7 +18,6 @@ organization external
     fields terminated by x'0009'
     lrtrim
     missing field values are null
-    reject rows with all null fields
      (TXTT_CODE char(4000),
       TAB_ALIAS char(4000),
       MANDATORY_FLAG char(4000),
