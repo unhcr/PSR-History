@@ -39,7 +39,7 @@ organization external
     optionally enclosed by '"' and '"'
     lrtrim
     missing field values are null
-      (KEY char(4000),
+     (KEY char(4000),
       IS03166A3 char(4000),
       ISO_NAME_EN char(4000),
       LOCT_CODE char(4000),
