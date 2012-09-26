@@ -25,24 +25,28 @@ prompt InitBase
 prompt ========
 @InitBase
 
-prompt InitMessages
+prompt LoadLanguages
+prompt =============
+@LoadLanguages
+
+prompt LoadTextTypes
+prompt =============
+@LoadTextTypes
+
+prompt LoadMessages
 prompt ============
-@InitMessages
+@LoadMessages
 
 prompt InitParameters
 prompt ==============
 @InitParameters
 
-prompt LoadLanguages
-prompt =============
-@LoadLanguages
-
 prompt LoadStatisticTypes
-prompt =============
+prompt ==================
 @LoadStatisticTypes
 
 prompt InitDisplacementStatuses
-prompt ===========
+prompt ========================
 @InitDisplacementStatuses
 
 prompt InitSexes
@@ -60,6 +64,10 @@ prompt ===============
 prompt LoadDimensionTypes
 prompt ==================
 @LoadDimensionTypes
+
+prompt LoadPopulationSegmentAttributeTypes
+prompt ===================================
+@LoadPopulationSegmentAttributeTypes
 
 prompt LoadLocationTypes
 prompt =================
@@ -81,9 +89,13 @@ prompt LoadLocationsCountries
 prompt ======================
 @LoadLocationsCountries
 
---prompt LoadLocations_Subdivisions
---prompt ==========================
---@LoadLocations_Subdivisions
+prompt LoadLocationTypeVariants
+prompt ========================
+@LoadLocationTypeVariants
+
+prompt LoadLocationsSubdivisions
+prompt =========================
+@LoadLocationsSubdivisions
 
 --prompt LoadPPGs
 --prompt ========
@@ -92,6 +104,10 @@ prompt ======================
 prompt LoadStatistics
 prompt ==============
 @LoadStatistics
+
+prompt DeactivateCodes
+prompt ===============
+@DeactivateCodes
 
 --prompt InitTests
 --prompt =========
