@@ -1,0 +1,271 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableView class="oracle.dbtools.crest.model.design.relational.TableView" id="0DF9E522-FEF6-964E-DF1B-BD6190A50833" directorySegmentName="seg_0" name="UP_ASR_TABLE2">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 08:35:18 UTC</createdTime>
+<comment>Statistics gathered in ASR table I in normalised (unpivoted) format</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<userDefined>true</userDefined>
+<userDefinedSQL>SELECT STATSYEAR,&lt;br/&gt;  DST_CODE,&lt;br/&gt;  DST_DESCRIPTION,&lt;br/&gt;  ISO_COUNTRY_CODE,&lt;br/&gt;  UNHCR_COUNTRY_CODE,&lt;br/&gt;  LOC_NAME_COUNTRY,&lt;br/&gt;  ISO_ORIGIN_CODE,&lt;br/&gt;  UNHCR_ORIGIN_CODE,&lt;br/&gt;  LOC_NAME_ORIGIN,&lt;br/&gt;  COLUMN_NAME,&lt;br/&gt;  VALUE,&lt;br/&gt;  STC_ID,&lt;br/&gt;  ITM_ID,&lt;br/&gt;  SOURCE,&lt;br/&gt;  BASIS&lt;br/&gt;FROM&lt;br/&gt;  (SELECT Extract(YEAR FROM STC.PER_START_DATE) AS STATSYEAR,&lt;br/&gt;    STC.DST_CODE,&lt;br/&gt;    STC.DST_DESCRIPTION,&lt;br/&gt;    STC.ISO_COUNTRY_CODE,&lt;br/&gt;    STC.UNHCR_COUNTRY_CODE,&lt;br/&gt;    STC.LOC_NAME_COUNTRY,&lt;br/&gt;    STC.ISO_ORIGIN_CODE,&lt;br/&gt;    STC.UNHCR_ORIGIN_CODE,&lt;br/&gt;    STC.LOC_NAME_ORIGIN,&lt;br/&gt;    REPLACE(STC.STCT_CODE, &apos;-&apos;, &apos;_&apos;)&lt;br/&gt;    ||&lt;br/&gt;    CASE&lt;br/&gt;      WHEN STC.PERT_DESCRIPTION = &apos;Year&apos;&lt;br/&gt;      THEN &apos;&apos;&lt;br/&gt;      WHEN STC.PER_START_DATE = TRUNC(STC.PER_START_DATE, &apos;YYYY&apos;)&lt;br/&gt;      THEN &apos;_START&apos;&lt;br/&gt;      WHEN STC.PER_END_DATE = add_months(TRUNC(STC.PER_START_DATE, &apos;YYYY&apos;), 12)&lt;br/&gt;      THEN &apos;_END&apos;&lt;br/&gt;    END AS COLUMN_NAME,&lt;br/&gt;    STC.VALUE,&lt;br/&gt;    STC.ID           AS STC_ID,&lt;br/&gt;    STC.ITM_ID       AS ITM_ID,&lt;br/&gt;    PSGA1.CHAR_VALUE AS SOURCE,&lt;br/&gt;    PSGA2.CHAR_VALUE AS BASIS&lt;br/&gt;  FROM STATISTICS STC&lt;br/&gt;  LEFT OUTER JOIN T_POPSEG_ATTRIBUTES PSGA1&lt;br/&gt;  ON PSGA1.PSG_ID      = STC.PSG_ID&lt;br/&gt;  AND PSGA1.PSGAT_CODE = &apos;SOURCE&apos;&lt;br/&gt;  LEFT OUTER JOIN T_POPSEG_ATTRIBUTES PSGA2&lt;br/&gt;  ON PSGA2.PSG_ID      = STC.PSG_ID&lt;br/&gt;  AND PSGA2.PSGAT_CODE = &apos;BASIS&apos;&lt;br/&gt;  WHERE STC.DST_CODE  IN (&apos;REF&apos;, &apos;ROC&apos;)&lt;br/&gt;  AND STC.STCT_CODE   IN (&apos;POP&apos;, &apos;POP-AH&apos;, &apos;ARR-GRP&apos;, &apos;ARR-IND&apos;, &apos;ARR-RESTL&apos;, &apos;BIRTH&apos;, &apos;REFOTHINC&apos;, &apos;VOLREP&apos;, &apos;VOLREP-AH&apos;, &apos;RESTL&apos;, &apos;RESTL-AH&apos;, &apos;CESSATION&apos;, &apos;NATURLZN&apos;, &apos;DEATH&apos;, &apos;REFOTHDEC&apos;)&lt;br/&gt;  AND STC.DIM_ID1     IS NULL&lt;br/&gt;  AND STC.DIM_ID2     IS NULL&lt;br/&gt;  AND STC.DIM_ID3     IS NULL&lt;br/&gt;  AND STC.DIM_ID4     IS NULL&lt;br/&gt;  AND STC.DIM_ID5     IS NULL&lt;br/&gt;  AND STC.SEX_CODE    IS NULL&lt;br/&gt;  AND STC.AGR_ID      IS NULL&lt;br/&gt;  )</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select STATSYEAR, DST_CODE, DST_DESCRIPTION, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, LOC_NAME_COUNTRY, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, LOC_NAME_ORIGIN, COLUMN_NAME, VALUE, STC_ID, ITM_ID, SOURCE, BASIS From (Select Extract(Year From STC.PER_START_DATE) As STATSYEAR, STC.DST_CODE, STC.DST_DESCRIPTION, STC.ISO_COUNTRY_CODE, STC.UNHCR_COUNTRY_CODE, STC.LOC_NAME_COUNTRY, STC.ISO_ORIGIN_CODE, STC.UNHCR_ORIGIN_CODE, STC.LOC_NAME_ORIGIN, REPLACE(STC.STCT_CODE, &apos;-&apos;, &apos;_&apos;) || Case When STC.PERT_DESCRIPTION = &apos;Year&apos; Then &apos;&apos; When STC.PER_START_DATE = TRUNC(STC.PER_START_DATE, &apos;YYYY&apos;) Then &apos;_START&apos; When STC.PER_END_DATE = add_months(TRUNC(STC.PER_START_DATE, &apos;YYYY&apos;), 12) Then &apos;_END&apos; End As COLUMN_NAME, STC.VALUE, STC.ID As STC_ID, STC.ITM_ID As ITM_ID, PSGA1.CHAR_VALUE As SOURCE, PSGA2.CHAR_VALUE As BASIS From STATISTICS STC Left Outer Join T_POPSEG_ATTRIBUTES PSGA1 On PSGA1.PSG_ID = STC.PSG_ID And PSGA1.PSGAT_CODE = &apos;SOURCE&apos; Left Outer Join T_POPSEG_ATTRIBUTES PSGA2 On PSGA2.PSG_ID = STC.PSG_ID And PSGA2.PSGAT_CODE = &apos;BASIS&apos; Where STC.DST_CODE In (&apos;REF&apos;, &apos;ROC&apos;) And STC.STCT_CODE In (&apos;POP&apos;, &apos;POP-AH&apos;, &apos;ARR-GRP&apos;, &apos;ARR-IND&apos;, &apos;ARR-RESTL&apos;, &apos;BIRTH&apos;, &apos;REFOTHINC&apos;, &apos;VOLREP&apos;, &apos;VOLREP-AH&apos;, &apos;RESTL&apos;, &apos;RESTL-AH&apos;, &apos;CESSATION&apos;, &apos;NATURLZN&apos;, &apos;DEATH&apos;, &apos;REFOTHDEC&apos;) And STC.DIM_ID1 Is Null And STC.DIM_ID2 Is Null And STC.DIM_ID3 Is Null And STC.DIM_ID4 Is Null And STC.DIM_ID5 Is Null And STC.SEX_CODE Is Null And STC.AGR_ID Is Null)&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select STATSYEAR, DST_CODE, DST_DESCRIPTION, ISO_COUNTRY_CODE, UNHCR_COUNTRY_CODE, LOC_NAME_COUNTRY, ISO_ORIGIN_CODE, UNHCR_ORIGIN_CODE, LOC_NAME_ORIGIN, COLUMN_NAME, VALUE, STC_ID, ITM_ID, SOURCE, BASIS From (Select Extract(Year From STC.PER_START_DATE) As STATSYEAR, STC.DST_CODE, STC.DST_DESCRIPTION, STC.ISO_COUNTRY_CODE, STC.UNHCR_COUNTRY_CODE, STC.LOC_NAME_COUNTRY, STC.ISO_ORIGIN_CODE, STC.UNHCR_ORIGIN_CODE, STC.LOC_NAME_ORIGIN, REPLACE(STC.STCT_CODE, &apos;-&apos;, &apos;_&apos;) || Case When STC.PERT_DESCRIPTION = &apos;Year&apos; Then &apos;&apos; When STC.PER_START_DATE = TRUNC(STC.PER_START_DATE, &apos;YYYY&apos;) Then &apos;_START&apos; When STC.PER_END_DATE = add_months(TRUNC(STC.PER_START_DATE, &apos;YYYY&apos;), 12) Then &apos;_END&apos; End As COLUMN_NAME, STC.VALUE, STC.ID As STC_ID, STC.ITM_ID As ITM_ID, PSGA1.CHAR_VALUE As SOURCE, PSGA2.CHAR_VALUE As BASIS From STATISTICS STC Left Outer Join T_POPSEG_ATTRIBUTES PSGA1 On PSGA1.PSG_ID = STC.PSG_ID And PSGA1.PSGAT_CODE = &apos;SOURCE&apos; Left Outer Join T_POPSEG_ATTRIBUTES PSGA2 On PSGA2.PSG_ID = STC.PSG_ID And PSGA2.PSGAT_CODE = &apos;BASIS&apos; Where STC.DST_CODE In (&apos;REF&apos;, &apos;ROC&apos;) And STC.STCT_CODE In (&apos;POP&apos;, &apos;POP-AH&apos;, &apos;ARR-GRP&apos;, &apos;ARR-IND&apos;, &apos;ARR-RESTL&apos;, &apos;BIRTH&apos;, &apos;REFOTHINC&apos;, &apos;VOLREP&apos;, &apos;VOLREP-AH&apos;, &apos;RESTL&apos;, &apos;RESTL-AH&apos;, &apos;CESSATION&apos;, &apos;NATURLZN&apos;, &apos;DEATH&apos;, &apos;REFOTHDEC&apos;) And STC.DIM_ID1 Is Null And STC.DIM_ID2 Is Null And STC.DIM_ID3 Is Null And STC.DIM_ID4 Is Null And STC.DIM_ID5 Is Null And STC.SEX_CODE Is Null And STC.AGR_ID Is Null)&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;(Select Extract(Year From STC.PER_START_DATE) As STATSYEAR, STC.DST_CODE, STC.DST_DESCRIPTION, STC.ISO_COUNTRY_CODE, STC.UNHCR_COUNTRY_CODE, STC.LOC_NAME_COUNTRY, STC.ISO_ORIGIN_CODE, STC.UNHCR_ORIGIN_CODE, STC.LOC_NAME_ORIGIN, REPLACE(STC.STCT_CODE, &apos;-&apos;, &apos;_&apos;) || Case When STC.PERT_DESCRIPTION = &apos;Year&apos; Then &apos;&apos; When STC.PER_START_DATE = TRUNC(STC.PER_START_DATE, &apos;YYYY&apos;) Then &apos;_START&apos; When STC.PER_END_DATE = add_months(TRUNC(STC.PER_START_DATE, &apos;YYYY&apos;), 12) Then &apos;_END&apos; End As COLUMN_NAME, STC.VALUE, STC.ID As STC_ID, STC.ITM_ID As ITM_ID, PSGA1.CHAR_VALUE As SOURCE, PSGA2.CHAR_VALUE As BASIS From STATISTICS STC Left Outer Join T_POPSEG_ATTRIBUTES PSGA1 On PSGA1.PSG_ID = STC.PSG_ID And PSGA1.PSGAT_CODE = &apos;SOURCE&apos; Left Outer Join T_POPSEG_ATTRIBUTES PSGA2 On PSGA2.PSG_ID = STC.PSG_ID And PSGA2.PSGAT_CODE = &apos;BASIS&apos; Where STC.DST_CODE In (&apos;REF&apos;, &apos;ROC&apos;) And STC.STCT_CODE In (&apos;POP&apos;, &apos;POP-AH&apos;, &apos;ARR-GRP&apos;, &apos;ARR-IND&apos;, &apos;ARR-RESTL&apos;, &apos;BIRTH&apos;, &apos;REFOTHINC&apos;, &apos;VOLREP&apos;, &apos;VOLREP-AH&apos;, &apos;RESTL&apos;, &apos;RESTL-AH&apos;, &apos;CESSATION&apos;, &apos;NATURLZN&apos;, &apos;DEATH&apos;, &apos;REFOTHDEC&apos;) And STC.DIM_ID1 Is Null And STC.DIM_ID2 Is Null And STC.DIM_ID3 Is Null And STC.DIM_ID4 Is Null And STC.DIM_ID5 Is Null And STC.SEX_CODE Is Null And STC.AGR_ID Is Null)&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;315&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select Extract(Year From STC.PER_START_DATE) As STATSYEAR, STC.DST_CODE, STC.DST_DESCRIPTION, STC.ISO_COUNTRY_CODE, STC.UNHCR_COUNTRY_CODE, STC.LOC_NAME_COUNTRY, STC.ISO_ORIGIN_CODE, STC.UNHCR_ORIGIN_CODE, STC.LOC_NAME_ORIGIN, REPLACE(STC.STCT_CODE, &apos;-&apos;, &apos;_&apos;) || Case When STC.PERT_DESCRIPTION = &apos;Year&apos; Then &apos;&apos; When STC.PER_START_DATE = TRUNC(STC.PER_START_DATE, &apos;YYYY&apos;) Then &apos;_START&apos; When STC.PER_END_DATE = add_months(TRUNC(STC.PER_START_DATE, &apos;YYYY&apos;), 12) Then &apos;_END&apos; End As COLUMN_NAME, STC.VALUE, STC.ID As STC_ID, STC.ITM_ID As ITM_ID, PSGA1.CHAR_VALUE As SOURCE, PSGA2.CHAR_VALUE As BASIS From STATISTICS STC Left Outer Join T_POPSEG_ATTRIBUTES PSGA1 On PSGA1.PSG_ID = STC.PSG_ID And PSGA1.PSGAT_CODE = &apos;SOURCE&apos; Left Outer Join T_POPSEG_ATTRIBUTES PSGA2 On PSGA2.PSG_ID = STC.PSG_ID And PSGA2.PSGAT_CODE = &apos;BASIS&apos; Where STC.DST_CODE In (&apos;REF&apos;, &apos;ROC&apos;) And STC.STCT_CODE In (&apos;POP&apos;, &apos;POP-AH&apos;, &apos;ARR-GRP&apos;, &apos;ARR-IND&apos;, &apos;ARR-RESTL&apos;, &apos;BIRTH&apos;, &apos;REFOTHINC&apos;, &apos;VOLREP&apos;, &apos;VOLREP-AH&apos;, &apos;RESTL&apos;, &apos;RESTL-AH&apos;, &apos;CESSATION&apos;, &apos;NATURLZN&apos;, &apos;DEATH&apos;, &apos;REFOTHDEC&apos;) And STC.DIM_ID1 Is Null And STC.DIM_ID2 Is Null And STC.DIM_ID3 Is Null And STC.DIM_ID4 Is Null And STC.DIM_ID5 Is Null And STC.SEX_CODE Is Null And STC.AGR_ID Is Null&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;STATISTICS STC&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;1125&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_POPSEG_ATTRIBUTES PSGA1&quot; X=&quot;240&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_POPSEG_ATTRIBUTES PSGA2&quot; X=&quot;430&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<parsed>true</parsed>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+</fonts>
+<viewElements>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="STATSYEAR" id="CB034747-F839-7C6C-2F22-55461C55FFFD">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 09:13:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>STATSYEAR</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="DST_CODE" id="BED115BF-1012-B9D5-1C22-8E8B942D5D1A">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 08:36:15 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (10)</dataType>
+<expression>DST_CODE</expression>
+<reference>false</reference>
+<referencedColumn>EA63B773-11E4-F79C-7236-99E4FF9332C0</referencedColumn>
+<table>E044B429-8BDF-4BAB-D2D2-18F8A838995C</table>
+<tableAlias>PSG</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="DST_DESCRIPTION" id="ECA33FAC-B303-84BC-E0C7-4C20160067B4">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 11:04:13 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>DST_DESCRIPTION</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ISO_COUNTRY_CODE" id="7CB6522A-4047-8DD4-14FF-EF9C20C74CB1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 11:04:13 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>ISO_COUNTRY_CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="UNHCR_COUNTRY_CODE" id="1CBE8E46-F77D-16CD-E00D-FDF6F5D760FA" directorySegmentName="seg_1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 11:04:13 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>UNHCR_COUNTRY_CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOC_NAME_COUNTRY" id="4F0370EE-CA1E-FE25-E04F-37B6BAD42CD2">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 11:04:13 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>LOC_NAME_COUNTRY</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ISO_ORIGIN_CODE" id="88EF6C7E-694D-6439-13EA-83F316D2F03F">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 11:04:13 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>ISO_ORIGIN_CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="UNHCR_ORIGIN_CODE" id="96BCC562-A182-23F7-DD09-4229586756EC">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 11:04:13 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>UNHCR_ORIGIN_CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOC_NAME_ORIGIN" id="93BE8E99-0086-7B4C-7808-DE8DD26A7626">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 11:04:13 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>LOC_NAME_ORIGIN</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="COLUMN_NAME" id="41E88D59-BC98-18F7-E282-03B53F6E2580">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 09:13:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>COLUMN_NAME</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="VALUE" id="02B6650C-F815-C8BC-928A-6C2637B5F56E">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 08:36:15 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>INTEGER</dataType>
+<expression>VALUE</expression>
+<reference>false</reference>
+<referencedColumn>97461C8E-E88E-2C29-6540-88CDB441BE21</referencedColumn>
+<table>0DA3F6B4-8518-F552-7B4C-1ADAA9907CC6</table>
+<tableAlias>STC</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="STC_ID" id="7FA7B43E-28EC-8E66-9E54-195467AC13F6">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 09:13:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>STC_ID</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ITM_ID" id="82F745FD-CEEF-D1E4-0833-E6C4205FE058">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 09:13:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>ITM_ID</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="SOURCE" id="8F5FD310-92C3-6FF5-7F75-BF3246CFDACA">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 09:13:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>SOURCE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="BASIS" id="8ACECE92-2FE5-1D6F-63A0-3505A0EB1A2F">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-21 09:13:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>BASIS</expression>
+<reference>false</reference>
+</viewElement>
+</viewElements>
+<usedObjects>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="3A1361CD-BEB2-D42F-CB5B-1CBCBE44B16D">
+<container>true</container>
+<tableName>STATISTICS</tableName>
+<view>true</view>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="3633FDE7-936F-0DC3-CD65-9C1C85251F2B">
+<container>true</container>
+<tableName>T_POPSEG_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="55012A10-A220-DC03-BB12-2D3CC208C6BF">
+<columnName>DST_CODE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="2B16CDBA-E47A-081B-624A-1CCAB4925702">
+<columnName>DST_DESCRIPTION</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="34844B40-75A6-8251-D2C8-0B3ED86A4825">
+<columnName>ISO_COUNTRY_CODE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="9DACC537-0B19-1454-4021-ADB14F01BCA0">
+<columnName>UNHCR_COUNTRY_CODE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="2507E32A-306A-EA50-903E-D3616320ABF1">
+<columnName>LOC_NAME_COUNTRY</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="40A528D3-C0C1-6EDE-F6E9-5DFA7977B2A8">
+<columnName>ISO_ORIGIN_CODE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="2808C0A8-E10C-A158-41AC-BD60D458814E">
+<columnName>UNHCR_ORIGIN_CODE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="6A0C477C-F43C-2EDD-1C1D-46CD9C998121">
+<columnName>LOC_NAME_ORIGIN</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="16D4D9C6-F518-8F0E-5085-AB22AF0316C3">
+<columnName>VALUE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="540E3C8B-8C76-3B5B-E778-FA6FD48853EA">
+<columnName>ID</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="85B03FF0-02F3-A397-5162-E31A57A75E35">
+<columnName>ITM_ID</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="186ADCED-3556-2269-E360-A78C075C1B65">
+<columnName>CHAR_VALUE</columnName>
+<tableName>T_POPSEG_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="4A530A8D-8E8C-B2CA-0F55-6CE7FC923D37">
+<columnName>PER_START_DATE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="B075AE6E-52CD-BFD7-1CF5-389C50015570">
+<columnName>STCT_CODE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="3D2C76B2-1810-96C6-55A7-86D56E3508A0">
+<columnName>PERT_DESCRIPTION</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="D8211A25-0671-6FB9-55DF-EEA93EFFEBD7">
+<columnName>PER_END_DATE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="6629DE77-2E2F-D822-CA82-A062BAB9076F">
+<columnName>PSG_ID</columnName>
+<tableName>T_POPSEG_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="3242E8ED-DCC9-3FCF-DC0F-443286FAE033">
+<columnName>PSG_ID</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="4B16E9C5-4992-E4F7-D39B-D938FD6D8EAD">
+<columnName>PSGAT_CODE</columnName>
+<tableName>T_POPSEG_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="48DBDED4-0F9D-C70F-546B-06C48B182BDC">
+<columnName>DIM_ID1</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="265CC3E1-8021-A37B-6E52-D8AF41F42CF6">
+<columnName>DIM_ID2</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="BA587878-E7CB-570C-DB27-CFB6A6F96C72">
+<columnName>DIM_ID3</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="00494BD2-ED80-9035-B910-96CEDB518C17">
+<columnName>DIM_ID4</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="D6E343CD-E7B0-E75D-5B66-F3FA19FC20D0">
+<columnName>DIM_ID5</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="E62283C2-88C3-4B98-34AD-D3F40284789A">
+<columnName>SEX_CODE</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="B14A3EEB-9F8A-D126-F939-C23CE5730475">
+<columnName>AGR_ID</columnName>
+<tableName>STATISTICS</tableName>
+</UsedObject>
+</usedObjects>
+</TableView>
