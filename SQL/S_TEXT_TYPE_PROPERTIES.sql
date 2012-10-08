@@ -10,12 +10,13 @@ organization external
   default directory PSRDATA
   access parameters 
    (records delimited by newline
-    characterset UTF16
+    characterset WE8MSWIN1252
     badfile 'TEXT_TYPE_PROPERTIES.bad'
     nodiscardfile
     nologfile
     skip 1 
-    fields terminated by x'0009'
+    fields terminated by ','
+    optionally enclosed by '"' and '"'
     lrtrim
     missing field values are null
      (TXTT_CODE char(4000),
@@ -24,7 +25,7 @@ organization external
       MULTI_INSTANCE_FLAG char(4000),
       LONG_TEXT_FLAG char(4000),
       NOTES char(4000)))
-  location ('TEXT_TYPE_PROPERTIES.tsv'))
+  location ('TEXT_TYPE_PROPERTIES.csv'))
 reject limit unlimited;
 
 grant select on S_TEXT_TYPE_PROPERTIES to PSR_STAGE;
