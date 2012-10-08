@@ -57,6 +57,26 @@
 <autoIncrementSequenceName>PGR_SEQ</autoIncrementSequenceName>
 <autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
 </Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="START_DATE" id="CD2D10BC-8902-0736-A7A9-30CD884BFD80">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 09:35:21 UTC</createdTime>
+<comment>Identifier of time period</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="END_DATE" id="39A432CD-0928-8352-B9F7-30095E77953F">
+<createdBy>Scott</createdBy>
+<createdTime>2012-10-08 09:46:46 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DST_CODE" id="EA63B773-11E4-F79C-7236-99E4FF9332C0">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-05 14:52:04 UTC</createdTime>
@@ -243,22 +263,6 @@
 <colAssociation fkAssociation="ACDF9357-08AF-72B1-4134-EEF27DB5E1A6" referredColumn="E887FD2B-4164-C0ED-B1AC-5A298B0AAA7E"/>
 </associations>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PER_ID" id="CD2D10BC-8902-0736-A7A9-30CD884BFD80">
-<createdBy>Scott</createdBy>
-<createdTime>2012-09-27 09:35:21 UTC</createdTime>
-<comment>Identifier of time period</comment>
-<ownerDesignName>Population Statistics Reference</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
-<delegate>A60499DA-C2F4-680A-2B87-78D396A5374B</delegate>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="C6E74322-E032-B989-C260-B2196D2663BC" referredColumn="A60499DA-C2F4-680A-2B87-78D396A5374B"/>
-</associations>
-</Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="SEQ_NBR" id="C612EA49-A316-DC41-0097-8955A89E52B5">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-05 15:37:00 UTC</createdTime>
@@ -359,7 +363,7 @@
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-11 09:18:47 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<indexExpression>nvl(DST_CODE, &apos;x&apos;), nvl(LOC_ID_ASYLUM_COUNTRY, 0), nvl(LOC_ID_ORIGIN_COUNTRY, 0), nvl(LOC_ID_ASYLUM, 0), nvl(LOC_ID_ORIGIN, 0), nvl(DIM_ID1, 0), nvl(DIM_ID2, 0), nvl(DIM_ID3, 0), nvl(DIM_ID4, 0), nvl(DIM_ID5, 0), nvl(SEX_CODE, &apos;x&apos;), nvl(AGR_ID, 0), nvl(PER_ID, 0), SEQ_NBR</indexExpression>
+<indexExpression>START_DATE, END_DATE, nvl(DST_CODE, &apos;x&apos;), nvl(LOC_ID_ASYLUM_COUNTRY, 0), nvl(LOC_ID_ORIGIN_COUNTRY, 0), nvl(LOC_ID_ASYLUM, 0), nvl(LOC_ID_ORIGIN, 0), nvl(DIM_ID1, 0), nvl(DIM_ID2, 0), nvl(DIM_ID3, 0), nvl(DIM_ID4, 0), nvl(DIM_ID5, 0), nvl(SEX_CODE, &apos;x&apos;), nvl(AGR_ID, 0), SEQ_NBR</indexExpression>
 <indexState>Unique Plain Index</indexState>
 </ind_PK_UK>
 <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="D88D3808-A552-F3F8-5FFE-F300668C35E8" name="FK_PGR_DIM1">
@@ -489,14 +493,13 @@
 <colUsage columnID="2FED2765-444B-F242-6884-110E92C4DA74"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="68E039DC-42F0-4504-A49E-7CB8708C7E4A" name="FK_PGR_PER">
-<createdBy>Scott</createdBy>
-<createdTime>2012-09-27 11:52:13 UTC</createdTime>
-<ownerDesignName>Population Statistics Reference</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<indexColumnUsage>
-<colUsage columnID="CD2D10BC-8902-0736-A7A9-30CD884BFD80"/>
-</indexColumnUsage>
-</ind_PK_UK>
 </indexes>
+<tableCheckConstraints>
+<tableCheckConstraint class="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint" name="CH_PGR_DATES" id="1D62CD5E-A884-27A0-09FB-07221845D527" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2012-10-08 10:02:14 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<rule>END_DATE &gt; START_DATE</rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
 </Table>

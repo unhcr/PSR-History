@@ -75,20 +75,25 @@
 <colAssociation fkAssociation="640305E8-8463-4BE4-5868-5DEA0C7BB92C" referredColumn="EB338200-AC8F-6607-A8D2-6B97B7122060"/>
 </associations>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PER_ID" id="94054760-D809-F88B-4EEE-0DACCFC1F534">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="START_DATE" id="91AB0554-CF0D-7D45-763F-25D78C1D7036">
+<createdBy>Scott</createdBy>
+<createdTime>2012-10-08 09:35:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="END_DATE" id="94054760-D809-F88B-4EEE-0DACCFC1F534">
 <createdBy>Scott</createdBy>
 <createdTime>2012-03-29 11:59:41 UTC</createdTime>
 <comment>Identifier of time period</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
-<delegate>A60499DA-C2F4-680A-2B87-78D396A5374B</delegate>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
 <autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="A569C6E7-519A-E8CE-A5F3-1C65EBF08D06" referredColumn="A60499DA-C2F4-680A-2B87-78D396A5374B"/>
-</associations>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DST_CODE" id="9DBF51AF-7EEA-B91A-B0F1-75E93A57C684">
 <createdBy>Scott</createdBy>
@@ -395,6 +400,8 @@
 <indexState>Unique Constraint</indexState>
 <indexColumnUsage>
 <colUsage columnID="7F16941E-0450-0982-F034-DF334E5BB70B"/>
+<colUsage columnID="91AB0554-CF0D-7D45-763F-25D78C1D7036"/>
+<colUsage columnID="94054760-D809-F88B-4EEE-0DACCFC1F534"/>
 <colUsage columnID="9DBF51AF-7EEA-B91A-B0F1-75E93A57C684"/>
 <colUsage columnID="C745C7B8-8830-3890-A245-B59538F56022"/>
 <colUsage columnID="380335CA-0046-B573-BA7E-B3CE5BD01E9F"/>
@@ -405,7 +412,6 @@
 <colUsage columnID="4E4DD542-4D84-8A46-4A3B-3A20222E4754"/>
 <colUsage columnID="CDB8781C-20A1-373A-35A4-1AB369F03CB4"/>
 <colUsage columnID="2ACE9384-8C86-F9D2-C19F-5FE05F23B85D"/>
-<colUsage columnID="94054760-D809-F88B-4EEE-0DACCFC1F534"/>
 <colUsage columnID="12403EFF-B965-DC85-DF84-4FD6950E185D"/>
 <colUsage columnID="EA3C65B3-25A8-FB2B-0E83-32CCF773AB29"/>
 <colUsage columnID="FB3DF66E-C821-4D12-59C5-7F782CD76E97"/>
@@ -447,15 +453,6 @@
 <indexState>Foreign Key</indexState>
 <indexColumnUsage>
 <colUsage columnID="CA1A4C22-EC2B-E587-9E08-010ACB965070"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="2EB02C21-1B7E-E4E2-49AD-0A0ECE12CB97" name="FK_STC_PER">
-<createdBy>Scott</createdBy>
-<createdTime>2012-03-29 14:16:41 UTC</createdTime>
-<ownerDesignName>Population Statistics Reference</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<indexColumnUsage>
-<colUsage columnID="94054760-D809-F88B-4EEE-0DACCFC1F534"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="FA4BE08A-1B63-C128-9559-D1FAC6AD6E1A" name="FK_STC_SEX">
@@ -561,7 +558,7 @@
 <colUsage columnID="2ACE9384-8C86-F9D2-C19F-5FE05F23B85D"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="30E71929-BF63-F019-4485-4A78583B6CD6" name="FK_STC_PGR">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="30E71929-BF63-F019-4485-4A78583B6CD6" name="FK_STC_PGR_SUBGROUP">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-27 09:31:06 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -581,4 +578,12 @@
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>
+<tableCheckConstraints>
+<tableCheckConstraint class="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint" name="CH_STC_DATES" id="19D397EE-C160-C5B6-EB56-23DED07EC2B1" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2012-10-08 10:01:59 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<rule>END_DATE &gt; START_DATE</rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
 </Table>
