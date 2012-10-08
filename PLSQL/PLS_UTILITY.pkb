@@ -7,7 +7,7 @@ create or replace package body PLS_UTILITY is
 -- Array of module names.
 --
   type tasModuleName is
-  table of varchar2(48)
+  table of varchar2(64)
   index by binary_integer;
 --
 -- Array of context information.
@@ -28,7 +28,7 @@ create or replace package body PLS_UTILITY is
 --
   gi binary_integer := 0; -- Call stack index
 --
-  gbBacktraceEnabled boolean := false; -- Is backtrace display enabled?
+  gbBacktraceEnabled boolean := true; -- Is backtrace display enabled?
   gbTraceEnabled boolean := false; -- Is trace display enabled?
   gsMatchString varchar2(250); -- Filtering string for trace output
 --
