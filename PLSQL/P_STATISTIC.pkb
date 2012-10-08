@@ -11,7 +11,8 @@ create or replace package body P_STATISTIC is
   procedure INSERT_STATISTIC
    (pnID out P_BASE.tnSTC_ID,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
-    pnPER_ID in P_BASE.tmnPER_ID,
+    pdSTART_DATE in P_BASE.tmdDate,
+    pdEND_DATE in P_BASE.tmdDate,
     psDST_CODE in P_BASE.tmsDST_CODE := null,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
@@ -48,7 +49,9 @@ create or replace package body P_STATISTIC is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_STATISTIC',
-      psSTCT_CODE || '~' || to_char(pnPER_ID) || '~' || psDST_CODE || '~' ||
+      psSTCT_CODE || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD')  || '~' || to_char(pdEND_DATE, 'YYYY-MM-DD')  || '~' ||
+        psDST_CODE || '~' ||
         to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' || to_char(pnLOC_ID_ASYLUM) || '~' ||
         to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' || to_char(pnLOC_ID_ORIGIN) || '~' ||
         to_char(pnDIM_ID1) || '~' || to_char(pnDIM_ID2) || '~' || to_char(pnDIM_ID3) || '~' ||
@@ -141,12 +144,12 @@ create or replace package body P_STATISTIC is
     end if;
   --
     insert into T_STATISTICS
-     (ID, STCT_CODE, PER_ID, DST_CODE,
+     (ID, STCT_CODE, START_DATE, END_DATE, DST_CODE,
       LOC_ID_ASYLUM_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN_COUNTRY, LOC_ID_ORIGIN,
       DIM_ID1, DIM_ID2, DIM_ID3, DIM_ID4, DIM_ID5,
       SEX_CODE, AGR_ID, PGR_ID_SUBGROUP, PPG_ID, VALUE)
     values
-     (STC_SEQ.nextval, psSTCT_CODE, pnPER_ID, psDST_CODE,
+     (STC_SEQ.nextval, psSTCT_CODE, pdSTART_DATE, pdEND_DATE, psDST_CODE,
       pnLOC_ID_ASYLUM_COUNTRY, pnLOC_ID_ASYLUM, pnLOC_ID_ORIGIN_COUNTRY, pnLOC_ID_ORIGIN,
       pnDIM_ID1, pnDIM_ID2, pnDIM_ID3, pnDIM_ID4, pnDIM_ID5,
       psSEX_CODE, pnAGR_ID, pnPGR_ID_SUBGROUP, pnPPG_ID, pnVALUE)
