@@ -6,7 +6,7 @@ create or replace package P_STATISTIC_TYPE is
 --  Procedures for maintenance of statistic types and groups.
 --
 --  Change History:
---  30-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  01-Oct-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -27,6 +27,30 @@ create or replace package P_STATISTIC_TYPE is
 --  psCODE - Statistic type code (mandatory).
 --  psLANG_CODE - Language code of the textual description (mandatory).
 --  psDescription - Textual description of statistic type (mandatory).
+--  psDST_CODE_FLAG - Flag indicating usage of Displacement Status dimension (mandatory).
+--  psLOC_ID_ASYLUM_COUNTRY_FLAG - Flag indicating usage of Country of Asylum dimension (mandatory).
+--  psLOC_ID_ASYLUM_FLAG - Flag indicating usage of Location of Asylum dimension (mandatory).
+--  psLOC_ID_ORIGIN_COUNTRY_FLAG - Flag indicating usage of (Country of) Origin dimension
+--    (mandatory).
+--  psLOC_ID_ORIGIN_FLAG - Flag indicating usage of Location of Origin dimension (mandatory).
+--  psDIM_ID1_FLAG - Flag indicating usage of generic dimension 1 (mandatory).
+--  psDIMT_CODE1 - Dimension type code to be used for dimension 1 (mandatory if psDIM_ID1_FLAG is
+--    M or O; must be null if psDIM_ID1_FLAG is N).
+--  psDIM_ID2_FLAG - Flag indicating usage of generic dimension 2 (mandatory).
+--  psDIMT_CODE2 - Dimension type code to be used for dimension 2 (mandatory if psDIM_ID2_FLAG is
+--    M or O; must be null if psDIM_ID2_FLAG is N).
+--  psDIM_ID3_FLAG - Flag indicating usage of generic dimension 3 (mandatory).
+--  psDIMT_CODE3 - Dimension type code to be used for dimension 3 (mandatory if psDIM_ID3_FLAG is
+--    M or O; must be null if psDIM_ID3_FLAG is N).
+--  psDIM_ID4_FLAG - Flag indicating usage of generic dimension 4 (mandatory).
+--  psDIMT_CODE4 - Dimension type code to be used for dimension 4 (mandatory if psDIM_ID4_FLAG is
+--    M or O; must be null if psDIM_ID4_FLAG is N).
+--  psDIM_ID5_FLAG - Flag indicating usage of generic dimension 5 (mandatory).
+--  psDIMT_CODE5 - Dimension type code to be used for dimension 5 (mandatory if psDIM_ID5_FLAG is
+--    M or O; must be null if psDIM_ID5_FLAG is N).
+--  psSEX_CODE_FLAG - Flag indicating usage of Sex dimension (mandatory).
+--  psAGR_ID_FLAG - Flag indicating usage of Age Range dimension (mandatory).
+--  psPGR_ID_SUBGROUP_FLAG - Flag indicating usage of Population subgroup dimension (mandatory).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of statistic types (optional).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the statistic type is currently available for use
 --    (optional: defaults to Y).
@@ -35,6 +59,24 @@ create or replace package P_STATISTIC_TYPE is
    (psCODE in P_BASE.tmsSTCT_CODE,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText,
+    psDST_CODE_FLAG in P_BASE.tmsFlag,
+    psLOC_ID_ASYLUM_COUNTRY_FLAG in P_BASE.tmsFlag,
+    psLOC_ID_ASYLUM_FLAG in P_BASE.tmsFlag,
+    psLOC_ID_ORIGIN_COUNTRY_FLAG in P_BASE.tmsFlag,
+    psLOC_ID_ORIGIN_FLAG in P_BASE.tmsFlag,
+    psDIM_ID1_FLAG in P_BASE.tmsFlag,
+    psDIMT_CODE1 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID2_FLAG in P_BASE.tmsFlag,
+    psDIMT_CODE2 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID3_FLAG in P_BASE.tmsFlag,
+    psDIMT_CODE3 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID4_FLAG in P_BASE.tmsFlag,
+    psDIMT_CODE4 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID5_FLAG in P_BASE.tmsFlag,
+    psDIMT_CODE5 in P_BASE.tsDIMT_CODE := null,
+    psSEX_CODE_FLAG in P_BASE.tmsFlag,
+    psAGR_ID_FLAG in P_BASE.tmsFlag,
+    psPGR_ID_SUBGROUP_FLAG in P_BASE.tmsFlag,
     pnDISPLAY_SEQ in P_BASE.tnSTCT_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tmsSTCT_ACTIVE_FLAG := 'Y');
 --
@@ -52,6 +94,42 @@ create or replace package P_STATISTIC_TYPE is
 --    psDescription is specified).
 --  psDescription - Textual description of statistic type (optional: if not specified, the
 --    description is not changed).
+--  psDST_CODE_FLAG - Flag indicating usage of Displacement Status dimension (optional: if not
+--    specified, the usage flag is not changed).
+--  psLOC_ID_ASYLUM_COUNTRY_FLAG - Flag indicating usage of Country of Asylum dimension (optional:
+--    if not specified, the usage flag is not changed).
+--  psLOC_ID_ASYLUM_FLAG - Flag indicating usage of Location of Asylum dimension (optional: if not
+--    specified, the usage flag is not changed).
+--  psLOC_ID_ORIGIN_COUNTRY_FLAG - Flag indicating usage of (Country of) Origin dimension (optional:
+--    if not specified, the usage flag is not changed).
+--  psLOC_ID_ORIGIN_FLAG - Flag indicating usage of Location of Origin dimension (optional: if not
+--    specified, the usage flag is not changed).
+--  psDIM_ID1_FLAG - Flag indicating usage of generic dimension 1 (optional: if not specified, the
+--    usage flag is not changed).
+--  psDIMT_CODE1 - Dimension type code to be used for dimension 1 (mandatory if psDIM_ID1_FLAG is
+--    M or O; must be null if psDIM_ID1_FLAG is N or not specified).
+--  psDIM_ID2_FLAG - Flag indicating usage of generic dimension 2 (optional: if not specified, the
+--    usage flag is not changed).
+--  psDIMT_CODE2 - Dimension type code to be used for dimension 2 (mandatory if psDIM_ID2_FLAG is
+--    M or O; must be null if psDIM_ID2_FLAG is N or not specified).
+--  psDIM_ID3_FLAG - Flag indicating usage of generic dimension 3 (optional: if not specified, the
+--    usage flag is not changed).
+--  psDIMT_CODE3 - Dimension type code to be used for dimension 3 (mandatory if psDIM_ID3_FLAG is
+--    M or O; must be null if psDIM_ID3_FLAG is N or not specified).
+--  psDIM_ID4_FLAG - Flag indicating usage of generic dimension 4 (optional: if not specified, the
+--    usage flag is not changed).
+--  psDIMT_CODE4 - Dimension type code to be used for dimension 4 (mandatory if psDIM_ID4_FLAG is
+--    M or O; must be null if psDIM_ID4_FLAG is N or not specified).
+--  psDIM_ID5_FLAG - Flag indicating usage of generic dimension 5 (optional: if not specified, the
+--    usage flag is not changed).
+--  psDIMT_CODE5 - Dimension type code to be used for dimension 5 (mandatory if psDIM_ID5_FLAG is
+--    M or O; must be null if psDIM_ID5_FLAG is N or not specified).
+--  psSEX_CODE_FLAG - Flag indicating usage of Sex dimension (optional: if not specified, the
+--    usage flag is not changed).
+--  psAGR_ID_FLAG - Flag indicating usage of Age Range dimension (optional: if not specified, the
+--    usage flag is not changed).
+--  psPGR_ID_SUBGROUP_FLAG - Flag indicating usage of Population subgroup dimension (optional: if
+--    not specified, the usage flag is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of statistic types (optional: if not
 --    specified, the existing display sequence is not changed; if null is specified, the display
 --    sequence is set to null).
@@ -63,6 +141,24 @@ create or replace package P_STATISTIC_TYPE is
     pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
+    psDST_CODE_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ASYLUM_COUNTRY_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ASYLUM_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ORIGIN_COUNTRY_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ORIGIN_FLAG in P_BASE.tsFlag := null,
+    psDIM_ID1_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE1 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID2_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE2 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID3_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE3 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID4_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE4 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID5_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE5 in P_BASE.tsDIMT_CODE := null,
+    psSEX_CODE_FLAG in P_BASE.tsFlag := null,
+    psAGR_ID_FLAG in P_BASE.tsFlag := null,
+    psPGR_ID_SUBGROUP_FLAG in P_BASE.tsFlag := null,
     pnDISPLAY_SEQ in P_BASE.tnSTCT_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsSTCT_ACTIVE_FLAG := null);
 --
@@ -80,6 +176,42 @@ create or replace package P_STATISTIC_TYPE is
 --    statistic type but must be specified if psDescription is specified).
 --  psDescription - Textual description of statistic type (optional when updating an existing
 --    statistic type; if not specified, the description is not changed).
+--  psDST_CODE_FLAG - Flag indicating usage of Displacement Status dimension (optional when updating
+--    an existing statistic type; if not specified, the usage flag is not changed).
+--  psLOC_ID_ASYLUM_COUNTRY_FLAG - Flag indicating usage of Country of Asylum dimension (optional
+--    when updating an existing statistic type; if not specified, the usage flag is not changed).
+--  psLOC_ID_ASYLUM_FLAG - Flag indicating usage of Location of Asylum dimension (optional when
+--    updating an existing statistic type; if not specified, the usage flag is not changed).
+--  psLOC_ID_ORIGIN_COUNTRY_FLAG - Flag indicating usage of (Country of) Origin dimension (optional
+--    when updating an existing statistic type; if not specified, the usage flag is not changed).
+--  psLOC_ID_ORIGIN_FLAG - Flag indicating usage of Location of Origin dimension (optional when
+--    updating an existing statistic type; if not specified, the usage flag is not changed).
+--  psDIM_ID1_FLAG - Flag indicating usage of generic dimension 1 (optional when updating an
+--    existing statistic type; if not specified, the usage flag is not changed).
+--  psDIMT_CODE1 - Dimension type code to be used for dimension 1 (mandatory if psDIM_ID1_FLAG is
+--    M or O; must be null if psDIM_ID1_FLAG is N or not specified).
+--  psDIM_ID2_FLAG - Flag indicating usage of generic dimension 2 (optional when updating an
+--    existing statistic type; if not specified, the usage flag is not changed).
+--  psDIMT_CODE2 - Dimension type code to be used for dimension 2 (mandatory if psDIM_ID2_FLAG is
+--    M or O; must be null if psDIM_ID2_FLAG is N or not specified).
+--  psDIM_ID3_FLAG - Flag indicating usage of generic dimension 3 (optional when updating an
+--    existing statistic type; if not specified, the usage flag is not changed).
+--  psDIMT_CODE3 - Dimension type code to be used for dimension 3 (mandatory if psDIM_ID3_FLAG is
+--    M or O; must be null if psDIM_ID3_FLAG is N or not specified).
+--  psDIM_ID4_FLAG - Flag indicating usage of generic dimension 4 (optional when updating an
+--    existing statistic type; if not specified, the usage flag is not changed).
+--  psDIMT_CODE4 - Dimension type code to be used for dimension 4 (mandatory if psDIM_ID4_FLAG is
+--    M or O; must be null if psDIM_ID4_FLAG is N or not specified).
+--  psDIM_ID5_FLAG - Flag indicating usage of generic dimension 5 (optional when updating an
+--    existing statistic type; if not specified, the usage flag is not changed).
+--  psDIMT_CODE5 - Dimension type code to be used for dimension 5 (mandatory if psDIM_ID5_FLAG is
+--    M or O; must be null if psDIM_ID5_FLAG is N or not specified).
+--  psSEX_CODE_FLAG - Flag indicating usage of Sex dimension (optional when updating an existing
+--    statistic type; if not specified, the usage flag is not changed).
+--  psAGR_ID_FLAG - Flag indicating usage of Age Range dimension (optional when updating an existing
+--    statistic type; if not specified, the usage flag is not changed).
+--  psPGR_ID_SUBGROUP_FLAG - Flag indicating usage of Population subgroup dimension (optional when
+--    updating an existing statistic type; if not specified, the usage flag is not changed).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of statistic types (optional: if not
 --    specified, an existing display sequence is not changed and a new one is set to null; if null
 --    is specified, the display sequence is set to null).
@@ -91,6 +223,24 @@ create or replace package P_STATISTIC_TYPE is
     pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
+    psDST_CODE_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ASYLUM_COUNTRY_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ASYLUM_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ORIGIN_COUNTRY_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ORIGIN_FLAG in P_BASE.tsFlag := null,
+    psDIM_ID1_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE1 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID2_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE2 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID3_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE3 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID4_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE4 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID5_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE5 in P_BASE.tsDIMT_CODE := null,
+    psSEX_CODE_FLAG in P_BASE.tsFlag := null,
+    psAGR_ID_FLAG in P_BASE.tsFlag := null,
+    psPGR_ID_SUBGROUP_FLAG in P_BASE.tsFlag := null,
     pnDISPLAY_SEQ in P_BASE.tnSTCT_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsSTCT_ACTIVE_FLAG := null);
 --

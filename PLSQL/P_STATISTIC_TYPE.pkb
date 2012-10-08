@@ -12,6 +12,24 @@ create or replace package body P_STATISTIC_TYPE is
    (psCODE in P_BASE.tmsSTCT_CODE,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText,
+    psDST_CODE_FLAG in P_BASE.tmsFlag,
+    psLOC_ID_ASYLUM_COUNTRY_FLAG in P_BASE.tmsFlag,
+    psLOC_ID_ASYLUM_FLAG in P_BASE.tmsFlag,
+    psLOC_ID_ORIGIN_COUNTRY_FLAG in P_BASE.tmsFlag,
+    psLOC_ID_ORIGIN_FLAG in P_BASE.tmsFlag,
+    psDIM_ID1_FLAG in P_BASE.tmsFlag,
+    psDIMT_CODE1 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID2_FLAG in P_BASE.tmsFlag,
+    psDIMT_CODE2 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID3_FLAG in P_BASE.tmsFlag,
+    psDIMT_CODE3 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID4_FLAG in P_BASE.tmsFlag,
+    psDIMT_CODE4 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID5_FLAG in P_BASE.tmsFlag,
+    psDIMT_CODE5 in P_BASE.tsDIMT_CODE := null,
+    psSEX_CODE_FLAG in P_BASE.tmsFlag,
+    psAGR_ID_FLAG in P_BASE.tmsFlag,
+    psPGR_ID_SUBGROUP_FLAG in P_BASE.tmsFlag,
     pnDISPLAY_SEQ in P_BASE.tnSTCT_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tmsSTCT_ACTIVE_FLAG := 'Y')
   is
@@ -20,19 +38,39 @@ create or replace package body P_STATISTIC_TYPE is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_STATISTIC_TYPE',
-      psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+      psCODE || '~' || psDST_CODE_FLAG || '~' ||
+        psLOC_ID_ASYLUM_COUNTRY_FLAG || '~' || psLOC_ID_ASYLUM_FLAG || '~' ||
+        psLOC_ID_ORIGIN_COUNTRY_FLAG || '~' || psLOC_ID_ORIGIN_FLAG || '~' ||
+        psDIM_ID1_FLAG || '~' || psDIMT_CODE1 || '~' ||
+        psDIM_ID2_FLAG || '~' || psDIMT_CODE2 || '~' ||
+        psDIM_ID3_FLAG || '~' || psDIMT_CODE3 || '~' ||
+        psDIM_ID4_FLAG || '~' || psDIMT_CODE4 || '~' ||
+        psDIM_ID5_FLAG || '~' || psDIMT_CODE5 || '~' ||
+        psSEX_CODE_FLAG || '~' || psAGR_ID_FLAG || '~' || psPGR_ID_SUBGROUP_FLAG || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     P_TEXT.SET_TEXT(nITM_ID, 'STCT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into T_STATISTIC_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
-    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
+    insert into T_STATISTIC_TYPES
+     (CODE, DST_CODE_FLAG,
+      LOC_ID_ASYLUM_COUNTRY_FLAG, LOC_ID_ASYLUM_FLAG,
+      LOC_ID_ORIGIN_COUNTRY_FLAG, LOC_ID_ORIGIN_FLAG,
+      DIM_ID1_FLAG, DIMT_CODE1, DIM_ID2_FLAG, DIMT_CODE2, DIM_ID3_FLAG, DIMT_CODE3,
+      DIM_ID4_FLAG, DIMT_CODE4, DIM_ID5_FLAG, DIMT_CODE5, SEX_CODE_FLAG, AGR_ID_FLAG,
+      PGR_ID_SUBGROUP_FLAG, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
+    values
+     (psCODE, psDST_CODE_FLAG,
+      psLOC_ID_ASYLUM_COUNTRY_FLAG, psLOC_ID_ASYLUM_FLAG,
+      psLOC_ID_ORIGIN_COUNTRY_FLAG, psLOC_ID_ORIGIN_FLAG,
+      psDIM_ID1_FLAG, psDIMT_CODE1, psDIM_ID2_FLAG, psDIMT_CODE2, psDIM_ID3_FLAG, psDIMT_CODE3,
+      psDIM_ID4_FLAG, psDIMT_CODE4, psDIM_ID5_FLAG, psDIMT_CODE5, psSEX_CODE_FLAG, psAGR_ID_FLAG,
+      psPGR_ID_SUBGROUP_FLAG, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_STATISTIC_TYPE;
 --
 -- ----------------------------------------
@@ -44,6 +82,24 @@ create or replace package body P_STATISTIC_TYPE is
     pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
+    psDST_CODE_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ASYLUM_COUNTRY_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ASYLUM_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ORIGIN_COUNTRY_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ORIGIN_FLAG in P_BASE.tsFlag := null,
+    psDIM_ID1_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE1 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID2_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE2 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID3_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE3 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID4_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE4 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID5_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE5 in P_BASE.tsDIMT_CODE := null,
+    psSEX_CODE_FLAG in P_BASE.tsFlag := null,
+    psAGR_ID_FLAG in P_BASE.tsFlag := null,
+    psPGR_ID_SUBGROUP_FLAG in P_BASE.tsFlag := null,
     pnDISPLAY_SEQ in P_BASE.tnSTCT_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsSTCT_ACTIVE_FLAG := null)
   is
@@ -54,9 +110,17 @@ create or replace package body P_STATISTIC_TYPE is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_STATISTIC_TYPE',
-      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) ||
-        '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
-        to_char(length(psDescription)) || ':' || psDescription);
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDST_CODE_FLAG || '~' ||
+        psLOC_ID_ASYLUM_COUNTRY_FLAG || '~' || psLOC_ID_ASYLUM_FLAG || '~' ||
+        psLOC_ID_ORIGIN_COUNTRY_FLAG || '~' || psLOC_ID_ORIGIN_FLAG || '~' ||
+        psDIM_ID1_FLAG || '~' || psDIMT_CODE1 || '~' ||
+        psDIM_ID2_FLAG || '~' || psDIMT_CODE2 || '~' ||
+        psDIM_ID3_FLAG || '~' || psDIMT_CODE3 || '~' ||
+        psDIM_ID4_FLAG || '~' || psDIMT_CODE4 || '~' ||
+        psDIM_ID5_FLAG || '~' || psDIMT_CODE5 || '~' ||
+        psSEX_CODE_FLAG || '~' || psAGR_ID_FLAG || '~' || psPGR_ID_SUBGROUP_FLAG || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     select ITM_ID, VERSION_NBR, rowid
     into nITM_ID, nVERSION_NBR, xSTCT_ROWID
@@ -71,7 +135,30 @@ create or replace package body P_STATISTIC_TYPE is
       end if;
     --
       update T_STATISTIC_TYPES
-      set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
+      set DST_CODE_FLAG = nvl(psDST_CODE_FLAG, DST_CODE_FLAG),
+        LOC_ID_ASYLUM_COUNTRY_FLAG = nvl(psLOC_ID_ASYLUM_COUNTRY_FLAG, LOC_ID_ASYLUM_COUNTRY_FLAG),
+        LOC_ID_ASYLUM_FLAG = nvl(psLOC_ID_ASYLUM_FLAG, LOC_ID_ASYLUM_FLAG),
+        LOC_ID_ORIGIN_COUNTRY_FLAG = nvl(psLOC_ID_ORIGIN_COUNTRY_FLAG, LOC_ID_ORIGIN_COUNTRY_FLAG),
+        LOC_ID_ORIGIN_FLAG = nvl(psLOC_ID_ORIGIN_FLAG, LOC_ID_ORIGIN_FLAG),
+        DIM_ID1_FLAG = nvl(psDIM_ID1_FLAG, DIM_ID1_FLAG),
+        DIMT_CODE1 =
+          case when psDIM_ID1_FLAG = 'N' then psDIMT_CODE1 else nvl(psDIMT_CODE1, DIMT_CODE1) end,
+        DIM_ID2_FLAG = nvl(psDIM_ID2_FLAG, DIM_ID2_FLAG),
+        DIMT_CODE2 =
+          case when psDIM_ID2_FLAG = 'N' then psDIMT_CODE2 else nvl(psDIMT_CODE2, DIMT_CODE2) end,
+        DIM_ID3_FLAG = nvl(psDIM_ID3_FLAG, DIM_ID3_FLAG),
+        DIMT_CODE3 =
+          case when psDIM_ID3_FLAG = 'N' then psDIMT_CODE3 else nvl(psDIMT_CODE3, DIMT_CODE3) end,
+        DIM_ID4_FLAG = nvl(psDIM_ID4_FLAG, DIM_ID4_FLAG),
+        DIMT_CODE4 =
+          case when psDIM_ID4_FLAG = 'N' then psDIMT_CODE4 else nvl(psDIMT_CODE4, DIMT_CODE4) end,
+        DIM_ID5_FLAG = nvl(psDIM_ID5_FLAG, DIM_ID5_FLAG),
+        DIMT_CODE5 =
+          case when psDIM_ID5_FLAG = 'N' then psDIMT_CODE5 else nvl(psDIMT_CODE5, DIMT_CODE5) end,
+        SEX_CODE_FLAG = nvl(psSEX_CODE_FLAG, SEX_CODE_FLAG),
+        AGR_ID_FLAG = nvl(psAGR_ID_FLAG, AGR_ID_FLAG),
+        PGR_ID_SUBGROUP_FLAG = nvl(psPGR_ID_SUBGROUP_FLAG, PGR_ID_SUBGROUP_FLAG),
+        DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
       where rowid = xSTCT_ROWID
@@ -83,8 +170,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_STATISTIC_TYPE;
 --
 -- ----------------------------------------
@@ -96,33 +182,69 @@ create or replace package body P_STATISTIC_TYPE is
     pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
+    psDST_CODE_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ASYLUM_COUNTRY_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ASYLUM_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ORIGIN_COUNTRY_FLAG in P_BASE.tsFlag := null,
+    psLOC_ID_ORIGIN_FLAG in P_BASE.tsFlag := null,
+    psDIM_ID1_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE1 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID2_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE2 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID3_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE3 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID4_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE4 in P_BASE.tsDIMT_CODE := null,
+    psDIM_ID5_FLAG in P_BASE.tsFlag := null,
+    psDIMT_CODE5 in P_BASE.tsDIMT_CODE := null,
+    psSEX_CODE_FLAG in P_BASE.tsFlag := null,
+    psAGR_ID_FLAG in P_BASE.tsFlag := null,
+    psPGR_ID_SUBGROUP_FLAG in P_BASE.tsFlag := null,
     pnDISPLAY_SEQ in P_BASE.tnSTCT_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsSTCT_ACTIVE_FLAG := null)
   is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_STATISTIC_TYPE',
-      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
-        psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDST_CODE_FLAG || '~' ||
+        psLOC_ID_ASYLUM_COUNTRY_FLAG || '~' || psLOC_ID_ASYLUM_FLAG || '~' ||
+        psLOC_ID_ORIGIN_COUNTRY_FLAG || '~' || psLOC_ID_ORIGIN_FLAG || '~' ||
+        psDIM_ID1_FLAG || '~' || psDIMT_CODE1 || '~' ||
+        psDIM_ID2_FLAG || '~' || psDIMT_CODE2 || '~' ||
+        psDIM_ID3_FLAG || '~' || psDIMT_CODE3 || '~' ||
+        psDIM_ID4_FLAG || '~' || psDIMT_CODE4 || '~' ||
+        psDIM_ID5_FLAG || '~' || psDIMT_CODE5 || '~' ||
+        psSEX_CODE_FLAG || '~' || psAGR_ID_FLAG || '~' || psPGR_ID_SUBGROUP_FLAG || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     if pnVERSION_NBR is null
     then
-      INSERT_STATISTIC_TYPE(psCODE, psLANG_CODE, psDescription,
-                            case when pnDISPLAY_SEQ = -1e6 then null else pnDISPLAY_SEQ end,
-                            nvl(psACTIVE_FLAG, 'Y'));
+      INSERT_STATISTIC_TYPE
+       (psCODE, psLANG_CODE, psDescription, psDST_CODE_FLAG,
+        psLOC_ID_ASYLUM_COUNTRY_FLAG, psLOC_ID_ASYLUM_FLAG,
+        psLOC_ID_ORIGIN_COUNTRY_FLAG, psLOC_ID_ORIGIN_FLAG,
+        psDIM_ID1_FLAG, psDIMT_CODE1, psDIM_ID2_FLAG, psDIMT_CODE2, psDIM_ID3_FLAG, psDIMT_CODE3,
+        psDIM_ID4_FLAG, psDIMT_CODE4, psDIM_ID5_FLAG, psDIMT_CODE5,
+        psSEX_CODE_FLAG, psAGR_ID_FLAG, psPGR_ID_SUBGROUP_FLAG,
+        case when pnDISPLAY_SEQ = -1e6 then null else pnDISPLAY_SEQ end,
+        nvl(psACTIVE_FLAG, 'Y'));
     --
       pnVERSION_NBR := 1;
     else
-      UPDATE_STATISTIC_TYPE(psCODE, pnVERSION_NBR, psLANG_CODE, psDescription,
-                            pnDISPLAY_SEQ, psACTIVE_FLAG);
+      UPDATE_STATISTIC_TYPE
+       (psCODE, pnVERSION_NBR, psLANG_CODE, psDescription, psDST_CODE_FLAG,
+        psLOC_ID_ASYLUM_COUNTRY_FLAG, psLOC_ID_ASYLUM_FLAG,
+        psLOC_ID_ORIGIN_COUNTRY_FLAG, psLOC_ID_ORIGIN_FLAG,
+        psDIM_ID1_FLAG, psDIMT_CODE1, psDIM_ID2_FLAG, psDIMT_CODE2, psDIM_ID3_FLAG, psDIMT_CODE3,
+        psDIM_ID4_FLAG, psDIMT_CODE4, psDIM_ID5_FLAG, psDIMT_CODE5,
+        psSEX_CODE_FLAG, psAGR_ID_FLAG, psPGR_ID_SUBGROUP_FLAG, pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_STATISTIC_TYPE;
 --
 -- ----------------------------------------
@@ -159,8 +281,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_STATISTIC_TYPE;
 --
 -- ----------------------------------------
@@ -185,8 +306,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_STCT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -208,8 +328,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_STCT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -254,8 +373,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_STCT_TEXT;
 --
 -- ----------------------------------------
@@ -299,8 +417,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_STCT_TEXT;
 --
 -- ----------------------------------------
@@ -330,8 +447,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_STATISTIC_GROUP;
 --
 -- ----------------------------------------
@@ -382,8 +498,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_STATISTIC_GROUP;
 --
 -- ----------------------------------------
@@ -420,8 +535,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_STATISTIC_GROUP;
 --
 -- ----------------------------------------
@@ -458,8 +572,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_STATISTIC_GROUP;
 --
 -- ----------------------------------------
@@ -484,8 +597,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_STCG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -507,8 +619,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_STCG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -553,8 +664,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_STCG_TEXT;
 --
 -- ----------------------------------------
@@ -598,8 +708,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_STCG_TEXT;
 --
 -- ----------------------------------------
@@ -621,8 +730,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_STATISTIC_TYPE_GROUPING;
 --
 -- ----------------------------------------
@@ -663,8 +771,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_STATISTIC_TYPE_GROUPING;
 --
 -- ----------------------------------------
@@ -713,8 +820,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_STCTG_TEXT;
 --
 -- ----------------------------------------
@@ -760,8 +866,7 @@ create or replace package body P_STATISTIC_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_STCTG_TEXT;
 --
 -- =====================================
