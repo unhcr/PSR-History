@@ -22,6 +22,8 @@ create or replace package P_BASE is
   subtype tsText is varchar2;
   subtype tmsText is tsText not null;
   subtype tsNormalText is varchar2(1000);
+  subtype tsFlag is varchar2(1);
+  subtype tmsFlag is tsFlag not null;
   subtype tnNumber is number;
   subtype tnInteger is integer;
   subtype tdDate is date;
@@ -98,6 +100,19 @@ create or replace package P_BASE is
   subtype tmsLANG_ACTIVE_FLAG is tsLANG_ACTIVE_FLAG not null;
   subtype tnLANG_VERSION_NBR is T_LANGUAGES.VERSION_NBR%type;
 --
+-- T_LOCATIONS
+--
+  subtype tnLOC_ID is T_LOCATIONS.ID%type;
+  subtype tmnLOC_ID is tnLOC_ID not null;
+  subtype tnLOC_VERSION_NBR is T_LOCATIONS.VERSION_NBR%type;
+--
+-- T_LOCATION_ATTRIBUTES
+--
+  subtype tsLOCA_CHAR_VALUE is T_LOCATION_ATTRIBUTES.CHAR_VALUE%type;
+  subtype tnLOCA_NUM_VALUE is T_LOCATION_ATTRIBUTES.NUM_VALUE%type;
+  subtype tdLOCA_DATE_VALUE is T_LOCATION_ATTRIBUTES.DATE_VALUE%type;
+  subtype tnLOCA_VERSION_NBR is T_LOCATION_ATTRIBUTES.VERSION_NBR%type;
+--
 -- T_LOCATION_ATTRIBUTE_TYPES
 --
   subtype tmsLOCAT_CODE is T_LOCATION_ATTRIBUTE_TYPES.CODE%type not null;
@@ -108,12 +123,9 @@ create or replace package P_BASE is
   subtype tmsLOCAT_ACTIVE_FLAG is tsLOCAT_ACTIVE_FLAG not null;
   subtype tnLOCAT_VERSION_NBR is T_LOCATION_ATTRIBUTE_TYPES.VERSION_NBR%type;
 --
--- T_LOCATION_ATTRIBUTES
+-- T_LOCATION_RELATIONSHIPS
 --
-  subtype tsLOCA_CHAR_VALUE is T_LOCATION_ATTRIBUTES.CHAR_VALUE%type;
-  subtype tnLOCA_NUM_VALUE is T_LOCATION_ATTRIBUTES.NUM_VALUE%type;
-  subtype tdLOCA_DATE_VALUE is T_LOCATION_ATTRIBUTES.DATE_VALUE%type;
-  subtype tnLOCA_VERSION_NBR is T_LOCATION_ATTRIBUTES.VERSION_NBR%type;
+  subtype tnLOCR_VERSION_NBR is T_LOCATION_RELATIONSHIPS.VERSION_NBR%type;
 --
 -- T_LOCATION_RELATIONSHIP_TYPES
 --
@@ -124,9 +136,14 @@ create or replace package P_BASE is
   subtype tmsLOCRT_ACTIVE_FLAG is tsLOCRT_ACTIVE_FLAG not null;
   subtype tnLOCRT_VERSION_NBR is T_LOCATION_RELATIONSHIP_TYPES.VERSION_NBR%type;
 --
--- T_LOCATION_RELATIONSHIPS
+-- T_LOCATION_TYPES
 --
-  subtype tnLOCR_VERSION_NBR is T_LOCATION_RELATIONSHIPS.VERSION_NBR%type;
+  subtype tsLOCT_CODE is T_LOCATION_TYPES.CODE%type;
+  subtype tmsLOCT_CODE is tsLOCT_CODE not null;
+  subtype tnLOCT_DISPLAY_SEQ is T_LOCATION_TYPES.DISPLAY_SEQ%type;
+  subtype tsLOCT_ACTIVE_FLAG is T_LOCATION_TYPES.ACTIVE_FLAG%type;
+  subtype tmsLOCT_ACTIVE_FLAG is tsLOCT_ACTIVE_FLAG not null;
+  subtype tnLOCT_VERSION_NBR is T_LOCATION_TYPES.VERSION_NBR%type;
 --
 -- T_LOCATION_TYPE_RELATIONSHIPS
 --
@@ -141,43 +158,18 @@ create or replace package P_BASE is
   subtype tmsLOCTV_ACTIVE_FLAG is tsLOCTV_ACTIVE_FLAG not null;
   subtype tnLOCTV_VERSION_NBR is T_LOCATION_TYPE_VARIANTS.VERSION_NBR%type;
 --
--- T_LOCATION_TYPES
---
-  subtype tsLOCT_CODE is T_LOCATION_TYPES.CODE%type;
-  subtype tmsLOCT_CODE is tsLOCT_CODE not null;
-  subtype tnLOCT_DISPLAY_SEQ is T_LOCATION_TYPES.DISPLAY_SEQ%type;
-  subtype tsLOCT_ACTIVE_FLAG is T_LOCATION_TYPES.ACTIVE_FLAG%type;
-  subtype tmsLOCT_ACTIVE_FLAG is tsLOCT_ACTIVE_FLAG not null;
-  subtype tnLOCT_VERSION_NBR is T_LOCATION_TYPES.VERSION_NBR%type;
---
--- T_LOCATIONS
---
-  subtype tnLOC_ID is T_LOCATIONS.ID%type;
-  subtype tmnLOC_ID is tnLOC_ID not null;
-  subtype tnLOC_VERSION_NBR is T_LOCATIONS.VERSION_NBR%type;
---
 -- T_MESSAGES
 --
   subtype tnMSG_SEQ_NBR is T_MESSAGES.SEQ_NBR%type;
   subtype tsMSG_SEVERITY is T_MESSAGES.SEVERITY%type;
   subtype tnMSG_VERSION_NBR is T_MESSAGES.VERSION_NBR%type;
 --
--- T_POPSEG_ATTRIBUTE_TYPES
+-- T_POPULATION_GROUPS
 --
-  subtype tmsPSGAT_CODE is T_POPSEG_ATTRIBUTE_TYPES.CODE%type not null;
-  subtype tsPSGAT_DATA_TYPE is T_POPSEG_ATTRIBUTE_TYPES.DATA_TYPE%type;
-  subtype tmsPSGAT_DATA_TYPE is tsPSGAT_DATA_TYPE not null;
-  subtype tnPSGAT_DISPLAY_SEQ is T_POPSEG_ATTRIBUTE_TYPES.DISPLAY_SEQ%type;
-  subtype tsPSGAT_ACTIVE_FLAG is T_POPSEG_ATTRIBUTE_TYPES.ACTIVE_FLAG%type;
-  subtype tmsPSGAT_ACTIVE_FLAG is tsPSGAT_ACTIVE_FLAG not null;
-  subtype tnPSGAT_VERSION_NBR is T_POPSEG_ATTRIBUTE_TYPES.VERSION_NBR%type;
---
--- T_POPSEG_ATTRIBUTES
---
-  subtype tsPSGA_CHAR_VALUE is T_POPSEG_ATTRIBUTES.CHAR_VALUE%type;
-  subtype tnPSGA_NUM_VALUE is T_POPSEG_ATTRIBUTES.NUM_VALUE%type;
-  subtype tdPSGA_DATE_VALUE is T_POPSEG_ATTRIBUTES.DATE_VALUE%type;
-  subtype tnPSGA_VERSION_NBR is T_POPSEG_ATTRIBUTES.VERSION_NBR%type;
+  subtype tnPGR_ID is T_POPULATION_GROUPS.ID%type;
+  subtype tmnPGR_ID is tnPGR_ID not null;
+  subtype tnPGR_SEQ_NBR is T_POPULATION_GROUPS.SEQ_NBR%type;
+  subtype tnPGR_VERSION_NBR is T_POPULATION_GROUPS.VERSION_NBR%type;
 --
 -- T_POPULATION_PLANNING_GROUPS
 --
@@ -187,16 +179,34 @@ create or replace package P_BASE is
   subtype tmsPPG_CODE is tsPPG_CODE not null;
   subtype tnPPG_VERSION_NBR is T_POPULATION_PLANNING_GROUPS.VERSION_NBR%type;
 --
--- T_POPULATION_SEGMENTS
+-- T_POP_GROUP_ATTRIBUTES
 --
-  subtype tnPSG_ID is T_POPULATION_SEGMENTS.ID%type;
-  subtype tmnPSG_ID is tnPSG_ID not null;
-  subtype tnPSG_SEQ_NBR is T_POPULATION_SEGMENTS.SEQ_NBR%type;
-  subtype tnPSG_VERSION_NBR is T_POPULATION_SEGMENTS.VERSION_NBR%type;
+  subtype tsPGRA_CHAR_VALUE is T_POP_GROUP_ATTRIBUTES.CHAR_VALUE%type;
+  subtype tnPGRA_NUM_VALUE is T_POP_GROUP_ATTRIBUTES.NUM_VALUE%type;
+  subtype tdPGRA_DATE_VALUE is T_POP_GROUP_ATTRIBUTES.DATE_VALUE%type;
+  subtype tnPGRA_VERSION_NBR is T_POP_GROUP_ATTRIBUTES.VERSION_NBR%type;
+--
+-- T_POP_GROUP_ATTRIBUTE_TYPES
+--
+  subtype tmsPGRAT_CODE is T_POP_GROUP_ATTRIBUTE_TYPES.CODE%type not null;
+  subtype tsPGRAT_DATA_TYPE is T_POP_GROUP_ATTRIBUTE_TYPES.DATA_TYPE%type;
+  subtype tmsPGRAT_DATA_TYPE is tsPGRAT_DATA_TYPE not null;
+  subtype tnPGRAT_DISPLAY_SEQ is T_POP_GROUP_ATTRIBUTE_TYPES.DISPLAY_SEQ%type;
+  subtype tsPGRAT_ACTIVE_FLAG is T_POP_GROUP_ATTRIBUTE_TYPES.ACTIVE_FLAG%type;
+  subtype tmsPGRAT_ACTIVE_FLAG is tsPGRAT_ACTIVE_FLAG not null;
+  subtype tnPGRAT_VERSION_NBR is T_POP_GROUP_ATTRIBUTE_TYPES.VERSION_NBR%type;
 --
 -- T_SEXES
 --
   subtype tsSEX_CODE is T_SEXES.CODE%type;
+--
+-- T_STATISTICS
+--
+  subtype tnSTC_ID is T_STATISTICS.ID%type;
+  subtype tmnSTC_ID is tnSTC_ID not null;
+  subtype tnSTC_VALUE is T_STATISTICS.VALUE%type;
+  subtype tmnSTC_VALUE is tnSTC_VALUE not null;
+  subtype tnSTC_VERSION_NBR is T_STATISTICS.VERSION_NBR%type;
 --
 -- T_STATISTIC_GROUPS
 --
@@ -218,14 +228,6 @@ create or replace package P_BASE is
 -- T_STATISTIC_TYPES_IN_GROUPS
 --
   subtype tnSTCTG_VERSION_NBR is T_STATISTIC_TYPES_IN_GROUPS.VERSION_NBR%type;
---
--- T_STATISTICS
---
-  subtype tnSTC_ID is T_STATISTICS.ID%type;
-  subtype tmnSTC_ID is tnSTC_ID not null;
-  subtype tnSTC_VALUE is T_STATISTICS.VALUE%type;
-  subtype tmnSTC_VALUE is tnSTC_VALUE not null;
-  subtype tnSTC_VERSION_NBR is T_STATISTICS.VERSION_NBR%type;
 --
 -- T_SYSTEM_PARAMETERS
 --
@@ -256,11 +258,6 @@ create or replace package P_BASE is
   subtype tsTST_CODE is T_TESTS.CODE%type;
   subtype tsTST_DESCRIPTION is T_TESTS.DESCRIPTION%type;
 --
--- T_TEST_STEPS
---
-  subtype tsSTP_SEQ_NBR is T_TEST_STEPS.SEQ_NBR%type;
-  subtype tsSTP_DESCRIPTION is T_TEST_STEPS.DESCRIPTION%type;
---
 -- T_TEST_CASES
 --
   subtype tsTCS_PACKAGE_NAME is T_TEST_CASES.PACKAGE_NAME%type;
@@ -282,9 +279,23 @@ create or replace package P_BASE is
   subtype tdTCA_DATE_VALUE_IN is T_TEST_CASE_ARGUMENTS.DATE_VALUE_IN%type;
   subtype tdTCA_DATE_VALUE_OUT is T_TEST_CASE_ARGUMENTS.DATE_VALUE_OUT%type;
 --
+-- T_TEST_STEPS
+--
+  subtype tsSTP_SEQ_NBR is T_TEST_STEPS.SEQ_NBR%type;
+  subtype tsSTP_DESCRIPTION is T_TEST_STEPS.DESCRIPTION%type;
+--
 -- T_TEXT_ITEMS
 --
   subtype tnTXT_SEQ_NBR is T_TEXT_ITEMS.SEQ_NBR%type;
+--
+-- T_TEXT_TYPES
+--
+  subtype tsTXTT_CODE is T_TEXT_TYPES.CODE%type;
+  subtype tmsTXTT_CODE is tsTXTT_CODE not null;
+  subtype tnTXTT_DISPLAY_SEQ is T_TEXT_TYPES.DISPLAY_SEQ%type;
+  subtype tsTXTT_ACTIVE_FLAG is T_TEXT_TYPES.ACTIVE_FLAG%type;
+  subtype tmsTXTT_ACTIVE_FLAG is tsTXTT_ACTIVE_FLAG not null;
+  subtype tnTXTT_VERSION_NBR is T_TEXT_TYPES.VERSION_NBR%type;
 --
 -- T_TEXT_TYPE_HEADERS
 --
@@ -300,14 +311,11 @@ create or replace package P_BASE is
   subtype tmsTTP_LONG_TEXT_FLAG is tsTTP_LONG_TEXT_FLAG not null;
   subtype tnTTP_VERSION_NBR is T_TEXT_TYPE_PROPERTIES.VERSION_NBR%type;
 --
--- T_TEXT_TYPES
+-- T_TIME_PERIODS
 --
-  subtype tsTXTT_CODE is T_TEXT_TYPES.CODE%type;
-  subtype tmsTXTT_CODE is tsTXTT_CODE not null;
-  subtype tnTXTT_DISPLAY_SEQ is T_TEXT_TYPES.DISPLAY_SEQ%type;
-  subtype tsTXTT_ACTIVE_FLAG is T_TEXT_TYPES.ACTIVE_FLAG%type;
-  subtype tmsTXTT_ACTIVE_FLAG is tsTXTT_ACTIVE_FLAG not null;
-  subtype tnTXTT_VERSION_NBR is T_TEXT_TYPES.VERSION_NBR%type;
+  subtype tnPER_ID is T_TIME_PERIODS.ID%type;
+  subtype tmnPER_ID is tnPER_ID not null;
+  subtype tnPER_VERSION_NBR is T_TIME_PERIODS.VERSION_NBR%type;
 --
 -- T_TIME_PERIOD_TYPES
 --
@@ -318,11 +326,12 @@ create or replace package P_BASE is
   subtype tmsPERT_ACTIVE_FLAG is tsPERT_ACTIVE_FLAG not null;
   subtype tnPERT_VERSION_NBR is T_TIME_PERIOD_TYPES.VERSION_NBR%type;
 --
--- T_TIME_PERIODS
+-- T_USER_ATTRIBUTES
 --
-  subtype tnPER_ID is T_TIME_PERIODS.ID%type;
-  subtype tmnPER_ID is tnPER_ID not null;
-  subtype tnPER_VERSION_NBR is T_TIME_PERIODS.VERSION_NBR%type;
+  subtype tsUAT_CHAR_VALUE is T_USER_ATTRIBUTES.CHAR_VALUE%type;
+  subtype tnUAT_NUM_VALUE is T_USER_ATTRIBUTES.NUM_VALUE%type;
+  subtype tdUAT_DATE_VALUE is T_USER_ATTRIBUTES.DATE_VALUE%type;
+  subtype tnUAT_VERSION_NBR is T_USER_ATTRIBUTES.VERSION_NBR%type;
 --
 -- T_USER_ATTRIBUTE_TYPES
 --
@@ -333,13 +342,6 @@ create or replace package P_BASE is
   subtype tsUATT_ACTIVE_FLAG is T_USER_ATTRIBUTE_TYPES.ACTIVE_FLAG%type;
   subtype tmsUATT_ACTIVE_FLAG is tsUATT_ACTIVE_FLAG not null;
   subtype tnUATT_VERSION_NBR is T_USER_ATTRIBUTE_TYPES.VERSION_NBR%type;
---
--- T_USER_ATTRIBUTES
---
-  subtype tsUAT_CHAR_VALUE is T_USER_ATTRIBUTES.CHAR_VALUE%type;
-  subtype tnUAT_NUM_VALUE is T_USER_ATTRIBUTES.NUM_VALUE%type;
-  subtype tdUAT_DATE_VALUE is T_USER_ATTRIBUTES.DATE_VALUE%type;
-  subtype tnUAT_VERSION_NBR is T_USER_ATTRIBUTES.VERSION_NBR%type;
 --
 -- T_USER_LANGUAGE_PREFERENCES
 --
