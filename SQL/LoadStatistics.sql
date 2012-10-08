@@ -333,8 +333,20 @@ begin
           POP_AH_END as 'E/OOCPOP-AH'))),
   --
     AGGREGATED_STATISTICS as
-     (select TABLE_NUMBER, STATSYEAR, DST_CODE,
-        COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
+     (select TABLE_NUMBER, STATSYEAR,
+        trunc(to_date(STATSYEAR, 'YYYY'), 'YYYY') as START_DATE_YEAR,
+        add_months(trunc(to_date(STATSYEAR, 'YYYY'), 'YYYY'), 12) as END_DATE_YEAR,
+        case PERIOD_FLAG
+          when 'S' then trunc(to_date(STATSYEAR, 'YYYY'), 'YYYY')
+          when 'E' then add_months(trunc(to_date(STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
+          when 'F' then trunc(to_date(STATSYEAR, 'YYYY'), 'YYYY')
+        end as START_DATE,
+        case PERIOD_FLAG
+          when 'S' then trunc(to_date(STATSYEAR, 'YYYY'), 'YYYY') + 1
+          when 'E' then add_months(trunc(to_date(STATSYEAR, 'YYYY'), 'YYYY'), 12)
+          when 'F' then add_months(trunc(to_date(STATSYEAR, 'YYYY'), 'YYYY'), 12)
+        end as END_DATE,
+        DST_CODE, COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
         DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME,
         SOURCE, BASIS,
         PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
@@ -371,6 +383,10 @@ begin
   --
     select STC.TABLE_NUMBER,
       STC.STATSYEAR,
+      STC.START_DATE_YEAR,
+      STC.END_DATE_YEAR,
+      STC.START_DATE,
+      STC.END_DATE,
       STC.DST_CODE,
       STC.COU_CODE_ASYLUM,
       STC.LOCATION_NAME,
@@ -387,8 +403,6 @@ begin
       STC.SEX_CODE,
       STC.AGE_FROM,
       STC.VALUE,
-      PER1.ID as PER_ID_YEAR,
-      PER2.ID as PER_ID,
       nvl(COU.ID, case when STC.COU_CODE_ASYLUM != 'VAR' then -1 end) as LOC_ID_ASYLUM_COUNTRY,
       LOC.LOC_ID as LOC_ID_ASYLUM,
       nvl(OGN.ID, case when STC.COU_CODE_ORIGIN != 'VAR' then -1 end) as LOC_ID_ORIGIN_COUNTRY,
@@ -396,21 +410,10 @@ begin
       DIM2.ID as DIM_ID2,
       AGR.ID as AGR_ID,
       row_number() over
-       (partition by PER1.ID, STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID, DIM1.ID, DIM2.ID,
+       (partition by STC.STATSYEAR, STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID, DIM1.ID, DIM2.ID,
           STC.SUBGROUP_NAME
-        order by PER2.ID, STC.STCT_CODE, STC.SEX_CODE, AGR.ID) as PSG_CHILD_NUMBER
+        order by STC.PERIOD_FLAG, STC.STCT_CODE, STC.SEX_CODE, AGR.ID) as PSG_CHILD_NUMBER
     from AGGREGATED_STATISTICS STC
-    join TIME_PERIODS PER1
-      on PER1.START_DATE = trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY')
-      and PER1.PERT_CODE = 'YEAR'
-    join TIME_PERIODS PER2
-      on PER2.START_DATE =
-        case STC.PERIOD_FLAG
-          when 'S' then trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY')
-          when 'E' then add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
-          when 'F' then trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY')
-        end
-      and PER2.PERT_CODE = decode(STC.PERIOD_FLAG, 'S', 'DAY', 'E', 'DAY', 'F', 'YEAR')
     left outer join COUNTRIES COU
       on COU.UNHCR_COUNTRY_CODE = STC.COU_CODE_ASYLUM
       and COU.START_DATE <= add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
@@ -439,8 +442,8 @@ begin
     left outer join T_AGE_RANGES AGR
       on AGR.AGP_CODE = 'STD'
       and AGR.AGE_FROM = STC.AGE_FROM
-    order by PER1.ID, STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID, DIM1.ID, DIM2.ID, STC.SUBGROUP_NAME,
-      PER2.ID, STC.STCT_CODE, STC.SEX_CODE, AGR.ID)
+    order by STC.STATSYEAR, STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID, DIM1.ID, DIM2.ID,
+      STC.SUBGROUP_NAME, STC.PERIOD_FLAG, STC.STCT_CODE, STC.SEX_CODE, AGR.ID)
   loop
     PLS_UTILITY.TRACE_POINT
      ('Trace',
@@ -465,14 +468,13 @@ begin
       if rSTC.PSG_CHILD_NUMBER = 1
       then
         P_POPULATION_GROUP.INSERT_POPULATION_GROUP
-         (nPGR_ID,
+         (nPGR_ID, rSTC.START_DATE_YEAR, rSTC.END_DATE_YEAR,
           psDST_CODE => rSTC.DST_CODE,
           pnLOC_ID_ASYLUM_COUNTRY => rSTC.LOC_ID_ASYLUM_COUNTRY,
           pnLOC_ID_ASYLUM => rSTC.LOC_ID_ASYLUM,
           pnLOC_ID_ORIGIN_COUNTRY => rSTC.LOC_ID_ORIGIN_COUNTRY,
           pnDIM_ID1 => rSTC.DIM_ID1,
           pnDIM_ID2 => rSTC.DIM_ID2,
-          pnPER_ID => rSTC.PER_ID_YEAR,
           psLANG_CODE => case when rSTC.SUBGROUP_NAME is not null then 'en' end,
           psSUBGROUP_NAME => rSTC.SUBGROUP_NAME);
         iCount1 := iCount1 + 1;
@@ -487,9 +489,7 @@ begin
       end if;
     --
       P_STATISTIC.INSERT_STATISTIC
-       (nSTC_ID,
-        psSTCT_CODE => rSTC.STCT_CODE,
-        pnPER_ID => rSTC.PER_ID,
+       (nSTC_ID, rSTC.STCT_CODE, rSTC.START_DATE, rSTC.END_DATE,
         psDST_CODE => rSTC.DST_CODE,
         pnLOC_ID_ASYLUM_COUNTRY => rSTC.LOC_ID_ASYLUM_COUNTRY,
         pnLOC_ID_ASYLUM => rSTC.LOC_ID_ASYLUM,
