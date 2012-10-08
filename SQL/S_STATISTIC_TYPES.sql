@@ -1,6 +1,28 @@
 create table S_STATISTIC_TYPES 
  (CODE varchar2(10),
   DESCRIPTION_EN varchar2(1000),
+  DST_CODE_FLAG varchar2(1),
+  LOC_ID_ASYLUM_COUNTRY_FLAG varchar2(1),
+  LOC_ID_ASYLUM_FLAG varchar2(1),
+  LOC_ID_ORIGIN_COUNTRY_FLAG varchar2(1),
+  LOC_ID_ORIGIN_FLAG varchar2(1),
+  DIM_ID1_FLAG varchar2(1),
+  DIMT_CODE1 varchar2(10),
+  DIM_ID2_FLAG varchar2(1),
+  DIMT_CODE2 varchar2(10),
+  DIM_ID3_FLAG varchar2(1),
+  DIMT_CODE3 varchar2(10),
+  DIM_ID4_FLAG varchar2(1),
+  DIMT_CODE4 varchar2(10),
+  DIM_ID5_FLAG varchar2(1),
+  DIMT_CODE5 varchar2(10),
+  SEX_CODE_FLAG varchar2(1),
+  AGR_ID_FLAG varchar2(1),
+  PGR_ID_SUBGROUP_FLAG varchar2(1),
+  STCG_CODE1 varchar2(10),
+  STCG_CODE2 varchar2(10),
+  STCG_CODE3 varchar2(10),
+  STCG_CODE4 varchar2(10),
   DISPLAY_SEQ number(5),
   DESCRIPTION_FR varchar2(1000),
   NOTES varchar2(4000))
@@ -10,7 +32,7 @@ organization external
   access parameters 
    (records delimited by newline
     characterset WE8MSWIN1252
-    badfile PSRDATA:'STATISTIC_TYPES.bad'
+    badfile 'STATISTIC_TYPES.bad'
     nodiscardfile
     nologfile
     skip 1 
@@ -20,6 +42,28 @@ organization external
     missing field values are null
      (CODE char(4000),
       DESCRIPTION_EN char(4000),
+      DST_CODE_FLAG char(4000),
+      LOC_ID_ASYLUM_COUNTRY_FLAG char(4000),
+      LOC_ID_ASYLUM_FLAG char(4000),
+      LOC_ID_ORIGIN_COUNTRY_FLAG char(4000),
+      LOC_ID_ORIGIN_FLAG char(4000),
+      DIM_ID1_FLAG char(4000),
+      DIMT_CODE1 char(4000),
+      DIM_ID2_FLAG char(4000),
+      DIMT_CODE2 char(4000),
+      DIM_ID3_FLAG char(4000),
+      DIMT_CODE3 char(4000),
+      DIM_ID4_FLAG char(4000),
+      DIMT_CODE4 char(4000),
+      DIM_ID5_FLAG char(4000),
+      DIMT_CODE5 char(4000),
+      SEX_CODE_FLAG char(4000),
+      AGR_ID_FLAG char(4000),
+      PGR_ID_SUBGROUP_FLAG char(4000),
+      STCG_CODE1 char(4000),
+      STCG_CODE2 char(4000),
+      STCG_CODE3 char(4000),
+      STCG_CODE4 char(4000),
       DISPLAY_SEQ char(4000),
       DESCRIPTION_FR char(4000),
       NOTES char(4000)))
