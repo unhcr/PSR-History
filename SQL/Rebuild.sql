@@ -41,10 +41,6 @@ prompt InitParameters
 prompt ==============
 @InitParameters
 
-prompt LoadStatisticTypes
-prompt ==================
-@LoadStatisticTypes
-
 prompt InitDisplacementStatuses
 prompt ========================
 @InitDisplacementStatuses
@@ -65,9 +61,13 @@ prompt LoadDimensionTypes
 prompt ==================
 @LoadDimensionTypes
 
-prompt LoadPopulationSegmentAttributeTypes
-prompt ===================================
-@LoadPopulationSegmentAttributeTypes
+prompt LoadStatisticTypes
+prompt ==================
+@LoadStatisticTypes
+
+prompt LoadPopulationGroupAttributeTypes
+prompt =================================
+@LoadPopulationGroupAttributeTypes
 
 prompt LoadLocationTypes
 prompt =================
