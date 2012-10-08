@@ -5,9 +5,13 @@ spool Rebuild.log
 
 purge recyclebin;
 
-prompt PSRD
-prompt ====
-@PSRD
+prompt Schema
+prompt ======
+@Schema
+
+prompt Views
+prompt =====
+@Views
 
 prompt Packages
 prompt ========
@@ -16,10 +20,6 @@ prompt ========
 prompt Triggers
 prompt ========
 @Triggers
-
-prompt Views
-prompt =====
-@Views
 
 prompt InitBase
 prompt ========
@@ -53,9 +53,9 @@ prompt InitAgeProfiles
 prompt ===============
 @InitAgeProfiles
 
-prompt InitTimePeriods
-prompt ===============
-@InitTimePeriods
+--prompt InitTimePeriods
+--prompt ===============
+--@InitTimePeriods
 
 prompt LoadDimensionTypes
 prompt ==================
