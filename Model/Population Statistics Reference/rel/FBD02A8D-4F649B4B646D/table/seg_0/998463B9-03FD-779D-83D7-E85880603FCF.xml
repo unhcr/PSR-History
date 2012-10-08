@@ -101,9 +101,8 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="0FE96B9B-93EC-E3B9-6517-7C3DC019557C" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
@@ -165,7 +164,6 @@
 <createdBy>Scott</createdBy>
 <createdTime>2012-02-23 09:47:51 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<schemaObject>A2FEF0BB-B119-46DD-17A0-4C530CB2D107</schemaObject>
 <indexColumnUsage>
 <colUsage columnID="5754F68F-85FF-3CBB-4997-8D237A4FA48B"/>
 </indexColumnUsage>

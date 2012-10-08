@@ -46,6 +46,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="CODE" id="EB338200-AC8F-6607-A8D2-6B97B7122060">
 <createdBy>Scott</createdBy>
 <createdTime>2011-10-26 10:37:49 UTC</createdTime>
+<comment>Statistic type code</comment>
 <generatorID>78A04E1B-6B0A-03B0-A910-5D49EEEB7CDF</generatorID>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_STCT_CODE</constraintName>
@@ -54,9 +55,252 @@
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
 <previousColumn>false</previousColumn>
 </Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DST_CODE_FLAG" id="A6E7F4CB-4BE1-6BB6-BB11-49967172EDD3">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-28 15:02:07 UTC</createdTime>
+<comment>Flag indicating usage of Displacement Status dimension</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_DST_CODE_FLAG</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="LOC_ID_ASYLUM_COUNTRY_FLAG" id="F9414FFF-21C3-3F84-1F1C-BF84FD2DE738">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 06:50:33 UTC</createdTime>
+<comment>Flag indicating usage of Country of Asylum dimension</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_STCT_LOC_ID_ASY_COU_FLAG</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="LOC_ID_ASYLUM_FLAG" id="82BB81ED-ED79-CD23-C28B-CFBD3D9AEA74">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 06:52:23 UTC</createdTime>
+<comment>Flag indicating usage of Location of Asylum dimension</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_STCT_LOC_ID_ASYLUM_FLAG</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="LOC_ID_ORIGIN_COUNTRY_FLAG" id="1E84F573-0DB7-15F2-311D-48FE91C1F2C5">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 06:53:25 UTC</createdTime>
+<comment>Flag indicating usage of (Country of) Origin dimension</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_STCT_LOC_ID_ORIG_COU_FLAG</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="LOC_ID_ORIGIN_FLAG" id="EC977906-4023-49CB-8B62-ECCEA95CDB83">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 06:54:05 UTC</createdTime>
+<comment>Flag indicating usage of Location of Origin dimension</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_STCT_LOC_ID_ORIGIN_FLAG</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DIM_ID1_FLAG" id="D5ACBCAC-400D-969B-5CCE-C0925903D4EB">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 06:55:54 UTC</createdTime>
+<comment>Flag indicating usage of generic dimension 1</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_STCT_DIM_ID1</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="(DIM_ID1_FLAG in (&apos;M&apos;, &apos;O&apos;) and DIMT_CODE1 is not null) or&lt;br&gt;(DIM_ID1_FLAG = &apos;N&apos; and DIMT_CODE1 is null)"/>
+</checkConstraint>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DIMT_CODE1" id="09BE161C-1E50-FCBD-5B3E-9257BB08FC46">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 06:59:59 UTC</createdTime>
+<comment>Dimension type to be used for dimension 1</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<delegate>8633CDBB-79D3-9E30-0357-B6706911E68D</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="8388C303-E0A8-9CA2-FE23-97981106CD4E" referredColumn="8633CDBB-79D3-9E30-0357-B6706911E68D"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DIM_ID2_FLAG" id="4510EF0E-D400-B93A-E21D-397BD306B6A1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 06:56:22 UTC</createdTime>
+<comment>Flag indicating usage of generic dimension 2</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_STCT_DIM_ID2</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="(DIM_ID2_FLAG in (&apos;M&apos;, &apos;O&apos;) and DIMT_CODE2 is not null) or&lt;br&gt;(DIM_ID2_FLAG = &apos;N&apos; and DIMT_CODE2 is null)"/>
+</checkConstraint>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DIMT_CODE2" id="B2E3E628-FF25-AF38-8909-9A1970F61CF0">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 07:01:35 UTC</createdTime>
+<comment>Dimension type to be used for dimension 2</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<delegate>8633CDBB-79D3-9E30-0357-B6706911E68D</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="D691FB28-39F1-C227-7968-53C4E61C771C" referredColumn="8633CDBB-79D3-9E30-0357-B6706911E68D"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DIM_ID3_FLAG" id="E483D67A-8C0B-25BF-D342-E8C9A118A3F3">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 06:56:22 UTC</createdTime>
+<comment>Flag indicating usage of generic dimension 3</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_STCT_DIM_ID3</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="(DIM_ID3_FLAG in (&apos;M&apos;, &apos;O&apos;) and DIMT_CODE3 is not null) or&lt;br&gt;(DIM_ID3_FLAG = &apos;N&apos; and DIMT_CODE3 is null)"/>
+</checkConstraint>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DIMT_CODE3" id="DB9CF7DF-881C-76FA-861D-EEF6A6142263">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 07:01:35 UTC</createdTime>
+<comment>Dimension type to be used for dimension 3</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<delegate>8633CDBB-79D3-9E30-0357-B6706911E68D</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="74D5EADE-5DD2-D9EA-18F1-BC78B5C81452" referredColumn="8633CDBB-79D3-9E30-0357-B6706911E68D"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DIM_ID4_FLAG" id="F7A510A7-AA32-7E69-3061-6A70A3F832D1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 06:56:22 UTC</createdTime>
+<comment>Flag indicating usage of generic dimension 4</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_STCT_DIM_ID4</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="(DIM_ID4_FLAG in (&apos;M&apos;, &apos;O&apos;) and DIMT_CODE4 is not null) or&lt;br&gt;(DIM_ID4_FLAG = &apos;N&apos; and DIMT_CODE4 is null)"/>
+</checkConstraint>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DIMT_CODE4" id="7E547CCE-3885-9B4C-3C76-562EBBAD6409">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 07:01:35 UTC</createdTime>
+<comment>Dimension type to be used for dimension 4</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<delegate>8633CDBB-79D3-9E30-0357-B6706911E68D</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="022DDEED-2C85-06F4-7B3D-6D3E05BBE5F8" referredColumn="8633CDBB-79D3-9E30-0357-B6706911E68D"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DIM_ID5_FLAG" id="36F5B816-94CA-1956-BC48-04AF9C376ADC">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 06:56:22 UTC</createdTime>
+<comment>Flag indicating usage of generic dimension 5</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_STCT_DIM_ID5</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="(DIM_ID5_FLAG in (&apos;M&apos;, &apos;O&apos;) and DIMT_CODE5 is not null) or&lt;br&gt;(DIM_ID5_FLAG = &apos;N&apos; and DIMT_CODE5 is null)"/>
+</checkConstraint>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DIMT_CODE5" id="E3C5BC0F-2E6C-519C-E450-6EC9552A0671">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 07:01:35 UTC</createdTime>
+<comment>Dimension type to be used for dimension 5</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<delegate>8633CDBB-79D3-9E30-0357-B6706911E68D</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="AEAD0B49-F08C-9788-0E97-5B868FBF8B8C" referredColumn="8633CDBB-79D3-9E30-0357-B6706911E68D"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="SEX_CODE_FLAG" id="51436C89-A1D2-8EDC-DE8E-5E4B281EB923">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 07:03:24 UTC</createdTime>
+<comment>Flag indicating usage of Sex dimension</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_STCT_SEX_CODE_FLAG</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="AGR_ID_FLAG" id="0D424F31-A9B1-B669-FDA3-E06E01E87759">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-27 07:04:41 UTC</createdTime>
+<comment>Flag indicating usage of Age Range dimension</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_STCT_AGR_ID_FLAG</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PGR_ID_SUBGROUP_FLAG" id="87A6324D-CEB8-C749-8157-B3350E759AAB">
+<createdBy>Scott</createdBy>
+<createdTime>2012-10-01 15:25:39 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PGR_ID_SUBGROUP_FLAG</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="50AB787D-8618-DEF6-F7B7-60673EDDB44A">
 <createdBy>Scott</createdBy>
 <createdTime>2011-11-09 08:38:21 UTC</createdTime>
+<comment>Number controlling the sequence of display of statistics types</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -66,6 +310,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ACTIVE_FLAG" id="83ED7C82-3991-91A2-6798-AE3EEAC1B0AD">
 <createdBy>Scott</createdBy>
 <createdTime>2011-11-04 10:05:40 UTC</createdTime>
+<comment>Is this statistic tpe currently active (Y/N)?</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_STCT_ACTIVE_FLAG</constraintName>
 <defaultValue>Y</defaultValue>
@@ -76,11 +321,11 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="26238266-1CEC-B43A-85CE-4A4A039949C0">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-08 07:48:36 UTC</createdTime>
+<comment>General data item identifier for this statistic type</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="288ED32A-70F9-A815-A1FF-68B836FDB8AF" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
@@ -89,6 +334,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="FCBF5FB9-12B9-0DE7-42DD-309D27AF6A9D">
 <createdBy>Scott</createdBy>
 <createdTime>2012-03-27 10:21:10 UTC</createdTime>
+<comment>Update version number of this statistic type</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <defaultValue>1</defaultValue>
 <use>0</use>
@@ -125,6 +371,51 @@
 <indexState>Foreign Key</indexState>
 <indexColumnUsage>
 <colUsage columnID="26238266-1CEC-B43A-85CE-4A4A039949C0"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="6822EF6A-80C7-5D04-00D2-F1B7284EDD15" name="FK_STCT_DIMT1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-10-01 16:04:48 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="09BE161C-1E50-FCBD-5B3E-9257BB08FC46"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="5CFDB5D0-8A13-80FC-CED2-B6523A69B0DB" name="FK_STCT_DIMT2">
+<createdBy>Scott</createdBy>
+<createdTime>2012-10-01 16:05:12 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="B2E3E628-FF25-AF38-8909-9A1970F61CF0"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="2C409497-AE8C-5EC9-126E-6AE973B3BE7A" name="FK_STCT_DIMT3">
+<createdBy>Scott</createdBy>
+<createdTime>2012-10-01 16:05:33 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="DB9CF7DF-881C-76FA-861D-EEF6A6142263"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="D4775BA8-F27C-3B8F-8F73-666F56A13F6B" name="FK_STCT_DIMT4">
+<createdBy>Scott</createdBy>
+<createdTime>2012-10-01 16:05:51 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="7E547CCE-3885-9B4C-3C76-562EBBAD6409"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="E31FF5DF-BF92-FB4C-5CE7-8A876E7970E9" name="FK_STCT_DIMT5">
+<createdBy>Scott</createdBy>
+<createdTime>2012-10-01 16:06:11 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="E3C5BC0F-2E6C-519C-E450-6EC9552A0671"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

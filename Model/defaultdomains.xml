@@ -273,6 +273,21 @@
          <fileName>defaultdomains</fileName>
          <logicalDatatype>LOGDT011</logicalDatatype>
       </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Dimension Usage Flag" id="D77E9D6A-6ACF-58C6-5D34-F3F18744121F">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-09-27 06:43:16 UTC</createdTime>
+         <comment>Flag indicating whether usage of a given dimension is mandatory, optional or not allowed</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>1</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <listOfValues>
+            <valueDef value="M" description="Mandatory"/>
+            <valueDef value="N" description="Not allowed"/>
+            <valueDef value="O" description="Optional"/>
+         </listOfValues>
+      </Domain>
       <Domain class="oracle.dbtools.crest.model.design.Domain" name="Unknown" id="DOM3000004">
          <createdBy>Scott</createdBy>
          <createdTime>2012-02-13 13:44:47 UTC</createdTime>

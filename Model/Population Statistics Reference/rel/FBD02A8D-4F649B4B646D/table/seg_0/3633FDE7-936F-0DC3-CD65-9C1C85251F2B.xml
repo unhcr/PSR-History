@@ -1,10 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" id="3633FDE7-936F-0DC3-CD65-9C1C85251F2B" directorySegmentName="seg_0" name="T_POPSEG_ATTRIBUTES">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="3633FDE7-936F-0DC3-CD65-9C1C85251F2B" directorySegmentName="seg_0" name="T_POP_GROUP_ATTRIBUTES">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <pkName>PK_LOCA</pkName>
-<abbreviation>PSGA</abbreviation>
+<abbreviation>PGRA</abbreviation>
 <fonts>
 <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
 <foType>Title</foType>
@@ -41,9 +41,10 @@
 </FontObject>
 </fonts>
 <columns>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PSG_ID" id="6629DE77-2E2F-D822-CA82-A062BAB9076F">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PGR_ID" id="6629DE77-2E2F-D822-CA82-A062BAB9076F">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
+<comment>Population group identifier</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
@@ -54,9 +55,10 @@
 <colAssociation fkAssociation="8C480CB3-B5E7-EB44-E908-7AAA3BD4F371" referredColumn="AEB0255B-BEA7-2999-B8A3-E334130E7989"/>
 </associations>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PSGAT_CODE" id="4B16E9C5-4992-E4F7-D39B-D938FD6D8EAD">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PGRAT_CODE" id="4B16E9C5-4992-E4F7-D39B-D938FD6D8EAD">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
+<comment>Population group attribute type code</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
@@ -70,6 +72,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="CHAR_VALUE" id="186ADCED-3556-2269-E360-A78C075C1B65">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
+<comment>General character value</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
@@ -80,6 +83,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="NUM_VALUE" id="7A41770E-C2AC-B8FD-93A3-C6D7620E0E90">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
+<comment>General numeric value</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
@@ -89,6 +93,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DATE_VALUE" id="E6EFF334-D44A-E082-BA65-E79DB358A279">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
+<comment>General date value</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -98,6 +103,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="BA4924A9-A36D-2BC2-0580-A653777846E5">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
+<comment>General data item identifier of this population group attribute</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
@@ -111,6 +117,8 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="UPDATE_TIMESTAMP" id="262A0D40-E432-D19A-F1A3-D09386F1AB20">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
+<comment>Date and time of last update</comment>
+<notes>Maintained by trigger</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <defaultValue>systimestamp</defaultValue>
 <use>0</use>
@@ -121,6 +129,8 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="UPDATE_USERID" id="0ED49135-2ABA-B7BA-06D1-4CCCA6F59C94">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
+<comment>Identifier of user who made the last update</comment>
+<notes>Maintained by trigger</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <defaultValue>nvl(sys_context(&apos;PSR&apos;, &apos;USERID&apos;), &apos;*&apos; || user)</defaultValue>
 <use>0</use>
@@ -131,6 +141,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="6ED2FE28-8B4E-07EB-C2D5-902C78AD6D71">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
+<comment>Update version number of this population group attribute</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <defaultValue>1</defaultValue>
 <use>0</use>
@@ -140,7 +151,7 @@
 </Column>
 </columns>
 <indexes>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="66EAD21C-F7CB-52A0-B698-92A551052984" name="PK_PSGA">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="66EAD21C-F7CB-52A0-B698-92A551052984" name="PK_PGRA">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -151,7 +162,7 @@
 <colUsage columnID="4B16E9C5-4992-E4F7-D39B-D938FD6D8EAD"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="42F2E81A-3779-A823-D4E7-D6CD104E6598" name="UK_PSGA_ITM_ID">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="42F2E81A-3779-A823-D4E7-D6CD104E6598" name="UK_PGRA_ITM_ID">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -160,7 +171,7 @@
 <colUsage columnID="BA4924A9-A36D-2BC2-0580-A653777846E5"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="CB8B4283-7492-F433-3474-4E565A7CDB07" name="FK_PSGA_ITM">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="CB8B4283-7492-F433-3474-4E565A7CDB07" name="FK_PGRA_ITM">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -169,7 +180,7 @@
 <colUsage columnID="BA4924A9-A36D-2BC2-0580-A653777846E5"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="4BAC9216-635D-D3E3-5469-B4B4E1AEED38" name="FK_PSGA_PSG">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="4BAC9216-635D-D3E3-5469-B4B4E1AEED38" name="FK_PGRA_PGR">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:17:52 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -178,7 +189,7 @@
 <colUsage columnID="6629DE77-2E2F-D822-CA82-A062BAB9076F"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="C31B6505-D6BE-68D3-C578-2F03B8186953" name="FK_PSGA_PSGAT">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="C31B6505-D6BE-68D3-C578-2F03B8186953" name="FK_PGRA_PGRAT">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:18:11 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -189,7 +200,7 @@
 </ind_PK_UK>
 </indexes>
 <tableCheckConstraints>
-<tableCheckConstraint class="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint" name="CH_PSGA" id="A670D3A0-589D-44DE-820C-BE31B361AB08" directorySegmentName="seg_1">
+<tableCheckConstraint class="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint" name="CH_PGRA" id="A670D3A0-589D-44DE-820C-BE31B361AB08" directorySegmentName="seg_1">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
