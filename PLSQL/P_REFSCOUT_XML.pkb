@@ -162,8 +162,7 @@ create or replace package body P_REFSCOUT_XML is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end CHARTBYASYLUM;
 --
 -- ----------------------------------------
@@ -324,8 +323,7 @@ create or replace package body P_REFSCOUT_XML is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end CHARTBYORIGIN;
 --
 -- ----------------------------------------
@@ -443,8 +441,7 @@ create or replace package body P_REFSCOUT_XML is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end STATSBYASYLUM;
 /*
 --
@@ -519,8 +516,7 @@ create or replace package body P_REFSCOUT_XML is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end STATSBYFLOW;
 */
 --
@@ -645,8 +641,7 @@ create or replace package body P_REFSCOUT_XML is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end STATSBYORIGIN;
 --
 -- =====================================

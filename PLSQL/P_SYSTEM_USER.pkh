@@ -7,7 +7,7 @@ create or replace package P_SYSTEM_USER is
 --   attribute types.
 --
 --  Change History:
---  29-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  02-Oct-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --

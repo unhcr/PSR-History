@@ -31,8 +31,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_TEXT_TYPE;
 --
 -- ----------------------------------------
@@ -83,8 +82,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_TEXT_TYPE;
 --
 -- ----------------------------------------
@@ -121,8 +119,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_TEXT_TYPE;
 --
 -- ----------------------------------------
@@ -158,8 +155,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_TEXT_TYPE;
 --
 -- ----------------------------------------
@@ -184,8 +180,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_TXTT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -207,8 +202,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_TXTT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -253,8 +247,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_TXTT_TEXT;
 --
 -- ----------------------------------------
@@ -298,8 +291,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_TXTT_TEXT;
 --
 -- ----------------------------------------
@@ -327,8 +319,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_TEXT_TYPE_PROPERTIES;
 --
 -- ----------------------------------------
@@ -374,8 +365,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_TEXT_TYPE_PROPERTIES;
 --
 -- ----------------------------------------
@@ -411,8 +401,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_TEXT_TYPE_PROPERTIES;
 --
 -- ----------------------------------------
@@ -453,8 +442,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_TEXT_TYPE_PROPERTIES;
 --
 -- ----------------------------------------
@@ -503,8 +491,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_TTP_TEXT;
 --
 -- ----------------------------------------
@@ -550,8 +537,7 @@ create or replace package body P_TEXT_TYPE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_TTP_TEXT;
 --
 -- =====================================

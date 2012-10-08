@@ -31,8 +31,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_DIMENSION_TYPE;
 --
 -- ----------------------------------------
@@ -83,8 +82,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_DIMENSION_TYPE;
 --
 -- ----------------------------------------
@@ -121,8 +119,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_DIMENSION_TYPE;
 --
 -- ----------------------------------------
@@ -159,8 +156,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_DIMENSION_TYPE;
 --
 -- ----------------------------------------
@@ -185,8 +181,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_DIMT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -208,8 +203,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_DIMT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -254,8 +248,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_DIMT_TEXT;
 --
 -- ----------------------------------------
@@ -299,8 +292,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_DIMT_TEXT;
 --
 -- ----------------------------------------
@@ -333,8 +325,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_DIMENSION_VALUE;
 --
 -- ----------------------------------------
@@ -387,8 +378,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_DIMENSION_VALUE;
 --
 -- ----------------------------------------
@@ -427,8 +417,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_DIMENSION_VALUE;
 --
 -- ----------------------------------------
@@ -465,8 +454,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_DIMENSION_VALUE;
 --
 -- ----------------------------------------
@@ -491,8 +479,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_DIM_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -514,8 +501,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_DIM_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -560,8 +546,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_DIM_TEXT;
 --
 -- ----------------------------------------
@@ -605,8 +590,7 @@ create or replace package body P_DIMENSION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_DIM_TEXT;
 --
 -- =====================================

@@ -19,8 +19,7 @@ create or replace package body P_CONTEXT is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_USERID;
 --
 -- =====================================

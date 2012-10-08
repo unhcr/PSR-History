@@ -6,7 +6,7 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 --  Procedures for maintenance of population planning groups (PPGs).
 --
 --  Change History:
---  04-May-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  02-Oct-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --

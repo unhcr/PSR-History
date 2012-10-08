@@ -31,8 +31,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_TIME_PERIOD_TYPE;
 --
 -- ----------------------------------------
@@ -83,8 +82,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_TIME_PERIOD_TYPE;
 --
 -- ----------------------------------------
@@ -121,8 +119,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_TIME_PERIOD_TYPE;
 --
 -- ----------------------------------------
@@ -159,8 +156,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_TIME_PERIOD_TYPE;
 --
 -- ----------------------------------------
@@ -185,8 +181,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_PERT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -208,8 +203,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_PERT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -254,8 +248,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_PERT_TEXT;
 --
 -- ----------------------------------------
@@ -299,8 +292,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_PERT_TEXT;
 --
 -- ----------------------------------------
@@ -346,8 +338,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_TIME_PERIOD;
 --
 -- ----------------------------------------
@@ -434,8 +425,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_TIME_PERIOD;
 --
 -- ----------------------------------------
@@ -468,8 +458,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_TIME_PERIOD;
 --
 -- ----------------------------------------
@@ -508,8 +497,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_TIME_PERIOD;
 --
 -- ----------------------------------------
@@ -555,8 +543,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_PER_TEXT;
 --
 -- ----------------------------------------
@@ -600,8 +587,7 @@ create or replace package body P_TIME_PERIOD is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_PER_TEXT;
 --
 -- =====================================

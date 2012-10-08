@@ -31,8 +31,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_AGE_PROFILE;
 --
 -- ----------------------------------------
@@ -83,8 +82,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_AGE_PROFILE;
 --
 -- ----------------------------------------
@@ -121,8 +119,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_AGE_PROFILE;
 --
 -- ----------------------------------------
@@ -159,8 +156,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_AGE_PROFILE;
 --
 -- ----------------------------------------
@@ -185,8 +181,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_AGP_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -208,8 +203,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_AGP_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -254,8 +248,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_AGP_TEXT;
 --
 -- ----------------------------------------
@@ -299,8 +292,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_AGP_TEXT;
 --
 -- ----------------------------------------
@@ -332,8 +324,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_AGE_RANGE;
 --
 -- ----------------------------------------
@@ -427,8 +418,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_AGE_RANGE;
 --
 -- ----------------------------------------
@@ -463,8 +453,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_AGE_RANGE;
 --
 -- ----------------------------------------
@@ -501,8 +490,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_AGE_RANGE;
 --
 -- ----------------------------------------
@@ -527,8 +515,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_AGR_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -550,8 +537,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_AGR_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -597,8 +583,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_AGR_TEXT;
 --
 -- ----------------------------------------
@@ -642,8 +627,7 @@ create or replace package body P_AGE_PROFILE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_AGR_TEXT;
 --
 -- =====================================

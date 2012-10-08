@@ -6,7 +6,7 @@ create or replace package P_DIMENSION is
 --  Procedures for maintenance of dimension types and dimension values.
 --
 --  Change History:
---  10-Apr-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  02-Oct-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --

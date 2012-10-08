@@ -73,8 +73,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_PPG;
 --
 -- ----------------------------------------
@@ -190,8 +189,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_PPG;
 --
 -- ----------------------------------------
@@ -231,8 +229,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_PPG;
 --
 -- ----------------------------------------
@@ -269,8 +266,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_PPG;
 --
 -- ----------------------------------------
@@ -295,8 +291,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_PPG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -319,8 +314,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_PPG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -366,8 +360,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_PPG_TEXT;
 --
 -- ----------------------------------------
@@ -411,8 +404,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_PPG_TEXT;
 --
 -- =====================================

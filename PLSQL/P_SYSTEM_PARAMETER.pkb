@@ -34,8 +34,7 @@ create or replace package body P_SYSTEM_PARAMETER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_SYSTEM_PARAMETER;
 --
 -- ----------------------------------------
@@ -90,8 +89,7 @@ create or replace package body P_SYSTEM_PARAMETER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_SYSTEM_PARAMETER;
 --
 -- ----------------------------------------
@@ -129,8 +127,7 @@ create or replace package body P_SYSTEM_PARAMETER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_SYSTEM_PARAMETER;
 --
 -- ----------------------------------------
@@ -167,8 +164,7 @@ create or replace package body P_SYSTEM_PARAMETER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_SYSTEM_PARAMETER;
 --
 -- ----------------------------------------
@@ -193,8 +189,7 @@ create or replace package body P_SYSTEM_PARAMETER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_SYP_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -216,8 +211,7 @@ create or replace package body P_SYSTEM_PARAMETER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_SYP_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -263,8 +257,7 @@ create or replace package body P_SYSTEM_PARAMETER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_SYP_TEXT;
 --
 -- ----------------------------------------
@@ -308,8 +301,7 @@ create or replace package body P_SYSTEM_PARAMETER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_SYP_TEXT;
 --
 -- =====================================

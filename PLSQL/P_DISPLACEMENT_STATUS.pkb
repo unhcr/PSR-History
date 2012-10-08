@@ -31,8 +31,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_DISPLACEMENT_STATUS;
 --
 -- ----------------------------------------
@@ -83,8 +82,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_DISPLACEMENT_STATUS;
 --
 -- ----------------------------------------
@@ -121,8 +119,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_DISPLACEMENT_STATUS;
 --
 -- ----------------------------------------
@@ -159,8 +156,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_DISPLACEMENT_STATUS;
 --
 -- ----------------------------------------
@@ -185,8 +181,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_DST_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -208,8 +203,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_DST_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -254,8 +248,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_DST_TEXT;
 --
 -- ----------------------------------------
@@ -299,8 +292,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_DST_TEXT;
 --
 -- =====================================

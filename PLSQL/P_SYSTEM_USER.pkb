@@ -31,8 +31,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_SYSTEM_USER;
 --
 -- ----------------------------------------
@@ -82,8 +81,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_SYSTEM_USER;
 --
 -- ----------------------------------------
@@ -118,8 +116,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_SYSTEM_USER;
 --
 -- ----------------------------------------
@@ -156,8 +153,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_SYSTEM_USER;
 --
 -- ----------------------------------------
@@ -182,8 +178,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_USR_NAME;
 --
 -- ----------------------------------------
@@ -205,8 +200,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_USR_NAME;
 --
 -- ----------------------------------------
@@ -252,8 +246,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_USR_TEXT;
 --
 -- ----------------------------------------
@@ -297,8 +290,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_USR_TEXT;
 --
 -- ----------------------------------------
@@ -329,8 +321,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_USER_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -401,8 +392,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_USER_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -440,8 +430,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_USER_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -478,8 +467,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_USER_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -504,8 +492,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_UATT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -527,8 +514,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_UATT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -573,8 +559,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_UATT_TEXT;
 --
 -- ----------------------------------------
@@ -618,8 +603,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_UATT_TEXT;
 --
 -- ----------------------------------------
@@ -663,8 +647,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_USER_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -734,8 +717,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_USER_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -770,8 +752,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_USER_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -811,8 +792,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_USER_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -861,8 +841,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_UAT_TEXT;
 --
 -- ----------------------------------------
@@ -908,8 +887,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_UAT_TEXT;
 --
 -- ----------------------------------------
@@ -939,8 +917,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_USER_LANG_PREFERENCE;
 --
 -- ----------------------------------------
@@ -982,8 +959,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_USER_LANG_PREFERENCE;
 --
 -- ----------------------------------------
@@ -1014,8 +990,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_USER_LANG_PREFERENCE;
 --
 -- ----------------------------------------
@@ -1063,8 +1038,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_USER_LANG_PREFERENCE;
 --
 -- ----------------------------------------
@@ -1082,8 +1056,7 @@ create or replace package body P_SYSTEM_USER is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end USER_LOGIN;
 --
 -- =====================================

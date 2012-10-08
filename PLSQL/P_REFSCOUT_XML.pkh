@@ -6,7 +6,7 @@ create or replace package P_REFSCOUT_XML is
 --  Procedures for generating XML files suitable for use in the RefScout application.
 --
 --  Change History:
---  06-Jun-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  02-Oct-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --

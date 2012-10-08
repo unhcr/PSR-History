@@ -45,8 +45,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION_TYPE;
 --
 -- ----------------------------------------
@@ -97,8 +96,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOCATION_TYPE;
 --
 -- ----------------------------------------
@@ -135,8 +133,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCATION_TYPE;
 --
 -- ----------------------------------------
@@ -173,8 +170,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION_TYPE;
 --
 -- ----------------------------------------
@@ -199,8 +195,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -222,8 +217,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -269,8 +263,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCT_TEXT;
 --
 -- ----------------------------------------
@@ -314,8 +307,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCT_TEXT;
 --
 -- ----------------------------------------
@@ -402,8 +394,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION;
 --
 -- ----------------------------------------
@@ -567,8 +558,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOCATION;
 --
 -- ----------------------------------------
@@ -610,8 +600,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCATION;
 --
 -- ----------------------------------------
@@ -648,8 +637,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION;
 --
 -- ----------------------------------------
@@ -674,8 +662,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOC_NAME;
 --
 -- ----------------------------------------
@@ -697,8 +684,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOC_NAME;
 --
 -- ----------------------------------------
@@ -744,8 +730,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOC_TEXT;
 --
 -- ----------------------------------------
@@ -789,8 +774,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOC_TEXT;
 --
 -- ----------------------------------------
@@ -822,8 +806,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -896,8 +879,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOCATION_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -936,8 +918,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCATION_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -974,8 +955,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -1000,8 +980,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCAT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -1023,8 +1002,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCAT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -1070,8 +1048,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCAT_TEXT;
 --
 -- ----------------------------------------
@@ -1115,8 +1092,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCAT_TEXT;
 --
 -- ----------------------------------------
@@ -1160,8 +1136,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -1240,8 +1215,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOCATION_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -1277,8 +1251,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCATION_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -1323,8 +1296,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -1373,8 +1345,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCA_TEXT;
 --
 -- ----------------------------------------
@@ -1420,8 +1391,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCA_TEXT;
 --
 -- ----------------------------------------
@@ -1451,8 +1421,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOC_RELATIONSHIP_TYPE;
 --
 -- ----------------------------------------
@@ -1503,8 +1472,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOC_RELATIONSHIP_TYPE;
 --
 -- ----------------------------------------
@@ -1541,8 +1509,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOC_RELATIONSHIP_TYPE;
 --
 -- ----------------------------------------
@@ -1579,8 +1546,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOC_RELATIONSHIP_TYPE;
 --
 -- ----------------------------------------
@@ -1605,8 +1571,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCRT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -1628,8 +1593,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCRT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -1675,8 +1639,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCRT_TEXT;
 --
 -- ----------------------------------------
@@ -1720,8 +1683,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCRT_TEXT;
 --
 -- ----------------------------------------
@@ -1803,8 +1765,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION_RELATIONSHIP;
 --
 -- ----------------------------------------
@@ -1893,8 +1854,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOCATION_RELATIONSHIP;
 --
 -- ----------------------------------------
@@ -1941,8 +1901,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION_RELATIONSHIP;
 --
 -- ----------------------------------------
@@ -1996,8 +1955,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCR_TEXT;
 --
 -- ----------------------------------------
@@ -2048,8 +2006,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCR_TEXT;
 --
 -- ----------------------------------------
@@ -2079,8 +2036,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOC_TYPE_RELATIONSHIP;
 --
 -- ----------------------------------------
@@ -2123,8 +2079,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOC_TYPE_RELATIONSHIP;
 --
 -- ----------------------------------------
@@ -2175,8 +2130,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCTR_TEXT;
 --
 -- ----------------------------------------
@@ -2225,8 +2179,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCTR_TEXT;
 --
 -- ----------------------------------------
@@ -2265,8 +2218,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION_TYPE_VARIANT;
 --
 -- ----------------------------------------
@@ -2317,8 +2269,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOCATION_TYPE_VARIANT;
 --
 -- ----------------------------------------
@@ -2359,8 +2310,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCATION_TYPE_VARIANT;
 --
 -- ----------------------------------------
@@ -2397,8 +2347,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION_TYPE_VARIANT;
 --
 -- ----------------------------------------
@@ -2423,8 +2372,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCTV_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -2446,8 +2394,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCTV_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -2493,8 +2440,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LOCTV_TEXT;
 --
 -- ----------------------------------------
@@ -2538,8 +2484,7 @@ create or replace package body P_LOCATION is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCTV_TEXT;
 --
 -- =====================================

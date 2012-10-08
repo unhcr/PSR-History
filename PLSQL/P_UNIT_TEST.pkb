@@ -98,8 +98,7 @@ create or replace package body P_UNIT_TEST is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end RUN_TEST;
 --
 -- ----------------------------------------
@@ -416,8 +415,7 @@ create or replace package body P_UNIT_TEST is
     PLS_UTILITY.END_MODULE;
 --  exception
 --    when others
---    then PLS_UTILITY.END_MODULE;
---      raise;
+--    then PLS_UTILITY.TRACE_EXCEPTION;
   end RUN_TEST_CASE;
 --
 -- =====================================

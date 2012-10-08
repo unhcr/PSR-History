@@ -31,8 +31,7 @@ create or replace package body P_LANGUAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_LANGUAGE;
 --
 -- ----------------------------------------
@@ -83,8 +82,7 @@ create or replace package body P_LANGUAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LANGUAGE;
 --
 -- ----------------------------------------
@@ -121,8 +119,7 @@ create or replace package body P_LANGUAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LANGUAGE;
 --
 -- ----------------------------------------
@@ -158,8 +155,7 @@ create or replace package body P_LANGUAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_LANGUAGE;
 --
 -- ----------------------------------------
@@ -184,8 +180,7 @@ create or replace package body P_LANGUAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LANG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -207,8 +202,7 @@ create or replace package body P_LANGUAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LANG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -253,8 +247,7 @@ create or replace package body P_LANGUAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_LANG_TEXT;
 --
 -- ----------------------------------------
@@ -298,8 +291,7 @@ create or replace package body P_LANGUAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LANG_TEXT;
 --
 -- =====================================

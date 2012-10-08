@@ -8,7 +8,7 @@ create or replace package P_UNIT_TEST is
 --    of type character, number or date only.
 --
 --  Change History:
---  23-May-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  02-Oct-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --

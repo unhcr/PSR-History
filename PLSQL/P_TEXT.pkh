@@ -6,7 +6,7 @@ create or replace package P_TEXT is
 --  Procedures for maintenance of the text tables.
 --
 --  Change History:
---  27-Mar-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  02-Oct-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --

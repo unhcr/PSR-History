@@ -197,8 +197,7 @@ create or replace package body P_TEXT is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_TEXT;
 --
 -- ----------------------------------------
@@ -349,8 +348,7 @@ create or replace package body P_TEXT is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_TEXT;
 --
 -- =====================================

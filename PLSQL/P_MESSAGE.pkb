@@ -31,8 +31,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_COMPONENT;
 --
 -- ----------------------------------------
@@ -83,8 +82,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_COMPONENT;
 --
 -- ----------------------------------------
@@ -121,8 +119,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_COMPONENT;
 --
 -- ----------------------------------------
@@ -158,8 +155,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_COMPONENT;
 --
 -- ----------------------------------------
@@ -184,8 +180,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_COMP_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -207,8 +202,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_COMP_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -253,8 +247,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_COMP_TEXT;
 --
 -- ----------------------------------------
@@ -298,8 +291,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_COMP_TEXT;
 --
 -- ----------------------------------------
@@ -354,8 +346,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_MESSAGE;
 --
 -- ----------------------------------------
@@ -405,8 +396,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_MESSAGE;
 --
 -- ----------------------------------------
@@ -439,8 +429,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_MESSAGE;
 --
 -- ----------------------------------------
@@ -479,8 +468,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DELETE_MESSAGE;
 --
 -- ----------------------------------------
@@ -506,8 +494,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_MSG_MESSAGE;
 --
 -- ----------------------------------------
@@ -531,8 +518,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_MSG_MESSAGE;
 --
 -- ----------------------------------------
@@ -580,8 +566,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end SET_MSG_TEXT;
 --
 -- ----------------------------------------
@@ -627,8 +612,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end REMOVE_MSG_TEXT;
 --
 -- ----------------------------------------
@@ -715,8 +699,7 @@ create or replace package body P_MESSAGE is
     PLS_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.END_MODULE;
-      raise;
+    then PLS_UTILITY.TRACE_EXCEPTION;
   end DISPLAY_MESSAGE;
 --
 -- =====================================
