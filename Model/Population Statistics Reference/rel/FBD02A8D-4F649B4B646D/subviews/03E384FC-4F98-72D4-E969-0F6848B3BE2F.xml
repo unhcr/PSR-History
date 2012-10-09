@@ -14,23 +14,14 @@
 <display>false</display>
 <notation>1</notation>
 <objectViews>
-<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="0DF9E522-FEF6-964E-DF1B-BD6190A50833" otype="View" vid="F8A7DD47-5301-DED0-C6AA-96290503BECC">
-<bounds x="30" y="710" width="181" height="271"/>
-</OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="12C1FF7C-86A2-FD61-8AD5-DD24711E21DD" otype="View" vid="D435B140-9C73-5276-C532-A51668E5E246">
 <bounds x="720" y="30" width="211" height="1051"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="3A1361CD-BEB2-D42F-CB5B-1CBCBE44B16D" otype="View" vid="A52D8729-67C1-B6DB-345F-01D10B3570BB">
 <bounds x="950" y="30" width="211" height="1121"/>
 </OView>
-<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="713860DD-DCFF-3958-7F6F-5980202BB960" otype="View" vid="34B6894C-ED9C-BFD4-F085-C7E4A61F1E89">
-<bounds x="30" y="310" width="231" height="371"/>
-</OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="B08CEC94-BFEA-85DD-C5BD-8DBA8FC4A8B5" otype="View" vid="16432282-2EB1-0891-44EF-A1AA1B963D31">
 <bounds x="30" y="30" width="211" height="261"/>
-</OView>
-<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="D41DF684-22D6-5EDD-5ED4-91086679104A" otype="View" vid="F4B86431-41C3-F37E-4018-C53C58EAF414">
-<bounds x="280" y="310" width="221" height="231"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="DFCF15DB-6E00-1E8A-0EC1-BA63F3306DA0" otype="View" vid="BC56237E-465E-A7FD-B132-3591B568700B">
 <bounds x="260" y="30" width="211" height="261"/>
