@@ -9,7 +9,8 @@ declare
   iCount pls_integer := 0;
 begin
   for rLOC in
-   (select KEY, NAME_EN, LOCT_CODE, START_DATE, END_DATE, NAME_FR, UNSDNUM, HCRBC, DISPLAYSEQ, RSKEY, NOTES
+   (select KEY, NAME_EN, LOCT_CODE, START_DATE, END_DATE, NAME_FR, UNSDNUM, HCRCD,
+      DISPLAYSEQ, RSKEY, NOTES
     from STAGE.S_LOCATIONS_REGIONS
     order by KEY)
   loop
@@ -28,8 +29,8 @@ begin
     then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'UNSDNUM', rLOC.UNSDNUM);
     end if;
   --
-    if rLOC.HCRBC is not null
-    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'HCRBC', rLOC.HCRBC);
+    if rLOC.HCRCD is not null
+    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'HCRCD', rLOC.HCRCD);
     end if;
   --
     if rLOC.DISPLAYSEQ is not null
