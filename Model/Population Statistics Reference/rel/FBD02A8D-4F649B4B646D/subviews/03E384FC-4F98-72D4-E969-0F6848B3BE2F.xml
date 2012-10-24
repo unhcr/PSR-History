@@ -9,25 +9,25 @@
 <showGrid>false</showGrid>
 <diagramColor>-1</diagramColor>
 <legendPosX>30</legendPosX>
-<legendPosY>1070</legendPosY>
+<legendPosY>1099</legendPosY>
 <legendAttributes>56</legendAttributes>
 <display>false</display>
 <notation>1</notation>
 <objectViews>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="12C1FF7C-86A2-FD61-8AD5-DD24711E21DD" otype="View" vid="D435B140-9C73-5276-C532-A51668E5E246">
-<bounds x="720" y="30" width="211" height="1051"/>
+<bounds x="270" y="31" width="211" height="1051"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="3A1361CD-BEB2-D42F-CB5B-1CBCBE44B16D" otype="View" vid="A52D8729-67C1-B6DB-345F-01D10B3570BB">
-<bounds x="950" y="30" width="211" height="1121"/>
+<bounds x="511" y="30" width="211" height="1131"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="B08CEC94-BFEA-85DD-C5BD-8DBA8FC4A8B5" otype="View" vid="16432282-2EB1-0891-44EF-A1AA1B963D31">
 <bounds x="30" y="30" width="211" height="261"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="DFCF15DB-6E00-1E8A-0EC1-BA63F3306DA0" otype="View" vid="BC56237E-465E-A7FD-B132-3591B568700B">
-<bounds x="260" y="30" width="211" height="261"/>
+<bounds x="31" y="319" width="211" height="261"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="E2FBFD92-8C66-CACF-7766-38C7CCEED812" otype="View" vid="9A6419D7-FB02-2233-191A-47149F4E8A20">
-<bounds x="490" y="30" width="211" height="221"/>
+<bounds x="31" y="610" width="211" height="261"/>
 </OView>
 </objectViews>
 </Diagram>

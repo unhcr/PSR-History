@@ -288,10 +288,22 @@
 <colAssociation fkAssociation="9EA24DFD-571F-BCEC-B9BB-5F8EA2C8266B" referredColumn="E887FD2B-4164-C0ED-B1AC-5A298B0AAA7E"/>
 </associations>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PGR_ID_SUBGROUP" id="FB3DF66E-C821-4D12-59C5-7F782CD76E97">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PGR_SEQ_NBR" id="2DAEA3FB-3F69-DF27-14BA-21EEE2BD730B">
+<createdBy>Scott</createdBy>
+<createdTime>2012-10-23 11:03:53 UTC</createdTime>
+<comment>Population sub-group sequence number</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>4DEE2B98-924B-3C9C-5F42-8D1F2F4A8E54</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PGR_ID_PRIMARY" id="FB3DF66E-C821-4D12-59C5-7F782CD76E97">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-27 09:29:42 UTC</createdTime>
-<comment>Identifier of population sub-group</comment>
+<comment>Identifier of primary population group for this statistic</comment>
+<notes>This is of use in ASR statistics to link individual statistics to the population group which represents the complete row of data in an ASR table. This linkage must also be represented by a row in table T_STATISTICS_IN_GROUPS (but the converse is not true).</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
@@ -414,7 +426,7 @@
 <colUsage columnID="2ACE9384-8C86-F9D2-C19F-5FE05F23B85D"/>
 <colUsage columnID="12403EFF-B965-DC85-DF84-4FD6950E185D"/>
 <colUsage columnID="EA3C65B3-25A8-FB2B-0E83-32CCF773AB29"/>
-<colUsage columnID="FB3DF66E-C821-4D12-59C5-7F782CD76E97"/>
+<colUsage columnID="2DAEA3FB-3F69-DF27-14BA-21EEE2BD730B"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="0CBCA6D2-74EE-76EB-DDB2-384C7AFDF914" name="UK_STC_ITM_ID">
@@ -558,7 +570,7 @@
 <colUsage columnID="2ACE9384-8C86-F9D2-C19F-5FE05F23B85D"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="30E71929-BF63-F019-4485-4A78583B6CD6" name="FK_STC_PGR_SUBGROUP">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="30E71929-BF63-F019-4485-4A78583B6CD6" name="FK_STC_PGR_PRIMARY">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-27 09:31:06 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>

@@ -266,7 +266,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="SEQ_NBR" id="C612EA49-A316-DC41-0097-8955A89E52B5">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-05 15:37:00 UTC</createdTime>
-<comment>Population sub-segment sequence number</comment>
+<comment>Population sub-group sequence number</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
