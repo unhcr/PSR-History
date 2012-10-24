@@ -498,7 +498,7 @@ begin
         pnDIM_ID2 => rSTC.DIM_ID2,
         psSEX_CODE => rSTC.SEX_CODE,
         pnAGR_ID => rSTC.AGR_ID,
-        pnPGR_ID_SUBGROUP => case when rSTC.SUBGROUP_NAME is not null then nPGR_ID end,
+        pnPGR_ID_PRIMARY => nPGR_ID,
         pnVALUE => rSTC.VALUE);
       iCount2 := iCount2 + 1;
     end if;
