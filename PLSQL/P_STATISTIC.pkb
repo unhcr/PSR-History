@@ -25,7 +25,7 @@ create or replace package body P_STATISTIC is
     pnDIM_ID5 in P_BASE.tnDIM_ID := null,
     psSEX_CODE in P_BASE.tsSEX_CODE := null,
     pnAGR_ID in P_BASE.tnAGR_ID := null,
-    pnPGR_ID_SUBGROUP in P_BASE.tnPGR_ID := null,
+    pnPGR_ID_PRIMARY in P_BASE.tnPGR_ID := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
     pnVALUE in P_BASE.tmnSTC_VALUE)
   is
@@ -46,6 +46,8 @@ create or replace package body P_STATISTIC is
     sDIMT_CODE5 P_BASE.tsDIMT_CODE;
     sSEX_CODE_FLAG P_BASE.tsFlag;
     sAGR_ID_FLAG P_BASE.tsFlag;
+  --
+    nPGR_SEQ_NBR P_BASE.tnPGR_SEQ_NBR;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_STATISTIC',
@@ -56,7 +58,7 @@ create or replace package body P_STATISTIC is
         to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' || to_char(pnLOC_ID_ORIGIN) || '~' ||
         to_char(pnDIM_ID1) || '~' || to_char(pnDIM_ID2) || '~' || to_char(pnDIM_ID3) || '~' ||
         to_char(pnDIM_ID4) || '~' || to_char(pnDIM_ID5) || '~' || psSEX_CODE || '~' ||
-        to_char(pnAGR_ID) || '~' || to_char(pnPGR_ID_SUBGROUP) || '~' || to_char(pnPPG_ID) || '~' ||
+        to_char(pnAGR_ID) || '~' || to_char(pnPGR_ID_PRIMARY) || '~' || to_char(pnPPG_ID) || '~' ||
         to_char(pnVALUE));
   --
     select DST_CODE_FLAG, LOC_ID_ASYLUM_COUNTRY_FLAG, LOC_ID_ASYLUM_FLAG,
@@ -143,78 +145,74 @@ create or replace package body P_STATISTIC is
     then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Age range must not be specified');
     end if;
   --
+    if pnPGR_ID_PRIMARY is not null
+    then
+      select SEQ_NBR
+      into nPGR_SEQ_NBR
+      from T_POPULATION_GROUPS
+      where ID = pnPGR_ID_PRIMARY;
+    end if;
+  --
     insert into T_STATISTICS
      (ID, STCT_CODE, START_DATE, END_DATE, DST_CODE,
       LOC_ID_ASYLUM_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN_COUNTRY, LOC_ID_ORIGIN,
       DIM_ID1, DIM_ID2, DIM_ID3, DIM_ID4, DIM_ID5,
-      SEX_CODE, AGR_ID, PGR_ID_SUBGROUP, PPG_ID, VALUE)
+      SEX_CODE, AGR_ID, PGR_SEQ_NBR, PGR_ID_PRIMARY, PPG_ID, VALUE)
     values
      (STC_SEQ.nextval, psSTCT_CODE, pdSTART_DATE, pdEND_DATE, psDST_CODE,
       pnLOC_ID_ASYLUM_COUNTRY, pnLOC_ID_ASYLUM, pnLOC_ID_ORIGIN_COUNTRY, pnLOC_ID_ORIGIN,
       pnDIM_ID1, pnDIM_ID2, pnDIM_ID3, pnDIM_ID4, pnDIM_ID5,
-      psSEX_CODE, pnAGR_ID, pnPGR_ID_SUBGROUP, pnPPG_ID, pnVALUE)
+      psSEX_CODE, pnAGR_ID, nPGR_SEQ_NBR, pnPGR_ID_PRIMARY, pnPPG_ID, pnVALUE)
     returning ID into pnID;
+  --
+    if pnPGR_ID_PRIMARY is not null
+    then
+      insert into T_STATISTICS_IN_GROUPS (STC_ID, PGR_ID)
+      values(pnID, pnPGR_ID_PRIMARY);
+    end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
   end INSERT_STATISTIC;
-/*
 --
 -- ----------------------------------------
--- INSERT_STATISTIC
+-- UPDATE_STATISTIC
 -- ----------------------------------------
 --
-  procedure INSERT_STATISTIC
-   (pnID out P_BASE.tnSTC_ID,
-    psSTCT_CODE in P_BASE.tmsSTCT_CODE,
-    pnLOC_ID_COUNTRY in P_BASE.tnLOC_ID := null,
-    pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
-    pnLOC_ID_ORIGIN in P_BASE.tnLOC_ID := null,
-    pnLOC_ID_SOURCE in P_BASE.tnLOC_ID := null,
-    pnPPG_ID in P_BASE.tnPPG_ID := null,
-    psDST_CODE in P_BASE.tsDST_CODE := null,
-    pnPER_ID in P_BASE.tnPER_ID := null,
-    psSEX_CODE in P_BASE.tsSEX_CODE := null,
-    pnAGR_ID in P_BASE.tnAGR_ID := null,
-    pnDIM_ID1 in P_BASE.tnDIM_ID := null,
-    pnDIM_ID2 in P_BASE.tnDIM_ID := null,
-    pnDIM_ID3 in P_BASE.tnDIM_ID := null,
-    pnDIM_ID4 in P_BASE.tnDIM_ID := null,
-    pnDIM_ID5 in P_BASE.tnDIM_ID := null,
-    pnVALUE in P_BASE.tmnSTC_VALUE)
+  procedure UPDATE_STATISTIC
+   (pnID in P_BASE.tmnSTC_ID,
+    pnVERSION_NBR in out P_BASE.tnSTC_VERSION_NBR,
+    pnVALUE in P_BASE.tnSTC_VALUE)
   is
+    nVERSION_NBR P_BASE.tnSTC_VERSION_NBR;
+    xSTC_ROWID rowid;
   begin
     PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_STATISTIC',
-      psSTCT_CODE || '~' || to_char(pnLOC_ID_COUNTRY) || '~' || to_char(pnLOC_ID_ASYLUM) || '~' ||
-        to_char(pnLOC_ID_ORIGIN) || '~' || to_char(pnLOC_ID_SOURCE) || '~' ||
-        to_char(pnPPG_ID) || '~' || psDST_CODE || '~' || to_char(pnPER_ID) || '~' ||
-        psSEX_CODE || '~' || to_char(pnAGR_ID) || '~' ||
-        to_char(pnDIM_ID1) || '~' || to_char(pnDIM_ID2) || '~' || to_char(pnDIM_ID3) || '~' ||
-        to_char(pnDIM_ID4) || '~' || to_char(pnDIM_ID5) || '~' || to_char(pnVALUE));
+     (sVersion || '-' || sComponent || '.UPDATE_STATISTIC',
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnVALUE));
   --
-    insert into T_STATISTICS
-     (ID, STCT_CODE,
-      LOC_ID_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN, LOC_ID_SOURCE,
-      PPG_ID, DST_CODE, PER_ID, SEX_CODE, AGR_ID,
-      DIM_ID1, DIM_ID2, DIM_ID3, DIM_ID4, DIM_ID5,
-      VALUE)
-    values
-     (STC_SEQ.nextval, psSTCT_CODE,
-      pnLOC_ID_COUNTRY, pnLOC_ID_ASYLUM, pnLOC_ID_ORIGIN, pnLOC_ID_SOURCE,
-      pnPPG_ID, psDST_CODE, pnPER_ID, psSEX_CODE, pnAGR_ID,
-      pnDIM_ID1, pnDIM_ID2, pnDIM_ID3, pnDIM_ID4, pnDIM_ID5,
-      pnVALUE)
-    returning ID into pnID;
+    select VERSION_NBR, rowid
+    into nVERSION_NBR, xSTC_ROWID
+    from T_STATISTICS
+    where ID = pnID
+    for update;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      update T_STATISTICS
+      set VALUE = pnVALUE
+      where rowid = xSTC_ROWID;
+    else
+      P_MESSAGE.DISPLAY_MESSAGE('STC', 1, 'Statistic has been updated by another user');
+    end if;
   --
     PLS_UTILITY.END_MODULE;
   exception
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
-  end INSERT_STATISTIC;
-*/
+  end UPDATE_STATISTIC;
 --
 -- ----------------------------------------
 -- DELETE_STATISTIC
