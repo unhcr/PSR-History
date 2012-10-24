@@ -97,9 +97,9 @@ prompt LoadLocationsSubdivisions
 prompt =========================
 @LoadLocationsSubdivisions
 
---prompt LoadPPGs
---prompt ========
---@LoadPPGs
+prompt LoadPPGs
+prompt ========
+@LoadPPGs
 
 prompt LoadStatistics
 prompt ==============
