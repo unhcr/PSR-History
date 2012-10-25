@@ -24,6 +24,7 @@ begin
         null as DIMT_CODE2,
         null as DIM_CODE2,
         null as SUBGROUP_NAME,
+        null as PPG_NAME,
         SOURCE,
         BASIS,
         substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
@@ -73,6 +74,7 @@ begin
           when 'Undefined' then 'UNDEFINED'
         end as DIM_CODE2,
         null as SUBGROUP_NAME,
+        PPG_NAME,
         null as SOURCE,
         BASIS,
         'E' as PERIOD_FLAG,
@@ -86,11 +88,13 @@ begin
         VALUE
       from
        (select ASR.TABLE_NUMBER, ASR.STATSYEAR,
+          ASR.DISPLACEMENT_STATUS,
           upper(ASR.COU_CODE_ASYLUM) as COU_CODE_ASYLUM,
           coalesce(LCOR.CORRECTED_LOCATION_NAME,
                    ASR.NEW_LOCATION_NAME, ASR.LOCATION_NAME) as LOCATION_NAME,
-          ASR.URBAN_RURAL_STATUS, ASR.ACCOMMODATION_TYPE, ASR.DISPLACEMENT_STATUS,
           upper(ASR.COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
+          ASR.URBAN_RURAL_STATUS, ASR.ACCOMMODATION_TYPE,
+          nvl(PCOR.CORRECTED_PPG_NAME, ASR.PPG_NAME) as PPG_NAME,
           ASR.F0_4, ASR.F5_11, ASR.F12_17, ASR.F18_59, ASR.F60,
           case
             when nvl(ASR.F0_4, 0) + nvl(ASR.F5_11, 0) + nvl(ASR.F12_17, 0) + nvl(ASR.F18_59, 0) +
@@ -119,7 +123,11 @@ begin
           and LCOR.LOCATION_NAME = ASR.LOCATION_NAME
           and (LCOR.NEW_LOCATION_NAME = ASR.NEW_LOCATION_NAME
             or (LCOR.NEW_LOCATION_NAME is null
-              and ASR.NEW_LOCATION_NAME is null)))
+              and ASR.NEW_LOCATION_NAME is null))
+        left outer join STAGE.S_PPG_CORRECTIONS PCOR
+          on PCOR.STATSYEAR = ASR.STATSYEAR
+          and PCOR.COU_CODE_ASYLUM = upper(ASR.COU_CODE_ASYLUM)
+          and PCOR.PPG_NAME = ASR.PPG_NAME)
       unpivot
        (VALUE for COLUMN_CODE in
          (F0_4 as 'F00',
@@ -149,6 +157,7 @@ begin
         null as DIMT_CODE2,
         null as DIM_CODE2,
         null as SUBGROUP_NAME,
+        null as PPG_NAME,
         null as SOURCE,
         null as BASIS,
         'E' as PERIOD_FLAG,
@@ -179,6 +188,7 @@ begin
         'RSDLEVEL' as DIMT_CODE2,
         DIM_RSDLEVEL_VALUE as DIM_CODE2,
         null as SUBGROUP_NAME,
+        null as PPG_NAME,
         null as SOURCE,
         null as BASIS,
         substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
@@ -211,6 +221,7 @@ begin
         null as DIMT_CODE2,
         null as DIM_CODE2,
         null as SUBGROUP_NAME,
+        null as PPG_NAME,
         SOURCE,
         BASIS,
         substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
@@ -257,6 +268,7 @@ begin
         null as DIMT_CODE2,
         null as DIM_CODE2,
         null as SUBGROUP_NAME,
+        null as PPG_NAME,
         SOURCE,
         BASIS,
         substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
@@ -282,6 +294,7 @@ begin
         null as DIMT_CODE2,
         null as DIM_CODE2,
         DESCRIPTION as SUBGROUP_NAME,
+        null as PPG_NAME,
         SOURCE,
         BASIS,
         substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
@@ -313,6 +326,7 @@ begin
         null as DIMT_CODE2,
         null as DIM_CODE2,
         DESCRIPTION as SUBGROUP_NAME,
+        null as PPG_NAME,
         SOURCE,
         BASIS,
         substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
@@ -348,28 +362,32 @@ begin
         end as END_DATE,
         DST_CODE, COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
         DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME,
-        SOURCE, BASIS,
+        PPG_NAME, PPG_COUNT, SOURCE, BASIS,
         PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
         sum(VALUE) as VALUE
       from
        (select TABLE_NUMBER, STATSYEAR, DST_CODE,
           COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
-          DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME,
+          DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME, PPG_NAME,
+          count(distinct nvl(PPG_NAME, 'zzz')) over
+           (partition by TABLE_NUMBER, STATSYEAR, DST_CODE,
+            COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
+            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME) as PPG_COUNT,
           STAGE.CHARAGG(SOURCE) over
            (partition by TABLE_NUMBER, STATSYEAR, DST_CODE,
             COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
-            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME) as SOURCE,
+            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME, PPG_NAME) as SOURCE,
           STAGE.CHARAGG(BASIS) over
            (partition by TABLE_NUMBER, STATSYEAR, DST_CODE,
             COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
-            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME) as BASIS,
+            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME, PPG_NAME) as BASIS,
           PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
           VALUE
         from
          (select TABLE_NUMBER, STATSYEAR, DST_CODE,
             COU_CODE_ASYLUM, LOCATION_NAME,
             decode(COU_CODE_ORIGIN, 'YUG', 'SRB', COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
-            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME,
+            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME, PPG_NAME,
             SOURCE, BASIS,
             PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
             VALUE
@@ -378,7 +396,7 @@ begin
       group by TABLE_NUMBER, STATSYEAR, DST_CODE,
         COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
         DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME,
-        SOURCE, BASIS,
+        PPG_NAME, PPG_COUNT, SOURCE, BASIS,
         PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM)
   --
     select STC.TABLE_NUMBER,
@@ -395,7 +413,10 @@ begin
       STC.DIM_CODE1,
       STC.DIMT_CODE2,
       STC.DIM_CODE2,
-      STC.SUBGROUP_NAME,
+      nvl(STC.SUBGROUP_NAME, case when STC.PPG_COUNT > 1 then STC.PPG_NAME end) as SUBGROUP_NAME,
+      STC.PPG_NAME,
+      STC.PPG_COUNT,
+      nvl(PPG1.PPG_ID, PPG2.PPG_ID) as PPG_ID,
       STC.SOURCE,
       STC.BASIS,
       STC.PERIOD_FLAG,
@@ -411,7 +432,8 @@ begin
       AGR.ID as AGR_ID,
       row_number() over
        (partition by STC.STATSYEAR, STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID, DIM1.ID, DIM2.ID,
-          STC.SUBGROUP_NAME
+          nvl(STC.SUBGROUP_NAME, case when STC.PPG_COUNT > 1 then STC.PPG_NAME end),
+          nvl(PPG1.PPG_ID, PPG2.PPG_ID)
         order by STC.PERIOD_FLAG, STC.STCT_CODE, STC.SEX_CODE, AGR.ID) as PSG_CHILD_NUMBER
     from AGGREGATED_STATISTICS STC
     left outer join COUNTRIES COU
@@ -439,11 +461,39 @@ begin
     left outer join DIMENSION_VALUES DIM2
       on DIM2.DIMT_CODE = STC.DIMT_CODE2
       and DIM2.CODE = STC.DIM_CODE2
+    left outer join
+     (select COU.UNHCR_COUNTRY_CODE, PPG.ID as PPG_ID, PPG.DESCRIPTION as PPG_NAME,
+        greatest(COU.START_DATE, PPG.START_DATE) as START_DATE,
+        least(COU.END_DATE, PPG.END_DATE) as END_DATE
+      from COUNTRIES COU
+      inner join POPULATION_PLANNING_GROUPS PPG
+        on PPG.LOC_ID = COU.ID) PPG1
+      on PPG1.UNHCR_COUNTRY_CODE = STC.COU_CODE_ASYLUM
+      and PPG1.PPG_NAME = STC.PPG_NAME
+      and PPG1.START_DATE <= trunc(to_date(STC.STATSYEAR || '-12-31', 'YYYY-MM-DD'))
+      and PPG1.END_DATE >= trunc(to_date(STC.STATSYEAR || '-12-31', 'YYYY-MM-DD'))
+    left outer join
+     (select COU.UNHCR_COUNTRY_CODE, PPG.ID as PPG_ID, PPG.DESCRIPTION as PPG_NAME,
+        greatest(COU.START_DATE, PPG.START_DATE) as START_DATE,
+        least(COU.END_DATE, PPG.END_DATE) as END_DATE
+      from COUNTRIES COU
+      inner join LOCATION_RELATIONSHIPS LOCR
+        on LOCR.LOC_ID_TO = COU.ID
+        and LOCR.LOCRT_CODE = 'HCRRESP'
+      inner join LOCATIONS LOC
+        on LOC.ID = LOCR.LOC_ID_FROM
+        and LOC.LOCT_CODE = 'HCR-ROF'
+      inner join POPULATION_PLANNING_GROUPS PPG
+        on PPG.LOC_ID = LOC.ID) PPG2
+      on PPG2.UNHCR_COUNTRY_CODE = STC.COU_CODE_ASYLUM
+      and PPG2.PPG_NAME = STC.PPG_NAME
+      and PPG2.START_DATE <= trunc(to_date(STC.STATSYEAR || '-12-31', 'YYYY-MM-DD'))
+      and PPG2.END_DATE >= trunc(to_date(STC.STATSYEAR || '-12-31', 'YYYY-MM-DD'))
     left outer join T_AGE_RANGES AGR
       on AGR.AGP_CODE = 'STD'
       and AGR.AGE_FROM = STC.AGE_FROM
-    order by STC.STATSYEAR, STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID, DIM1.ID, DIM2.ID,
-      STC.SUBGROUP_NAME, STC.PERIOD_FLAG, STC.STCT_CODE, STC.SEX_CODE, AGR.ID)
+    order by STATSYEAR, DST_CODE, LOC_ID_ASYLUM_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN_COUNTRY,
+      DIM_ID1, DIM_ID2, SUBGROUP_NAME, PPG_ID, PERIOD_FLAG, STCT_CODE, SEX_CODE, AGR_ID)
   loop
     PLS_UTILITY.TRACE_POINT
      ('Trace',
@@ -451,7 +501,7 @@ begin
         rSTC.COU_CODE_ASYLUM || '~' || rSTC.LOCATION_NAME || '~' || rSTC.COU_CODE_ORIGIN || '~' ||
         rSTC.DIMT_CODE1 || '~' || rSTC.DIM_CODE1 || '~' ||
         rSTC.DIMT_CODE2 || '~' || rSTC.DIM_CODE2 || '~' ||
-        rSTC.SUBGROUP_NAME || '~' || rSTC.STCT_CODE || '~' ||
+        rSTC.SUBGROUP_NAME || '~' || rSTC.PPG_NAME || '~' || rSTC.STCT_CODE || '~' ||
         rSTC.PERIOD_FLAG || '~' || rSTC.SEX_CODE || '~' || to_char(rSTC.AGE_FROM));
   --
     if rSTC.LOC_ID_ASYLUM_COUNTRY = -1
@@ -476,7 +526,8 @@ begin
           pnDIM_ID1 => rSTC.DIM_ID1,
           pnDIM_ID2 => rSTC.DIM_ID2,
           psLANG_CODE => case when rSTC.SUBGROUP_NAME is not null then 'en' end,
-          psSUBGROUP_NAME => rSTC.SUBGROUP_NAME);
+          psSUBGROUP_NAME => rSTC.SUBGROUP_NAME,
+          pnPPG_ID => rSTC.PPG_ID);
         iCount1 := iCount1 + 1;
       --
         if rSTC.SOURCE is not null
@@ -499,6 +550,7 @@ begin
         psSEX_CODE => rSTC.SEX_CODE,
         pnAGR_ID => rSTC.AGR_ID,
         pnPGR_ID_PRIMARY => nPGR_ID,
+        pnPPG_ID => rSTC.PPG_ID,
         pnVALUE => rSTC.VALUE);
       iCount2 := iCount2 + 1;
     end if;
