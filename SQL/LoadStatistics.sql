@@ -210,14 +210,20 @@ begin
           ASY_AH_END as 'E/ASYPOP-AH'))
       union all
       --
-      -- Table VI
+      -- Table VI.A and VI.B
       --
       select TABLE_NUMBER, STATSYEAR, DST_CODE,
         COU_CODE_ORIGIN as COU_CODE_ASYLUM,
         LOCATION_NAME,
         COU_CODE_ORIGIN,
-        'DISPCAUSE' as DIMT_CODE1,
-        DISPLACEMENT_CAUSE as DIM_CODE1,
+        case
+          when TABLE_NUMBER in ('6A', '6B') and OFFICIAL is not null
+          then 'OFFICIAL'
+        end as DIMT_CODE1,
+        case
+          when TABLE_NUMBER in ('6A', '6B')
+          then decode(OFFICIAL, 'yes', 'Y', 'no', 'N')
+        end as DIM_CODE1,
         null as DIMT_CODE2,
         null as DIM_CODE2,
         null as SUBGROUP_NAME,
@@ -225,13 +231,18 @@ begin
         SOURCE,
         BASIS,
         substr(COLUMN_CODE, 1, 1) as PERIOD_FLAG,
-        substr(COLUMN_CODE, 3) as STCT_CODE,
+        case TABLE_NUMBER
+          when '6A' then 'IDPH'
+          when '6B' then 'IDPH'
+          when '6C' then 'IDPC'
+          when '6D' then 'IDPD'
+        end || substr(COLUMN_CODE, 3) as STCT_CODE,
         null as SEX_CODE,
         to_number(null) as AGE_FROM,
         VALUE
       from
        (select ASR.TABLE_NUMBER, ASR.STATSYEAR,
-          ASR.DISPLACEMENT_CAUSE, ASR.DST_CODE,
+          ASR.OFFICIAL, ASR.DST_CODE,
           upper(ASR.COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
           coalesce(LCOR.CORRECTED_LOCATION_NAME, ASR.LOCATION_NAME) as LOCATION_NAME,
           ASR.POP_START, ASR.POP_AH_START,
@@ -245,16 +256,16 @@ begin
           and LCOR.LOCATION_NAME = ASR.LOCATION_NAME)
       unpivot
        (VALUE for COLUMN_CODE in
-         (POP_START as 'S/IDPPOP',
-          POP_AH_START as 'S/IDPPOP-AH',
-          IDPNEW as 'F/IDPNEW',
-          IDPOTHINC as 'F/IDPOTHINC',
-          RETURN as 'F/IDPRTN',
-          RETURN_AH as 'F/IDPRTN-AH',
-          IDPRELOC as 'F/IDPRELOC',
-          IDPOTHDEC as 'F/IDPOTHDEC',
-          POP_END as 'E/IDPPOP',
-          POP_AH_END as 'E/IDPPOP-AH'))
+         (POP_START as 'S/POP',
+          POP_AH_START as 'S/POP-AH',
+          IDPNEW as 'F/NEW',
+          IDPOTHINC as 'F/OTHINC',
+          RETURN as 'F/RTN',
+          RETURN_AH as 'F/RTN-AH',
+          IDPRELOC as 'F/RELOC',
+          IDPOTHDEC as 'F/OTHDEC',
+          POP_END as 'E/POP',
+          POP_AH_END as 'E/POP-AH'))
       union all
       --
       -- Table VII.A and VII.B
