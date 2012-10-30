@@ -1,7 +1,7 @@
 create table S_ASR_T6D_2011
  (TABLE_NUMBER varchar2(5),
   STATSYEAR varchar2(4),
-  DISPLACEMENT_CAUSE varchar2(10),
+  OFFICIAL varchar2(10),
   COU_CODE_ORIGIN varchar2(3),
   LOCATION_NAME varchar2(1000),
   DST_CODE varchar2(3),
@@ -35,7 +35,7 @@ organization external
       FILLER2 char(4000),
       STATSYEAR char(4000),
       COU_CODE_ORIGIN char(4000),
-      FILLER5 char(4000),
+      OFFICIAL char(4000),
       LOCATION_NAME char(4000),
       POP_START char(4000),
       POP_AH_START char(4000),
@@ -51,7 +51,6 @@ organization external
       BASIS char(4000))
     column transforms
      (TABLE_NUMBER from constant '6D',
-      DISPLACEMENT_CAUSE from constant 'DISASTER',
       DST_CODE from constant 'IDP'))
   location ('ASR_T6D_2011.csv'))
 reject limit unlimited;
