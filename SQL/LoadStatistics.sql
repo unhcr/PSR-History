@@ -23,6 +23,12 @@ begin
         null as DIM_CODE1,
         null as DIMT_CODE2,
         null as DIM_CODE2,
+        null as DIMT_CODE3,
+        null as DIM_CODE3,
+        null as DIMT_CODE4,
+        null as DIM_CODE4,
+        null as DIMT_CODE5,
+        null as DIM_CODE5,
         null as SUBGROUP_NAME,
         null as PPG_NAME,
         SOURCE,
@@ -73,6 +79,15 @@ begin
           when 'Settlement' then 'SETTLEMENT'
           when 'Undefined' then 'UNDEFINED'
         end as DIM_CODE2,
+        case when BASIS in ('C', 'E', 'R', 'S', 'V') then 'REG' end as DIMT_CODE3,
+        case
+          when BASIS in ('C', 'R') then 'Y'
+          when BASIS in ('E', 'S', 'V') then 'N'
+        end as DIM_CODE3,
+        null as DIMT_CODE4,
+        null as DIM_CODE4,
+        null as DIMT_CODE5,
+        null as DIM_CODE5,
         null as SUBGROUP_NAME,
         PPG_NAME,
         null as SOURCE,
@@ -156,6 +171,12 @@ begin
         LEGAL_BASIS as DIM_CODE1,
         null as DIMT_CODE2,
         null as DIM_CODE2,
+        null as DIMT_CODE3,
+        null as DIM_CODE3,
+        null as DIMT_CODE4,
+        null as DIM_CODE4,
+        null as DIMT_CODE5,
+        null as DIM_CODE5,
         null as SUBGROUP_NAME,
         null as PPG_NAME,
         null as SOURCE,
@@ -187,6 +208,12 @@ begin
         DIM_RSDTYPE_VALUE as DIM_CODE1,
         'RSDLEVEL' as DIMT_CODE2,
         DIM_RSDLEVEL_VALUE as DIM_CODE2,
+        null as DIMT_CODE3,
+        null as DIM_CODE3,
+        null as DIMT_CODE4,
+        null as DIM_CODE4,
+        null as DIMT_CODE5,
+        null as DIM_CODE5,
         null as SUBGROUP_NAME,
         null as PPG_NAME,
         null as SOURCE,
@@ -210,7 +237,7 @@ begin
           ASY_AH_END as 'E/ASYPOP-AH'))
       union all
       --
-      -- Table VI.A and VI.B
+      -- Table VI
       --
       select TABLE_NUMBER, STATSYEAR, DST_CODE,
         COU_CODE_ORIGIN as COU_CODE_ASYLUM,
@@ -226,6 +253,12 @@ begin
         end as DIM_CODE1,
         null as DIMT_CODE2,
         null as DIM_CODE2,
+        null as DIMT_CODE3,
+        null as DIM_CODE3,
+        null as DIMT_CODE4,
+        null as DIM_CODE4,
+        null as DIMT_CODE5,
+        null as DIM_CODE5,
         null as SUBGROUP_NAME,
         null as PPG_NAME,
         SOURCE,
@@ -278,6 +311,12 @@ begin
         null as DIM_CODE1,
         null as DIMT_CODE2,
         null as DIM_CODE2,
+        null as DIMT_CODE3,
+        null as DIM_CODE3,
+        null as DIMT_CODE4,
+        null as DIM_CODE4,
+        null as DIMT_CODE5,
+        null as DIM_CODE5,
         null as SUBGROUP_NAME,
         null as PPG_NAME,
         SOURCE,
@@ -304,6 +343,12 @@ begin
         null as DIM_CODE1,
         null as DIMT_CODE2,
         null as DIM_CODE2,
+        null as DIMT_CODE3,
+        null as DIM_CODE3,
+        null as DIMT_CODE4,
+        null as DIM_CODE4,
+        null as DIMT_CODE5,
+        null as DIM_CODE5,
         DESCRIPTION as SUBGROUP_NAME,
         null as PPG_NAME,
         SOURCE,
@@ -336,6 +381,12 @@ begin
         null as DIM_CODE1,
         null as DIMT_CODE2,
         null as DIM_CODE2,
+        null as DIMT_CODE3,
+        null as DIM_CODE3,
+        null as DIMT_CODE4,
+        null as DIM_CODE4,
+        null as DIMT_CODE5,
+        null as DIM_CODE5,
         DESCRIPTION as SUBGROUP_NAME,
         null as PPG_NAME,
         SOURCE,
@@ -372,33 +423,39 @@ begin
           when 'F' then add_months(trunc(to_date(STATSYEAR, 'YYYY'), 'YYYY'), 12)
         end as END_DATE,
         DST_CODE, COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
-        DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME,
+        DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
+        DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME,
         PPG_NAME, PPG_COUNT, SOURCE, BASIS,
         PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
         sum(VALUE) as VALUE
       from
        (select TABLE_NUMBER, STATSYEAR, DST_CODE,
           COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
-          DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME, PPG_NAME,
+          DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
+          DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME, PPG_NAME,
           count(distinct nvl(PPG_NAME, 'zzz')) over
            (partition by TABLE_NUMBER, STATSYEAR, DST_CODE,
             COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
-            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME) as PPG_COUNT,
+            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
+            DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME) as PPG_COUNT,
           STAGE.CHARAGG(SOURCE) over
            (partition by TABLE_NUMBER, STATSYEAR, DST_CODE,
             COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
-            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME, PPG_NAME) as SOURCE,
+            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
+            DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME, PPG_NAME) as SOURCE,
           STAGE.CHARAGG(BASIS) over
            (partition by TABLE_NUMBER, STATSYEAR, DST_CODE,
             COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
-            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME, PPG_NAME) as BASIS,
+            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
+            DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME, PPG_NAME) as BASIS,
           PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
           VALUE
         from
          (select TABLE_NUMBER, STATSYEAR, DST_CODE,
             COU_CODE_ASYLUM, LOCATION_NAME,
             decode(COU_CODE_ORIGIN, 'YUG', 'SRB', COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
-            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME, PPG_NAME,
+            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
+            DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME, PPG_NAME,
             SOURCE, BASIS,
             PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
             VALUE
@@ -406,7 +463,8 @@ begin
           where VALUE != 0))
       group by TABLE_NUMBER, STATSYEAR, DST_CODE,
         COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
-        DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, SUBGROUP_NAME,
+        DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
+        DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME,
         PPG_NAME, PPG_COUNT, SOURCE, BASIS,
         PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM)
   --
@@ -424,6 +482,12 @@ begin
       STC.DIM_CODE1,
       STC.DIMT_CODE2,
       STC.DIM_CODE2,
+      STC.DIMT_CODE3,
+      STC.DIM_CODE3,
+      STC.DIMT_CODE4,
+      STC.DIM_CODE4,
+      STC.DIMT_CODE5,
+      STC.DIM_CODE5,
       nvl(STC.SUBGROUP_NAME, case when STC.PPG_COUNT > 1 then STC.PPG_NAME end) as SUBGROUP_NAME,
       STC.PPG_NAME,
       STC.PPG_COUNT,
@@ -440,9 +504,13 @@ begin
       nvl(OGN.ID, case when STC.COU_CODE_ORIGIN != 'VAR' then -1 end) as LOC_ID_ORIGIN_COUNTRY,
       DIM1.ID as DIM_ID1,
       DIM2.ID as DIM_ID2,
+      DIM3.ID as DIM_ID3,
+      DIM4.ID as DIM_ID4,
+      DIM5.ID as DIM_ID5,
       AGR.ID as AGR_ID,
       row_number() over
-       (partition by STC.STATSYEAR, STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID, DIM1.ID, DIM2.ID,
+       (partition by STC.STATSYEAR, STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID,
+          DIM1.ID, DIM2.ID, DIM3.ID, DIM4.ID, DIM5.ID,
           nvl(STC.SUBGROUP_NAME, case when STC.PPG_COUNT > 1 then STC.PPG_NAME end),
           nvl(PPG1.PPG_ID, PPG2.PPG_ID)
         order by STC.PERIOD_FLAG, STC.STCT_CODE, STC.SEX_CODE, AGR.ID) as PSG_CHILD_NUMBER
@@ -472,6 +540,15 @@ begin
     left outer join DIMENSION_VALUES DIM2
       on DIM2.DIMT_CODE = STC.DIMT_CODE2
       and DIM2.CODE = STC.DIM_CODE2
+    left outer join DIMENSION_VALUES DIM3
+      on DIM3.DIMT_CODE = STC.DIMT_CODE3
+      and DIM3.CODE = STC.DIM_CODE3
+    left outer join DIMENSION_VALUES DIM4
+      on DIM4.DIMT_CODE = STC.DIMT_CODE4
+      and DIM4.CODE = STC.DIM_CODE4
+    left outer join DIMENSION_VALUES DIM5
+      on DIM5.DIMT_CODE = STC.DIMT_CODE5
+      and DIM5.CODE = STC.DIM_CODE5
     left outer join
      (select COU.UNHCR_COUNTRY_CODE, PPG.ID as PPG_ID, PPG.DESCRIPTION as PPG_NAME,
         greatest(COU.START_DATE, PPG.START_DATE) as START_DATE,
@@ -504,7 +581,8 @@ begin
       on AGR.AGP_CODE = 'STD'
       and AGR.AGE_FROM = STC.AGE_FROM
     order by STATSYEAR, DST_CODE, LOC_ID_ASYLUM_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN_COUNTRY,
-      DIM_ID1, DIM_ID2, SUBGROUP_NAME, PPG_ID, PERIOD_FLAG, STCT_CODE, SEX_CODE, AGR_ID)
+      DIM_ID1, DIM_ID2, DIM_ID3, DIM_ID4, DIM_ID5, SUBGROUP_NAME,
+      PPG_ID, PERIOD_FLAG, STCT_CODE, SEX_CODE, AGR_ID)
   loop
     PLS_UTILITY.TRACE_POINT
      ('Trace',
@@ -512,6 +590,9 @@ begin
         rSTC.COU_CODE_ASYLUM || '~' || rSTC.LOCATION_NAME || '~' || rSTC.COU_CODE_ORIGIN || '~' ||
         rSTC.DIMT_CODE1 || '~' || rSTC.DIM_CODE1 || '~' ||
         rSTC.DIMT_CODE2 || '~' || rSTC.DIM_CODE2 || '~' ||
+        rSTC.DIMT_CODE3 || '~' || rSTC.DIM_CODE3 || '~' ||
+        rSTC.DIMT_CODE4 || '~' || rSTC.DIM_CODE4 || '~' ||
+        rSTC.DIMT_CODE5 || '~' || rSTC.DIM_CODE5 || '~' ||
         rSTC.SUBGROUP_NAME || '~' || rSTC.PPG_NAME || '~' || rSTC.STCT_CODE || '~' ||
         rSTC.PERIOD_FLAG || '~' || rSTC.SEX_CODE || '~' || to_char(rSTC.AGE_FROM));
   --
@@ -536,6 +617,9 @@ begin
           pnLOC_ID_ORIGIN_COUNTRY => rSTC.LOC_ID_ORIGIN_COUNTRY,
           pnDIM_ID1 => rSTC.DIM_ID1,
           pnDIM_ID2 => rSTC.DIM_ID2,
+          pnDIM_ID3 => rSTC.DIM_ID3,
+          pnDIM_ID4 => rSTC.DIM_ID4,
+          pnDIM_ID5 => rSTC.DIM_ID5,
           psLANG_CODE => case when rSTC.SUBGROUP_NAME is not null then 'en' end,
           psSUBGROUP_NAME => rSTC.SUBGROUP_NAME,
           pnPPG_ID => rSTC.PPG_ID);
@@ -558,6 +642,9 @@ begin
         pnLOC_ID_ORIGIN_COUNTRY => rSTC.LOC_ID_ORIGIN_COUNTRY,
         pnDIM_ID1 => rSTC.DIM_ID1,
         pnDIM_ID2 => rSTC.DIM_ID2,
+        pnDIM_ID3 => rSTC.DIM_ID3,
+        pnDIM_ID4 => rSTC.DIM_ID4,
+        pnDIM_ID5 => rSTC.DIM_ID5,
         psSEX_CODE => rSTC.SEX_CODE,
         pnAGR_ID => rSTC.AGR_ID,
         pnPGR_ID_PRIMARY => nPGR_ID,
