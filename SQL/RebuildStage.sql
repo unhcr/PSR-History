@@ -5,6 +5,7 @@ spool RebuildStage.log
 
 purge recyclebin;
 
+@@S_ACTIVE_MSRP_SITES
 @@S_COMPONENTS
 @@S_DIMENSION_TYPES
 @@S_DIMENSION_VALUES
