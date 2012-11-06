@@ -55,7 +55,7 @@
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
 <previousColumn>false</previousColumn>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DST_CODE_FLAG" id="A6E7F4CB-4BE1-6BB6-BB11-49967172EDD3">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DST_ID_FLAG" id="A6E7F4CB-4BE1-6BB6-BB11-49967172EDD3">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-28 15:02:07 UTC</createdTime>
 <comment>Flag indicating usage of Displacement Status dimension</comment>

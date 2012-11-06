@@ -43,6 +43,21 @@
 </FontObject>
 </fonts>
 <columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ID" id="F5C73F48-6A40-DF48-E317-381D087E137E">
+<createdBy>Scott</createdBy>
+<createdTime>2012-11-05 07:49:51 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_DST_ID</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
+<autoIncrementColumn>true</autoIncrementColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementOrder>false</autoIncrementOrder>
+<autoIncrementSequenceName>DST_SEQ</autoIncrementSequenceName>
+<autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
+</Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="CODE" id="097325F8-9568-7D0B-7885-33E8D97336B3">
 <createdBy>Scott</createdBy>
 <createdTime>2011-11-03 16:09:39 UTC</createdTime>
@@ -53,6 +68,24 @@
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="START_DATE" id="5778BBA0-20AE-F57B-D594-395FDF4F2A6A">
+<createdBy>Scott</createdBy>
+<createdTime>2012-11-05 07:50:38 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="END_DATE" id="DDA84E8B-68A2-C7CB-C9BF-1C2A11549BC0">
+<createdBy>Scott</createdBy>
+<createdTime>2012-11-05 07:50:38 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="096ED6B7-4763-9700-1A6F-366C615657BE">
 <createdBy>Scott</createdBy>
@@ -108,7 +141,7 @@
 <pk>true</pk>
 <indexState>Primary Constraint</indexState>
 <indexColumnUsage>
-<colUsage columnID="097325F8-9568-7D0B-7885-33E8D97336B3"/>
+<colUsage columnID="F5C73F48-6A40-DF48-E317-381D087E137E"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="704A3FF7-B316-3D21-9B80-17BC9B261FF3" name="UK_DST_ITM_ID">
@@ -118,6 +151,16 @@
 <indexState>Unique Constraint</indexState>
 <indexColumnUsage>
 <colUsage columnID="2358118F-DE2E-2C47-F319-27049B5D3BEA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="A82F8517-661C-1011-E36E-A99DD9852266" name="UK_DST">
+<createdBy>Scott</createdBy>
+<createdTime>2012-11-05 07:50:58 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="097325F8-9568-7D0B-7885-33E8D97336B3"/>
+<colUsage columnID="5778BBA0-20AE-F57B-D594-395FDF4F2A6A"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="D3917482-56B3-FC8F-31B2-4C0041BD3EBE" name="FK_DST_ITM">
@@ -130,4 +173,12 @@
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>
+<tableCheckConstraints>
+<tableCheckConstraint class="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint" name="CH_DST_DATES" id="BB6D5365-E120-4F29-65CD-8D3E8676F5F9" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2012-11-05 09:26:35 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<rule>END_DATE &gt; START_DATE</rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
 </Table>

@@ -95,19 +95,19 @@
 <domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DST_CODE" id="9DBF51AF-7EEA-B91A-B0F1-75E93A57C684">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DST_ID" id="9DBF51AF-7EEA-B91A-B0F1-75E93A57C684">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-27 09:03:40 UTC</createdTime>
 <comment>Displacement status code</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>097325F8-9568-7D0B-7885-33E8D97336B3</delegate>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="1372499E-BA22-EF43-FB05-369D834B4910" referredColumn="097325F8-9568-7D0B-7885-33E8D97336B3"/>
+<colAssociation fkAssociation="1372499E-BA22-EF43-FB05-369D834B4910" referredColumn="F5C73F48-6A40-DF48-E317-381D087E137E"/>
 </associations>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="LOC_ID_ASYLUM_COUNTRY" id="C745C7B8-8830-3890-A245-B59538F56022">

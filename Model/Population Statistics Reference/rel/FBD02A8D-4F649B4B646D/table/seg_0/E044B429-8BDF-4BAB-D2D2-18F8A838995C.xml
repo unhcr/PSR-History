@@ -77,7 +77,7 @@
 <domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DST_CODE" id="EA63B773-11E4-F79C-7236-99E4FF9332C0">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DST_ID" id="EA63B773-11E4-F79C-7236-99E4FF9332C0">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-05 14:52:04 UTC</createdTime>
 <comment>Displacement status code</comment>
@@ -85,11 +85,11 @@
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>097325F8-9568-7D0B-7885-33E8D97336B3</delegate>
 <associations>
-<colAssociation fkAssociation="6A80E3A8-A5EC-3956-8B5D-6C9FD3E8A4AC" referredColumn="097325F8-9568-7D0B-7885-33E8D97336B3"/>
+<colAssociation fkAssociation="6A80E3A8-A5EC-3956-8B5D-6C9FD3E8A4AC" referredColumn="F5C73F48-6A40-DF48-E317-381D087E137E"/>
 </associations>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="LOC_ID_ASYLUM_COUNTRY" id="296CBE5F-94ED-648A-4ED7-20AB3FD5C7CF">
@@ -363,7 +363,7 @@
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-11 09:18:47 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<indexExpression>START_DATE, END_DATE, nvl(DST_CODE, &apos;x&apos;), nvl(LOC_ID_ASYLUM_COUNTRY, 0), nvl(LOC_ID_ORIGIN_COUNTRY, 0), nvl(LOC_ID_ASYLUM, 0), nvl(LOC_ID_ORIGIN, 0), nvl(DIM_ID1, 0), nvl(DIM_ID2, 0), nvl(DIM_ID3, 0), nvl(DIM_ID4, 0), nvl(DIM_ID5, 0), nvl(SEX_CODE, &apos;x&apos;), nvl(AGR_ID, 0), SEQ_NBR</indexExpression>
+<indexExpression>START_DATE, END_DATE, nvl(DST_ID, 0), nvl(LOC_ID_ASYLUM_COUNTRY, 0), nvl(LOC_ID_ORIGIN_COUNTRY, 0), nvl(LOC_ID_ASYLUM, 0), nvl(LOC_ID_ORIGIN, 0), nvl(DIM_ID1, 0), nvl(DIM_ID2, 0), nvl(DIM_ID3, 0), nvl(DIM_ID4, 0), nvl(DIM_ID5, 0), nvl(SEX_CODE, &apos;x&apos;), nvl(AGR_ID, 0), SEQ_NBR</indexExpression>
 <indexState>Unique Plain Index</indexState>
 </ind_PK_UK>
 <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="D88D3808-A552-F3F8-5FFE-F300668C35E8" name="FK_PGR_DIM1">

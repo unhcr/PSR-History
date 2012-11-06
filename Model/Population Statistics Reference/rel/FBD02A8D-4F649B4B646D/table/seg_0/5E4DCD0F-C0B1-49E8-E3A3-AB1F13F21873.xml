@@ -81,6 +81,24 @@
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="START_DATE" id="5C1D363E-BE7C-41ED-A844-D3C349072E44">
+<createdBy>Scott</createdBy>
+<createdTime>2012-11-05 07:46:12 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="END_DATE" id="E9379182-21A0-B02A-09CF-54718304A8A6">
+<createdBy>Scott</createdBy>
+<createdTime>2012-11-05 07:46:12 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="B9A511E6-DA8B-58EE-A5A0-1B89180F7A0D">
 <createdBy>Scott</createdBy>
 <createdTime>2012-04-10 08:12:46 UTC</createdTime>
@@ -107,9 +125,8 @@
 <createdTime>2012-04-10 08:12:46 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
@@ -155,6 +172,7 @@
 <indexColumnUsage>
 <colUsage columnID="D55D2553-B5FC-72C3-9EB3-D16CCB02DD4C"/>
 <colUsage columnID="68402508-69FE-01BE-F806-C41C817E9EA4"/>
+<colUsage columnID="5C1D363E-BE7C-41ED-A844-D3C349072E44"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="6C9AEA4E-B654-F36F-562D-086E8DCF069C" name="FK_DIM_ITM">
@@ -176,4 +194,12 @@
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>
+<tableCheckConstraints>
+<tableCheckConstraint class="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint" name="CH_DIM_DATES" id="DF7678F3-8489-AF00-B6EE-43C681FBF805" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2012-11-05 09:26:03 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<rule>END_DATE &gt; START_DATE</rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
 </Table>
