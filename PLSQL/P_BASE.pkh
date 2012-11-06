@@ -6,7 +6,7 @@ create or replace package P_BASE is
 --  Type definitions and data values used throughout the PSR system.
 --
 --  Change History:
---  13-Sep-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  05-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -84,6 +84,8 @@ create or replace package P_BASE is
 --
 -- T_DISPLACEMENT_STATUSES
 --
+  subtype tnDST_ID is T_DISPLACEMENT_STATUSES.ID%type;
+  subtype tmnDST_ID is tnDST_ID not null;
   subtype tsDST_CODE is T_DISPLACEMENT_STATUSES.CODE%type;
   subtype tmsDST_CODE is tsDST_CODE not null;
   subtype tnDST_DISPLAY_SEQ is T_DISPLACEMENT_STATUSES.DISPLAY_SEQ%type;
