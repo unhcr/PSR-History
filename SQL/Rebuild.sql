@@ -41,9 +41,9 @@ prompt InitParameters
 prompt ==============
 @InitParameters
 
-prompt InitDisplacementStatuses
+prompt LoadDisplacementStatuses
 prompt ========================
-@InitDisplacementStatuses
+@LoadDisplacementStatuses
 
 prompt InitSexes
 prompt =========
