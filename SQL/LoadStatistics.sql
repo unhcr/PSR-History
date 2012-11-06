@@ -499,6 +499,7 @@ begin
       STC.SEX_CODE,
       STC.AGE_FROM,
       STC.VALUE,
+      DST.ID as DST_ID,
       nvl(COU.ID, case when STC.COU_CODE_ASYLUM != 'VAR' then -1 end) as LOC_ID_ASYLUM_COUNTRY,
       LOC.LOC_ID as LOC_ID_ASYLUM,
       nvl(OGN.ID, case when STC.COU_CODE_ORIGIN != 'VAR' then -1 end) as LOC_ID_ORIGIN_COUNTRY,
@@ -515,10 +516,20 @@ begin
           nvl(PPG1.PPG_ID, PPG2.PPG_ID)
         order by STC.PERIOD_FLAG, STC.STCT_CODE, STC.SEX_CODE, AGR.ID) as PSG_CHILD_NUMBER
     from AGGREGATED_STATISTICS STC
-    left outer join COUNTRIES COU
+    left outer join T_DISPLACEMENT_STATUSES DST
+      on DST.CODE = STC.DST_CODE
+      and DST.START_DATE < STC.END_DATE_YEAR
+      and DST.END_DATE >= STC.END_DATE_YEAR
+    left outer join
+     (select LOC.ID, LOC.START_DATE, LOC.END_DATE, LOCA.CHAR_VALUE as UNHCR_COUNTRY_CODE
+      from T_LOCATIONS LOC
+      inner join T_LOCATION_ATTRIBUTES LOCA
+        on LOCA.LOC_ID = LOC.ID
+        and LOCA.LOCAT_CODE = 'HCRCC'
+      where LOC.LOCT_CODE = 'COUNTRY') COU
       on COU.UNHCR_COUNTRY_CODE = STC.COU_CODE_ASYLUM
-      and COU.START_DATE <= add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
-      and COU.END_DATE > add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
+      and COU.START_DATE < STC.END_DATE_YEAR
+      and COU.END_DATE >= STC.END_DATE_YEAR
     left outer join
      (select LOCR.LOC_ID_FROM, LOCR.LOCRT_CODE, LOCR.START_DATE, LOCR.END_DATE,
         LOC.ID LOC_ID, LOC.NAME
@@ -527,56 +538,79 @@ begin
         on LOC.ID = LOCR.LOC_ID_TO) LOC
       on LOC.LOC_ID_FROM = COU.ID
       and LOC.LOCRT_CODE = 'WITHIN'
-      and LOC.START_DATE <= add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
-      and LOC.END_DATE > add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
+      and LOC.START_DATE < STC.END_DATE_YEAR
+      and LOC.END_DATE >= STC.END_DATE_YEAR
       and LOC.NAME = trim(regexp_replace(STC.LOCATION_NAME, ':.*$', ''))
-    left outer join ORIGINS OGN
+    left outer join
+     (select LOC.ID, LOC.START_DATE, LOC.END_DATE, LOCA.CHAR_VALUE as UNHCR_COUNTRY_CODE
+      from T_LOCATIONS LOC
+      inner join T_LOCATION_ATTRIBUTES LOCA
+        on LOCA.LOC_ID = LOC.ID
+        and LOCA.LOCAT_CODE = 'HCRCC'
+      where LOC.LOCT_CODE in ('COUNTRY', 'OTHORIGIN')) OGN
       on OGN.UNHCR_COUNTRY_CODE = STC.COU_CODE_ORIGIN
-      and OGN.START_DATE <= add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
-      and OGN.END_DATE > add_months(trunc(to_date(STC.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
-    left outer join DIMENSION_VALUES DIM1
+      and OGN.START_DATE < STC.END_DATE_YEAR
+      and OGN.END_DATE >= STC.END_DATE_YEAR
+    left outer join T_DIMENSION_VALUES DIM1
       on DIM1.DIMT_CODE = STC.DIMT_CODE1
       and DIM1.CODE = STC.DIM_CODE1
-    left outer join DIMENSION_VALUES DIM2
+      and DIM1.START_DATE < STC.END_DATE_YEAR
+      and DIM1.END_DATE >= STC.END_DATE_YEAR
+    left outer join T_DIMENSION_VALUES DIM2
       on DIM2.DIMT_CODE = STC.DIMT_CODE2
       and DIM2.CODE = STC.DIM_CODE2
-    left outer join DIMENSION_VALUES DIM3
+      and DIM2.START_DATE < STC.END_DATE_YEAR
+      and DIM2.END_DATE >= STC.END_DATE_YEAR
+    left outer join T_DIMENSION_VALUES DIM3
       on DIM3.DIMT_CODE = STC.DIMT_CODE3
       and DIM3.CODE = STC.DIM_CODE3
-    left outer join DIMENSION_VALUES DIM4
+      and DIM3.START_DATE < STC.END_DATE_YEAR
+      and DIM3.END_DATE >= STC.END_DATE_YEAR
+    left outer join T_DIMENSION_VALUES DIM4
       on DIM4.DIMT_CODE = STC.DIMT_CODE4
       and DIM4.CODE = STC.DIM_CODE4
-    left outer join DIMENSION_VALUES DIM5
+      and DIM4.START_DATE < STC.END_DATE_YEAR
+      and DIM4.END_DATE >= STC.END_DATE_YEAR
+    left outer join T_DIMENSION_VALUES DIM5
       on DIM5.DIMT_CODE = STC.DIMT_CODE5
       and DIM5.CODE = STC.DIM_CODE5
+      and DIM5.START_DATE < STC.END_DATE_YEAR
+      and DIM5.END_DATE >= STC.END_DATE_YEAR
     left outer join
-     (select COU.UNHCR_COUNTRY_CODE, PPG.ID as PPG_ID, PPG.DESCRIPTION as PPG_NAME,
-        greatest(COU.START_DATE, PPG.START_DATE) as START_DATE,
-        least(COU.END_DATE, PPG.END_DATE) as END_DATE
-      from COUNTRIES COU
+     (select LOCA.CHAR_VALUE as UNHCR_COUNTRY_CODE, PPG.ID as PPG_ID, PPG.DESCRIPTION as PPG_NAME,
+        greatest(LOC.START_DATE, PPG.START_DATE) as START_DATE,
+        least(LOC.END_DATE, PPG.END_DATE) as END_DATE
+      from T_LOCATIONS LOC
+      inner join T_LOCATION_ATTRIBUTES LOCA
+        on LOCA.LOC_ID = LOC.ID
+        and LOCA.LOCAT_CODE = 'HCRCC'
       inner join POPULATION_PLANNING_GROUPS PPG
-        on PPG.LOC_ID = COU.ID) PPG1
+        on PPG.LOC_ID = LOC.ID
+      where LOC.LOCT_CODE = 'COUNTRY') PPG1
       on PPG1.UNHCR_COUNTRY_CODE = STC.COU_CODE_ASYLUM
       and PPG1.PPG_NAME = STC.PPG_NAME
-      and PPG1.START_DATE <= trunc(to_date(STC.STATSYEAR || '-12-31', 'YYYY-MM-DD'))
-      and PPG1.END_DATE >= trunc(to_date(STC.STATSYEAR || '-12-31', 'YYYY-MM-DD'))
+      and PPG1.START_DATE < STC.END_DATE_YEAR
+      and PPG1.END_DATE >= STC.END_DATE_YEAR
     left outer join
-     (select COU.UNHCR_COUNTRY_CODE, PPG.ID as PPG_ID, PPG.DESCRIPTION as PPG_NAME,
-        greatest(COU.START_DATE, PPG.START_DATE) as START_DATE,
-        least(COU.END_DATE, PPG.END_DATE) as END_DATE
-      from COUNTRIES COU
+     (select LOCA.CHAR_VALUE as UNHCR_COUNTRY_CODE, PPG.ID as PPG_ID, PPG.DESCRIPTION as PPG_NAME,
+        greatest(LOC1.START_DATE, LOC2.START_DATE, PPG.START_DATE) as START_DATE,
+        least(LOC1.END_DATE, LOC2.END_DATE, PPG.END_DATE) as END_DATE
+      from T_LOCATIONS LOC1
+      inner join T_LOCATION_ATTRIBUTES LOCA
+        on LOCA.LOC_ID = LOC1.ID
+        and LOCA.LOCAT_CODE = 'HCRCC'
       inner join LOCATION_RELATIONSHIPS LOCR
-        on LOCR.LOC_ID_TO = COU.ID
+        on LOCR.LOC_ID_TO = LOC1.ID
         and LOCR.LOCRT_CODE = 'HCRRESP'
-      inner join LOCATIONS LOC
-        on LOC.ID = LOCR.LOC_ID_FROM
-        and LOC.LOCT_CODE = 'HCR-ROF'
+      inner join LOCATIONS LOC2
+        on LOC2.ID = LOCR.LOC_ID_FROM
+        and LOC2.LOCT_CODE = 'HCR-ROF'
       inner join POPULATION_PLANNING_GROUPS PPG
-        on PPG.LOC_ID = LOC.ID) PPG2
+        on PPG.LOC_ID = LOC2.ID) PPG2
       on PPG2.UNHCR_COUNTRY_CODE = STC.COU_CODE_ASYLUM
       and PPG2.PPG_NAME = STC.PPG_NAME
-      and PPG2.START_DATE <= trunc(to_date(STC.STATSYEAR || '-12-31', 'YYYY-MM-DD'))
-      and PPG2.END_DATE >= trunc(to_date(STC.STATSYEAR || '-12-31', 'YYYY-MM-DD'))
+      and PPG2.START_DATE < STC.END_DATE_YEAR
+      and PPG2.END_DATE >= STC.END_DATE_YEAR
     left outer join T_AGE_RANGES AGR
       on AGR.AGP_CODE = 'STD'
       and AGR.AGE_FROM = STC.AGE_FROM
@@ -611,7 +645,7 @@ begin
       then
         P_POPULATION_GROUP.INSERT_POPULATION_GROUP
          (nPGR_ID, rSTC.START_DATE_YEAR, rSTC.END_DATE_YEAR,
-          psDST_CODE => rSTC.DST_CODE,
+          pnDST_ID => rSTC.DST_ID,
           pnLOC_ID_ASYLUM_COUNTRY => rSTC.LOC_ID_ASYLUM_COUNTRY,
           pnLOC_ID_ASYLUM => rSTC.LOC_ID_ASYLUM,
           pnLOC_ID_ORIGIN_COUNTRY => rSTC.LOC_ID_ORIGIN_COUNTRY,
@@ -636,7 +670,7 @@ begin
     --
       P_STATISTIC.INSERT_STATISTIC
        (nSTC_ID, rSTC.STCT_CODE, rSTC.START_DATE, rSTC.END_DATE,
-        psDST_CODE => rSTC.DST_CODE,
+        pnDST_ID => rSTC.DST_ID,
         pnLOC_ID_ASYLUM_COUNTRY => rSTC.LOC_ID_ASYLUM_COUNTRY,
         pnLOC_ID_ASYLUM => rSTC.LOC_ID_ASYLUM,
         pnLOC_ID_ORIGIN_COUNTRY => rSTC.LOC_ID_ORIGIN_COUNTRY,
