@@ -6,7 +6,7 @@ create or replace package P_DIMENSION is
 --  Procedures for maintenance of dimension types and dimension values.
 --
 --  Change History:
---  02-Oct-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  05-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -209,6 +209,12 @@ create or replace package P_DIMENSION is
 --  psDescription - Textual description of dimension value (mandatory).
 --  psDIMT_CODE - Dimension type code (mandatory).
 --  psCODE - Dimension value code (mandatory).
+--  pdSTART_DATE - Effective start date of details of this dimension value (optional, the absence of
+--    a start date, or a null value, indicates that the effectivity starts indefinitely far in the
+--    past).
+--  pdEND_DATE - Effective end date of details of this dimansion value (optional, the absence of an
+--    end date, or a null value, indicates that the effectivity extends indefinitely into the
+--    future).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of dimension values (optional).
 --  psACTIVE_FLAG - Flag (Y/N) indicating whether the dimension value is currently available for use
 --    (optional: defaults to Y).
@@ -219,6 +225,8 @@ create or replace package P_DIMENSION is
     psDescription in P_BASE.tmsText,
     psDIMT_CODE in P_BASE.tmsDIMT_CODE,
     psCODE in P_BASE.tmsDIM_CODE,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null,
     pnDISPLAY_SEQ in P_BASE.tnDIM_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tmsDIM_ACTIVE_FLAG := 'Y');
 --
@@ -237,6 +245,12 @@ create or replace package P_DIMENSION is
 --  psDescription - Textual description of dimension value (optional: if not specified, the
 --    description is not changed).
 --  psCODE - Dimension value code (optional: if not specified, the code is not changed).
+--  pdSTART_DATE - Effective start date of details of this dimension value (optional: if not
+--    specified, the existing start date is left unchanged; a null value indicates that the
+--    effectivity starts indefinitely far in the past).
+--  pdEND_DATE - Effective end date of details of this dimension value (optional: if not specified,
+--    the existing end date is left unchanged; a null value indicates that the effectivity extends
+--    indefinitely into the future).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of dimension values (optional: if
 --    not specified, the existing display sequence is not changed; if null is specified, the display
 --    sequence is set to null).
@@ -249,6 +263,8 @@ create or replace package P_DIMENSION is
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
     psCODE in P_BASE.tsDIM_CODE := null,
+    pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pnDISPLAY_SEQ in P_BASE.tnDIM_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsDIM_ACTIVE_FLAG := null);
 --
@@ -270,6 +286,16 @@ create or replace package P_DIMENSION is
 --    updating an existing dimension value, since the dimension type may not be changed).
 --  psCODE - Dimension value code (optional when updating an existing dimension value: if not
 --    specified, the code is not changed).
+--  pdSTART_DATE - Effective start date of this dimension value (optional: for a new dimension
+--    value, the absence of a start date, or a null value, indicates that the effectivity starts
+--    indefinitely far in the past; when updating an existing dimension value, the absence of a
+--    start date leaves the existing date unchanged, and a null value indicates that the effectivity
+--    starts indefinitely far in the past).
+--  pdEND_DATE - Effective end date of details of this dimension value (optional: for a new
+--    dimension value, the absence of an end date, or a null value, indicates that the effectivity
+--    extends indefinitely into the future; when updating an existing dimension value, the absence
+--    of an end date leaves the existing date unchanged, and a null value indicates that the
+--    effectivity extends indefinitely into the future).
 --  pnDISPLAY_SEQ - Sequence number to control display ordering of dimension values (optional: if
 --    not specified, an existing display sequence is not changed and a new one is set to null; if
 --    null is specified, the display sequence is set to null).
@@ -283,6 +309,8 @@ create or replace package P_DIMENSION is
     psDescription in P_BASE.tsText := null,
     psDIMT_CODE in P_BASE.tsDIMT_CODE := null,
     psCODE in P_BASE.tsDIM_CODE := null,
+    pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pnDISPLAY_SEQ in P_BASE.tnDIM_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsDIM_ACTIVE_FLAG := null);
 --

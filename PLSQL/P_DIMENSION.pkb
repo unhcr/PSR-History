@@ -305,6 +305,8 @@ create or replace package body P_DIMENSION is
     psDescription in P_BASE.tmsText,
     psDIMT_CODE in P_BASE.tmsDIMT_CODE,
     psCODE in P_BASE.tmsDIM_CODE,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null,
     pnDISPLAY_SEQ in P_BASE.tnDIM_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tmsDIM_ACTIVE_FLAG := 'Y')
   is
@@ -313,14 +315,52 @@ create or replace package body P_DIMENSION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_DIMENSION_VALUE',
-      psDIMT_CODE || '~' || psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG ||
-        '~' || psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
+      '~' || psDIMT_CODE || '~' || psCODE || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
+  --
+  -- Check for existing dimension value with same type and code and overlapping effective date
+  --  range.
+  --
+    declare
+      sDummy varchar2(1);
+    begin
+      select 'x'
+      into sDummy
+      from T_DIMENSION_VALUES
+      where DIMT_CODE = psDIMT_CODE
+      and CODE = psCODE
+      and START_DATE < nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
+      and END_DATE > nvl(pdSTART_DATE, P_BASE.gdMIN_DATE);
+    --
+      raise TOO_MANY_ROWS;
+    exception
+      when NO_DATA_FOUND then null;
+    --
+      when TOO_MANY_ROWS
+      then P_MESSAGE.DISPLAY_MESSAGE('DST', 999, 'Dimension value with this type and code already exists');
+    end;
   --
     P_TEXT.SET_TEXT(nITM_ID, 'DIM', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into T_DIMENSION_VALUES (ID, DIMT_CODE, CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
-    values (DIM_SEQ.nextval, psDIMT_CODE, psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID)
+    insert into T_DIMENSION_VALUES
+     (ID, DIMT_CODE, CODE,
+      START_DATE, END_DATE,
+      DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
+    values
+     (DIM_SEQ.nextval, psDIMT_CODE, psCODE,
+      nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE),
+      pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID)
     returning ID into pnID;
+  --
+    PLS_UTILITY.TRACE_CONTEXT
+     (to_char(pnID) || '~' || psDIMT_CODE || '~' || psCODE || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -338,34 +378,90 @@ create or replace package body P_DIMENSION is
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
     psCODE in P_BASE.tsDIM_CODE := null,
+    pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pnDISPLAY_SEQ in P_BASE.tnDIM_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsDIM_ACTIVE_FLAG := null)
   is
+    sDIMT_CODE P_BASE.tsDIMT_CODE;
+    sCODE P_BASE.tsDIM_CODE;
+    dSTART_DATE P_BASE.tdDate;
+    dEND_DATE P_BASE.tdDate;
     nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnDIM_VERSION_NBR;
     xDIM_ROWID rowid;
+    dSTART_DATE_NEW P_BASE.tdDate;
+    dEND_DATE_NEW P_BASE.tdDate;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_DIMENSION_VALUE',
-      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psCODE ||
-        '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
-        to_char(length(psDescription)) || ':' || psDescription);
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psCODE || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    select ITM_ID, VERSION_NBR, rowid
-    into nITM_ID, nVERSION_NBR, xDIM_ROWID
+    select DIMT_CODE, CODE, START_DATE, END_DATE, ITM_ID, VERSION_NBR, rowid
+    into sDIMT_CODE, sCODE, dSTART_DATE, dEND_DATE, nITM_ID, nVERSION_NBR, xDIM_ROWID
     from T_DIMENSION_VALUES
     where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
+    --
+    -- Determine new values for dates.
+    --
+      if pdSTART_DATE = P_BASE.gdFALSE_DATE
+      then dSTART_DATE_NEW := dSTART_DATE;
+      else dSTART_DATE_NEW := nvl(pdSTART_DATE, P_BASE.gdMIN_DATE);
+      end if;
+    --
+      if pdEND_DATE = P_BASE.gdFALSE_DATE
+      then dEND_DATE_NEW := dEND_DATE;
+      else dEND_DATE_NEW := nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
+      end if;
+    --
+    -- Check if code or effective date range are being changed.
+    --
+      if psCODE != sCODE
+        or dSTART_DATE_NEW != dSTART_DATE
+        or dEND_DATE_NEW != dEND_DATE
+      then
+      --
+      -- Check for existing dimension value with same type and code and overlapping effective date
+      --  range.
+      --
+        declare
+          sDummy varchar2(1);
+        begin
+          select 'x'
+          into sDummy
+          from T_DIMENSION_VALUES
+          where DIMT_CODE = sDIMT_CODE
+          and CODE = psCODE
+          and START_DATE < dEND_DATE_NEW
+          and END_DATE > dSTART_DATE_NEW
+          and ID != pnID;
+        --
+          raise TOO_MANY_ROWS;
+        exception
+          when NO_DATA_FOUND then null;
+        --
+          when TOO_MANY_ROWS
+          then P_MESSAGE.DISPLAY_MESSAGE('DIM', 999, 'Dimension value with this type and code already exists');
+        end;
+      end if;
+    --
       if psDescription is not null
       then P_TEXT.SET_TEXT(nITM_ID, 'DIM', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
       update T_DIMENSION_VALUES
       set CODE = nvl(psCODE, CODE),
+        START_DATE = dSTART_DATE_NEW,
+        END_DATE = dEND_DATE_NEW,
         DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
@@ -374,6 +470,13 @@ create or replace package body P_DIMENSION is
     else
       P_MESSAGE.DISPLAY_MESSAGE('DIM', 2, 'Dimension value has been updated by another user');
     end if;
+  --
+    PLS_UTILITY.TRACE_CONTEXT
+     (to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psCODE || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -392,27 +495,44 @@ create or replace package body P_DIMENSION is
     psDescription in P_BASE.tsText := null,
     psDIMT_CODE in P_BASE.tsDIMT_CODE := null,
     psCODE in P_BASE.tsDIM_CODE := null,
+    pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pnDISPLAY_SEQ in P_BASE.tnDIM_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsDIM_ACTIVE_FLAG := null)
   is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_DIMENSION_VALUE',
-      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psDIMT_CODE || '~' ||
-        psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psDIMT_CODE || '~' || psCODE || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     if pnVERSION_NBR is null
     then
-      INSERT_DIMENSION_VALUE(pnID, psLANG_CODE, psDescription, psDIMT_CODE, psCODE,
-                             case when pnDISPLAY_SEQ = -1e6 then null else pnDISPLAY_SEQ end,
-                             nvl(psACTIVE_FLAG, 'Y'));
+      INSERT_DIMENSION_VALUE
+       (pnID, psLANG_CODE, psDescription, psDIMT_CODE, psCODE,
+        case when pdSTART_DATE = P_BASE.gdFALSE_DATE then null else pdSTART_DATE end,
+        case when pdEND_DATE = P_BASE.gdFALSE_DATE then null else pdEND_DATE end,
+        case when pnDISPLAY_SEQ = -1e6 then null else pnDISPLAY_SEQ end,
+        nvl(psACTIVE_FLAG, 'Y'));
     --
       pnVERSION_NBR := 1;
     else
-      UPDATE_DIMENSION_VALUE(pnID, pnVERSION_NBR, psLANG_CODE, psDescription, psCODE,
-                             pnDISPLAY_SEQ, psACTIVE_FLAG);
+      UPDATE_DIMENSION_VALUE
+       (pnID, pnVERSION_NBR, psLANG_CODE, psDescription, psCODE, pdSTART_DATE, pdEND_DATE,
+        pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
+  --
+    PLS_UTILITY.TRACE_CONTEXT
+     (to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psDIMT_CODE || '~' || psCODE || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     PLS_UTILITY.END_MODULE;
   exception
