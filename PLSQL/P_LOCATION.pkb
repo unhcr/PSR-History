@@ -328,7 +328,7 @@ create or replace package body P_LOCATION is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_LOCATION',
-      to_char(pnID) || '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
+      '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
@@ -375,6 +375,12 @@ create or replace package body P_LOCATION is
       mod(pnID * gnLOC_ID_MULTIPLIER + gnLOC_ID_INCREMENT, 1e8) +
         (gnLOC_ID_CHECK_INCREMENT -
           mod(pnID * gnLOC_ID_CHECK_MULTIPLIER, gnLOC_ID_CHECK_MODULUS)) * 1e8;
+  --
+    PLS_UTILITY.TRACE_CONTEXT
+     (to_char(pnID) || '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
   --
     P_TEXT.SET_TEXT(nITM_ID, 'LOC', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
   --
@@ -546,8 +552,8 @@ create or replace package body P_LOCATION is
     --
       update T_LOCATIONS
       set LOCTV_ID = case when pnLOCTV_ID = -1 then LOCTV_ID else pnLOCTV_ID end,
-        START_DATE = dSTART_DATE,
-        END_DATE = dEND_DATE,
+        START_DATE = dSTART_DATE_NEW,
+        END_DATE = dEND_DATE_NEW,
         VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOC_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
