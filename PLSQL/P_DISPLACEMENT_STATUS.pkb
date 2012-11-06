@@ -9,9 +9,12 @@ create or replace package body P_DISPLACEMENT_STATUS is
 -- ----------------------------------------
 --
   procedure INSERT_DISPLACEMENT_STATUS
-   (psCODE in P_BASE.tmsDST_CODE,
+   (pnID out P_BASE.tnDST_ID,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText,
+    psCODE in P_BASE.tmsDST_CODE,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null,
     pnDISPLAY_SEQ in P_BASE.tnDST_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tmsDST_ACTIVE_FLAG := 'Y')
   is
@@ -20,13 +23,50 @@ create or replace package body P_DISPLACEMENT_STATUS is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_DISPLACEMENT_STATUS',
-      psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+      '~' || psCODE || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
+  --
+  -- Check for existing displacement status with same code and overlapping effective date range.
+  --
+    declare
+      sDummy varchar2(1);
+    begin
+      select 'x'
+      into sDummy
+      from T_DISPLACEMENT_STATUSES
+      where CODE = psCODE
+      and START_DATE < nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
+      and END_DATE > nvl(pdSTART_DATE, P_BASE.gdMIN_DATE);
+    --
+      raise TOO_MANY_ROWS;
+    exception
+      when NO_DATA_FOUND then null;
+    --
+      when TOO_MANY_ROWS
+      then P_MESSAGE.DISPLAY_MESSAGE('DST', 999, 'Displacement status with this code already exists');
+    end;
   --
     P_TEXT.SET_TEXT(nITM_ID, 'DST', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into T_DISPLACEMENT_STATUSES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
-    values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
+    insert into T_DISPLACEMENT_STATUSES
+     (ID, CODE,
+      START_DATE, END_DATE,
+      DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
+    values
+     (DST_SEQ.nextval, psCODE,
+      nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE),
+      pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID)
+    returning ID into pnID;
+  --
+    PLS_UTILITY.TRACE_CONTEXT
+     (to_char(pnID) || '~' || psCODE || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -39,38 +79,90 @@ create or replace package body P_DISPLACEMENT_STATUS is
 -- ----------------------------------------
 --
   procedure UPDATE_DISPLACEMENT_STATUS
-   (psCODE in P_BASE.tmsDST_CODE,
+   (pnID in P_BASE.tmnDST_ID,
     pnVERSION_NBR in out P_BASE.tnDST_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
+    pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pnDISPLAY_SEQ in P_BASE.tnDST_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsDST_ACTIVE_FLAG := null)
   is
+    sCODE P_BASE.tsDST_CODE;
+    dSTART_DATE P_BASE.tdDate;
+    dEND_DATE P_BASE.tdDate;
     nITM_ID P_BASE.tnITM_ID;
     nVERSION_NBR P_BASE.tnDST_VERSION_NBR;
     xDST_ROWID rowid;
+    dSTART_DATE_NEW P_BASE.tdDate;
+    dEND_DATE_NEW P_BASE.tdDate;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_DISPLACEMENT_STATUS',
-      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) ||
-        '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
-        to_char(length(psDescription)) || ':' || psDescription);
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    select ITM_ID, VERSION_NBR, rowid
-    into nITM_ID, nVERSION_NBR, xDST_ROWID
+    select CODE, START_DATE, END_DATE, ITM_ID, VERSION_NBR, rowid
+    into sCODE, dSTART_DATE, dEND_DATE, nITM_ID, nVERSION_NBR, xDST_ROWID
     from T_DISPLACEMENT_STATUSES
-    where CODE = psCODE
+    where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
+    --
+    -- Determine new values for dates.
+    --
+      if pdSTART_DATE = P_BASE.gdFALSE_DATE
+      then dSTART_DATE_NEW := dSTART_DATE;
+      else dSTART_DATE_NEW := nvl(pdSTART_DATE, P_BASE.gdMIN_DATE);
+      end if;
+    --
+      if pdEND_DATE = P_BASE.gdFALSE_DATE
+      then dEND_DATE_NEW := dEND_DATE;
+      else dEND_DATE_NEW := nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
+      end if;
+    --
+    -- Check if effective date range is being changed.
+    --
+      if dSTART_DATE_NEW != dSTART_DATE
+        or dEND_DATE_NEW != dEND_DATE
+      then
+      --
+      -- Check for existing displacement status with same code and overlapping effective date range.
+      --
+        declare
+          sDummy varchar2(1);
+        begin
+          select 'x'
+          into sDummy
+          from T_DISPLACEMENT_STATUSES
+          where CODE = sCODE
+          and START_DATE < dEND_DATE_NEW
+          and END_DATE > dSTART_DATE_NEW
+          and ID != pnID;
+        --
+          raise TOO_MANY_ROWS;
+        exception
+          when NO_DATA_FOUND then null;
+        --
+          when TOO_MANY_ROWS
+          then P_MESSAGE.DISPLAY_MESSAGE('DST', 999, 'Displacement status with this code already exists');
+        end;
+      end if;
+    --
       if psDescription is not null
       then P_TEXT.SET_TEXT(nITM_ID, 'DST', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
       update T_DISPLACEMENT_STATUSES
-      set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
+      set START_DATE = dSTART_DATE_NEW,
+        END_DATE = dEND_DATE_NEW,
+        DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
       where rowid = xDST_ROWID
@@ -78,6 +170,13 @@ create or replace package body P_DISPLACEMENT_STATUS is
     else
       P_MESSAGE.DISPLAY_MESSAGE('DST', 1, 'Displacement status has been updated by another user');
     end if;
+  --
+    PLS_UTILITY.TRACE_CONTEXT
+     (to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -90,31 +189,47 @@ create or replace package body P_DISPLACEMENT_STATUS is
 -- ----------------------------------------
 --
   procedure SET_DISPLACEMENT_STATUS
-   (psCODE in P_BASE.tmsDST_CODE,
+   (pnID in out P_BASE.tmnDST_ID,
     pnVERSION_NBR in out P_BASE.tnDST_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
+    psCODE in P_BASE.tsDST_CODE,
+    pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pnDISPLAY_SEQ in P_BASE.tnDST_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsDST_ACTIVE_FLAG := null)
   is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_DISPLACEMENT_STATUS',
-      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
-        psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
-        to_char(length(psDescription)) || ':' || psDescription);
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psCODE || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     if pnVERSION_NBR is null
     then
-      INSERT_DISPLACEMENT_STATUS(psCODE, psLANG_CODE, psDescription,
-                                 case when pnDISPLAY_SEQ = -1e6 then null else pnDISPLAY_SEQ end,
-                                 nvl(psACTIVE_FLAG, 'Y'));
+      INSERT_DISPLACEMENT_STATUS
+       (pnID, psLANG_CODE, psDescription, psCODE,
+        case when pdSTART_DATE = P_BASE.gdFALSE_DATE then null else pdSTART_DATE end,
+        case when pdEND_DATE = P_BASE.gdFALSE_DATE then null else pdEND_DATE end,
+        case when pnDISPLAY_SEQ = -1e6 then null else pnDISPLAY_SEQ end,
+        nvl(psACTIVE_FLAG, 'Y'));
     --
       pnVERSION_NBR := 1;
     else
-      UPDATE_DISPLACEMENT_STATUS(psCODE, pnVERSION_NBR, psLANG_CODE, psDescription,
-                                 pnDISPLAY_SEQ, psACTIVE_FLAG);
+      UPDATE_DISPLACEMENT_STATUS
+       (pnID, pnVERSION_NBR, psLANG_CODE, psDescription, pdSTART_DATE, pdEND_DATE,
+        pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
+  --
+    PLS_UTILITY.TRACE_CONTEXT
+     (to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psCODE || '~' ||
+        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -127,7 +242,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
 -- ----------------------------------------
 --
   procedure DELETE_DISPLACEMENT_STATUS
-   (psCODE in P_BASE.tmsDST_CODE,
+   (pnID in P_BASE.tmnDST_ID,
     pnVERSION_NBR in P_BASE.tnDST_VERSION_NBR)
   is
     nITM_ID P_BASE.tnITM_ID;
@@ -136,12 +251,12 @@ create or replace package body P_DISPLACEMENT_STATUS is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.DELETE_DISPLACEMENT_STATUS',
-      psCODE || '~' || to_char(pnVERSION_NBR));
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
     into nITM_ID, nVERSION_NBR, xDST_ROWID
     from T_DISPLACEMENT_STATUSES
-    where CODE = psCODE
+    where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
@@ -164,7 +279,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
 -- ----------------------------------------
 --
   procedure SET_DST_DESCRIPTION
-   (psCODE in P_BASE.tmsDST_CODE,
+   (pnID in P_BASE.tmnDST_ID,
     pnVERSION_NBR in out P_BASE.tnDST_VERSION_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
@@ -173,10 +288,10 @@ create or replace package body P_DISPLACEMENT_STATUS is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_DST_DESCRIPTION',
-      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
-        to_char(length(psDescription)) || ':' || psDescription);
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    SET_DST_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    SET_DST_TEXT(pnID, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -189,16 +304,16 @@ create or replace package body P_DISPLACEMENT_STATUS is
 -- ----------------------------------------
 --
   procedure REMOVE_DST_DESCRIPTION
-   (psCODE in P_BASE.tmsDST_CODE,
+   (pnID in P_BASE.tmnDST_ID,
     pnVERSION_NBR in out P_BASE.tnDST_VERSION_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_DST_DESCRIPTION',
-      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
-    REMOVE_DST_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
+    REMOVE_DST_TEXT(pnID, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
     PLS_UTILITY.END_MODULE;
   exception
@@ -211,7 +326,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
 -- ----------------------------------------
 --
   procedure SET_DST_TEXT
-   (psCODE in P_BASE.tmsDST_CODE,
+   (pnID in P_BASE.tmnDST_ID,
     pnVERSION_NBR in out P_BASE.tnDST_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
@@ -224,13 +339,14 @@ create or replace package body P_DISPLACEMENT_STATUS is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_DST_TEXT',
-      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
-        '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
+        psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
+        psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
     select ITM_ID, VERSION_NBR, rowid
     into nITM_ID, nVERSION_NBR, xDST_ROWID
     from T_DISPLACEMENT_STATUSES
-    where CODE = psCODE
+    where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
@@ -256,7 +372,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
 -- ----------------------------------------
 --
   procedure REMOVE_DST_TEXT
-   (psCODE in P_BASE.tmsDST_CODE,
+   (pnID in P_BASE.tmnDST_ID,
     pnVERSION_NBR in out P_BASE.tnDST_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
@@ -268,13 +384,13 @@ create or replace package body P_DISPLACEMENT_STATUS is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_DST_TEXT',
-      psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
     select ITM_ID, VERSION_NBR, rowid
     into nITM_ID, nVERSION_NBR, xDST_ROWID
     from T_DISPLACEMENT_STATUSES
-    where CODE = psCODE
+    where ID = pnID
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
