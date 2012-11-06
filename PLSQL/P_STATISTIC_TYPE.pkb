@@ -12,7 +12,7 @@ create or replace package body P_STATISTIC_TYPE is
    (psCODE in P_BASE.tmsSTCT_CODE,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText,
-    psDST_CODE_FLAG in P_BASE.tmsFlag,
+    psDST_ID_FLAG in P_BASE.tmsFlag,
     psLOC_ID_ASYLUM_COUNTRY_FLAG in P_BASE.tmsFlag,
     psLOC_ID_ASYLUM_FLAG in P_BASE.tmsFlag,
     psLOC_ID_ORIGIN_COUNTRY_FLAG in P_BASE.tmsFlag,
@@ -38,7 +38,7 @@ create or replace package body P_STATISTIC_TYPE is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_STATISTIC_TYPE',
-      psCODE || '~' || psDST_CODE_FLAG || '~' ||
+      psCODE || '~' || psDST_ID_FLAG || '~' ||
         psLOC_ID_ASYLUM_COUNTRY_FLAG || '~' || psLOC_ID_ASYLUM_FLAG || '~' ||
         psLOC_ID_ORIGIN_COUNTRY_FLAG || '~' || psLOC_ID_ORIGIN_FLAG || '~' ||
         psDIM_ID1_FLAG || '~' || psDIMT_CODE1 || '~' ||
@@ -53,14 +53,14 @@ create or replace package body P_STATISTIC_TYPE is
     P_TEXT.SET_TEXT(nITM_ID, 'STCT', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
     insert into T_STATISTIC_TYPES
-     (CODE, DST_CODE_FLAG,
+     (CODE, DST_ID_FLAG,
       LOC_ID_ASYLUM_COUNTRY_FLAG, LOC_ID_ASYLUM_FLAG,
       LOC_ID_ORIGIN_COUNTRY_FLAG, LOC_ID_ORIGIN_FLAG,
       DIM_ID1_FLAG, DIMT_CODE1, DIM_ID2_FLAG, DIMT_CODE2, DIM_ID3_FLAG, DIMT_CODE3,
       DIM_ID4_FLAG, DIMT_CODE4, DIM_ID5_FLAG, DIMT_CODE5, SEX_CODE_FLAG, AGR_ID_FLAG,
       PGR_ID_SUBGROUP_FLAG, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values
-     (psCODE, psDST_CODE_FLAG,
+     (psCODE, psDST_ID_FLAG,
       psLOC_ID_ASYLUM_COUNTRY_FLAG, psLOC_ID_ASYLUM_FLAG,
       psLOC_ID_ORIGIN_COUNTRY_FLAG, psLOC_ID_ORIGIN_FLAG,
       psDIM_ID1_FLAG, psDIMT_CODE1, psDIM_ID2_FLAG, psDIMT_CODE2, psDIM_ID3_FLAG, psDIMT_CODE3,
@@ -82,7 +82,7 @@ create or replace package body P_STATISTIC_TYPE is
     pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
-    psDST_CODE_FLAG in P_BASE.tsFlag := null,
+    psDST_ID_FLAG in P_BASE.tsFlag := null,
     psLOC_ID_ASYLUM_COUNTRY_FLAG in P_BASE.tsFlag := null,
     psLOC_ID_ASYLUM_FLAG in P_BASE.tsFlag := null,
     psLOC_ID_ORIGIN_COUNTRY_FLAG in P_BASE.tsFlag := null,
@@ -110,7 +110,7 @@ create or replace package body P_STATISTIC_TYPE is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_STATISTIC_TYPE',
-      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDST_CODE_FLAG || '~' ||
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDST_ID_FLAG || '~' ||
         psLOC_ID_ASYLUM_COUNTRY_FLAG || '~' || psLOC_ID_ASYLUM_FLAG || '~' ||
         psLOC_ID_ORIGIN_COUNTRY_FLAG || '~' || psLOC_ID_ORIGIN_FLAG || '~' ||
         psDIM_ID1_FLAG || '~' || psDIMT_CODE1 || '~' ||
@@ -135,7 +135,7 @@ create or replace package body P_STATISTIC_TYPE is
       end if;
     --
       update T_STATISTIC_TYPES
-      set DST_CODE_FLAG = nvl(psDST_CODE_FLAG, DST_CODE_FLAG),
+      set DST_ID_FLAG = nvl(psDST_ID_FLAG, DST_ID_FLAG),
         LOC_ID_ASYLUM_COUNTRY_FLAG = nvl(psLOC_ID_ASYLUM_COUNTRY_FLAG, LOC_ID_ASYLUM_COUNTRY_FLAG),
         LOC_ID_ASYLUM_FLAG = nvl(psLOC_ID_ASYLUM_FLAG, LOC_ID_ASYLUM_FLAG),
         LOC_ID_ORIGIN_COUNTRY_FLAG = nvl(psLOC_ID_ORIGIN_COUNTRY_FLAG, LOC_ID_ORIGIN_COUNTRY_FLAG),
@@ -182,7 +182,7 @@ create or replace package body P_STATISTIC_TYPE is
     pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
-    psDST_CODE_FLAG in P_BASE.tsFlag := null,
+    psDST_ID_FLAG in P_BASE.tsFlag := null,
     psLOC_ID_ASYLUM_COUNTRY_FLAG in P_BASE.tsFlag := null,
     psLOC_ID_ASYLUM_FLAG in P_BASE.tsFlag := null,
     psLOC_ID_ORIGIN_COUNTRY_FLAG in P_BASE.tsFlag := null,
@@ -206,7 +206,7 @@ create or replace package body P_STATISTIC_TYPE is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_STATISTIC_TYPE',
-      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDST_CODE_FLAG || '~' ||
+      psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDST_ID_FLAG || '~' ||
         psLOC_ID_ASYLUM_COUNTRY_FLAG || '~' || psLOC_ID_ASYLUM_FLAG || '~' ||
         psLOC_ID_ORIGIN_COUNTRY_FLAG || '~' || psLOC_ID_ORIGIN_FLAG || '~' ||
         psDIM_ID1_FLAG || '~' || psDIMT_CODE1 || '~' ||
@@ -221,7 +221,7 @@ create or replace package body P_STATISTIC_TYPE is
     if pnVERSION_NBR is null
     then
       INSERT_STATISTIC_TYPE
-       (psCODE, psLANG_CODE, psDescription, psDST_CODE_FLAG,
+       (psCODE, psLANG_CODE, psDescription, psDST_ID_FLAG,
         psLOC_ID_ASYLUM_COUNTRY_FLAG, psLOC_ID_ASYLUM_FLAG,
         psLOC_ID_ORIGIN_COUNTRY_FLAG, psLOC_ID_ORIGIN_FLAG,
         psDIM_ID1_FLAG, psDIMT_CODE1, psDIM_ID2_FLAG, psDIMT_CODE2, psDIM_ID3_FLAG, psDIMT_CODE3,
@@ -233,7 +233,7 @@ create or replace package body P_STATISTIC_TYPE is
       pnVERSION_NBR := 1;
     else
       UPDATE_STATISTIC_TYPE
-       (psCODE, pnVERSION_NBR, psLANG_CODE, psDescription, psDST_CODE_FLAG,
+       (psCODE, pnVERSION_NBR, psLANG_CODE, psDescription, psDST_ID_FLAG,
         psLOC_ID_ASYLUM_COUNTRY_FLAG, psLOC_ID_ASYLUM_FLAG,
         psLOC_ID_ORIGIN_COUNTRY_FLAG, psLOC_ID_ORIGIN_FLAG,
         psDIM_ID1_FLAG, psDIMT_CODE1, psDIM_ID2_FLAG, psDIMT_CODE2, psDIM_ID3_FLAG, psDIMT_CODE3,

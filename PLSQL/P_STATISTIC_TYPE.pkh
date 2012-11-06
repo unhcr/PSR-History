@@ -6,7 +6,7 @@ create or replace package P_STATISTIC_TYPE is
 --  Procedures for maintenance of statistic types and groups.
 --
 --  Change History:
---  01-Oct-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  06-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -27,7 +27,7 @@ create or replace package P_STATISTIC_TYPE is
 --  psCODE - Statistic type code (mandatory).
 --  psLANG_CODE - Language code of the textual description (mandatory).
 --  psDescription - Textual description of statistic type (mandatory).
---  psDST_CODE_FLAG - Flag indicating usage of Displacement Status dimension (mandatory).
+--  psDST_ID_FLAG - Flag indicating usage of Displacement Status dimension (mandatory).
 --  psLOC_ID_ASYLUM_COUNTRY_FLAG - Flag indicating usage of Country of Asylum dimension (mandatory).
 --  psLOC_ID_ASYLUM_FLAG - Flag indicating usage of Location of Asylum dimension (mandatory).
 --  psLOC_ID_ORIGIN_COUNTRY_FLAG - Flag indicating usage of (Country of) Origin dimension
@@ -59,7 +59,7 @@ create or replace package P_STATISTIC_TYPE is
    (psCODE in P_BASE.tmsSTCT_CODE,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText,
-    psDST_CODE_FLAG in P_BASE.tmsFlag,
+    psDST_ID_FLAG in P_BASE.tmsFlag,
     psLOC_ID_ASYLUM_COUNTRY_FLAG in P_BASE.tmsFlag,
     psLOC_ID_ASYLUM_FLAG in P_BASE.tmsFlag,
     psLOC_ID_ORIGIN_COUNTRY_FLAG in P_BASE.tmsFlag,
@@ -94,7 +94,7 @@ create or replace package P_STATISTIC_TYPE is
 --    psDescription is specified).
 --  psDescription - Textual description of statistic type (optional: if not specified, the
 --    description is not changed).
---  psDST_CODE_FLAG - Flag indicating usage of Displacement Status dimension (optional: if not
+--  psDST_ID_FLAG - Flag indicating usage of Displacement Status dimension (optional: if not
 --    specified, the usage flag is not changed).
 --  psLOC_ID_ASYLUM_COUNTRY_FLAG - Flag indicating usage of Country of Asylum dimension (optional:
 --    if not specified, the usage flag is not changed).
@@ -141,7 +141,7 @@ create or replace package P_STATISTIC_TYPE is
     pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
-    psDST_CODE_FLAG in P_BASE.tsFlag := null,
+    psDST_ID_FLAG in P_BASE.tsFlag := null,
     psLOC_ID_ASYLUM_COUNTRY_FLAG in P_BASE.tsFlag := null,
     psLOC_ID_ASYLUM_FLAG in P_BASE.tsFlag := null,
     psLOC_ID_ORIGIN_COUNTRY_FLAG in P_BASE.tsFlag := null,
@@ -176,7 +176,7 @@ create or replace package P_STATISTIC_TYPE is
 --    statistic type but must be specified if psDescription is specified).
 --  psDescription - Textual description of statistic type (optional when updating an existing
 --    statistic type; if not specified, the description is not changed).
---  psDST_CODE_FLAG - Flag indicating usage of Displacement Status dimension (optional when updating
+--  psDST_ID_FLAG - Flag indicating usage of Displacement Status dimension (optional when updating
 --    an existing statistic type; if not specified, the usage flag is not changed).
 --  psLOC_ID_ASYLUM_COUNTRY_FLAG - Flag indicating usage of Country of Asylum dimension (optional
 --    when updating an existing statistic type; if not specified, the usage flag is not changed).
@@ -223,7 +223,7 @@ create or replace package P_STATISTIC_TYPE is
     pnVERSION_NBR in out P_BASE.tnSTCT_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
-    psDST_CODE_FLAG in P_BASE.tsFlag := null,
+    psDST_ID_FLAG in P_BASE.tsFlag := null,
     psLOC_ID_ASYLUM_COUNTRY_FLAG in P_BASE.tsFlag := null,
     psLOC_ID_ASYLUM_FLAG in P_BASE.tsFlag := null,
     psLOC_ID_ORIGIN_COUNTRY_FLAG in P_BASE.tsFlag := null,
