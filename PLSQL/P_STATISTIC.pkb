@@ -13,7 +13,7 @@ create or replace package body P_STATISTIC is
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pdEND_DATE in P_BASE.tmdDate,
-    psDST_CODE in P_BASE.tmsDST_CODE := null,
+    pnDST_ID in P_BASE.tmnDST_ID := null,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tnLOC_ID := null,
@@ -29,7 +29,7 @@ create or replace package body P_STATISTIC is
     pnPPG_ID in P_BASE.tnPPG_ID := null,
     pnVALUE in P_BASE.tmnSTC_VALUE)
   is
-    sDST_CODE_FLAG P_BASE.tsFlag;
+    sDST_ID_FLAG P_BASE.tsFlag;
     sLOC_ID_ASYLUM_COUNTRY_FLAG P_BASE.tsFlag;
     sLOC_ID_ASYLUM_FLAG P_BASE.tsFlag;
     sLOC_ID_ORIGIN_COUNTRY_FLAG P_BASE.tsFlag;
@@ -53,7 +53,7 @@ create or replace package body P_STATISTIC is
      (sVersion || '-' || sComponent || '.INSERT_STATISTIC',
       psSTCT_CODE || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD')  || '~' || to_char(pdEND_DATE, 'YYYY-MM-DD')  || '~' ||
-        psDST_CODE || '~' ||
+        to_char(pnDST_ID) || '~' ||
         to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' || to_char(pnLOC_ID_ASYLUM) || '~' ||
         to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' || to_char(pnLOC_ID_ORIGIN) || '~' ||
         to_char(pnDIM_ID1) || '~' || to_char(pnDIM_ID2) || '~' || to_char(pnDIM_ID3) || '~' ||
@@ -61,11 +61,11 @@ create or replace package body P_STATISTIC is
         to_char(pnAGR_ID) || '~' || to_char(pnPGR_ID_PRIMARY) || '~' || to_char(pnPPG_ID) || '~' ||
         to_char(pnVALUE));
   --
-    select DST_CODE_FLAG, LOC_ID_ASYLUM_COUNTRY_FLAG, LOC_ID_ASYLUM_FLAG,
+    select DST_ID_FLAG, LOC_ID_ASYLUM_COUNTRY_FLAG, LOC_ID_ASYLUM_FLAG,
       LOC_ID_ORIGIN_COUNTRY_FLAG, LOC_ID_ORIGIN_FLAG,
       DIM_ID1_FLAG, DIMT_CODE1, DIM_ID2_FLAG, DIMT_CODE2, DIM_ID3_FLAG, DIMT_CODE3,
       DIM_ID4_FLAG, DIMT_CODE4, DIM_ID5_FLAG, DIMT_CODE5, SEX_CODE_FLAG, AGR_ID_FLAG
-    into sDST_CODE_FLAG, sLOC_ID_ASYLUM_COUNTRY_FLAG, sLOC_ID_ASYLUM_FLAG,
+    into sDST_ID_FLAG, sLOC_ID_ASYLUM_COUNTRY_FLAG, sLOC_ID_ASYLUM_FLAG,
       sLOC_ID_ORIGIN_COUNTRY_FLAG, sLOC_ID_ORIGIN_FLAG,
       sDIM_ID1_FLAG, sDIMT_CODE1, sDIM_ID2_FLAG, sDIMT_CODE2, sDIM_ID3_FLAG, sDIMT_CODE3,
       sDIM_ID4_FLAG, sDIMT_CODE4, sDIM_ID5_FLAG, sDIMT_CODE5, sSEX_CODE_FLAG, sAGR_ID_FLAG
@@ -73,9 +73,9 @@ create or replace package body P_STATISTIC is
     where CODE = psSTCT_CODE
     and ACTIVE_FLAG = 'Y';
   --
-    if sDST_CODE_FLAG = 'M' and psDST_CODE is null
+    if sDST_ID_FLAG = 'M' and pnDST_ID is null
     then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Displacement status must be specified');
-    elsif sDST_CODE_FLAG = 'N' and psDST_CODE is not null
+    elsif sDST_ID_FLAG = 'N' and pnDST_ID is not null
     then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Displacement status must not be specified');
     end if;
   --
@@ -154,12 +154,12 @@ create or replace package body P_STATISTIC is
     end if;
   --
     insert into T_STATISTICS
-     (ID, STCT_CODE, START_DATE, END_DATE, DST_CODE,
+     (ID, STCT_CODE, START_DATE, END_DATE, DST_ID,
       LOC_ID_ASYLUM_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN_COUNTRY, LOC_ID_ORIGIN,
       DIM_ID1, DIM_ID2, DIM_ID3, DIM_ID4, DIM_ID5,
       SEX_CODE, AGR_ID, PGR_SEQ_NBR, PGR_ID_PRIMARY, PPG_ID, VALUE)
     values
-     (STC_SEQ.nextval, psSTCT_CODE, pdSTART_DATE, pdEND_DATE, psDST_CODE,
+     (STC_SEQ.nextval, psSTCT_CODE, pdSTART_DATE, pdEND_DATE, pnDST_ID,
       pnLOC_ID_ASYLUM_COUNTRY, pnLOC_ID_ASYLUM, pnLOC_ID_ORIGIN_COUNTRY, pnLOC_ID_ORIGIN,
       pnDIM_ID1, pnDIM_ID2, pnDIM_ID3, pnDIM_ID4, pnDIM_ID5,
       psSEX_CODE, pnAGR_ID, nPGR_SEQ_NBR, pnPGR_ID_PRIMARY, pnPPG_ID, pnVALUE)

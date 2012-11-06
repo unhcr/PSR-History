@@ -6,7 +6,7 @@ create or replace package P_STATISTIC is
 --  Procedures for maintenance of statistics.
 --
 --  Change History:
---  23-Oct-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  05-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -28,7 +28,7 @@ create or replace package P_STATISTIC is
 --  psSTCT_CODE - Statistic type code (mandatory).
 --  pdSTART_DATE - Statistic start date (mandatory).
 --  pdEND_DATE - Statistic end date (mandatory).
---  psDST_CODE - Displacement status code (optional).
+--  psDST_ID - Displacement status identifier (optional).
 --  pnLOC_ID_ASYLUM_COUNTRY - Location identifier of country of asylum (optional).
 --  pnLOC_ID_ASYLUM - Identifier of asylum location (optional).
 --  pnLOC_ID_ORIGIN_COUNTRY - Location identifier of (country of) origin (optional).
@@ -49,7 +49,7 @@ create or replace package P_STATISTIC is
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pdEND_DATE in P_BASE.tmdDate,
-    psDST_CODE in P_BASE.tmsDST_CODE := null,
+    pnDST_ID in P_BASE.tmnDST_ID := null,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tnLOC_ID := null,
