@@ -12,7 +12,7 @@ create or replace package body P_POPULATION_GROUP is
    (pnID out P_BASE.tnPGR_ID,
     pdSTART_DATE in P_BASE.tmdDate,
     pdEND_DATE in P_BASE.tmdDate,
-    psDST_CODE in P_BASE.tsDST_CODE := null,
+    pnDST_ID in P_BASE.tnDST_ID := null,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tnLOC_ID := null,
@@ -35,7 +35,7 @@ create or replace package body P_POPULATION_GROUP is
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_POPULATION_GROUP',
       to_char(pdSTART_DATE, 'YYYY-MM-DD')  || '~' || to_char(pdEND_DATE, 'YYYY-MM-DD')  || '~' ||
-        psDST_CODE || '~' ||
+        to_char(pnDST_ID) || '~' ||
         to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' || to_char(pnLOC_ID_ASYLUM) || '~' ||
         to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' || to_char(pnLOC_ID_ORIGIN) || '~' ||
         to_char(pnDIM_ID1) || '~' || to_char(pnDIM_ID2) || '~' || to_char(pnDIM_ID3) || '~' ||
@@ -50,7 +50,7 @@ create or replace package body P_POPULATION_GROUP is
       from T_POPULATION_GROUPS
       where START_DATE = pdSTART_DATE
       and END_DATE = pdEND_DATE
-      and nvl(DST_CODE, 'x') = nvl(psDST_CODE, 'x')
+      and nvl(DST_ID, 0) = nvl(pnDST_ID, 0)
       and nvl(LOC_ID_ASYLUM_COUNTRY, 0) = nvl(pnLOC_ID_ASYLUM_COUNTRY, 0)
       and nvl(LOC_ID_ASYLUM, 0) = nvl(pnLOC_ID_ASYLUM, 0)
       and nvl(LOC_ID_ORIGIN_COUNTRY, 0) = nvl(pnLOC_ID_ORIGIN_COUNTRY, 0)
@@ -67,12 +67,12 @@ create or replace package body P_POPULATION_GROUP is
     end if;
   --
     insert into T_POPULATION_GROUPS
-     (ID, START_DATE, END_DATE, DST_CODE,
+     (ID, START_DATE, END_DATE, DST_ID,
       LOC_ID_ASYLUM_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN_COUNTRY, LOC_ID_ORIGIN,
       DIM_ID1, DIM_ID2, DIM_ID3, DIM_ID4, DIM_ID5, SEX_CODE, AGR_ID,
       SEQ_NBR, PPG_ID, ITM_ID)
     values
-     (PGR_SEQ.nextval, pdSTART_DATE, pdEND_DATE, psDST_CODE,
+     (PGR_SEQ.nextval, pdSTART_DATE, pdEND_DATE, pnDST_ID,
       pnLOC_ID_ASYLUM_COUNTRY, pnLOC_ID_ASYLUM, pnLOC_ID_ORIGIN_COUNTRY, pnLOC_ID_ORIGIN,
       pnDIM_ID1, pnDIM_ID2, pnDIM_ID3, pnDIM_ID4, pnDIM_ID5, psSEX_CODE, pnAGR_ID,
       nPGR_SEQ_NBR_MAX, pnPPG_ID, nITM_ID)
@@ -147,7 +147,7 @@ create or replace package body P_POPULATION_GROUP is
     pnVERSION_NBR in out P_BASE.tnPGR_VERSION_NBR,
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null,
-    psDST_CODE in P_BASE.tsDST_CODE := null,
+    pnDST_ID in P_BASE.tnDST_ID := null,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tnLOC_ID := null,
@@ -168,7 +168,7 @@ create or replace package body P_POPULATION_GROUP is
      (sVersion || '-' || sComponent || '.SET_POPULATION_GROUP',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD')  || '~' || to_char(pdEND_DATE, 'YYYY-MM-DD')  || '~' ||
-        psDST_CODE || '~' ||
+        to_char(pnDST_ID) || '~' ||
         to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' || to_char(pnLOC_ID_ASYLUM) || '~' ||
         to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' || to_char(pnLOC_ID_ORIGIN) || '~' ||
         to_char(pnDIM_ID1) || '~' || to_char(pnDIM_ID2) || '~' || to_char(pnDIM_ID3) || '~' ||
@@ -179,7 +179,7 @@ create or replace package body P_POPULATION_GROUP is
     if pnVERSION_NBR is null
     then
       INSERT_POPULATION_GROUP
-       (pnID, pdSTART_DATE, pdEND_DATE, psDST_CODE,
+       (pnID, pdSTART_DATE, pdEND_DATE, pnDST_ID,
         pnLOC_ID_ASYLUM_COUNTRY, pnLOC_ID_ASYLUM, pnLOC_ID_ORIGIN_COUNTRY, pnLOC_ID_ORIGIN,
         pnDIM_ID1, pnDIM_ID2, pnDIM_ID3, pnDIM_ID4, pnDIM_ID5, psSEX_CODE, pnAGR_ID,
         psLANG_CODE, psSUBGROUP_NAME, pnPPG_ID);

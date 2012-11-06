@@ -7,7 +7,7 @@ create or replace package P_POPULATION_GROUP is
 --   types.
 --
 --  Change History:
---  08-Oct-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  05-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -28,7 +28,7 @@ create or replace package P_POPULATION_GROUP is
 --  pnID - New population group identifier (returned).
 --  pdSTART_DATE - Population group start date (mandatory).
 --  pdEND_DATE - Population group end date (mandatory).
---  psDST_CODE - Displacement status code (optional).
+--  pnDST_ID - Displacement status identifier (optional).
 --  pnLOC_ID_ASYLUM_COUNTRY - Location identifier of country of asylum (optional).
 --  pnLOC_ID_ASYLUM - Identifier of asylum location (optional).
 --  pnLOC_ID_ORIGIN_COUNTRY - Location identifier of (country of) origin (optional).
@@ -50,7 +50,7 @@ create or replace package P_POPULATION_GROUP is
    (pnID out P_BASE.tnPGR_ID,
     pdSTART_DATE in P_BASE.tmdDate,
     pdEND_DATE in P_BASE.tmdDate,
-    psDST_CODE in P_BASE.tsDST_CODE := null,
+    pnDST_ID in P_BASE.tnDST_ID := null,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tnLOC_ID := null,
@@ -105,7 +105,7 @@ create or replace package P_POPULATION_GROUP is
 --    specified for an existing population group).
 --  pdEND_DATE - Population group end date (mandatory for a new population group; may not be
 --    specified for an existing population group).
---  psDST_CODE - Displacement status code (optional, may only be specified for a new population
+--  pnDST_ID - Displacement status identifier (optional, may only be specified for a new population
 --    group).
 --  pnLOC_ID_ASYLUM_COUNTRY - Location identifier of country of asylum (optional, may only be
 --    specified for a new population group).
@@ -140,7 +140,7 @@ create or replace package P_POPULATION_GROUP is
     pnVERSION_NBR in out P_BASE.tnPGR_VERSION_NBR,
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null,
-    psDST_CODE in P_BASE.tsDST_CODE := null,
+    pnDST_ID in P_BASE.tnDST_ID := null,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tnLOC_ID := null,
