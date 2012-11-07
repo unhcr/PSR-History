@@ -30,10 +30,15 @@ begin
     iCount1 := iCount1 + 1;
   --
     P_LOCATION.INSERT_LOCATION
-     (nLOC_ID, 'en', rLOC.ISO_NAME_EN, rLOC.LOCT_CODE, rLOC.IS03166A3,
+     (nLOC_ID, 'en', rLOC.ISO_NAME_EN, rLOC.LOCT_CODE,
+      case when rLOC.LOCT_CODE = 'COUNTRY' then rLOC.IS03166A3 end,
       rLOC.START_DATE, rLOC.END_DATE);
     anLOC_ID(rLOC.KEY) := nLOC_ID;
     nVERSION_NBR := 1;
+  --
+    if rLOC.LOCT_CODE != 'COUNTRY' and rLOC.IS03166A3 is not null
+    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'IS03166A3', rLOC.IS03166A3);
+    end if;
   --
     if rLOC.IS03166A2 is not null
     then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'IS03166A2', rLOC.IS03166A2);
