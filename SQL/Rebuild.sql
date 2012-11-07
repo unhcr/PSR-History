@@ -53,10 +53,6 @@ prompt InitAgeProfiles
 prompt ===============
 @InitAgeProfiles
 
---prompt InitTimePeriods
---prompt ===============
---@InitTimePeriods
-
 prompt LoadDimensionTypes
 prompt ==================
 @LoadDimensionTypes
