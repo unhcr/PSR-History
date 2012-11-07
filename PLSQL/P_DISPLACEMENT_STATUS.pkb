@@ -46,7 +46,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
       when NO_DATA_FOUND then null;
     --
       when TOO_MANY_ROWS
-      then P_MESSAGE.DISPLAY_MESSAGE('DST', 999, 'Displacement status with this code already exists');
+      then P_MESSAGE.DISPLAY_MESSAGE('DST', 2, 'Displacement status with this code already exists');
     end;
   --
     P_TEXT.SET_TEXT(nITM_ID, 'DST', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
@@ -151,7 +151,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
           when NO_DATA_FOUND then null;
         --
           when TOO_MANY_ROWS
-          then P_MESSAGE.DISPLAY_MESSAGE('DST', 999, 'Displacement status with this code already exists');
+          then P_MESSAGE.DISPLAY_MESSAGE('DST', 2, 'Displacement status with this code already exists');
         end;
       end if;
     --

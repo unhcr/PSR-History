@@ -74,75 +74,75 @@ create or replace package body P_STATISTIC is
     and ACTIVE_FLAG = 'Y';
   --
     if sDST_ID_FLAG = 'M' and pnDST_ID is null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Displacement status must be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 2, 'Displacement status must be specified');
     elsif sDST_ID_FLAG = 'N' and pnDST_ID is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Displacement status must not be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 3, 'Displacement status must not be specified');
     end if;
   --
     if sLOC_ID_ASYLUM_COUNTRY_FLAG = 'M' and pnLOC_ID_ASYLUM_COUNTRY is null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Asylum country must be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 4, 'Asylum country must be specified');
     elsif sLOC_ID_ASYLUM_COUNTRY_FLAG = 'N' and pnLOC_ID_ASYLUM_COUNTRY is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Asylum country must not be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 5, 'Asylum country must not be specified');
     end if;
   --
     if sLOC_ID_ASYLUM_FLAG = 'M' and pnLOC_ID_ASYLUM is null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Asylum location must be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 6, 'Asylum location must be specified');
     elsif sLOC_ID_ASYLUM_FLAG = 'N' and pnLOC_ID_ASYLUM is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Asylum location must not be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 7, 'Asylum location must not be specified');
     end if;
   --
     if sLOC_ID_ORIGIN_COUNTRY_FLAG = 'M' and pnLOC_ID_ORIGIN_COUNTRY is null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Origin country must be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 8, 'Origin country must be specified');
     elsif sLOC_ID_ORIGIN_COUNTRY_FLAG = 'N' and pnLOC_ID_ORIGIN_COUNTRY is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Origin country must not be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 9, 'Origin country must not be specified');
     end if;
   --
     if sLOC_ID_ORIGIN_FLAG = 'M' and pnLOC_ID_ORIGIN is null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Origin location must be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 10, 'Origin location must be specified');
     elsif sLOC_ID_ORIGIN_FLAG = 'N' and pnLOC_ID_ORIGIN is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Origin location must not be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 11, 'Origin location must not be specified');
     end if;
   --
     if sDIM_ID1_FLAG = 'M' and pnDIM_ID1 is null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Generic dimension 1 must be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 12, 'Generic dimension 1 must be specified');
     elsif sDIM_ID1_FLAG = 'N' and pnDIM_ID1 is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Generic dimension 1 must not be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 13, 'Generic dimension 1 must not be specified');
     end if;
   --
     if sDIM_ID2_FLAG = 'M' and pnDIM_ID2 is null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Generic dimension 2 must be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 14, 'Generic dimension 2 must be specified');
     elsif sDIM_ID2_FLAG = 'N' and pnDIM_ID2 is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Generic dimension 2 must not be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 15, 'Generic dimension 2 must not be specified');
     end if;
   --
     if sDIM_ID3_FLAG = 'M' and pnDIM_ID3 is null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Generic dimension 3 must be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 16, 'Generic dimension 3 must be specified');
     elsif sDIM_ID3_FLAG = 'N' and pnDIM_ID3 is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Generic dimension 3 must not be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 17, 'Generic dimension 3 must not be specified');
     end if;
   --
     if sDIM_ID4_FLAG = 'M' and pnDIM_ID4 is null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Generic dimension 4 must be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 18, 'Generic dimension 4 must be specified');
     elsif sDIM_ID4_FLAG = 'N' and pnDIM_ID4 is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Generic dimension 4 must not be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 19, 'Generic dimension 4 must not be specified');
     end if;
   --
     if sDIM_ID5_FLAG = 'M' and pnDIM_ID5 is null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Generic dimension 5 must be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 20, 'Generic dimension 5 must be specified');
     elsif sDIM_ID5_FLAG = 'N' and pnDIM_ID5 is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Generic dimension 5 must not be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 21, 'Generic dimension 5 must not be specified');
     end if;
   --
     if sSEX_CODE_FLAG = 'M' and psSEX_CODE is null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Sex must be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 22, 'Sex must be specified');
     elsif sSEX_CODE_FLAG = 'N' and psSEX_CODE is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Sex must not be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 23, 'Sex must not be specified');
     end if;
   --
     if sAGR_ID_FLAG = 'M' and pnAGR_ID is null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Age range must be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 24, 'Age range must be specified');
     elsif sAGR_ID_FLAG = 'N' and pnAGR_ID is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('STC', 99, 'Age range must not be specified');
+    then P_MESSAGE.DISPLAY_MESSAGE('STC', 25, 'Age range must not be specified');
     end if;
   --
     if pnPGR_ID_PRIMARY is not null
