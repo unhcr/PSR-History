@@ -209,8 +209,8 @@ create or replace package P_LOCATION is
 --  psLANG_CODE - Language code of the location name (mandatory).
 --  psName - Location name text (mandatory).
 --  psLOCT_CODE - Location type code (mandatory).
---  psCountryCode - Country code, usually ISO 3166-1 alpha-3 code (not allowed when the location
---    type is not country; mandatory for a new location of type country).
+--  psCountryCode - ISO 3166-1 alpha-3 country code (not allowed when the location type is not
+--    country; mandatory for a new location of type country).
 --  pdSTART_DATE - Effective start date of details of this location (optional, the absence of a
 --    start date, or a null value, indicates that the effectivity starts indefinitely far in the
 --    past).
