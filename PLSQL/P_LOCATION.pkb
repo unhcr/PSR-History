@@ -365,6 +365,8 @@ create or replace package body P_LOCATION is
           then P_MESSAGE.DISPLAY_MESSAGE('LOC', 9, 'Country with this code already exists');
         end;
       end if;
+    elsif psCountryCode is not null
+    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 10, 'Country code can only be specified for countries');
     end if;
   --
   -- Generate new location code.
