@@ -18,13 +18,13 @@ begin
   --
     if rDST.DESCRIPTION_FR is not null
     then
-      P_DISPLACEMENT_STATUS.SET_DIMT_DESCRIPTION(nDST_ID, nVERSION_NBR, 'fr', rDST.DESCRIPTION_FR);
+      P_DISPLACEMENT_STATUS.SET_DST_DESCRIPTION(nDST_ID, nVERSION_NBR, 'fr', rDST.DESCRIPTION_FR);
     end if;
   --
     if rDST.NOTES is not null
     then
       nSEQ_NBR := null;
-      P_DISPLACEMENT_STATUS.SET_DIMT_TEXT(nDST_ID, nVERSION_NBR, 'NOTE', nSEQ_NBR, 'en', rDST.NOTES);
+      P_DISPLACEMENT_STATUS.SET_DST_TEXT(nDST_ID, nVERSION_NBR, 'NOTE', nSEQ_NBR, 'en', rDST.NOTES);
     end if;
   end loop;
 --
