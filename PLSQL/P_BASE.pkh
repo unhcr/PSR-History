@@ -6,7 +6,7 @@ create or replace package P_BASE is
 --  Type definitions and data values used throughout the PSR system.
 --
 --  Change History:
---  05-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  07-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -312,21 +312,6 @@ create or replace package P_BASE is
   subtype tsTTP_LONG_TEXT_FLAG is T_TEXT_TYPE_PROPERTIES.LONG_TEXT_FLAG%type;
   subtype tmsTTP_LONG_TEXT_FLAG is tsTTP_LONG_TEXT_FLAG not null;
   subtype tnTTP_VERSION_NBR is T_TEXT_TYPE_PROPERTIES.VERSION_NBR%type;
---
--- T_TIME_PERIODS
---
-  subtype tnPER_ID is T_TIME_PERIODS.ID%type;
-  subtype tmnPER_ID is tnPER_ID not null;
-  subtype tnPER_VERSION_NBR is T_TIME_PERIODS.VERSION_NBR%type;
---
--- T_TIME_PERIOD_TYPES
---
-  subtype tsPERT_CODE is T_TIME_PERIOD_TYPES.CODE%type;
-  subtype tmsPERT_CODE is tsPERT_CODE not null;
-  subtype tnPERT_DISPLAY_SEQ is T_TIME_PERIOD_TYPES.DISPLAY_SEQ%type;
-  subtype tsPERT_ACTIVE_FLAG is T_TIME_PERIOD_TYPES.ACTIVE_FLAG%type;
-  subtype tmsPERT_ACTIVE_FLAG is tsPERT_ACTIVE_FLAG not null;
-  subtype tnPERT_VERSION_NBR is T_TIME_PERIOD_TYPES.VERSION_NBR%type;
 --
 -- T_USER_ATTRIBUTES
 --
