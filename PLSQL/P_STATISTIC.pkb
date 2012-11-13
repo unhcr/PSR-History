@@ -13,7 +13,7 @@ create or replace package body P_STATISTIC is
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
     pdSTART_DATE in P_BASE.tmdDate,
     pdEND_DATE in P_BASE.tmdDate,
-    pnDST_ID in P_BASE.tmnDST_ID := null,
+    pnDST_ID in P_BASE.tnDST_ID := null,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tnLOC_ID := null,
@@ -51,7 +51,7 @@ create or replace package body P_STATISTIC is
   begin
     PLS_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_STATISTIC',
-      psSTCT_CODE || '~' ||
+      '~' || psSTCT_CODE || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD')  || '~' || to_char(pdEND_DATE, 'YYYY-MM-DD')  || '~' ||
         to_char(pnDST_ID) || '~' ||
         to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' || to_char(pnLOC_ID_ASYLUM) || '~' ||
@@ -165,10 +165,21 @@ create or replace package body P_STATISTIC is
       psSEX_CODE, pnAGR_ID, nPGR_SEQ_NBR, pnPGR_ID_PRIMARY, pnPPG_ID, pnVALUE)
     returning ID into pnID;
   --
+    PLS_UTILITY.TRACE_CONTEXT
+     (to_char(pnID) || '~' || psSTCT_CODE || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD')  || '~' || to_char(pdEND_DATE, 'YYYY-MM-DD')  || '~' ||
+        to_char(pnDST_ID) || '~' ||
+        to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' || to_char(pnLOC_ID_ASYLUM) || '~' ||
+        to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' || to_char(pnLOC_ID_ORIGIN) || '~' ||
+        to_char(pnDIM_ID1) || '~' || to_char(pnDIM_ID2) || '~' || to_char(pnDIM_ID3) || '~' ||
+        to_char(pnDIM_ID4) || '~' || to_char(pnDIM_ID5) || '~' || psSEX_CODE || '~' ||
+        to_char(pnAGR_ID) || '~' || to_char(pnPGR_ID_PRIMARY) || '~' || to_char(pnPPG_ID) || '~' ||
+        to_char(pnVALUE));
+  --
     if pnPGR_ID_PRIMARY is not null
     then
       insert into T_STATISTICS_IN_GROUPS (STC_ID, PGR_ID)
-      values(pnID, pnPGR_ID_PRIMARY);
+      values (pnID, pnPGR_ID_PRIMARY);
     end if;
   --
     PLS_UTILITY.END_MODULE;
@@ -213,6 +224,65 @@ create or replace package body P_STATISTIC is
     when others
     then PLS_UTILITY.TRACE_EXCEPTION;
   end UPDATE_STATISTIC;
+--
+-- ----------------------------------------
+-- SET_STATISTIC
+-- ----------------------------------------
+--
+  procedure SET_STATISTIC
+   (pnID in out P_BASE.tnSTC_ID,
+    pnVERSION_NBR in out P_BASE.tnSTC_VERSION_NBR,
+    psSTCT_CODE in P_BASE.tsSTCT_CODE := null,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null,
+    pnDST_ID in P_BASE.tnDST_ID := null,
+    pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tnLOC_ID := null,
+    pnLOC_ID_ASYLUM in P_BASE.tnLOC_ID := null,
+    pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tnLOC_ID := null,
+    pnLOC_ID_ORIGIN in P_BASE.tnLOC_ID := null,
+    pnDIM_ID1 in P_BASE.tnDIM_ID := null,
+    pnDIM_ID2 in P_BASE.tnDIM_ID := null,
+    pnDIM_ID3 in P_BASE.tnDIM_ID := null,
+    pnDIM_ID4 in P_BASE.tnDIM_ID := null,
+    pnDIM_ID5 in P_BASE.tnDIM_ID := null,
+    psSEX_CODE in P_BASE.tsSEX_CODE := null,
+    pnAGR_ID in P_BASE.tnAGR_ID := null,
+    pnPGR_ID_PRIMARY in P_BASE.tnPGR_ID := null,
+    pnPPG_ID in P_BASE.tnPPG_ID := null,
+    pnVALUE in P_BASE.tmnSTC_VALUE)
+  is
+  begin
+    PLS_UTILITY.START_MODULE
+     (sVersion || '-' || sComponent || '.SET_STATISTIC',
+      to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psSTCT_CODE || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD')  || '~' || to_char(pdEND_DATE, 'YYYY-MM-DD')  || '~' ||
+        to_char(pnDST_ID) || '~' ||
+        to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' || to_char(pnLOC_ID_ASYLUM) || '~' ||
+        to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' || to_char(pnLOC_ID_ORIGIN) || '~' ||
+        to_char(pnDIM_ID1) || '~' || to_char(pnDIM_ID2) || '~' || to_char(pnDIM_ID3) || '~' ||
+        to_char(pnDIM_ID4) || '~' || to_char(pnDIM_ID5) || '~' || psSEX_CODE || '~' ||
+        to_char(pnAGR_ID) || '~' || to_char(pnPGR_ID_PRIMARY) || '~' || to_char(pnPPG_ID) || '~' ||
+        to_char(pnVALUE));
+  --
+    if pnVERSION_NBR is null
+    then
+      INSERT_STATISTIC
+       (pnID, psSTCT_CODE, pdSTART_DATE, pdEND_DATE, pnDST_ID,
+        pnLOC_ID_ASYLUM_COUNTRY, pnLOC_ID_ASYLUM, pnLOC_ID_ORIGIN_COUNTRY, pnLOC_ID_ORIGIN,
+        pnDIM_ID1, pnDIM_ID2, pnDIM_ID3, pnDIM_ID4, pnDIM_ID5,
+        psSEX_CODE, pnAGR_ID, pnPGR_ID_PRIMARY, pnPPG_ID,
+        pnVALUE);
+    --
+      pnVERSION_NBR := 1;
+    else
+      UPDATE_STATISTIC(pnID, pnVERSION_NBR, pnVALUE);
+    end if;
+  --
+    PLS_UTILITY.END_MODULE;
+  exception
+    when others
+    then PLS_UTILITY.TRACE_EXCEPTION;
+  end SET_STATISTIC;
 --
 -- ----------------------------------------
 -- DELETE_STATISTIC
