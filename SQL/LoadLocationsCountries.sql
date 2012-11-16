@@ -129,7 +129,7 @@ begin
       iCount2 := iCount2 + 1;
       P_LOCATION.INSERT_LOCATION_RELATIONSHIP(anLOC_ID(rLOC.CCHANGE_FROM_KEY), anLOC_ID(rLOC.KEY), 'CCHANGE');
     end if;
-  end loop;PLS_UTILITY.DISABLE_TRACE;
+  end loop;
 --
   dbms_output.put_line(to_char(iCount2) || ' LOCATION_RELATIONSHIPS records inserted');
 end;
