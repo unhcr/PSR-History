@@ -618,7 +618,7 @@ begin
       DIM_ID1, DIM_ID2, DIM_ID3, DIM_ID4, DIM_ID5, SUBGROUP_NAME,
       PPG_ID, PERIOD_FLAG, STCT_CODE, SEX_CODE, AGR_ID)
   loop
-    PLS_UTILITY.TRACE_POINT
+    P_UTILITY.TRACE_POINT
      ('Trace',
       rSTC.TABLE_NUMBER || '~' || rSTC.STATSYEAR || '~' || rSTC.DST_CODE || '~' ||
         rSTC.COU_CODE_ASYLUM || '~' || rSTC.LOCATION_NAME || '~' || rSTC.COU_CODE_ORIGIN || '~' ||
