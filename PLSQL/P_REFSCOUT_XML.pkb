@@ -13,8 +13,8 @@ create or replace package body P_REFSCOUT_XML is
   is
     xELEMENT XMLType;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.CHARTBYASYLUM');
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.CHARTBYASYLUM');
   --
     with
       -- Definitions of selection criteria and aggregations for required Statistic Types
@@ -159,10 +159,10 @@ create or replace package body P_REFSCOUT_XML is
   --
     return xELEMENT;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end CHARTBYASYLUM;
 --
 -- ----------------------------------------
@@ -174,8 +174,8 @@ create or replace package body P_REFSCOUT_XML is
   is
     xELEMENT XMLType;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.CHARTBYORIGIN');
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.CHARTBYORIGIN');
   --
     with
       -- Definitions of selection criteria and aggregations for required Statistic Types
@@ -320,10 +320,10 @@ create or replace package body P_REFSCOUT_XML is
   --
     return xELEMENT;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end CHARTBYORIGIN;
 --
 -- ----------------------------------------
@@ -335,8 +335,8 @@ create or replace package body P_REFSCOUT_XML is
   is
     xELEMENT XMLType;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.STATSBYASYLUM');
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.STATSBYASYLUM');
   --
     select
       xmlroot
@@ -438,10 +438,10 @@ create or replace package body P_REFSCOUT_XML is
   --
     return xELEMENT;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end STATSBYASYLUM;
 /*
 --
@@ -453,8 +453,8 @@ create or replace package body P_REFSCOUT_XML is
     return taText pipelined
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.STATSBYFLOW');
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.STATSBYFLOW');
   --
     pipe row('<?xml version="1.0" encoding="iso-8859-1"?>');
     pipe row('<root>');
@@ -513,10 +513,10 @@ create or replace package body P_REFSCOUT_XML is
   --
     pipe row('</root>');
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end STATSBYFLOW;
 */
 --
@@ -529,8 +529,8 @@ create or replace package body P_REFSCOUT_XML is
   is
     xELEMENT XMLType;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.STATSBYORIGIN');
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.STATSBYORIGIN');
   --
     select
       xmlroot
@@ -638,23 +638,27 @@ create or replace package body P_REFSCOUT_XML is
   --
     return xELEMENT;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end STATSBYORIGIN;
 --
 -- =====================================
 -- Initialisation
 -- =====================================
 --
-begin null;
-  if sComponent != 'RSX'
+begin
+  if sModule != $$PLSQL_UNIT
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  end if;
+--
+  if sComponent != 'RSX'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_REFSCOUT_XML;

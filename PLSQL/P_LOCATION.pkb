@@ -32,8 +32,8 @@ create or replace package body P_LOCATION is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_LOCATION_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_LOCATION_TYPE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -42,10 +42,10 @@ create or replace package body P_LOCATION is
     insert into T_LOCATION_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION_TYPE;
 --
 -- ----------------------------------------
@@ -65,8 +65,8 @@ create or replace package body P_LOCATION is
     xLOCT_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_LOCATION_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_LOCATION_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -90,13 +90,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 1, 'Location type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Location type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOCATION_TYPE;
 --
 -- ----------------------------------------
@@ -112,8 +112,8 @@ create or replace package body P_LOCATION is
     psACTIVE_FLAG in P_BASE.tsLOCT_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCATION_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCATION_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -130,10 +130,10 @@ create or replace package body P_LOCATION is
                            pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCATION_TYPE;
 --
 -- ----------------------------------------
@@ -148,8 +148,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCT_VERSION_NBR;
     xLOCT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_LOCATION_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_LOCATION_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -164,13 +164,13 @@ create or replace package body P_LOCATION is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 1, 'Location type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Location type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION_TYPE;
 --
 -- ----------------------------------------
@@ -185,17 +185,17 @@ create or replace package body P_LOCATION is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_LOCT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -208,16 +208,16 @@ create or replace package body P_LOCATION is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOCT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOCT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_LOCT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -236,8 +236,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCT_VERSION_NBR;
     xLOCT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -257,13 +257,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 1, 'Location type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Location type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCT_TEXT;
 --
 -- ----------------------------------------
@@ -281,8 +281,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCT_VERSION_NBR;
     xLOCT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOCT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOCT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -301,13 +301,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 1, 'Location type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Location type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCT_TEXT;
 --
 -- ----------------------------------------
@@ -326,8 +326,8 @@ create or replace package body P_LOCATION is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_LOCATION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_LOCATION',
       '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -339,7 +339,7 @@ create or replace package body P_LOCATION is
     then
       if psCountryCode is null
       then
-        P_MESSAGE.DISPLAY_MESSAGE('LOC', 8, 'Country code must be specified for new country');
+        P_MESSAGE.DISPLAY_MESSAGE(sComponent, 8, 'Country code must be specified for new country');
       else
       --
       -- Check for existing country with same country code and overlapping effective date range.
@@ -362,11 +362,11 @@ create or replace package body P_LOCATION is
           when NO_DATA_FOUND then null;
         --
           when TOO_MANY_ROWS
-          then P_MESSAGE.DISPLAY_MESSAGE('LOC', 9, 'Country with this code already exists');
+          then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 9, 'Country with this code already exists');
         end;
       end if;
     elsif psCountryCode is not null
-    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 10, 'Country code can only be specified for countries');
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 10, 'Country code can only be specified for countries');
     end if;
   --
   -- Generate new location code.
@@ -378,7 +378,7 @@ create or replace package body P_LOCATION is
         (gnLOC_ID_CHECK_INCREMENT -
           mod(pnID * gnLOC_ID_CHECK_MULTIPLIER, gnLOC_ID_CHECK_MODULUS)) * 1e8;
   --
-    PLS_UTILITY.TRACE_CONTEXT
+    P_UTILITY.TRACE_CONTEXT
      (to_char(pnID) || '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -399,10 +399,10 @@ create or replace package body P_LOCATION is
     then INSERT_LOCATION_ATTRIBUTE(pnID, gsCOUNTRY_LOCAT_CODE, psCountryCode);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION;
 --
 -- ----------------------------------------
@@ -432,8 +432,8 @@ create or replace package body P_LOCATION is
     nLOCA_VERSION_NBR P_BASE.tnLOCA_VERSION_NBR;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_LOCATION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_LOCATION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnLOCTV_ID) || '~' || psCountryCode || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -509,7 +509,7 @@ create or replace package body P_LOCATION is
               when NO_DATA_FOUND then null;
             --
               when TOO_MANY_ROWS
-              then P_MESSAGE.DISPLAY_MESSAGE('LOC', 9, 'Country with this code already exists');
+              then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 9, 'Country with this code already exists');
             end;
           end if;
         end if;
@@ -519,7 +519,7 @@ create or replace package body P_LOCATION is
                                        psCountryCode);
         end if;
       elsif psCountryCode is not null
-      then P_MESSAGE.DISPLAY_MESSAGE('LOC', 10, 'Country code can only be specified for countries');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 10, 'Country code can only be specified for countries');
       end if;
     --
     --
@@ -544,7 +544,7 @@ create or replace package body P_LOCATION is
           and LOCTV.LOCT_CODE = sLOCT_CODE;
         exception
           when NO_DATA_FOUND
-          then P_MESSAGE.DISPLAY_MESSAGE('LOC', 11, 'Invalid location type variant for this location');
+          then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 11, 'Invalid location type variant for this location');
         end;
       end if;
     --
@@ -560,13 +560,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOC_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 2, 'Location has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Location has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOCATION;
 --
 -- ----------------------------------------
@@ -585,8 +585,8 @@ create or replace package body P_LOCATION is
     pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCATION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCATION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLOCT_CODE || '~' ||
         to_char(pnLOCTV_ID) || '~' || psCountryCode || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -605,10 +605,10 @@ create or replace package body P_LOCATION is
                       pdSTART_DATE, pdEND_DATE);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCATION;
 --
 -- ----------------------------------------
@@ -623,8 +623,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
     xLOC_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_LOCATION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_LOCATION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -639,13 +639,13 @@ create or replace package body P_LOCATION is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 2, 'Location has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Location has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION;
 --
 -- ----------------------------------------
@@ -660,17 +660,17 @@ create or replace package body P_LOCATION is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOC_NAME',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOC_NAME',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psName)) || ':' || psName);
   --
     SET_LOC_TEXT(pnID, pnVERSION_NBR, 'NAME', nSEQ_NBR, psLANG_CODE, psName);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOC_NAME;
 --
 -- ----------------------------------------
@@ -683,16 +683,16 @@ create or replace package body P_LOCATION is
     psLANG_CODE in P_BASE.tsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOC_NAME',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOC_NAME',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_LOC_TEXT(pnID, pnVERSION_NBR, 'NAME', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOC_NAME;
 --
 -- ----------------------------------------
@@ -711,8 +711,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
     xLOC_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOC_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOC_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -732,13 +732,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOC_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 2, 'Location has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Location has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOC_TEXT;
 --
 -- ----------------------------------------
@@ -756,8 +756,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
     xLOC_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOC_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOC_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -776,13 +776,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOC_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 2, 'Location has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Location has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOC_TEXT;
 --
 -- ----------------------------------------
@@ -800,8 +800,8 @@ create or replace package body P_LOCATION is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_LOCATION_ATTRIBUTE_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_LOCATION_ATTRIBUTE_TYPE',
       psCODE || '~' || psDATA_TYPE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -811,10 +811,10 @@ create or replace package body P_LOCATION is
     insert into T_LOCATION_ATTRIBUTE_TYPES (CODE, DATA_TYPE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values (psCODE, psDATA_TYPE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -836,8 +836,8 @@ create or replace package body P_LOCATION is
     xLOCAT_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_LOCATION_ATTRIBUTE_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_LOCATION_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDATA_TYPE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -865,7 +865,7 @@ create or replace package body P_LOCATION is
           when NO_DATA_FOUND then null;
         --
           when TOO_MANY_ROWS
-          then P_MESSAGE.DISPLAY_MESSAGE('LOC', 12, 'Cannot update data type of location attribute type already in use');
+          then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 12, 'Cannot update data type of location attribute type already in use');
         end;
       end if;
     --
@@ -881,13 +881,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 3, 'Location attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Location attribute type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOCATION_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -904,8 +904,8 @@ create or replace package body P_LOCATION is
     psACTIVE_FLAG in P_BASE.tsLOCAT_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCATION_ATTRIBUTE_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCATION_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDATA_TYPE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -923,10 +923,10 @@ create or replace package body P_LOCATION is
         pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCATION_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -941,8 +941,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCAT_VERSION_NBR;
     xLOCAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_LOCATION_ATTRIBUTE_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_LOCATION_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -957,13 +957,13 @@ create or replace package body P_LOCATION is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 3, 'Location attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Location attribute type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -978,17 +978,17 @@ create or replace package body P_LOCATION is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCAT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCAT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_LOCAT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCAT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -1001,16 +1001,16 @@ create or replace package body P_LOCATION is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOCAT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOCAT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_LOCAT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCAT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -1029,8 +1029,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCAT_VERSION_NBR;
     xLOCAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCAT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCAT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -1050,13 +1050,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 3, 'Location attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Location attribute type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCAT_TEXT;
 --
 -- ----------------------------------------
@@ -1074,8 +1074,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCAT_VERSION_NBR;
     xLOCAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOCAT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOCAT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -1094,13 +1094,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 3, 'Location attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Location attribute type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCAT_TEXT;
 --
 -- ----------------------------------------
@@ -1117,8 +1117,8 @@ create or replace package body P_LOCATION is
     sDATA_TYPE P_BASE.tsLOCAT_DATA_TYPE;
     sACTIVE_FLAG P_BASE.tsLOCAT_ACTIVE_FLAG;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_LOCATION_ATTRIBUTE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_LOCATION_ATTRIBUTE',
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || psCHAR_VALUE || '~' ||
         to_char(pnNUM_VALUE) || '~' || to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
   --
@@ -1128,23 +1128,23 @@ create or replace package body P_LOCATION is
     where CODE = psLOCAT_CODE;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 13, 'Inactive location attribute type');
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 13, 'Inactive location attribute type');
     end if;
   --
     case
       when sDATA_TYPE = 'C' and psCHAR_VALUE is not null then null;
       when sDATA_TYPE = 'N' and pnNUM_VALUE is not null then null;
       when sDATA_TYPE = 'D' and pdDATE_VALUE is not null then null;
-      else P_MESSAGE.DISPLAY_MESSAGE('LOC', 14, 'Attribute of the correct type must be specified');
+      else P_MESSAGE.DISPLAY_MESSAGE(sComponent, 14, 'Attribute of the correct type must be specified');
     end case;
   --
     insert into T_LOCATION_ATTRIBUTES (LOC_ID, LOCAT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
     values (pnLOC_ID, psLOCAT_CODE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -1163,8 +1163,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCA_VERSION_NBR;
     xLOCA_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_LOCATION_ATTRIBUTE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_LOCATION_ATTRIBUTE',
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
         to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -1205,7 +1205,7 @@ create or replace package body P_LOCATION is
           when NO_DATA_FOUND then null;
         --
           when TOO_MANY_ROWS
-          then P_MESSAGE.DISPLAY_MESSAGE('LOC', 9, 'Country with this code already exists');
+          then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 9, 'Country with this code already exists');
         end;
       end if;
     --
@@ -1217,13 +1217,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCA_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 4, 'Location attribute has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 4, 'Location attribute has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOCATION_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -1239,8 +1239,8 @@ create or replace package body P_LOCATION is
     pdDATE_VALUE in P_BASE.tdLOCA_DATE_VALUE := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCATION_ATTRIBUTE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCATION_ATTRIBUTE',
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
         to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -1256,10 +1256,10 @@ create or replace package body P_LOCATION is
        (pnLOC_ID, psLOCAT_CODE, pnVERSION_NBR, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCATION_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -1275,12 +1275,12 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCA_VERSION_NBR;
     xLOCA_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_LOCATION_ATTRIBUTE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_LOCATION_ATTRIBUTE',
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR));
   --
     if psLOCAT_CODE = gsCOUNTRY_LOCAT_CODE
-    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 15, 'Cannot delete the primary country code');
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 15, 'Cannot delete the primary country code');
     end if;
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -1298,13 +1298,13 @@ create or replace package body P_LOCATION is
       then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 4, 'Location attribute has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 4, 'Location attribute has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -1324,8 +1324,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCA_VERSION_NBR;
     xLOCA_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCA_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCA_TEXT',
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -1347,13 +1347,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCA_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 4, 'Location attribute has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 4, 'Location attribute has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCA_TEXT;
 --
 -- ----------------------------------------
@@ -1372,8 +1372,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCA_VERSION_NBR;
     xLOCA_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOCA_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOCA_TEXT',
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -1393,13 +1393,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCA_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 4, 'Location attribute has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 4, 'Location attribute has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCA_TEXT;
 --
 -- ----------------------------------------
@@ -1416,8 +1416,8 @@ create or replace package body P_LOCATION is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_LOC_RELATIONSHIP_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_LOC_RELATIONSHIP_TYPE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -1426,10 +1426,10 @@ create or replace package body P_LOCATION is
     insert into T_LOCATION_RELATIONSHIP_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOC_RELATIONSHIP_TYPE;
 --
 -- ----------------------------------------
@@ -1449,8 +1449,8 @@ create or replace package body P_LOCATION is
     xLOCRT_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_LOC_RELATIONSHIP_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_LOC_RELATIONSHIP_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -1474,13 +1474,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCRT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 5, 'Location relationship type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 5, 'Location relationship type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOC_RELATIONSHIP_TYPE;
 --
 -- ----------------------------------------
@@ -1496,8 +1496,8 @@ create or replace package body P_LOCATION is
     psACTIVE_FLAG in P_BASE.tsLOCRT_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOC_RELATIONSHIP_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOC_RELATIONSHIP_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -1514,10 +1514,10 @@ create or replace package body P_LOCATION is
        (psCODE, pnVERSION_NBR, psLANG_CODE, psDescription, pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOC_RELATIONSHIP_TYPE;
 --
 -- ----------------------------------------
@@ -1532,8 +1532,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCRT_VERSION_NBR;
     xLOCRT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_LOC_RELATIONSHIP_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_LOC_RELATIONSHIP_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -1548,13 +1548,13 @@ create or replace package body P_LOCATION is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 5, 'Location relationship type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 5, 'Location relationship type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOC_RELATIONSHIP_TYPE;
 --
 -- ----------------------------------------
@@ -1569,17 +1569,17 @@ create or replace package body P_LOCATION is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCRT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCRT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_LOCRT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCRT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -1592,16 +1592,16 @@ create or replace package body P_LOCATION is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOCRT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOCRT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_LOCRT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCRT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -1620,8 +1620,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCRT_VERSION_NBR;
     xLOCRT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCRT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCRT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -1641,13 +1641,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCRT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 5, 'Location relationship type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 5, 'Location relationship type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCRT_TEXT;
 --
 -- ----------------------------------------
@@ -1665,8 +1665,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCRT_VERSION_NBR;
     xLOCRT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOCRT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOCRT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -1685,13 +1685,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCRT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 5, 'Location relationship type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 5, 'Location relationship type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCRT_TEXT;
 --
 -- ----------------------------------------
@@ -1709,8 +1709,8 @@ create or replace package body P_LOCATION is
     dSTART_DATE P_BASE.tdDate;
     dEND_DATE P_BASE.tdDate;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_LOCATION_RELATIONSHIP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_LOCATION_RELATIONSHIP',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -1718,7 +1718,7 @@ create or replace package body P_LOCATION is
     select ACTIVE_FLAG into sACTIVE_FLAG from T_LOCATION_RELATIONSHIP_TYPES where CODE = psLOCRT_CODE;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 16, 'Inactive location relationship type');
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 16, 'Inactive location relationship type');
     end if;
   --
   -- Determine effective date range of the combined related locations.
@@ -1732,12 +1732,12 @@ create or replace package body P_LOCATION is
   --  related locations, or default them if not specified.
   --
     if pdSTART_DATE < dSTART_DATE or pdEND_DATE > dEND_DATE
-    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 17, 'Location relationship effective date range outside effective date range of related locations');
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 17, 'Location relationship effective date range outside effective date range of related locations');
     else
       dSTART_DATE := nvl(pdSTART_DATE, dSTART_DATE);
       dEND_DATE := nvl(pdEND_DATE, dEND_DATE);
     end if;
-    PLS_UTILITY.TRACE_POINT
+    P_UTILITY.TRACE_POINT
      ('Dates', to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(dSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(dEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -1762,7 +1762,7 @@ create or replace package body P_LOCATION is
       when NO_DATA_FOUND then null;
     --
       when TOO_MANY_ROWS
-      then P_MESSAGE.DISPLAY_MESSAGE('LOC', 18, 'Overlapping location relationship already exists');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 18, 'Overlapping location relationship already exists');
     end;
   --
     insert into T_LOCATION_RELATIONSHIPS
@@ -1770,10 +1770,10 @@ create or replace package body P_LOCATION is
     values
      (pnLOC_ID_FROM, pnLOC_ID_TO, psLOCRT_CODE, dSTART_DATE, dEND_DATE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION_RELATIONSHIP;
 --
 -- ----------------------------------------
@@ -1795,8 +1795,8 @@ create or replace package body P_LOCATION is
     dSTART_DATE_NEW P_BASE.tdDate;
     dEND_DATE_NEW P_BASE.tdDate;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_LOCATION_RELATIONSHIP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_LOCATION_RELATIONSHIP',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR) || '~' || to_char(pdSTART_DATE_NEW, 'YYYY-MM-DD HH24:MI:SS') ||
@@ -1846,7 +1846,7 @@ create or replace package body P_LOCATION is
         when NO_DATA_FOUND then null;
       --
         when TOO_MANY_ROWS
-        then P_MESSAGE.DISPLAY_MESSAGE('LOC', 18, 'Overlapping location relationship already exists');
+        then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 18, 'Overlapping location relationship already exists');
       end;
     --
       update T_LOCATION_RELATIONSHIPS
@@ -1856,13 +1856,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 6, 'Location relationship has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Location relationship has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOCATION_RELATIONSHIP;
 --
 -- ----------------------------------------
@@ -1880,8 +1880,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCR_VERSION_NBR;
     xLOCR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_LOCATION_RELATIONSHIP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_LOCATION_RELATIONSHIP',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR));
@@ -1903,13 +1903,13 @@ create or replace package body P_LOCATION is
       then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 6, 'Location relationship has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Location relationship has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION_RELATIONSHIP;
 --
 -- ----------------------------------------
@@ -1931,8 +1931,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCR_VERSION_NBR;
     xLOCR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCR_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCR_TEXT',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
@@ -1957,13 +1957,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 6, 'Location relationship has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Location relationship has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCR_TEXT;
 --
 -- ----------------------------------------
@@ -1984,8 +1984,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCR_VERSION_NBR;
     xLOCR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOCR_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOCR_TEXT',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' || psLOCRT_CODE ||
         '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || to_char(pnVERSION_NBR) ||
         '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
@@ -2008,13 +2008,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 6, 'Location relationship has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Location relationship has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCR_TEXT;
 --
 -- ----------------------------------------
@@ -2028,23 +2028,23 @@ create or replace package body P_LOCATION is
   is
     sACTIVE_FLAG P_BASE.tsLOCRT_ACTIVE_FLAG;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_LOC_TYPE_RELATIONSHIP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_LOC_TYPE_RELATIONSHIP',
       psLOCT_CODE_FROM || '~' || psLOCT_CODE_TO || '~' || psLOCRT_CODE);
   --
     select ACTIVE_FLAG into sACTIVE_FLAG from T_LOCATION_RELATIONSHIP_TYPES where CODE = psLOCRT_CODE;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('LOC', 16, 'Inactive location relationship type');
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 16, 'Inactive location relationship type');
     end if;
   --
     insert into T_LOCATION_TYPE_RELATIONSHIPS (LOCT_CODE_FROM, LOCT_CODE_TO, LOCRT_CODE)
     values (psLOCT_CODE_FROM, psLOCT_CODE_TO, psLOCRT_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOC_TYPE_RELATIONSHIP;
 --
 -- ----------------------------------------
@@ -2061,8 +2061,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCTR_VERSION_NBR;
     xLOCTR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_LOC_TYPE_RELATIONSHIP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_LOC_TYPE_RELATIONSHIP',
       psLOCT_CODE_FROM || '~' || psLOCT_CODE_TO || '~' || psLOCRT_CODE);
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -2081,13 +2081,13 @@ create or replace package body P_LOCATION is
       then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 5, 'Location relationship type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 5, 'Location relationship type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOC_TYPE_RELATIONSHIP;
 --
 -- ----------------------------------------
@@ -2108,8 +2108,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCTR_VERSION_NBR;
     xLOCTR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCTR_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCTR_TEXT',
       psLOCT_CODE_FROM || '~' || psLOCT_CODE_TO || '~' || psLOCRT_CODE || '~' ||
         to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
@@ -2132,13 +2132,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCTR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 6, 'Location relationship has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Location relationship has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCTR_TEXT;
 --
 -- ----------------------------------------
@@ -2158,8 +2158,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCTR_VERSION_NBR;
     xLOCTR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOCTR_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOCTR_TEXT',
       psLOCT_CODE_FROM || '~' || psLOCT_CODE_TO || '~' || psLOCRT_CODE || '~' ||
         to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
@@ -2181,13 +2181,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCTR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 6, 'Location relationship has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Location relationship has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCTR_TEXT;
 --
 -- ----------------------------------------
@@ -2207,8 +2207,8 @@ create or replace package body P_LOCATION is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_LOCATION_TYPE_VARIANT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_LOCATION_TYPE_VARIANT',
       psLOCT_CODE || '~' || to_char(pnLOC_ID) || '~' || psLOCRT_CODE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -2223,10 +2223,10 @@ create or replace package body P_LOCATION is
       nITM_ID)
     returning ID into pnID;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION_TYPE_VARIANT;
 --
 -- ----------------------------------------
@@ -2246,8 +2246,8 @@ create or replace package body P_LOCATION is
     xLOCTV_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_LOCATION_TYPE_VARIANT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_LOCATION_TYPE_VARIANT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -2271,13 +2271,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCTV_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 7, 'Location type variant has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 7, 'Location type variant has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LOCATION_TYPE_VARIANT;
 --
 -- ----------------------------------------
@@ -2296,8 +2296,8 @@ create or replace package body P_LOCATION is
     psACTIVE_FLAG in P_BASE.tsLOCTV_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCATION_TYPE_VARIANT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCATION_TYPE_VARIANT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psLOCT_CODE || '~' || to_char(pnLOC_ID) || '~' || psLOCRT_CODE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
@@ -2315,10 +2315,10 @@ create or replace package body P_LOCATION is
        (pnID, pnVERSION_NBR, psLANG_CODE, psDescription, pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCATION_TYPE_VARIANT;
 --
 -- ----------------------------------------
@@ -2333,8 +2333,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCTV_VERSION_NBR;
     xLOCTV_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_LOCATION_TYPE_VARIANT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_LOCATION_TYPE_VARIANT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -2349,13 +2349,13 @@ create or replace package body P_LOCATION is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 7, 'Location type variant has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 7, 'Location type variant has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION_TYPE_VARIANT;
 --
 -- ----------------------------------------
@@ -2370,17 +2370,17 @@ create or replace package body P_LOCATION is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCTV_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCTV_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_LOCTV_TEXT(pnID, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCTV_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -2393,16 +2393,16 @@ create or replace package body P_LOCATION is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOCTV_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOCTV_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_LOCTV_TEXT(pnID, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCTV_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -2421,8 +2421,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCTV_VERSION_NBR;
     xLOCTV_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCTV_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCTV_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -2442,13 +2442,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCTV_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 7, 'Location type variant has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 7, 'Location type variant has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LOCTV_TEXT;
 --
 -- ----------------------------------------
@@ -2466,8 +2466,8 @@ create or replace package body P_LOCATION is
     nVERSION_NBR P_BASE.tnLOCTV_VERSION_NBR;
     xLOCTV_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LOCTV_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LOCTV_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -2486,13 +2486,13 @@ create or replace package body P_LOCATION is
       where rowid = xLOCTV_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LOC', 7, 'Location type variant has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 7, 'Location type variant has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LOCTV_TEXT;
 --
 -- =====================================
@@ -2500,12 +2500,16 @@ create or replace package body P_LOCATION is
 -- =====================================
 --
 begin
-  if sComponent != 'LOC'
+  if sModule != $$PLSQL_UNIT
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  end if;
+--
+  if sComponent != 'LOC'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
   select CHAR_VALUE

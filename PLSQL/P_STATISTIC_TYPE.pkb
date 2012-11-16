@@ -36,8 +36,8 @@ create or replace package body P_STATISTIC_TYPE is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_STATISTIC_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_STATISTIC_TYPE',
       psCODE || '~' || psDST_ID_FLAG || '~' ||
         psLOC_ID_ASYLUM_COUNTRY_FLAG || '~' || psLOC_ID_ASYLUM_FLAG || '~' ||
         psLOC_ID_ORIGIN_COUNTRY_FLAG || '~' || psLOC_ID_ORIGIN_FLAG || '~' ||
@@ -67,10 +67,10 @@ create or replace package body P_STATISTIC_TYPE is
       psDIM_ID4_FLAG, psDIMT_CODE4, psDIM_ID5_FLAG, psDIMT_CODE5, psSEX_CODE_FLAG, psAGR_ID_FLAG,
       psPGR_ID_SUBGROUP_FLAG, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_STATISTIC_TYPE;
 --
 -- ----------------------------------------
@@ -108,8 +108,8 @@ create or replace package body P_STATISTIC_TYPE is
     xSTCT_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_STATISTIC_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_STATISTIC_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDST_ID_FLAG || '~' ||
         psLOC_ID_ASYLUM_COUNTRY_FLAG || '~' || psLOC_ID_ASYLUM_FLAG || '~' ||
         psLOC_ID_ORIGIN_COUNTRY_FLAG || '~' || psLOC_ID_ORIGIN_FLAG || '~' ||
@@ -164,13 +164,13 @@ create or replace package body P_STATISTIC_TYPE is
       where rowid = xSTCT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('STCT', 1, 'Statistic type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Statistic type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_STATISTIC_TYPE;
 --
 -- ----------------------------------------
@@ -204,8 +204,8 @@ create or replace package body P_STATISTIC_TYPE is
     psACTIVE_FLAG in P_BASE.tsSTCT_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_STATISTIC_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_STATISTIC_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDST_ID_FLAG || '~' ||
         psLOC_ID_ASYLUM_COUNTRY_FLAG || '~' || psLOC_ID_ASYLUM_FLAG || '~' ||
         psLOC_ID_ORIGIN_COUNTRY_FLAG || '~' || psLOC_ID_ORIGIN_FLAG || '~' ||
@@ -241,10 +241,10 @@ create or replace package body P_STATISTIC_TYPE is
         psSEX_CODE_FLAG, psAGR_ID_FLAG, psPGR_ID_SUBGROUP_FLAG, pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_STATISTIC_TYPE;
 --
 -- ----------------------------------------
@@ -259,8 +259,8 @@ create or replace package body P_STATISTIC_TYPE is
     nVERSION_NBR P_BASE.tnSTCT_VERSION_NBR;
     xSTCT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_STATISTIC_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_STATISTIC_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -275,13 +275,13 @@ create or replace package body P_STATISTIC_TYPE is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('STCT', 1, 'Statistic type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Statistic type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_STATISTIC_TYPE;
 --
 -- ----------------------------------------
@@ -296,17 +296,17 @@ create or replace package body P_STATISTIC_TYPE is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_STCT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_STCT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_STCT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_STCT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -319,16 +319,16 @@ create or replace package body P_STATISTIC_TYPE is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_STCT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_STCT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_STCT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_STCT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -347,8 +347,8 @@ create or replace package body P_STATISTIC_TYPE is
     nVERSION_NBR P_BASE.tnSTCT_VERSION_NBR;
     xSTCT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_STCT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_STCT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
@@ -367,13 +367,13 @@ create or replace package body P_STATISTIC_TYPE is
       where rowid = xSTCT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('STCT', 1, 'Statistic type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Statistic type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_STCT_TEXT;
 --
 -- ----------------------------------------
@@ -391,8 +391,8 @@ create or replace package body P_STATISTIC_TYPE is
     nVERSION_NBR P_BASE.tnSTCT_VERSION_NBR;
     xSTCT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_STCT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_STCT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -411,13 +411,13 @@ create or replace package body P_STATISTIC_TYPE is
       where rowid = xSTCT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('STCT', 1, 'Statistic type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Statistic type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_STCT_TEXT;
 --
 -- ----------------------------------------
@@ -434,8 +434,8 @@ create or replace package body P_STATISTIC_TYPE is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_STATISTIC_GROUP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_STATISTIC_GROUP',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -444,10 +444,10 @@ create or replace package body P_STATISTIC_TYPE is
     insert into T_STATISTIC_GROUPS (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_STATISTIC_GROUP;
 --
 -- ----------------------------------------
@@ -467,8 +467,8 @@ create or replace package body P_STATISTIC_TYPE is
     xSTCG_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_STATISTIC_GROUP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_STATISTIC_GROUP',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) ||
         '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -492,13 +492,13 @@ create or replace package body P_STATISTIC_TYPE is
       where rowid = xSTCG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('STCT', 2, 'Statistic group has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Statistic group has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_STATISTIC_GROUP;
 --
 -- ----------------------------------------
@@ -514,8 +514,8 @@ create or replace package body P_STATISTIC_TYPE is
     psACTIVE_FLAG in P_BASE.tsSTCG_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_STATISTIC_GROUP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_STATISTIC_GROUP',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -532,10 +532,10 @@ create or replace package body P_STATISTIC_TYPE is
                              pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_STATISTIC_GROUP;
 --
 -- ----------------------------------------
@@ -550,8 +550,8 @@ create or replace package body P_STATISTIC_TYPE is
     nVERSION_NBR P_BASE.tnSTCG_VERSION_NBR;
     xSTCG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_STATISTIC_GROUP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_STATISTIC_GROUP',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -566,13 +566,13 @@ create or replace package body P_STATISTIC_TYPE is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('STCT', 2, 'Statistic group has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Statistic group has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_STATISTIC_GROUP;
 --
 -- ----------------------------------------
@@ -587,17 +587,17 @@ create or replace package body P_STATISTIC_TYPE is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_STCG_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_STCG_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_STCG_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_STCG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -610,16 +610,16 @@ create or replace package body P_STATISTIC_TYPE is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_STCG_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_STCG_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_STCG_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_STCG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -638,8 +638,8 @@ create or replace package body P_STATISTIC_TYPE is
     nVERSION_NBR P_BASE.tnSTCG_VERSION_NBR;
     xSTCG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_STCG_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_STCG_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
@@ -658,13 +658,13 @@ create or replace package body P_STATISTIC_TYPE is
       where rowid = xSTCG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('STCT', 2, 'Statistic group has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Statistic group has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_STCG_TEXT;
 --
 -- ----------------------------------------
@@ -682,8 +682,8 @@ create or replace package body P_STATISTIC_TYPE is
     nVERSION_NBR P_BASE.tnSTCG_VERSION_NBR;
     xSTCG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_STCG_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_STCG_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -702,13 +702,13 @@ create or replace package body P_STATISTIC_TYPE is
       where rowid = xSTCG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('STCT', 2, 'Statistic group has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Statistic group has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_STCG_TEXT;
 --
 -- ----------------------------------------
@@ -720,17 +720,17 @@ create or replace package body P_STATISTIC_TYPE is
     psSTCT_CODE in P_BASE.tmsSTCT_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_STATISTIC_TYPE_GROUPING',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_STATISTIC_TYPE_GROUPING',
       psSTCG_CODE || '~' || psSTCT_CODE);
   --
     insert into T_STATISTIC_TYPES_IN_GROUPS (STCG_CODE, STCT_CODE)
     values (psSTCG_CODE, psSTCT_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_STATISTIC_TYPE_GROUPING;
 --
 -- ----------------------------------------
@@ -746,8 +746,8 @@ create or replace package body P_STATISTIC_TYPE is
     nVERSION_NBR P_BASE.tnSTCTG_VERSION_NBR;
     xSTCTG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_STATISTIC_TYPE_GROUPING',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_STATISTIC_TYPE_GROUPING',
       psSTCG_CODE || '~' || psSTCT_CODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -765,13 +765,13 @@ create or replace package body P_STATISTIC_TYPE is
       then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('STCT', 3, 'Statistic type grouping has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Statistic type grouping has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_STATISTIC_TYPE_GROUPING;
 --
 -- ----------------------------------------
@@ -791,8 +791,8 @@ create or replace package body P_STATISTIC_TYPE is
     nVERSION_NBR P_BASE.tnSTCTG_VERSION_NBR;
     xSTCTG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_STCTG_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_STCTG_TEXT',
       psSTCG_CODE || '~' || psSTCT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -814,13 +814,13 @@ create or replace package body P_STATISTIC_TYPE is
       where rowid = xSTCTG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('STCT', 3, 'Statistic type grouping has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Statistic type grouping has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_STCTG_TEXT;
 --
 -- ----------------------------------------
@@ -839,8 +839,8 @@ create or replace package body P_STATISTIC_TYPE is
     nVERSION_NBR P_BASE.tnSTCTG_VERSION_NBR;
     xSTCTG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_STCTG_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_STCTG_TEXT',
       psSTCG_CODE || '~' || psSTCT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -860,13 +860,13 @@ create or replace package body P_STATISTIC_TYPE is
       where rowid = xSTCTG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('STCT', 3, 'Statistic type grouping has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Statistic type grouping has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_STCTG_TEXT;
 --
 -- =====================================
@@ -874,12 +874,16 @@ create or replace package body P_STATISTIC_TYPE is
 -- =====================================
 --
 begin
-  if sComponent != 'STCT'
+  if sModule != $$PLSQL_UNIT
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  end if;
+--
+  if sComponent != 'STCT'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_STATISTIC_TYPE;

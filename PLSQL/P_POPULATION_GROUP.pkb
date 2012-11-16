@@ -32,8 +32,8 @@ create or replace package body P_POPULATION_GROUP is
     nITM_ID P_BASE.tnITM_ID := null;
     nTXT_SEQ_NBR P_BASE.tnTXT_SEQ_NBR := null;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_POPULATION_GROUP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_POPULATION_GROUP',
       to_char(pdSTART_DATE, 'YYYY-MM-DD')  || '~' || to_char(pdEND_DATE, 'YYYY-MM-DD')  || '~' ||
         to_char(pnDST_ID) || '~' ||
         to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' || to_char(pnLOC_ID_ASYLUM) || '~' ||
@@ -78,10 +78,10 @@ create or replace package body P_POPULATION_GROUP is
       nPGR_SEQ_NBR_MAX, pnPPG_ID, nITM_ID)
     returning ID into pnID;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_POPULATION_GROUP;
 --
 -- ----------------------------------------
@@ -101,8 +101,8 @@ create or replace package body P_POPULATION_GROUP is
     xPGR_ROWID rowid;
     nTXT_SEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_POPULATION_GROUP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_POPULATION_GROUP',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psSUBGROUP_NAME)) || ':' || psSUBGROUP_NAME || '~' ||
         to_char(pnPPG_ID));
@@ -119,7 +119,7 @@ create or replace package body P_POPULATION_GROUP is
       then
         if nPGR_SEQ_NBR is not null
         then P_TEXT.SET_TEXT(nITM_ID, 'PGR', 'PSGRNAME', nTXT_SEQ_NBR, psLANG_CODE, psSUBGROUP_NAME);
-        else P_MESSAGE.DISPLAY_MESSAGE('PGR', 4, 'Population group has no subgroup');
+        else P_MESSAGE.DISPLAY_MESSAGE(sComponent, 4, 'Population group has no subgroup');
         end if;
       end if;
     --
@@ -129,13 +129,13 @@ create or replace package body P_POPULATION_GROUP is
       where rowid = xPGR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PGR', 1, 'Population group has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Population group has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_POPULATION_GROUP;
 --
 -- ----------------------------------------
@@ -164,8 +164,8 @@ create or replace package body P_POPULATION_GROUP is
     pnPPG_ID in P_BASE.tnPPG_ID := -1)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_POPULATION_GROUP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_POPULATION_GROUP',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD')  || '~' || to_char(pdEND_DATE, 'YYYY-MM-DD')  || '~' ||
         to_char(pnDST_ID) || '~' ||
@@ -189,10 +189,10 @@ create or replace package body P_POPULATION_GROUP is
       UPDATE_POPULATION_GROUP(pnID, pnVERSION_NBR, psLANG_CODE, psSUBGROUP_NAME, pnPPG_ID);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_POPULATION_GROUP;
 --
 -- ----------------------------------------
@@ -207,8 +207,8 @@ create or replace package body P_POPULATION_GROUP is
     nVERSION_NBR P_BASE.tnPGR_VERSION_NBR;
     xPGR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_POPULATION_GROUP',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_POPULATION_GROUP',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -223,13 +223,13 @@ create or replace package body P_POPULATION_GROUP is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PGR', 1, 'Population group has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Population group has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_POPULATION_GROUP;
 --
 -- ----------------------------------------
@@ -248,8 +248,8 @@ create or replace package body P_POPULATION_GROUP is
     nVERSION_NBR P_BASE.tnPGR_VERSION_NBR;
     xPGR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_PGR_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_PGR_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -269,13 +269,13 @@ create or replace package body P_POPULATION_GROUP is
       where rowid = xPGR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PGR', 1, 'Population group has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Population group has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_PGR_TEXT;
 --
 -- ----------------------------------------
@@ -293,8 +293,8 @@ create or replace package body P_POPULATION_GROUP is
     nVERSION_NBR P_BASE.tnPGR_VERSION_NBR;
     xPGR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_PGR_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_PGR_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -313,13 +313,13 @@ create or replace package body P_POPULATION_GROUP is
       where rowid = xPGR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PGR', 1, 'Population group has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Population group has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_PGR_TEXT;
 --
 -- ----------------------------------------
@@ -337,8 +337,8 @@ create or replace package body P_POPULATION_GROUP is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_PGR_ATTRIBUTE_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_PGR_ATTRIBUTE_TYPE',
       psCODE || '~' || psDATA_TYPE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -348,10 +348,10 @@ create or replace package body P_POPULATION_GROUP is
     insert into T_POP_GROUP_ATTRIBUTE_TYPES (CODE, DATA_TYPE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values (psCODE, psDATA_TYPE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_PGR_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -373,8 +373,8 @@ create or replace package body P_POPULATION_GROUP is
     xPGRAT_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_PGR_ATTRIBUTE_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_PGR_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDATA_TYPE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -403,7 +403,7 @@ create or replace package body P_POPULATION_GROUP is
           when NO_DATA_FOUND then null;
         --
           when TOO_MANY_ROWS
-          then P_MESSAGE.DISPLAY_MESSAGE('PGR', 5, 'Cannot update data type of population group attribute type already in use');
+          then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 5, 'Cannot update data type of population group attribute type already in use');
         end;
       end if;
     --
@@ -419,13 +419,13 @@ create or replace package body P_POPULATION_GROUP is
       where rowid = xPGRAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PGR', 2, 'Population group attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Population group attribute type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_PGR_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -442,8 +442,8 @@ create or replace package body P_POPULATION_GROUP is
     psACTIVE_FLAG in P_BASE.tsPGRAT_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_PGR_ATTRIBUTE_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_PGR_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDATA_TYPE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -461,10 +461,10 @@ create or replace package body P_POPULATION_GROUP is
         pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_PGR_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -479,8 +479,8 @@ create or replace package body P_POPULATION_GROUP is
     nVERSION_NBR P_BASE.tnPGRAT_VERSION_NBR;
     xPGRAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_PGR_ATTRIBUTE_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_PGR_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -495,13 +495,13 @@ create or replace package body P_POPULATION_GROUP is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PGR', 2, 'Population group attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Population group attribute type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_PGR_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -516,17 +516,17 @@ create or replace package body P_POPULATION_GROUP is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_PGRAT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_PGRAT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_PGRAT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_PGRAT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -539,16 +539,16 @@ create or replace package body P_POPULATION_GROUP is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_PGRAT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_PGRAT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_PGRAT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_PGRAT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -567,8 +567,8 @@ create or replace package body P_POPULATION_GROUP is
     nVERSION_NBR P_BASE.tnPGRAT_VERSION_NBR;
     xPGRAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_PGRAT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_PGRAT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -588,13 +588,13 @@ create or replace package body P_POPULATION_GROUP is
       where rowid = xPGRAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PGR', 2, 'Population group attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Population group attribute type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_PGRAT_TEXT;
 --
 -- ----------------------------------------
@@ -612,8 +612,8 @@ create or replace package body P_POPULATION_GROUP is
     nVERSION_NBR P_BASE.tnPGRAT_VERSION_NBR;
     xPGRAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_PGRAT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_PGRAT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -632,13 +632,13 @@ create or replace package body P_POPULATION_GROUP is
       where rowid = xPGRAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PGR', 2, 'Population group attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Population group attribute type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_PGRAT_TEXT;
 --
 -- ----------------------------------------
@@ -655,8 +655,8 @@ create or replace package body P_POPULATION_GROUP is
     sDATA_TYPE P_BASE.tsPGRAT_DATA_TYPE;
     sACTIVE_FLAG P_BASE.tsPGRAT_ACTIVE_FLAG;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_PGR_ATTRIBUTE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_PGR_ATTRIBUTE',
       to_char(pnPGR_ID) || '~' || psPGRAT_CODE || '~' || psCHAR_VALUE || '~' ||
         to_char(pnNUM_VALUE) || '~' || to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
   --
@@ -666,23 +666,23 @@ create or replace package body P_POPULATION_GROUP is
     where CODE = psPGRAT_CODE;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('PGR', 6, 'Inactive population group attribute type');
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Inactive population group attribute type');
     end if;
   --
     case
       when sDATA_TYPE = 'C' and psCHAR_VALUE is not null then null;
       when sDATA_TYPE = 'N' and pnNUM_VALUE is not null then null;
       when sDATA_TYPE = 'D' and pdDATE_VALUE is not null then null;
-      else P_MESSAGE.DISPLAY_MESSAGE('PGR', 7, 'Attribute of the correct type must be specified');
+      else P_MESSAGE.DISPLAY_MESSAGE(sComponent, 7, 'Attribute of the correct type must be specified');
     end case;
   --
     insert into T_POP_GROUP_ATTRIBUTES (PGR_ID, PGRAT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
     values (pnPGR_ID, psPGRAT_CODE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_PGR_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -701,8 +701,8 @@ create or replace package body P_POPULATION_GROUP is
     nVERSION_NBR P_BASE.tnPGRA_VERSION_NBR;
     xPGRA_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_PGR_ATTRIBUTE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_PGR_ATTRIBUTE',
       to_char(pnPGR_ID) || '~' || psPGRAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
         to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -724,13 +724,13 @@ create or replace package body P_POPULATION_GROUP is
       where rowid = xPGRA_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PGR', 3, 'Population group attribute has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Population group attribute has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_PGR_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -746,8 +746,8 @@ create or replace package body P_POPULATION_GROUP is
     pdDATE_VALUE in P_BASE.tdPGRA_DATE_VALUE := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_PGR_ATTRIBUTE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_PGR_ATTRIBUTE',
       to_char(pnPGR_ID) || '~' || psPGRAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
         to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -763,10 +763,10 @@ create or replace package body P_POPULATION_GROUP is
        (pnPGR_ID, psPGRAT_CODE, pnVERSION_NBR, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_PGR_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -782,8 +782,8 @@ create or replace package body P_POPULATION_GROUP is
     nVERSION_NBR P_BASE.tnPGRA_VERSION_NBR;
     xPGRA_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_PGR_ATTRIBUTE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_PGR_ATTRIBUTE',
       to_char(pnPGR_ID) || '~' || psPGRAT_CODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -801,13 +801,13 @@ create or replace package body P_POPULATION_GROUP is
       then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PGR', 3, 'Population group attribute has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Population group attribute has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_PGR_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -827,8 +827,8 @@ create or replace package body P_POPULATION_GROUP is
     nVERSION_NBR P_BASE.tnPGRA_VERSION_NBR;
     xPGRA_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_PGRA_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_PGRA_TEXT',
       to_char(pnPGR_ID) || '~' || psPGRAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -850,13 +850,13 @@ create or replace package body P_POPULATION_GROUP is
       where rowid = xPGRA_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PGR', 3, 'Population group attribute has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Population group attribute has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_PGRA_TEXT;
 --
 -- ----------------------------------------
@@ -875,8 +875,8 @@ create or replace package body P_POPULATION_GROUP is
     nVERSION_NBR P_BASE.tnPGRA_VERSION_NBR;
     xPGRA_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_PGRA_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_PGRA_TEXT',
       to_char(pnPGR_ID) || '~' || psPGRAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -896,13 +896,13 @@ create or replace package body P_POPULATION_GROUP is
       where rowid = xPGRA_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PGR', 3, 'Population group attribute has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Population group attribute has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_PGRA_TEXT;
 --
 -- =====================================
@@ -910,12 +910,16 @@ create or replace package body P_POPULATION_GROUP is
 -- =====================================
 --
 begin
-  if sComponent != 'PGR'
+  if sModule != $$PLSQL_UNIT
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  end if;
+--
+  if sComponent != 'PGR'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_POPULATION_GROUP;

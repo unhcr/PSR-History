@@ -18,8 +18,8 @@ create or replace package body P_AGE_PROFILE is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_AGE_PROFILE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_AGE_PROFILE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -28,10 +28,10 @@ create or replace package body P_AGE_PROFILE is
     insert into T_AGE_PROFILES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_AGE_PROFILE;
 --
 -- ----------------------------------------
@@ -51,8 +51,8 @@ create or replace package body P_AGE_PROFILE is
     xAGP_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_AGE_PROFILE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_AGE_PROFILE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) ||
         '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -76,13 +76,13 @@ create or replace package body P_AGE_PROFILE is
       where rowid = xAGP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('AGP', 1, 'Age profile has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Age profile has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_AGE_PROFILE;
 --
 -- ----------------------------------------
@@ -98,8 +98,8 @@ create or replace package body P_AGE_PROFILE is
     psACTIVE_FLAG in P_BASE.tsAGP_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_AGE_PROFILE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_AGE_PROFILE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -116,10 +116,10 @@ create or replace package body P_AGE_PROFILE is
                          pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_AGE_PROFILE;
 --
 -- ----------------------------------------
@@ -134,8 +134,8 @@ create or replace package body P_AGE_PROFILE is
     nVERSION_NBR P_BASE.tnAGP_VERSION_NBR;
     xAGP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_AGE_PROFILE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_AGE_PROFILE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -150,13 +150,13 @@ create or replace package body P_AGE_PROFILE is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('AGP', 1, 'Age profile has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Age profile has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_AGE_PROFILE;
 --
 -- ----------------------------------------
@@ -171,17 +171,17 @@ create or replace package body P_AGE_PROFILE is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_AGP_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_AGP_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_AGP_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_AGP_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -194,16 +194,16 @@ create or replace package body P_AGE_PROFILE is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_AGP_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_AGP_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_AGP_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_AGP_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -222,8 +222,8 @@ create or replace package body P_AGE_PROFILE is
     nVERSION_NBR P_BASE.tnAGP_VERSION_NBR;
     xAGP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_AGP_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_AGP_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
@@ -242,13 +242,13 @@ create or replace package body P_AGE_PROFILE is
       where rowid = xAGP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('AGP', 1, 'Age profile has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Age profile has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_AGP_TEXT;
 --
 -- ----------------------------------------
@@ -266,8 +266,8 @@ create or replace package body P_AGE_PROFILE is
     nVERSION_NBR P_BASE.tnAGP_VERSION_NBR;
     xAGP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_AGP_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_AGP_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -286,13 +286,13 @@ create or replace package body P_AGE_PROFILE is
       where rowid = xAGP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('AGP', 1, 'Age profile has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Age profile has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_AGP_TEXT;
 --
 -- ----------------------------------------
@@ -310,8 +310,8 @@ create or replace package body P_AGE_PROFILE is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_AGE_RANGE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_AGE_RANGE',
       psAGP_CODE || '~' || to_char(pnAGE_FROM) || '~' || to_char(pnAGE_TO) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -321,10 +321,10 @@ create or replace package body P_AGE_PROFILE is
     values (AGR_SEQ.nextval, psAGP_CODE, pnAGE_FROM, pnAGE_TO, nITM_ID)
     returning ID into pnID;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_AGE_RANGE;
 --
 -- ----------------------------------------
@@ -347,8 +347,8 @@ create or replace package body P_AGE_PROFILE is
     xAGR_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_AGE_RANGE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_AGE_RANGE',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnAGE_FROM) || '~' || to_char(pnAGE_TO) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -376,7 +376,7 @@ create or replace package body P_AGE_PROFILE is
           when NO_DATA_FOUND then null;
         --
           when TOO_MANY_ROWS
-          then P_MESSAGE.DISPLAY_MESSAGE('AGP', 3, 'Cannot change age range already in use');
+          then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Cannot change age range already in use');
         end;
       --
       -- Check for overlapping age range for the same age profile.
@@ -397,7 +397,7 @@ create or replace package body P_AGE_PROFILE is
           when NO_DATA_FOUND then null;
         --
           when TOO_MANY_ROWS
-          then P_MESSAGE.DISPLAY_MESSAGE('AGP', 4, 'Overlapping age ranges for this age profile');
+          then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 4, 'Overlapping age ranges for this age profile');
         end;
       end if;
     --
@@ -412,13 +412,13 @@ create or replace package body P_AGE_PROFILE is
       where rowid = xAGR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('AGP', 2, 'Age range has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Age range has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_AGE_RANGE;
 --
 -- ----------------------------------------
@@ -435,8 +435,8 @@ create or replace package body P_AGE_PROFILE is
     pnAGE_TO in P_BASE.tnAGR_AGE_TO := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_AGE_RANGE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_AGE_RANGE',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psAGP_CODE || '~' || to_char(pnAGE_FROM) || '~' || to_char(pnAGE_TO) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -450,10 +450,10 @@ create or replace package body P_AGE_PROFILE is
       UPDATE_AGE_RANGE(pnID, pnVERSION_NBR, psLANG_CODE, psDescription, pnAGE_FROM, pnAGE_TO);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_AGE_RANGE;
 --
 -- ----------------------------------------
@@ -468,8 +468,8 @@ create or replace package body P_AGE_PROFILE is
     nVERSION_NBR P_BASE.tnAGR_VERSION_NBR;
     xAGR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_AGE_RANGE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_AGE_RANGE',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -484,13 +484,13 @@ create or replace package body P_AGE_PROFILE is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('AGP', 2, 'Age range has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Age range has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_AGE_RANGE;
 --
 -- ----------------------------------------
@@ -505,17 +505,17 @@ create or replace package body P_AGE_PROFILE is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_AGR_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_AGR_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_AGR_TEXT(pnID, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_AGR_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -528,16 +528,16 @@ create or replace package body P_AGE_PROFILE is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_AGR_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_AGR_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_AGR_TEXT(pnID, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_AGR_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -556,8 +556,8 @@ create or replace package body P_AGE_PROFILE is
     nVERSION_NBR P_BASE.tnAGR_VERSION_NBR;
     xAGR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_AGR_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_AGR_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -577,13 +577,13 @@ create or replace package body P_AGE_PROFILE is
       where rowid = xAGR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('AGP', 2, 'Age range has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Age range has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_AGR_TEXT;
 --
 -- ----------------------------------------
@@ -601,8 +601,8 @@ create or replace package body P_AGE_PROFILE is
     nVERSION_NBR P_BASE.tnAGR_VERSION_NBR;
     xAGR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_AGR_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_AGR_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -621,13 +621,13 @@ create or replace package body P_AGE_PROFILE is
       where rowid = xAGR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('AGP', 2, 'Age range has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Age range has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_AGR_TEXT;
 --
 -- =====================================
@@ -635,12 +635,16 @@ create or replace package body P_AGE_PROFILE is
 -- =====================================
 --
 begin
-  if sComponent != 'AGP'
+  if sModule != $$PLSQL_UNIT
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  end if;
+--
+  if sComponent != 'AGP'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_AGE_PROFILE;

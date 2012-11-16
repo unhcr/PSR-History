@@ -18,8 +18,8 @@ create or replace package body P_LANGUAGE is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_LANGUAGE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_LANGUAGE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -28,10 +28,10 @@ create or replace package body P_LANGUAGE is
     insert into T_LANGUAGES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_LANGUAGE;
 --
 -- ----------------------------------------
@@ -51,8 +51,8 @@ create or replace package body P_LANGUAGE is
     xLANG_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_LANGUAGE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_LANGUAGE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) ||
         '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -76,13 +76,13 @@ create or replace package body P_LANGUAGE is
       where rowid = xLANG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'Language has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Language has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_LANGUAGE;
 --
 -- ----------------------------------------
@@ -98,8 +98,8 @@ create or replace package body P_LANGUAGE is
     psACTIVE_FLAG in P_BASE.tsLANG_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LANGUAGE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LANGUAGE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -116,10 +116,10 @@ create or replace package body P_LANGUAGE is
                       pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LANGUAGE;
 --
 -- ----------------------------------------
@@ -134,8 +134,8 @@ create or replace package body P_LANGUAGE is
     nVERSION_NBR P_BASE.tnLANG_VERSION_NBR;
     xLANG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_LANGUAGE', psCODE || '~' || to_char(pnVERSION_NBR));
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_LANGUAGE', psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
     into nITM_ID, nVERSION_NBR, xLANG_ROWID
@@ -149,13 +149,13 @@ create or replace package body P_LANGUAGE is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'Language has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Language has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_LANGUAGE;
 --
 -- ----------------------------------------
@@ -170,17 +170,17 @@ create or replace package body P_LANGUAGE is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LANG_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LANG_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_LANG_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LANG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -193,16 +193,16 @@ create or replace package body P_LANGUAGE is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LANG_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LANG_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_LANG_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LANG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -221,8 +221,8 @@ create or replace package body P_LANGUAGE is
     nVERSION_NBR P_BASE.tnLANG_VERSION_NBR;
     xLANG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LANG_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LANG_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
@@ -241,13 +241,13 @@ create or replace package body P_LANGUAGE is
       where rowid = xLANG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'Language has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Language has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_LANG_TEXT;
 --
 -- ----------------------------------------
@@ -265,8 +265,8 @@ create or replace package body P_LANGUAGE is
     nVERSION_NBR P_BASE.tnLANG_VERSION_NBR;
     xLANG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_LANG_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_LANG_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -285,13 +285,13 @@ create or replace package body P_LANGUAGE is
       where rowid = xLANG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('LANG', 1, 'Language has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Language has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_LANG_TEXT;
 --
 -- =====================================
@@ -299,12 +299,16 @@ create or replace package body P_LANGUAGE is
 -- =====================================
 --
 begin
-  if sComponent != 'LANG'
+  if sModule != $$PLSQL_UNIT
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  end if;
+--
+  if sComponent != 'LANG'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_LANGUAGE;

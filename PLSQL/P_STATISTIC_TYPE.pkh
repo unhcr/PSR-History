@@ -6,12 +6,13 @@ create or replace package P_STATISTIC_TYPE is
 --  Procedures for maintenance of statistic types and groups.
 --
 --  Change History:
---  06-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  16-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
-  sComponent varchar2(30) := 'STCT';
+  sModule varchar2(30) := $$PLSQL_UNIT;
   sVersion varchar2(10) := 'D0.1';
+  sComponent varchar2(30) := 'STCT';
 --
 -- ========================================
 -- Program unit definitions

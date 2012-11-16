@@ -20,8 +20,8 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_PPG',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_PPG',
       to_char(pnLOC_ID) || '~' || psPPG_CODE || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -57,7 +57,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       when NO_DATA_FOUND then null;
     --
       when TOO_MANY_ROWS
-      then P_MESSAGE.DISPLAY_MESSAGE('PPG', 2, 'PPG with overlapping dates already exists');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'PPG with overlapping dates already exists');
     end;
   --
     P_TEXT.SET_TEXT(nITM_ID, 'PPG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
@@ -70,10 +70,10 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE), nITM_ID)
     returning ID into pnID;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_PPG;
 --
 -- ----------------------------------------
@@ -101,8 +101,8 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     dEND_DATE_NEW P_BASE.tdDate;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_PPG',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_PPG',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||to_char(pnLOC_ID) || '~' ||
         psPPG_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -166,7 +166,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
           when NO_DATA_FOUND then null;
         --
           when TOO_MANY_ROWS
-          then P_MESSAGE.DISPLAY_MESSAGE('PPG', 2, 'PPG with overlapping dates already exists');
+          then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'PPG with overlapping dates already exists');
         end;
       end if;
     --
@@ -183,13 +183,13 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       where rowid = xPPG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PPG', 1, 'PPG has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'PPG has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_PPG;
 --
 -- ----------------------------------------
@@ -207,8 +207,8 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_LOCATION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_LOCATION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||to_char(pnLOC_ID) || '~' ||
         psPPG_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -226,10 +226,10 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
                  pdSTART_DATE, pdEND_DATE);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_PPG;
 --
 -- ----------------------------------------
@@ -244,8 +244,8 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     nVERSION_NBR P_BASE.tnPPG_VERSION_NBR;
     xPPG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_SYSTEM_PARAMETER',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_SYSTEM_PARAMETER',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -260,13 +260,13 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PPG', 1, 'PPG has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'PPG has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_PPG;
 --
 -- ----------------------------------------
@@ -281,17 +281,17 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_PPG_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_PPG_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_PPG_TEXT(pnID, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_PPG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -304,17 +304,17 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_PPG_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_PPG_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psLANG_CODE);
   --
     REMOVE_PPG_TEXT(pnID, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_PPG_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -333,8 +333,8 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     nVERSION_NBR P_BASE.tnPPG_VERSION_NBR;
     xPPG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_PPG_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_PPG_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -354,13 +354,13 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       where rowid = xPPG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PPG', 1, 'PPG has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'PPG has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_PPG_TEXT;
 --
 -- ----------------------------------------
@@ -378,8 +378,8 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     nVERSION_NBR P_BASE.tnPPG_VERSION_NBR;
     xPPG_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_PPG_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_PPG_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -398,13 +398,13 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
       where rowid = xPPG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('PPG', 1, 'PPG has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'PPG has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_PPG_TEXT;
 --
 -- =====================================
@@ -412,12 +412,16 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
 -- =====================================
 --
 begin
-  if sComponent != 'PPG'
+  if sModule != $$PLSQL_UNIT
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  end if;
+--
+  if sComponent != 'PPG'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_POPULATION_PLANNING_GROUP;

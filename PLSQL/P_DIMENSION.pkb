@@ -18,8 +18,8 @@ create or replace package body P_DIMENSION is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_DIMENSION_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_DIMENSION_TYPE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -28,10 +28,10 @@ create or replace package body P_DIMENSION is
     insert into T_DIMENSION_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_DIMENSION_TYPE;
 --
 -- ----------------------------------------
@@ -51,8 +51,8 @@ create or replace package body P_DIMENSION is
     xDIMT_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_DIMENSION_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_DIMENSION_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) ||
         '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -76,13 +76,13 @@ create or replace package body P_DIMENSION is
       where rowid = xDIMT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('DIM', 1, 'Dimension type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Dimension type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_DIMENSION_TYPE;
 --
 -- ----------------------------------------
@@ -98,8 +98,8 @@ create or replace package body P_DIMENSION is
     psACTIVE_FLAG in P_BASE.tsDIMT_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_DIMENSION_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_DIMENSION_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -116,10 +116,10 @@ create or replace package body P_DIMENSION is
                             pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_DIMENSION_TYPE;
 --
 -- ----------------------------------------
@@ -134,8 +134,8 @@ create or replace package body P_DIMENSION is
     nVERSION_NBR P_BASE.tnDIMT_VERSION_NBR;
     xDIMT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_DIMENSION_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_DIMENSION_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -150,13 +150,13 @@ create or replace package body P_DIMENSION is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('DIM', 1, 'Dimension type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Dimension type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_DIMENSION_TYPE;
 --
 -- ----------------------------------------
@@ -171,17 +171,17 @@ create or replace package body P_DIMENSION is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_DIMT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_DIMT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_DIMT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_DIMT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -194,16 +194,16 @@ create or replace package body P_DIMENSION is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_DIMT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_DIMT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_DIMT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_DIMT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -222,8 +222,8 @@ create or replace package body P_DIMENSION is
     nVERSION_NBR P_BASE.tnDIMT_VERSION_NBR;
     xDIMT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_DIMT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_DIMT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
@@ -242,13 +242,13 @@ create or replace package body P_DIMENSION is
       where rowid = xDIMT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('DIM', 1, 'Dimension type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Dimension type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_DIMT_TEXT;
 --
 -- ----------------------------------------
@@ -266,8 +266,8 @@ create or replace package body P_DIMENSION is
     nVERSION_NBR P_BASE.tnDIMT_VERSION_NBR;
     xDIMT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_DIMT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_DIMT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -286,13 +286,13 @@ create or replace package body P_DIMENSION is
       where rowid = xDIMT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('DIM', 1, 'Dimension type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Dimension type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_DIMT_TEXT;
 --
 -- ----------------------------------------
@@ -313,8 +313,8 @@ create or replace package body P_DIMENSION is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_DIMENSION_VALUE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_DIMENSION_VALUE',
       '~' || psDIMT_CODE || '~' || psCODE || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -355,17 +355,17 @@ create or replace package body P_DIMENSION is
       pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID)
     returning ID into pnID;
   --
-    PLS_UTILITY.TRACE_CONTEXT
+    P_UTILITY.TRACE_CONTEXT
      (to_char(pnID) || '~' || psDIMT_CODE || '~' || psCODE || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_DIMENSION_VALUE;
 --
 -- ----------------------------------------
@@ -394,8 +394,8 @@ create or replace package body P_DIMENSION is
     dEND_DATE_NEW P_BASE.tdDate;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_DIMENSION_VALUE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_DIMENSION_VALUE',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psCODE || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -450,7 +450,7 @@ create or replace package body P_DIMENSION is
           when NO_DATA_FOUND then null;
         --
           when TOO_MANY_ROWS
-          then P_MESSAGE.DISPLAY_MESSAGE('DIM', 3, 'Dimension value with this type and code already exists');
+          then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Dimension value with this type and code already exists');
         end;
       end if;
     --
@@ -468,20 +468,20 @@ create or replace package body P_DIMENSION is
       where rowid = xDIM_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('DIM', 2, 'Dimension value has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Dimension value has been updated by another user');
     end if;
   --
-    PLS_UTILITY.TRACE_CONTEXT
+    P_UTILITY.TRACE_CONTEXT
      (to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psCODE || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_DIMENSION_VALUE;
 --
 -- ----------------------------------------
@@ -501,8 +501,8 @@ create or replace package body P_DIMENSION is
     psACTIVE_FLAG in P_BASE.tsDIM_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_DIMENSION_VALUE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_DIMENSION_VALUE',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psDIMT_CODE || '~' || psCODE || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -526,7 +526,7 @@ create or replace package body P_DIMENSION is
         pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.TRACE_CONTEXT
+    P_UTILITY.TRACE_CONTEXT
      (to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psDIMT_CODE || '~' || psCODE || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -534,10 +534,10 @@ create or replace package body P_DIMENSION is
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_DIMENSION_VALUE;
 --
 -- ----------------------------------------
@@ -552,8 +552,8 @@ create or replace package body P_DIMENSION is
     nVERSION_NBR P_BASE.tnDIM_VERSION_NBR;
     xDIM_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_DIMENSION_VALUE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_DIMENSION_VALUE',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -568,13 +568,13 @@ create or replace package body P_DIMENSION is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('DIM', 2, 'Dimension value has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Dimension value has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_DIMENSION_VALUE;
 --
 -- ----------------------------------------
@@ -589,17 +589,17 @@ create or replace package body P_DIMENSION is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_DIM_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_DIM_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_DIM_TEXT(pnID, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_DIM_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -612,16 +612,16 @@ create or replace package body P_DIMENSION is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_DIM_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_DIM_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_DIM_TEXT(pnID, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_DIM_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -640,8 +640,8 @@ create or replace package body P_DIMENSION is
     nVERSION_NBR P_BASE.tnDIM_VERSION_NBR;
     xDIM_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_DIM_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_DIM_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
@@ -660,13 +660,13 @@ create or replace package body P_DIMENSION is
       where rowid = xDIM_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('DIM', 2, 'Dimension value has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Dimension value has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_DIM_TEXT;
 --
 -- ----------------------------------------
@@ -684,8 +684,8 @@ create or replace package body P_DIMENSION is
     nVERSION_NBR P_BASE.tnDIM_VERSION_NBR;
     xDIM_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_DIM_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_DIM_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -704,13 +704,13 @@ create or replace package body P_DIMENSION is
       where rowid = xDIM_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('DIM', 2, 'Dimension value has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Dimension value has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_DIM_TEXT;
 --
 -- =====================================
@@ -718,12 +718,16 @@ create or replace package body P_DIMENSION is
 -- =====================================
 --
 begin
-  if sComponent != 'DIM'
+  if sModule != $$PLSQL_UNIT
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  end if;
+--
+  if sComponent != 'DIM'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_DIMENSION;

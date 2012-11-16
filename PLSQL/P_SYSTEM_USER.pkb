@@ -18,7 +18,7 @@ create or replace package body P_SYSTEM_USER is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_SYSTEM_USER',
       psUSERID || '~' || psLOCKED_FLAG || '~' || psTEMPLATE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psName)) || ':' || psName);
@@ -28,10 +28,10 @@ create or replace package body P_SYSTEM_USER is
     insert into T_SYSTEM_USERS (USERID, LOCKED_FLAG, TEMPLATE_FLAG, ITM_ID)
     values (psUSERID, psLOCKED_FLAG, psTEMPLATE_FLAG, nITM_ID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_SYSTEM_USER;
 --
 -- ----------------------------------------
@@ -51,7 +51,7 @@ create or replace package body P_SYSTEM_USER is
     xUSR_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_SYSTEM_USER',
       psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psLOCKED_FLAG || '~' ||
         psTEMPLATE_FLAG || '~' || psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
@@ -75,13 +75,13 @@ create or replace package body P_SYSTEM_USER is
       where rowid = xUSR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 1, 'System user has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'System user has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_SYSTEM_USER;
 --
 -- ----------------------------------------
@@ -97,7 +97,7 @@ create or replace package body P_SYSTEM_USER is
     psTEMPLATE_FLAG in P_BASE.tsUSR_TEMPLATE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_SYSTEM_USER',
       psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psLOCKED_FLAG || '~' ||
         psTEMPLATE_FLAG || '~' || psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
@@ -113,10 +113,10 @@ create or replace package body P_SYSTEM_USER is
                          psLOCKED_FLAG, psTEMPLATE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_SYSTEM_USER;
 --
 -- ----------------------------------------
@@ -131,7 +131,7 @@ create or replace package body P_SYSTEM_USER is
     nVERSION_NBR P_BASE.tnUSR_VERSION_NBR;
     xUSR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.DELETE_SYSTEM_USER',
       psUSERID || '~' || to_char(pnVERSION_NBR));
   --
@@ -147,13 +147,13 @@ create or replace package body P_SYSTEM_USER is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 1, 'System user has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'System user has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_SYSTEM_USER;
 --
 -- ----------------------------------------
@@ -168,17 +168,17 @@ create or replace package body P_SYSTEM_USER is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_USR_NAME',
       psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psName)) || ':' || psName);
   --
     SET_USR_TEXT(psUSERID, pnVERSION_NBR, 'NAME', nSEQ_NBR, psLANG_CODE, psName);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_USR_NAME;
 --
 -- ----------------------------------------
@@ -191,16 +191,16 @@ create or replace package body P_SYSTEM_USER is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_USR_NAME',
       psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_USR_TEXT(psUSERID, pnVERSION_NBR, 'NAME', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_USR_NAME;
 --
 -- ----------------------------------------
@@ -219,7 +219,7 @@ create or replace package body P_SYSTEM_USER is
     nVERSION_NBR P_BASE.tnUSR_VERSION_NBR;
     xUSR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_USR_TEXT',
       psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
@@ -240,13 +240,13 @@ create or replace package body P_SYSTEM_USER is
       where rowid = xUSR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 1, 'System user has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'System user has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_USR_TEXT;
 --
 -- ----------------------------------------
@@ -264,7 +264,7 @@ create or replace package body P_SYSTEM_USER is
     nVERSION_NBR P_BASE.tnUSR_VERSION_NBR;
     xUSR_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_USR_TEXT',
       psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
@@ -284,13 +284,13 @@ create or replace package body P_SYSTEM_USER is
       where rowid = xUSR_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 1, 'System user has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'System user has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_USR_TEXT;
 --
 -- ----------------------------------------
@@ -308,7 +308,7 @@ create or replace package body P_SYSTEM_USER is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_USER_ATTRIBUTE_TYPE',
       psCODE || '~' || psDATA_TYPE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG ||
         '~' || psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -318,10 +318,10 @@ create or replace package body P_SYSTEM_USER is
     insert into T_USER_ATTRIBUTE_TYPES (CODE, DATA_TYPE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values (psCODE, psDATA_TYPE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_USER_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -344,7 +344,7 @@ create or replace package body P_SYSTEM_USER is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
     sDummy varchar2(1);
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_USER_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDATA_TYPE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
@@ -368,7 +368,7 @@ create or replace package body P_SYSTEM_USER is
         when NO_DATA_FOUND then null;
       --
         when TOO_MANY_ROWS
-        then P_MESSAGE.DISPLAY_MESSAGE('USR', 5, 'Cannot update data type of user attribute type already in use');
+        then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 5, 'Cannot update data type of user attribute type already in use');
       end;
     end if;
   --
@@ -386,13 +386,13 @@ create or replace package body P_SYSTEM_USER is
       where rowid = xUATT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 2, 'User attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'User attribute type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_USER_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -409,7 +409,7 @@ create or replace package body P_SYSTEM_USER is
     psACTIVE_FLAG in P_BASE.tsUATT_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_USER_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDATA_TYPE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
@@ -427,10 +427,10 @@ create or replace package body P_SYSTEM_USER is
                                  pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_USER_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -445,7 +445,7 @@ create or replace package body P_SYSTEM_USER is
     nVERSION_NBR P_BASE.tnUATT_VERSION_NBR;
     xUATT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.DELETE_USER_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
@@ -461,13 +461,13 @@ create or replace package body P_SYSTEM_USER is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 2, 'User attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'User attribute type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_USER_ATTRIBUTE_TYPE;
 --
 -- ----------------------------------------
@@ -482,17 +482,17 @@ create or replace package body P_SYSTEM_USER is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_UATT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_UATT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_UATT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -505,16 +505,16 @@ create or replace package body P_SYSTEM_USER is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_UATT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_UATT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_UATT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -533,7 +533,7 @@ create or replace package body P_SYSTEM_USER is
     nVERSION_NBR P_BASE.tnUATT_VERSION_NBR;
     xUATT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_UATT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
@@ -553,13 +553,13 @@ create or replace package body P_SYSTEM_USER is
       where rowid = xUATT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 2, 'User attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'User attribute type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_UATT_TEXT;
 --
 -- ----------------------------------------
@@ -577,7 +577,7 @@ create or replace package body P_SYSTEM_USER is
     nVERSION_NBR P_BASE.tnUATT_VERSION_NBR;
     xUATT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_UATT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
@@ -597,13 +597,13 @@ create or replace package body P_SYSTEM_USER is
       where rowid = xUATT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 2, 'User attribute type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'User attribute type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_UATT_TEXT;
 --
 -- ----------------------------------------
@@ -620,7 +620,7 @@ create or replace package body P_SYSTEM_USER is
     sDATA_TYPE P_BASE.tsUATT_DATA_TYPE;
     sACTIVE_FLAG P_BASE.tsUATT_ACTIVE_FLAG;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_USER_ATTRIBUTE',
       psUSERID || '~' || psUATT_CODE || '~' || psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
         to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -631,23 +631,23 @@ create or replace package body P_SYSTEM_USER is
     where CODE = psUATT_CODE;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('USR', 6, 'Inactive user attribute type');
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Inactive user attribute type');
     end if;
   --
     case
       when sDATA_TYPE = 'C' and psCHAR_VALUE is not null then null;
       when sDATA_TYPE = 'N' and pnNUM_VALUE is not null then null;
       when sDATA_TYPE = 'D' and pdDATE_VALUE is not null then null;
-      else P_MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Attribute of the correct type must be specified');
+      else P_MESSAGE.DISPLAY_MESSAGE(sComponent, 7, 'Attribute of the correct type must be specified');
     end case;
   --
     insert into T_USER_ATTRIBUTES (USERID, UATT_CODE, CHAR_VALUE, NUM_VALUE, DATE_VALUE)
     values (psUSERID, psUATT_CODE, psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_USER_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -667,7 +667,7 @@ create or replace package body P_SYSTEM_USER is
     nVERSION_NBR P_BASE.tnUAT_VERSION_NBR;
     xUAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_USER_ATTRIBUTE',
       psUSERID || '~' || psUATT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
@@ -680,18 +680,18 @@ create or replace package body P_SYSTEM_USER is
       where CODE = psUATT_CODE;
     exception
       when NO_DATA_FOUND
-      then P_MESSAGE.DISPLAY_MESSAGE('USR', 8, 'Unknown user attribute type');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 8, 'Unknown user attribute type');
     end;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('USR', 6, 'Inactive user attribute type');
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Inactive user attribute type');
     end if;
   --
     case
       when sDATA_TYPE = 'C' and psCHAR_VALUE is not null then null;
       when sDATA_TYPE = 'N' and pnNUM_VALUE is not null then null;
       when sDATA_TYPE = 'D' and pdDATE_VALUE is not null then null;
-      else P_MESSAGE.DISPLAY_MESSAGE('USR', 7, 'Attribute of the correct type must be specified');
+      else P_MESSAGE.DISPLAY_MESSAGE(sComponent, 7, 'Attribute of the correct type must be specified');
     end case;
   --
     select VERSION_NBR, rowid
@@ -711,13 +711,13 @@ create or replace package body P_SYSTEM_USER is
       where rowid = xUAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 3, 'User attribute has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'User attribute has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_USER_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -733,7 +733,7 @@ create or replace package body P_SYSTEM_USER is
     pdDATE_VALUE in P_BASE.tdUAT_DATE_VALUE := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_USER_ATTRIBUTE',
       psUSERID || '~' || psUATT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
@@ -749,10 +749,10 @@ create or replace package body P_SYSTEM_USER is
                             psCHAR_VALUE, pnNUM_VALUE, pdDATE_VALUE);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_USER_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -768,7 +768,7 @@ create or replace package body P_SYSTEM_USER is
     nVERSION_NBR P_BASE.tnUAT_VERSION_NBR;
     xUAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sComponent || '.DELETE_USER_ATTRIBUTE',
+    P_UTILITY.START_MODULE(sVersion || '-' || sComponent || '.DELETE_USER_ATTRIBUTE',
                              psUSERID || '~' || psUATT_CODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -786,13 +786,13 @@ create or replace package body P_SYSTEM_USER is
       then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 3, 'User attribute has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'User attribute has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_USER_ATTRIBUTE;
 --
 -- ----------------------------------------
@@ -812,7 +812,7 @@ create or replace package body P_SYSTEM_USER is
     nVERSION_NBR P_BASE.tnUAT_VERSION_NBR;
     xUAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_UAT_TEXT',
       psUSERID || '~' || psUATT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
@@ -835,13 +835,13 @@ create or replace package body P_SYSTEM_USER is
       where rowid = xUAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 3, 'User attribute has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'User attribute has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_UAT_TEXT;
 --
 -- ----------------------------------------
@@ -860,7 +860,7 @@ create or replace package body P_SYSTEM_USER is
     nVERSION_NBR P_BASE.tnUAT_VERSION_NBR;
     xUAT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_UAT_TEXT',
       psUSERID || '~' || psUATT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
@@ -881,13 +881,13 @@ create or replace package body P_SYSTEM_USER is
       where rowid = xUAT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 3, 'User attribute has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'User attribute has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_UAT_TEXT;
 --
 -- ----------------------------------------
@@ -901,23 +901,23 @@ create or replace package body P_SYSTEM_USER is
   is
     sACTIVE_FLAG P_BASE.tsLANG_ACTIVE_FLAG;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_USER_LANG_PREFERENCE',
       psUSERID || '~' || psLANG_CODE || '~' || to_char(pnPREF_SEQ));
   --
     select ACTIVE_FLAG into sACTIVE_FLAG from T_LANGUAGES where CODE = psLANG_CODE;
   --
     if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('USR', 9, 'Inactive preference language');
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 9, 'Inactive preference language');
     end if;
   --
     insert into T_USER_LANGUAGE_PREFERENCES (USERID, LANG_CODE, PREF_SEQ)
     values (psUSERID, psLANG_CODE, pnPREF_SEQ);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_USER_LANG_PREFERENCE;
 --
 -- ----------------------------------------
@@ -933,7 +933,7 @@ create or replace package body P_SYSTEM_USER is
     nVERSION_NBR P_BASE.tnULP_VERSION_NBR;
     xULP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_USER_LANG_PREFERENCE',
       psUSERID || '~' || psLANG_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnPREF_SEQ));
@@ -953,13 +953,13 @@ create or replace package body P_SYSTEM_USER is
       where rowid = xULP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 4, 'User language preference has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 4, 'User language preference has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_USER_LANG_PREFERENCE;
 --
 -- ----------------------------------------
@@ -973,7 +973,7 @@ create or replace package body P_SYSTEM_USER is
     pnPREF_SEQ in P_BASE.tnULP_PREF_SEQ)
   is
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_USER_LANG_PREFERENCE',
       psUSERID || '~' || psLANG_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnPREF_SEQ));
@@ -987,10 +987,10 @@ create or replace package body P_SYSTEM_USER is
       UPDATE_USER_LANG_PREFERENCE(psUSERID, psLANG_CODE, pnVERSION_NBR, pnPREF_SEQ);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_USER_LANG_PREFERENCE;
 --
 -- ----------------------------------------
@@ -1006,7 +1006,7 @@ create or replace package body P_SYSTEM_USER is
     nVERSION_NBR P_BASE.tnULP_VERSION_NBR;
     xULP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
+    P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.REMOVE_USER_LANG_PREFERENCE',
       psUSERID || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(pnPREF_SEQ));
@@ -1032,13 +1032,13 @@ create or replace package body P_SYSTEM_USER is
     then
       delete from T_USER_LANGUAGE_PREFERENCES where rowid = xULP_ROWID;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('USR', 4, 'User language preference has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 4, 'User language preference has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_USER_LANG_PREFERENCE;
 --
 -- ----------------------------------------
@@ -1049,14 +1049,14 @@ create or replace package body P_SYSTEM_USER is
    (psUSERID in P_BASE.tmsUSR_USERID)
   is
   begin
-    PLS_UTILITY.START_MODULE(sVersion || '-' || sComponent || '.USER_LOGIN', psUSERID);
+    P_UTILITY.START_MODULE(sVersion || '-' || sComponent || '.USER_LOGIN', psUSERID);
   --
     P_CONTEXT.SET_USERID(psUSERID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end USER_LOGIN;
 --
 -- =====================================
@@ -1064,12 +1064,16 @@ create or replace package body P_SYSTEM_USER is
 -- =====================================
 --
 begin
-  if sComponent != 'USR'
+  if sModule != $$PLSQL_UNIT
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  end if;
+--
+  if sComponent != 'USR'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_SYSTEM_USER;

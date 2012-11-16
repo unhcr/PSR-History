@@ -18,8 +18,8 @@ create or replace package body P_TEXT_TYPE is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_TEXT_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_TEXT_TYPE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -28,10 +28,10 @@ create or replace package body P_TEXT_TYPE is
     insert into T_TEXT_TYPES (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_TEXT_TYPE;
 --
 -- ----------------------------------------
@@ -51,8 +51,8 @@ create or replace package body P_TEXT_TYPE is
     xTXTT_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_TEXT_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_TEXT_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -76,13 +76,13 @@ create or replace package body P_TEXT_TYPE is
       where rowid = xTXTT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('TXTT', 1, 'Text type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Text type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_TEXT_TYPE;
 --
 -- ----------------------------------------
@@ -98,8 +98,8 @@ create or replace package body P_TEXT_TYPE is
     psACTIVE_FLAG in P_BASE.tsTXTT_ACTIVE_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_TEXT_TYPE',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_TEXT_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -116,10 +116,10 @@ create or replace package body P_TEXT_TYPE is
                        pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_TEXT_TYPE;
 --
 -- ----------------------------------------
@@ -134,8 +134,8 @@ create or replace package body P_TEXT_TYPE is
     nVERSION_NBR P_BASE.tnTXTT_VERSION_NBR;
     xTXTT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_TEXT_TYPE', psCODE || '~' || to_char(pnVERSION_NBR));
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_TEXT_TYPE', psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
     into nITM_ID, nVERSION_NBR, xTXTT_ROWID
@@ -149,13 +149,13 @@ create or replace package body P_TEXT_TYPE is
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
-      P_MESSAGE.DISPLAY_MESSAGE('TXTT', 1, 'Text type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Text type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_TEXT_TYPE;
 --
 -- ----------------------------------------
@@ -170,17 +170,17 @@ create or replace package body P_TEXT_TYPE is
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_TXTT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_TXTT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     SET_TXTT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_TXTT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -193,16 +193,16 @@ create or replace package body P_TEXT_TYPE is
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_TXTT_DESCRIPTION',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_TXTT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_TXTT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_TXTT_DESCRIPTION;
 --
 -- ----------------------------------------
@@ -221,8 +221,8 @@ create or replace package body P_TEXT_TYPE is
     nVERSION_NBR P_BASE.tnTXTT_VERSION_NBR;
     xTXTT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_TXTT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_TXTT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
@@ -241,13 +241,13 @@ create or replace package body P_TEXT_TYPE is
       where rowid = xTXTT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('TXTT', 1, 'Text type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Text type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_TXTT_TEXT;
 --
 -- ----------------------------------------
@@ -265,8 +265,8 @@ create or replace package body P_TEXT_TYPE is
     nVERSION_NBR P_BASE.tnTXTT_VERSION_NBR;
     xTXTT_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.REMOVE_TXTT_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.REMOVE_TXTT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -285,13 +285,13 @@ create or replace package body P_TEXT_TYPE is
       where rowid = xTXTT_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('TXTT', 1, 'Text type has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Text type has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_TXTT_TEXT;
 --
 -- ----------------------------------------
@@ -306,8 +306,8 @@ create or replace package body P_TEXT_TYPE is
     psLONG_TEXT_FLAG in P_BASE.tmsTTP_LONG_TEXT_FLAG := 'N')
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_TEXT_TYPE_PROPERTIES',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_TEXT_TYPE_PROPERTIES',
       psTXTT_CODE || '~' || psTAB_ALIAS || '~' || psMANDATORY_FLAG || '~' ||
         psMULTI_INSTANCE_FLAG || '~' || psLONG_TEXT_FLAG);
   --
@@ -316,10 +316,10 @@ create or replace package body P_TEXT_TYPE is
     values
      (psTXTT_CODE, psTAB_ALIAS, psMANDATORY_FLAG, psMULTI_INSTANCE_FLAG, psLONG_TEXT_FLAG);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_TEXT_TYPE_PROPERTIES;
 --
 -- ----------------------------------------
@@ -337,8 +337,8 @@ create or replace package body P_TEXT_TYPE is
     nVERSION_NBR P_BASE.tnTTP_VERSION_NBR;
     xTTP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_TEXT_TYPE_PROPERTIES',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_TEXT_TYPE_PROPERTIES',
       psTXTT_CODE || '~' || psTAB_ALIAS || '~' || to_char(pnVERSION_NBR) || '~' ||
         psMANDATORY_FLAG || '~' || psMULTI_INSTANCE_FLAG || '~' || psLONG_TEXT_FLAG);
   --
@@ -359,13 +359,13 @@ create or replace package body P_TEXT_TYPE is
       where rowid = xTTP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('TXTT', 2, 'Text type property has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Text type property has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end UPDATE_TEXT_TYPE_PROPERTIES;
 --
 -- ----------------------------------------
@@ -381,8 +381,8 @@ create or replace package body P_TEXT_TYPE is
     psLONG_TEXT_FLAG in P_BASE.tsTTP_LONG_TEXT_FLAG := null)
   is
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_TEXT_TYPE_PROPERTIES',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_TEXT_TYPE_PROPERTIES',
       psTXTT_CODE || '~' || psTAB_ALIAS || '~' || to_char(pnVERSION_NBR) || '~' ||
         psMANDATORY_FLAG || '~' || psMULTI_INSTANCE_FLAG || '~' || psLONG_TEXT_FLAG);
   --
@@ -398,10 +398,10 @@ create or replace package body P_TEXT_TYPE is
         psMANDATORY_FLAG, psMULTI_INSTANCE_FLAG, psLONG_TEXT_FLAG);
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_TEXT_TYPE_PROPERTIES;
 --
 -- ----------------------------------------
@@ -417,8 +417,8 @@ create or replace package body P_TEXT_TYPE is
     nVERSION_NBR P_BASE.tnTTP_VERSION_NBR;
     xTTP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_TEXT_TYPE_PROPERTIES',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_TEXT_TYPE_PROPERTIES',
       psTXTT_CODE || '~' || psTAB_ALIAS || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -436,13 +436,13 @@ create or replace package body P_TEXT_TYPE is
       then P_TEXT.DELETE_TEXT(nITM_ID);
       end if;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('TXTT', 2, 'Text type property has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Text type property has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_TEXT_TYPE_PROPERTIES;
 --
 -- ----------------------------------------
@@ -462,8 +462,8 @@ create or replace package body P_TEXT_TYPE is
     nVERSION_NBR P_BASE.tnTTP_VERSION_NBR;
     xTTP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_TTP_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_TTP_TEXT',
       psTXTT_CODE || '~' || psTAB_ALIAS || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE_TEXT || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -485,13 +485,13 @@ create or replace package body P_TEXT_TYPE is
       where rowid = xTTP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('TXTT', 2, 'Text type property has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Text type property has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_TTP_TEXT;
 --
 -- ----------------------------------------
@@ -510,8 +510,8 @@ create or replace package body P_TEXT_TYPE is
     nVERSION_NBR P_BASE.tnTTP_VERSION_NBR;
     xTTP_ROWID rowid;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_TTP_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_TTP_TEXT',
       psTXTT_CODE || '~' || psTAB_ALIAS || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE_TEXT || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -531,13 +531,13 @@ create or replace package body P_TEXT_TYPE is
       where rowid = xTTP_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
-      P_MESSAGE.DISPLAY_MESSAGE('TXTT', 2, 'Text type property has been updated by another user');
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Text type property has been updated by another user');
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_TTP_TEXT;
 --
 -- =====================================
@@ -545,12 +545,16 @@ create or replace package body P_TEXT_TYPE is
 -- =====================================
 --
 begin
-  if sComponent != 'TXTT'
+  if sModule != $$PLSQL_UNIT
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  end if;
+--
+  if sComponent != 'TXTT'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_TEXT_TYPE;

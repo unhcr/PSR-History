@@ -7,12 +7,13 @@ create or replace package P_POPULATION_GROUP is
 --   types.
 --
 --  Change History:
---  05-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  16-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
-  sComponent varchar2(30) := 'PGR';
+  sModule varchar2(30) := $$PLSQL_UNIT;
   sVersion varchar2(10) := 'D0.1';
+  sComponent varchar2(30) := 'PGR';
 --
 -- ========================================
 -- Program unit definitions

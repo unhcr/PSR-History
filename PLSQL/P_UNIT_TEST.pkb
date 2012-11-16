@@ -29,8 +29,8 @@ create or replace package body P_UNIT_TEST is
   is
     sDESCRIPTION P_BASE.tsTST_DESCRIPTION;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.RUN_TEST', psCODE);
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.RUN_TEST', psCODE);
   --
     select DESCRIPTION into sDESCRIPTION from T_TESTS where CODE = psCODE;
   --
@@ -95,10 +95,10 @@ create or replace package body P_UNIT_TEST is
   --
     REPORT('End test', psCODE || ' - ' || sDESCRIPTION);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end RUN_TEST;
 --
 -- ----------------------------------------
@@ -111,8 +111,8 @@ create or replace package body P_UNIT_TEST is
   is
     sStatement varchar2(32000);
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.RUN_TEST_CASE', psTST_CODE || '~' || to_char(pnSEQ_NBR));
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.RUN_TEST_CASE', psTST_CODE || '~' || to_char(pnSEQ_NBR));
 /*
   --
   -- Construct procedure call for test case.
@@ -230,11 +230,11 @@ create or replace package body P_UNIT_TEST is
         order by ARG.SEQUENCE)
       loop
         if rARG.OVERLOAD is not null
-        then P_MESSAGE.DISPLAY_MESSAGE('TST', 999, 'Cannot test overloaded program units');
+        then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 999, 'Cannot test overloaded program units');
         end if;
       --
         if rARG.DATA_TYPE not in ('CHAR','CLOB','DATE','NUMBER','VARCHAR2')
-        then P_MESSAGE.DISPLAY_MESSAGE('TST', 999, 'Can only test program units with character, numeric or date parameters');
+        then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 999, 'Can only test program units with character, numeric or date parameters');
         end if;
       --
         if rARG.POSITION = 0
@@ -303,15 +303,15 @@ create or replace package body P_UNIT_TEST is
       for i in 1 .. anOverload.count
       loop
         if anOverload(i) > 1
-        then P_MESSAGE.DISPLAY_MESSAGE('TST', 999, 'Cannot test overloaded program units');
+        then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 999, 'Cannot test overloaded program units');
         end if;
       --
         if i > 1 and anPosition(i) != anPosition(i-1) + 1
-        then P_MESSAGE.DISPLAY_MESSAGE('TST', 999, 'Parameter out of order');
+        then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 999, 'Parameter out of order');
         end if;
       --
         if anDataType(i) not in (0, 1, 2, 3, 8, 12, 96, 112)
-        then P_MESSAGE.DISPLAY_MESSAGE('TST', 999, 'Can only test program units with character, numeric or date parameters');
+        then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 999, 'Can only test program units with character, numeric or date parameters');
         end if;
       --
         if anDataType != 0
@@ -338,7 +338,7 @@ create or replace package body P_UNIT_TEST is
             -- Check that a function return value test has not been specified.
             --
               if sCHAR_VALUE is not null or nNUM_VALUE is not null or dDATE_VALUE is not null
-              then P_MESSAGE.DISPLAY_MESSAGE('TST', 999, 'Cannot test the return value of a procedure');
+              then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 999, 'Cannot test the return value of a procedure');
               end if;
             end if;
           --
@@ -366,7 +366,7 @@ create or replace package body P_UNIT_TEST is
             exception
               when NO_DATA_FOUND
               then if anInOut = 0 and anDefaultValue = 0
-                then P_MESSAGE.DISPLAY_MESSAGE('TST', 999, 'Parameter ' || anArgumentName(i) || ' is mandatory');
+                then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 999, 'Parameter ' || anArgumentName(i) || ' is mandatory');
                 end if;
             end;
           end if;
@@ -412,23 +412,27 @@ create or replace package body P_UNIT_TEST is
   --
     REPORT('End test case', psTST_CODE || '/' || to_char(pnSEQ_NBR));
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
 --  exception
 --    when others
---    then PLS_UTILITY.TRACE_EXCEPTION;
+--    then P_UTILITY.TRACE_EXCEPTION;
   end RUN_TEST_CASE;
 --
 -- =====================================
 -- Initialisation
 -- =====================================
 --
-begin null;
-  if sComponent != 'TST'
+begin
+  if sModule != $$PLSQL_UNIT
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  end if;
+--
+  if sComponent != 'TST'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_UNIT_TEST;

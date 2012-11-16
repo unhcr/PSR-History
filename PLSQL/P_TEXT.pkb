@@ -22,8 +22,8 @@ create or replace package body P_TEXT is
     sMULTI_INSTANCE_FLAG P_BASE.tsTTP_MULTI_INSTANCE_FLAG;
     nTXT_SEQ_NBR_MAX P_BASE.tnTXT_SEQ_NBR_MAX;
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.SET_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.SET_TEXT',
       to_char(pnITM_ID) || '~' || psTAB_ALIAS || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psTEXT)) || ':' || psTEXT);
   --
@@ -37,11 +37,11 @@ create or replace package body P_TEXT is
       for update;
     exception
       when NO_DATA_FOUND
-      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 1, 'Unknown text type');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 1, 'Unknown text type');
     end;
   --
     if sTXTT_ACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('TXT', 2, 'Inactive text type');
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Inactive text type');
     end if;
   --
   -- Ensure required language is active.
@@ -54,11 +54,11 @@ create or replace package body P_TEXT is
       for update;
     exception
       when NO_DATA_FOUND
-      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 3, 'Unknown text language');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Unknown text language');
     end;
   --
     if sLANG_ACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE('TXT', 4, 'Inactive text language');
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 4, 'Inactive text language');
     end if;
   --
     if pnITM_ID is null
@@ -67,7 +67,7 @@ create or replace package body P_TEXT is
     -- Text is to be created for a new data item.
     --
       if pnSEQ_NBR is not null
-      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 5, 'Cannot specify a text item sequence number without a data item identifier');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 5, 'Cannot specify a text item sequence number without a data item identifier');
       end if;
     --
     -- Create new T_DATA_ITEMS row.
@@ -76,7 +76,7 @@ create or replace package body P_TEXT is
       values (ITM_SEQ.nextval, sTAB_ALIAS)
       returning ID into pnITM_ID;
     --
-      PLS_UTILITY.TRACE_POINT
+      P_UTILITY.TRACE_POINT
        ('Inserted T_DATA_ITEMS',
         to_char(pnITM_ID) || '~' || sTAB_ALIAS || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
           '~' || psLANG_CODE || '~' || to_char(length(psTEXT)) || ':' || psTEXT);
@@ -86,7 +86,7 @@ create or replace package body P_TEXT is
       insert into T_TEXT_TYPE_HEADERS (ITM_ID, TXTT_CODE, TAB_ALIAS, TXT_SEQ_NBR_MAX)
       values (pnITM_ID, psTXTT_CODE, sTAB_ALIAS, 1);
     --
-      PLS_UTILITY.TRACE_POINT('Inserted T_TEXT_TYPE_HEADERS');
+      P_UTILITY.TRACE_POINT('Inserted T_TEXT_TYPE_HEADERS');
     --
       pnSEQ_NBR := 1;
     --
@@ -97,7 +97,7 @@ create or replace package body P_TEXT is
       select TAB_ALIAS into sTAB_ALIAS from T_DATA_ITEMS TXT where TXT.ID = pnITM_ID;
     --
       if sTAB_ALIAS != psTAB_ALIAS
-      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 6, 'Wrong table for this data item identifier');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Wrong table for this data item identifier');
       end if;
     --
       if pnSEQ_NBR is null
@@ -111,7 +111,7 @@ create or replace package body P_TEXT is
         and TXTT_CODE = psTXTT_CODE
         returning TXT_SEQ_NBR_MAX into pnSEQ_NBR;
       --
-        PLS_UTILITY.TRACE_POINT
+        P_UTILITY.TRACE_POINT
          ('Updated T_TEXT_TYPE_HEADERS',
           to_char(pnITM_ID) || '~' || sTAB_ALIAS || '~' || psTXTT_CODE || '~' ||
             to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
@@ -125,7 +125,7 @@ create or replace package body P_TEXT is
           insert into T_TEXT_TYPE_HEADERS (ITM_ID, TXTT_CODE, TAB_ALIAS, TXT_SEQ_NBR_MAX)
           values (pnITM_ID, psTXTT_CODE, sTAB_ALIAS, 1);
         --
-          PLS_UTILITY.TRACE_POINT('Inserted T_TEXT_TYPE_HEADERS');
+          P_UTILITY.TRACE_POINT('Inserted T_TEXT_TYPE_HEADERS');
         --
           pnSEQ_NBR := 1;
         --
@@ -137,7 +137,7 @@ create or replace package body P_TEXT is
           and TAB_ALIAS = sTAB_ALIAS;
         --
           if sMULTI_INSTANCE_FLAG = 'N'
-          then P_MESSAGE.DISPLAY_MESSAGE('TXT', 7, 'Only one text item of this type allowed');
+          then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 7, 'Only one text item of this type allowed');
           end if;
         end if;
       else
@@ -153,11 +153,11 @@ create or replace package body P_TEXT is
           and TXTT_CODE = psTXTT_CODE;
         exception
           when NO_DATA_FOUND
-          then P_MESSAGE.DISPLAY_MESSAGE('TXT', 8, 'No existing text of this type');
+          then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 8, 'No existing text of this type');
         end;
       --
         if pnSEQ_NBR > nTXT_SEQ_NBR_MAX
-        then P_MESSAGE.DISPLAY_MESSAGE('TXT', 9, 'Text item sequence number greater than current maximum');
+        then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 9, 'Text item sequence number greater than current maximum');
         end if;
       end if;
     end if;
@@ -189,15 +189,15 @@ create or replace package body P_TEXT is
         case when INP.LONG_TEXT_FLAG = 'N' then psTEXT end,
         case when INP.LONG_TEXT_FLAG = 'Y' then psTEXT end);
   --
-    PLS_UTILITY.TRACE_POINT
+    P_UTILITY.TRACE_POINT
      ('Merged T_TEXT_ITEMS',
       to_char(pnITM_ID) || '~' || sTAB_ALIAS || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psTEXT)) || ':' || psTEXT);
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end SET_TEXT;
 --
 -- ----------------------------------------
@@ -214,8 +214,8 @@ create or replace package body P_TEXT is
     nItemCount1 integer;  -- Count of existing text items.
     nItemCount2 integer;  -- Count of text items to be deleted.
   begin
-    PLS_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_TEXT',
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_TEXT',
       to_char(pnITM_ID) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
   -- Determine if text to be deleted is of a mandatory text type (not necessary if all text is to be
@@ -244,7 +244,7 @@ create or replace package body P_TEXT is
       and TXTT_CODE = psTXTT_CODE;
     --
       if nItemCount2 = 0
-      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 10, 'No text to delete');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 10, 'No text to delete');
       end if;
     --
       if nItemCount1 = nItemCount2
@@ -253,14 +253,14 @@ create or replace package body P_TEXT is
       -- Single text item of this type is to be deleted.
       --
         if sMANDATORY_FLAG = 'Y'
-        then P_MESSAGE.DISPLAY_MESSAGE('TXT', 11, 'Cannot delete last mandatory text item');
+        then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 11, 'Cannot delete last mandatory text item');
         else
         --
         -- The single subordinate T_TEXT_ITEMS row will be cascade deleted.
         --
           delete from T_TEXT_TYPE_HEADERS where ITM_ID = pnITM_ID and TXTT_CODE = psTXTT_CODE;
         --
-          PLS_UTILITY.TRACE_POINT('Deleted T_TEXT_TYPE_HEADERS-A~' || to_char(sql%rowcount));
+          P_UTILITY.TRACE_POINT('Deleted T_TEXT_TYPE_HEADERS-A~' || to_char(sql%rowcount));
         end if;
       else
       --
@@ -272,7 +272,7 @@ create or replace package body P_TEXT is
         and SEQ_NBR = pnSEQ_NBR
         and LANG_CODE = psLANG_CODE;
       --
-        PLS_UTILITY.TRACE_POINT('Deleted T_TEXT_ITEMS-A~' || to_char(sql%rowcount));
+        P_UTILITY.TRACE_POINT('Deleted T_TEXT_ITEMS-A~' || to_char(sql%rowcount));
       end if;
     --
     elsif pnSEQ_NBR is not null
@@ -287,7 +287,7 @@ create or replace package body P_TEXT is
       and TXTT_CODE = psTXTT_CODE;
     --
       if nItemCount2 = 0
-      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 10, 'No text to delete');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 10, 'No text to delete');
       end if;
     --
       if nItemCount1 = nItemCount2
@@ -296,14 +296,14 @@ create or replace package body P_TEXT is
       -- All text items of this type are to be deleted.
       --
         if sMANDATORY_FLAG = 'Y'
-        then P_MESSAGE.DISPLAY_MESSAGE('TXT', 11, 'Cannot delete last mandatory text item');
+        then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 11, 'Cannot delete last mandatory text item');
         else
         --
         -- The subordinate T_TEXT_ITEMS rows will be cascade deleted.
         --
           delete from T_TEXT_TYPE_HEADERS where ITM_ID = pnITM_ID and TXTT_CODE = psTXTT_CODE;
         --
-          PLS_UTILITY.TRACE_POINT('Deleted T_TEXT_TYPE_HEADERS-B~' || to_char(sql%rowcount));
+          P_UTILITY.TRACE_POINT('Deleted T_TEXT_TYPE_HEADERS-B~' || to_char(sql%rowcount));
         end if;
       else
       --
@@ -314,23 +314,23 @@ create or replace package body P_TEXT is
         and TXTT_CODE = psTXTT_CODE
         and SEQ_NBR = pnSEQ_NBR;
       --
-        PLS_UTILITY.TRACE_POINT('Deleted T_TEXT_ITEMS-B~' || to_char(sql%rowcount));
+        P_UTILITY.TRACE_POINT('Deleted T_TEXT_ITEMS-B~' || to_char(sql%rowcount));
       end if;
     --
     elsif psTXTT_CODE is not null
     then
       if sMANDATORY_FLAG = 'Y'
-      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 12, 'Cannot delete mandatory text type');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 12, 'Cannot delete mandatory text type');
       end if;
     --
     -- Subordinate T_TEXT_ITEMS rows will be cascade deleted.
     --
       delete from T_TEXT_TYPE_HEADERS where ITM_ID = pnITM_ID and TXTT_CODE = psTXTT_CODE;
     --
-      PLS_UTILITY.TRACE_POINT('Deleted T_TEXT_TYPE_HEADERS-C~' || to_char(sql%rowcount));
+      P_UTILITY.TRACE_POINT('Deleted T_TEXT_TYPE_HEADERS-C~' || to_char(sql%rowcount));
     --
       if sql%rowcount = 0
-      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 10, 'No text to delete');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 10, 'No text to delete');
       end if;
     else
     --
@@ -338,17 +338,17 @@ create or replace package body P_TEXT is
     --
       delete from T_DATA_ITEMS where ID = pnITM_ID;
     --
-      PLS_UTILITY.TRACE_POINT('Deleted T_DATA_ITEMS~' || to_char(sql%rowcount));
+      P_UTILITY.TRACE_POINT('Deleted T_DATA_ITEMS~' || to_char(sql%rowcount));
     --
       if sql%rowcount = 0
-      then P_MESSAGE.DISPLAY_MESSAGE('TXT', 10, 'No text to delete');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 10, 'No text to delete');
       end if;
     end if;
   --
-    PLS_UTILITY.END_MODULE;
+    P_UTILITY.END_MODULE;
   exception
     when others
-    then PLS_UTILITY.TRACE_EXCEPTION;
+    then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_TEXT;
 --
 -- =====================================
@@ -356,12 +356,16 @@ create or replace package body P_TEXT is
 -- =====================================
 --
 begin
-  if sComponent != 'TXT'
+  if sModule != $$PLSQL_UNIT
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
+  end if;
+--
+  if sComponent != 'TXT'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_TEXT;

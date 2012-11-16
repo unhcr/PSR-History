@@ -7,12 +7,13 @@ create or replace package P_LOCATION is
 --   attribute types, relationships and relationship types.
 --
 --  Change History:
---  02-Oct-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  16-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
-  sComponent varchar2(30) := 'LOC';
+  sModule varchar2(30) := $$PLSQL_UNIT;
   sVersion varchar2(10) := 'D0.1';
+  sComponent varchar2(30) := 'LOC';
 --
 -- ========================================
 -- Program unit definitions
