@@ -1,4 +1,4 @@
-@@PLS_UTILITY.pkh
+@@P_UTILITY.pkh
 @@P_BASE.pkh
 @@P_AGE_PROFILE.pkh
 @@P_CONTEXT.pkh
@@ -16,7 +16,7 @@
 @@P_TEXT.pkh
 @@P_TEXT_TYPE.pkh
 
-@@PLS_UTILITY.pkb
+@@P_UTILITY.pkb
 @@P_BASE.pkb
 @@P_AGE_PROFILE.pkb
 @@P_CONTEXT.pkb
