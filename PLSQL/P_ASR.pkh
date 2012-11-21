@@ -1,0 +1,86 @@
+create or replace package P_ASR is
+--
+-- -------------------------------------------------------------------------------------------------
+--
+--  Package P_ASR
+--  Procedures for maintenance of statistics.
+--
+--  Change History:
+--  19-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--
+-- -------------------------------------------------------------------------------------------------
+--
+  sModule varchar2(30) := $$PLSQL_UNIT;
+  sVersion varchar2(10) := 'D0.1';
+  sComponent varchar2(30) := 'ASR';
+--
+-- ========================================
+-- Program unit definitions
+-- ========================================
+--
+-- ----------------------------------------
+-- INSERT_TABLE7AB
+-- ----------------------------------------
+--
+-- Create a new row in ASR table 7A/7B.
+--
+-- Parameters:
+--
+  procedure INSERT_TABLE7AB
+   (pnASR_YEAR in P_BASE.tmnYear,
+    pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tmnLOC_ID,
+    pnDST_ID in P_BASE.tmnDST_ID,
+    pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tmnLOC_ID,
+    psSOURCE in P_BASE.tsPGRA_CHAR_VALUE,
+    psBASIS in P_BASE.tsPGRA_CHAR_VALUE,
+    pnREFRTN_VALUE in P_BASE.tnSTC_VALUE,
+    pnREFRTN_AH_VALUE in P_BASE.tnSTC_VALUE);
+--
+-- ----------------------------------------
+-- UPDATE_TABLE7AB
+-- ----------------------------------------
+--
+-- Update an existing row in ASR table 7A/7B.
+--
+-- Parameters:
+--
+  procedure UPDATE_TABLE7AB
+   (pnASR_YEAR in P_BASE.tmnYear,
+    pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tmnLOC_ID,
+    pnDST_ID in P_BASE.tmnDST_ID,
+    pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tmnLOC_ID,
+    psSOURCE in P_BASE.tsPGRA_CHAR_VALUE,
+    psBASIS in P_BASE.tsPGRA_CHAR_VALUE,
+    pnREFRTN_VALUE in P_BASE.tnSTC_VALUE,
+    pnREFRTN_AH_VALUE in P_BASE.tnSTC_VALUE,
+    pnPGR_ID_PRIMARY in P_BASE.tmnPGR_ID,
+    pnPGR_VERSION_NBR in P_BASE.tnPGR_VERSION_NBR,  --  ** Not required
+    pnPGRA_VERSION_NBR_SOURCE in P_BASE.tnPGRA_VERSION_NBR,
+    pnPGRA_VERSION_NBR_BASIS in P_BASE.tnPGRA_VERSION_NBR,
+    pnREFRTN_STC_ID in P_BASE.tnSTC_ID,
+    pnREFRTN_VERSION_NBR in P_BASE.tnSTC_VERSION_NBR,
+    pnREFRTN_AH_STC_ID in P_BASE.tnSTC_ID,
+    pnREFRTN_AH_VERSION_NBR in P_BASE.tnSTC_VERSION_NBR);
+--
+-- ----------------------------------------
+-- DELETE_TABLE7AB
+-- ----------------------------------------
+--
+-- Delete a row in ASR table 7A/7B.
+--
+-- Parameters:
+--
+  procedure DELETE_TABLE7AB
+   (pnPGR_ID_PRIMARY in P_BASE.tnPGR_ID,
+    pnPGR_VERSION_NBR in P_BASE.tnPGR_VERSION_NBR,
+    pnPGRA_VERSION_NBR_SOURCE in P_BASE.tnPGRA_VERSION_NBR,
+    pnPGRA_VERSION_NBR_BASIS in P_BASE.tnPGRA_VERSION_NBR,
+    pnREFRTN_STC_ID in P_BASE.tnSTC_ID,
+    pnREFRTN_VERSION_NBR in P_BASE.tnSTC_VERSION_NBR,
+    pnREFRTN_AH_STC_ID in P_BASE.tnSTC_ID,
+    pnREFRTN_AH_VERSION_NBR in P_BASE.tnSTC_VERSION_NBR);
+--
+end P_ASR;
+/
+
+show errors
