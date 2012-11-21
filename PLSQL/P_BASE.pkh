@@ -29,6 +29,8 @@ create or replace package P_BASE is
   subtype tnInteger is integer;
   subtype tdDate is date;
   subtype tmdDate is tdDate not null;
+  subtype tnYear is number(4);
+  subtype tmnYear is tnYear not null;
   subtype tsCountryCode is varchar2(3);
 --
 -- T_AGE_PROFILES
