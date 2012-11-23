@@ -1,11 +1,11 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" id="5E76E307-0AF6-9679-448C-16298DADBD45" directorySegmentName="seg_0" name="T_POP_GROUP_ATTRIBUTE_TYPES">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="5E76E307-0AF6-9679-448C-16298DADBD45" directorySegmentName="seg_0" name="T_STC_GROUP_ATTRIBUTE_TYPES">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 08:53:05 UTC</createdTime>
 <comment>Types of population group attributes</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <pkName>PK_LOCAT</pkName>
-<abbreviation>PGRAT</abbreviation>
+<abbreviation>STGAT</abbreviation>
 <fonts>
 <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
 <foType>Title</foType>
@@ -110,7 +110,7 @@
 </Column>
 </columns>
 <indexes>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="A6A3D00C-366D-37C1-7F02-1BDF7C6924F2" name="PK_PGRAT">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="A6A3D00C-366D-37C1-7F02-1BDF7C6924F2" name="PK_STGAT">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 08:53:05 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -120,7 +120,7 @@
 <colUsage columnID="33E0298A-B40F-9F49-8DDA-F461581DE28C"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="2E91204F-04AB-4F8E-E9E1-255B35E16C57" name="UK_PGRAT_ITM_ID">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="2E91204F-04AB-4F8E-E9E1-255B35E16C57" name="UK_STGAT_ITM_ID">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 08:53:05 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -129,7 +129,7 @@
 <colUsage columnID="9A0E74F5-F85A-F2CB-0E7C-8907DC1D3E96"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="8FFE82A6-06A3-0A28-684D-A14E1D26B0B0" name="FK_PGRAT_ITM">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="8FFE82A6-06A3-0A28-684D-A14E1D26B0B0" name="FK_STGAT_ITM">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 08:53:05 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>

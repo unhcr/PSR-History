@@ -1,10 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" id="3633FDE7-936F-0DC3-CD65-9C1C85251F2B" directorySegmentName="seg_0" name="T_POP_GROUP_ATTRIBUTES">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="3633FDE7-936F-0DC3-CD65-9C1C85251F2B" directorySegmentName="seg_0" name="T_STC_GROUP_ATTRIBUTES">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <pkName>PK_LOCA</pkName>
-<abbreviation>PGRA</abbreviation>
+<abbreviation>STGA</abbreviation>
 <fonts>
 <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
 <foType>Title</foType>
@@ -41,7 +41,7 @@
 </FontObject>
 </fonts>
 <columns>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PGR_ID" id="6629DE77-2E2F-D822-CA82-A062BAB9076F">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="STG_ID" id="6629DE77-2E2F-D822-CA82-A062BAB9076F">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
 <comment>Population group identifier</comment>
@@ -55,7 +55,7 @@
 <colAssociation fkAssociation="8C480CB3-B5E7-EB44-E908-7AAA3BD4F371" referredColumn="AEB0255B-BEA7-2999-B8A3-E334130E7989"/>
 </associations>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PGRAT_CODE" id="4B16E9C5-4992-E4F7-D39B-D938FD6D8EAD">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="STGAT_CODE" id="4B16E9C5-4992-E4F7-D39B-D938FD6D8EAD">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
 <comment>Population group attribute type code</comment>
@@ -151,7 +151,7 @@
 </Column>
 </columns>
 <indexes>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="66EAD21C-F7CB-52A0-B698-92A551052984" name="PK_PGRA">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="66EAD21C-F7CB-52A0-B698-92A551052984" name="PK_STGA">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -162,7 +162,7 @@
 <colUsage columnID="4B16E9C5-4992-E4F7-D39B-D938FD6D8EAD"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="42F2E81A-3779-A823-D4E7-D6CD104E6598" name="UK_PGRA_ITM_ID">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="42F2E81A-3779-A823-D4E7-D6CD104E6598" name="UK_STGA_ITM_ID">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -171,7 +171,7 @@
 <colUsage columnID="BA4924A9-A36D-2BC2-0580-A653777846E5"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="CB8B4283-7492-F433-3474-4E565A7CDB07" name="FK_PGRA_ITM">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="CB8B4283-7492-F433-3474-4E565A7CDB07" name="FK_STGA_ITM">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -180,7 +180,7 @@
 <colUsage columnID="BA4924A9-A36D-2BC2-0580-A653777846E5"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="4BAC9216-635D-D3E3-5469-B4B4E1AEED38" name="FK_PGRA_PGR">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="4BAC9216-635D-D3E3-5469-B4B4E1AEED38" name="FK_STGA_STG">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:17:52 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -189,7 +189,7 @@
 <colUsage columnID="6629DE77-2E2F-D822-CA82-A062BAB9076F"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="C31B6505-D6BE-68D3-C578-2F03B8186953" name="FK_PGRA_PGRAT">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="C31B6505-D6BE-68D3-C578-2F03B8186953" name="FK_STGA_STGAT">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:18:11 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
@@ -200,7 +200,7 @@
 </ind_PK_UK>
 </indexes>
 <tableCheckConstraints>
-<tableCheckConstraint class="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint" name="CH_PGRA" id="A670D3A0-589D-44DE-820C-BE31B361AB08" directorySegmentName="seg_1">
+<tableCheckConstraint class="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint" name="CH_STGA_VALUES" id="A670D3A0-589D-44DE-820C-BE31B361AB08" directorySegmentName="seg_1">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 09:11:02 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>

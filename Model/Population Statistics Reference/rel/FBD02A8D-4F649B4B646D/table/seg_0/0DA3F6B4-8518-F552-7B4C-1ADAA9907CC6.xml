@@ -59,22 +59,6 @@
 <autoIncrementSequenceName>STC_SEQ</autoIncrementSequenceName>
 <autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="STCT_CODE" id="7F16941E-0450-0982-F034-DF334E5BB70B">
-<createdBy>Scott</createdBy>
-<createdTime>2011-10-26 10:37:49 UTC</createdTime>
-<comment>Statistic type code</comment>
-<generatorID>463835AA-AD85-7E5C-985E-BB9C3766C438</generatorID>
-<ownerDesignName>Population Statistics Reference</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
-<delegate>EB338200-AC8F-6607-A8D2-6B97B7122060</delegate>
-<previousColumn>false</previousColumn>
-<associations>
-<colAssociation fkAssociation="640305E8-8463-4BE4-5868-5DEA0C7BB92C" referredColumn="EB338200-AC8F-6607-A8D2-6B97B7122060"/>
-</associations>
-</Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="START_DATE" id="91AB0554-CF0D-7D45-763F-25D78C1D7036">
 <createdBy>Scott</createdBy>
 <createdTime>2012-10-08 09:35:09 UTC</createdTime>
@@ -94,6 +78,22 @@
 <logicalDatatype>LOGDT007</logicalDatatype>
 <domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
 <autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="STCT_CODE" id="7F16941E-0450-0982-F034-DF334E5BB70B">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-26 10:37:49 UTC</createdTime>
+<comment>Statistic type code</comment>
+<generatorID>463835AA-AD85-7E5C-985E-BB9C3766C438</generatorID>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<delegate>EB338200-AC8F-6607-A8D2-6B97B7122060</delegate>
+<previousColumn>false</previousColumn>
+<associations>
+<colAssociation fkAssociation="640305E8-8463-4BE4-5868-5DEA0C7BB92C" referredColumn="EB338200-AC8F-6607-A8D2-6B97B7122060"/>
+</associations>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DST_ID" id="9DBF51AF-7EEA-B91A-B0F1-75E93A57C684">
 <createdBy>Scott</createdBy>
@@ -288,7 +288,7 @@
 <colAssociation fkAssociation="9EA24DFD-571F-BCEC-B9BB-5F8EA2C8266B" referredColumn="E887FD2B-4164-C0ED-B1AC-5A298B0AAA7E"/>
 </associations>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PGR_SEQ_NBR" id="2DAEA3FB-3F69-DF27-14BA-21EEE2BD730B">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="STG_SEQ_NBR" id="2DAEA3FB-3F69-DF27-14BA-21EEE2BD730B">
 <createdBy>Scott</createdBy>
 <createdTime>2012-10-23 11:03:53 UTC</createdTime>
 <comment>Population sub-group sequence number</comment>
@@ -299,7 +299,7 @@
 <domain>4DEE2B98-924B-3C9C-5F42-8D1F2F4A8E54</domain>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PGR_ID_PRIMARY" id="FB3DF66E-C821-4D12-59C5-7F782CD76E97">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="STG_ID_PRIMARY" id="FB3DF66E-C821-4D12-59C5-7F782CD76E97">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-27 09:29:42 UTC</createdTime>
 <comment>Identifier of primary population group for this statistic</comment>
@@ -411,9 +411,9 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <indexState>Unique Constraint</indexState>
 <indexColumnUsage>
-<colUsage columnID="7F16941E-0450-0982-F034-DF334E5BB70B"/>
 <colUsage columnID="91AB0554-CF0D-7D45-763F-25D78C1D7036"/>
 <colUsage columnID="94054760-D809-F88B-4EEE-0DACCFC1F534"/>
+<colUsage columnID="7F16941E-0450-0982-F034-DF334E5BB70B"/>
 <colUsage columnID="9DBF51AF-7EEA-B91A-B0F1-75E93A57C684"/>
 <colUsage columnID="C745C7B8-8830-3890-A245-B59538F56022"/>
 <colUsage columnID="380335CA-0046-B573-BA7E-B3CE5BD01E9F"/>
@@ -570,7 +570,7 @@
 <colUsage columnID="2ACE9384-8C86-F9D2-C19F-5FE05F23B85D"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="30E71929-BF63-F019-4485-4A78583B6CD6" name="FK_STC_PGR_PRIMARY">
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="30E71929-BF63-F019-4485-4A78583B6CD6" name="FK_STC_STG_PRIMARY">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-27 09:31:06 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>

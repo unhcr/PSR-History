@@ -287,7 +287,7 @@
 <domain>D77E9D6A-6ACF-58C6-5D34-F3F18744121F</domain>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PGR_ID_SUBGROUP_FLAG" id="87A6324D-CEB8-C749-8157-B3350E759AAB">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="STG_ID_SUBGROUP_FLAG" id="87A6324D-CEB8-C749-8157-B3350E759AAB">
 <createdBy>Scott</createdBy>
 <createdTime>2012-10-01 15:25:39 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>

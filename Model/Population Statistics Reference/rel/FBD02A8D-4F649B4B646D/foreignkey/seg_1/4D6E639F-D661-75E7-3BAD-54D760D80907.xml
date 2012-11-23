@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" id="4D6E639F-D661-75E7-3BAD-54D760D80907" directorySegmentName="seg_1" name="FK_PGR_DIM2">
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" id="4D6E639F-D661-75E7-3BAD-54D760D80907" directorySegmentName="seg_1" name="FK_STG_DIM2">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-05 14:52:04 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
