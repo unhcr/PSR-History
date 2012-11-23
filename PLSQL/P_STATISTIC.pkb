@@ -25,7 +25,7 @@ create or replace package body P_STATISTIC is
     pnDIM_ID5 in P_BASE.tnDIM_ID := null,
     psSEX_CODE in P_BASE.tsSEX_CODE := null,
     pnAGR_ID in P_BASE.tnAGR_ID := null,
-    pnPGR_ID_PRIMARY in P_BASE.tnPGR_ID := null,
+    pnSTG_ID_PRIMARY in P_BASE.tnSTG_ID := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
     pnVALUE in P_BASE.tmnSTC_VALUE)
   is
@@ -47,7 +47,7 @@ create or replace package body P_STATISTIC is
     sSEX_CODE_FLAG P_BASE.tsFlag;
     sAGR_ID_FLAG P_BASE.tsFlag;
   --
-    nPGR_SEQ_NBR P_BASE.tnPGR_SEQ_NBR;
+    nSTG_SEQ_NBR P_BASE.tnSTG_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
      (sVersion || '-' || sModule || '.INSERT_STATISTIC',
@@ -58,7 +58,7 @@ create or replace package body P_STATISTIC is
         to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' || to_char(pnLOC_ID_ORIGIN) || '~' ||
         to_char(pnDIM_ID1) || '~' || to_char(pnDIM_ID2) || '~' || to_char(pnDIM_ID3) || '~' ||
         to_char(pnDIM_ID4) || '~' || to_char(pnDIM_ID5) || '~' || psSEX_CODE || '~' ||
-        to_char(pnAGR_ID) || '~' || to_char(pnPGR_ID_PRIMARY) || '~' || to_char(pnPPG_ID) || '~' ||
+        to_char(pnAGR_ID) || '~' || to_char(pnSTG_ID_PRIMARY) || '~' || to_char(pnPPG_ID) || '~' ||
         to_char(pnVALUE));
   --
     select DST_ID_FLAG, LOC_ID_ASYLUM_COUNTRY_FLAG, LOC_ID_ASYLUM_FLAG,
@@ -145,24 +145,24 @@ create or replace package body P_STATISTIC is
     then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 25, 'Age range must not be specified');
     end if;
   --
-    if pnPGR_ID_PRIMARY is not null
+    if pnSTG_ID_PRIMARY is not null
     then
       select SEQ_NBR
-      into nPGR_SEQ_NBR
-      from T_POPULATION_GROUPS
-      where ID = pnPGR_ID_PRIMARY;
+      into nSTG_SEQ_NBR
+      from T_STATISTIC_GROUPS
+      where ID = pnSTG_ID_PRIMARY;
     end if;
   --
     insert into T_STATISTICS
      (ID, STCT_CODE, START_DATE, END_DATE, DST_ID,
       LOC_ID_ASYLUM_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN_COUNTRY, LOC_ID_ORIGIN,
       DIM_ID1, DIM_ID2, DIM_ID3, DIM_ID4, DIM_ID5,
-      SEX_CODE, AGR_ID, PGR_SEQ_NBR, PGR_ID_PRIMARY, PPG_ID, VALUE)
+      SEX_CODE, AGR_ID, STG_SEQ_NBR, STG_ID_PRIMARY, PPG_ID, VALUE)
     values
      (STC_SEQ.nextval, psSTCT_CODE, pdSTART_DATE, pdEND_DATE, pnDST_ID,
       pnLOC_ID_ASYLUM_COUNTRY, pnLOC_ID_ASYLUM, pnLOC_ID_ORIGIN_COUNTRY, pnLOC_ID_ORIGIN,
       pnDIM_ID1, pnDIM_ID2, pnDIM_ID3, pnDIM_ID4, pnDIM_ID5,
-      psSEX_CODE, pnAGR_ID, nPGR_SEQ_NBR, pnPGR_ID_PRIMARY, pnPPG_ID, pnVALUE)
+      psSEX_CODE, pnAGR_ID, nSTG_SEQ_NBR, pnSTG_ID_PRIMARY, pnPPG_ID, pnVALUE)
     returning ID into pnID;
   --
     P_UTILITY.TRACE_CONTEXT
@@ -173,13 +173,11 @@ create or replace package body P_STATISTIC is
         to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' || to_char(pnLOC_ID_ORIGIN) || '~' ||
         to_char(pnDIM_ID1) || '~' || to_char(pnDIM_ID2) || '~' || to_char(pnDIM_ID3) || '~' ||
         to_char(pnDIM_ID4) || '~' || to_char(pnDIM_ID5) || '~' || psSEX_CODE || '~' ||
-        to_char(pnAGR_ID) || '~' || to_char(pnPGR_ID_PRIMARY) || '~' || to_char(pnPPG_ID) || '~' ||
+        to_char(pnAGR_ID) || '~' || to_char(pnSTG_ID_PRIMARY) || '~' || to_char(pnPPG_ID) || '~' ||
         to_char(pnVALUE));
   --
-    if pnPGR_ID_PRIMARY is not null
-    then
-      insert into T_STATISTICS_IN_GROUPS (STC_ID, PGR_ID)
-      values (pnID, pnPGR_ID_PRIMARY);
+    if pnSTG_ID_PRIMARY is not null
+    then INSERT_STATISTIC_IN_GROUP(pnID, pnSTG_ID_PRIMARY);
     end if;
   --
     P_UTILITY.END_MODULE;
@@ -247,7 +245,7 @@ create or replace package body P_STATISTIC is
     pnDIM_ID5 in P_BASE.tnDIM_ID := null,
     psSEX_CODE in P_BASE.tsSEX_CODE := null,
     pnAGR_ID in P_BASE.tnAGR_ID := null,
-    pnPGR_ID_PRIMARY in P_BASE.tnPGR_ID := null,
+    pnSTG_ID_PRIMARY in P_BASE.tnSTG_ID := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
     pnVALUE in P_BASE.tmnSTC_VALUE)
   is
@@ -261,7 +259,7 @@ create or replace package body P_STATISTIC is
         to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' || to_char(pnLOC_ID_ORIGIN) || '~' ||
         to_char(pnDIM_ID1) || '~' || to_char(pnDIM_ID2) || '~' || to_char(pnDIM_ID3) || '~' ||
         to_char(pnDIM_ID4) || '~' || to_char(pnDIM_ID5) || '~' || psSEX_CODE || '~' ||
-        to_char(pnAGR_ID) || '~' || to_char(pnPGR_ID_PRIMARY) || '~' || to_char(pnPPG_ID) || '~' ||
+        to_char(pnAGR_ID) || '~' || to_char(pnSTG_ID_PRIMARY) || '~' || to_char(pnPPG_ID) || '~' ||
         to_char(pnVALUE));
   --
     if pnVERSION_NBR is null
@@ -270,7 +268,7 @@ create or replace package body P_STATISTIC is
        (pnID, psSTCT_CODE, pdSTART_DATE, pdEND_DATE, pnDST_ID,
         pnLOC_ID_ASYLUM_COUNTRY, pnLOC_ID_ASYLUM, pnLOC_ID_ORIGIN_COUNTRY, pnLOC_ID_ORIGIN,
         pnDIM_ID1, pnDIM_ID2, pnDIM_ID3, pnDIM_ID4, pnDIM_ID5,
-        psSEX_CODE, pnAGR_ID, pnPGR_ID_PRIMARY, pnPPG_ID,
+        psSEX_CODE, pnAGR_ID, pnSTG_ID_PRIMARY, pnPPG_ID,
         pnVALUE);
     --
       pnVERSION_NBR := 1;
@@ -414,6 +412,51 @@ create or replace package body P_STATISTIC is
     when others
     then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_STC_TEXT;
+--
+-- ----------------------------------------
+-- INSERT_STATISTIC_IN_GROUP
+-- ----------------------------------------
+--
+  procedure INSERT_STATISTIC_IN_GROUP
+   (pnSTC_ID in P_BASE.tmnSTC_ID,
+    pnSTG_ID in P_BASE.tmnSTG_ID)
+  is
+  begin
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_STATISTIC_IN_GROUP',
+      to_char(pnSTC_ID) || '~' || to_char(pnSTG_ID));
+  --
+    insert into T_STATISTICS_IN_GROUPS (STC_ID, STG_ID)
+    values (pnSTC_ID, pnSTG_ID);
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end INSERT_STATISTIC_IN_GROUP;
+--
+-- ----------------------------------------
+-- DELETE_STATISTIC_IN_GROUP
+-- ----------------------------------------
+--
+  procedure DELETE_STATISTIC_IN_GROUP
+   (pnSTC_ID in P_BASE.tmnSTC_ID,
+    pnSTG_ID in P_BASE.tmnSTG_ID)
+  is
+  begin
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_STATISTIC_IN_GROUP',
+      to_char(pnSTC_ID) || '~' || to_char(pnSTG_ID));
+  --
+    delete from T_STATISTICS_IN_GROUPS
+    where STC_ID = pnSTC_ID
+    and STG_ID = pnSTG_ID;
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end DELETE_STATISTIC_IN_GROUP;
 --
 -- =====================================
 -- Initialisation

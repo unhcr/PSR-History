@@ -6,7 +6,7 @@ create or replace package P_STATISTIC is
 --  Procedures for maintenance of statistics.
 --
 --  Change History:
---  16-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  22-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -41,7 +41,7 @@ create or replace package P_STATISTIC is
 --  pnDIM_ID5 - Dimension value identifier 5 (optional).
 --  psSEX_CODE - Sex code (optional).
 --  pnAGR_ID - Age range identifier (optional).
---  pnPGR_ID_PRIMARY - Identifier of primary population group (optional).
+--  pnSTG_ID_PRIMARY - Identifier of primary statistic group (optional).
 --  pnPPG_ID - PPG identifier (optional).
 --  pnVALUE - The value of the statistic (mandatory).
 --
@@ -62,7 +62,7 @@ create or replace package P_STATISTIC is
     pnDIM_ID5 in P_BASE.tnDIM_ID := null,
     psSEX_CODE in P_BASE.tsSEX_CODE := null,
     pnAGR_ID in P_BASE.tnAGR_ID := null,
-    pnPGR_ID_PRIMARY in P_BASE.tnPGR_ID := null,
+    pnSTG_ID_PRIMARY in P_BASE.tnSTG_ID := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
     pnVALUE in P_BASE.tmnSTC_VALUE);
 --
@@ -125,8 +125,8 @@ create or replace package P_STATISTIC is
 --    statistic, since the sex may not be changed).
 --  pnAGR_ID - Age range identifier (optional when creating a new statistic; ignored when updating
 --    an existing statistic, since the age range may not be changed).
---  pnPGR_ID_PRIMARY - Identifier of primary population group (optional when creating a new
---    statistic; ignored when updating an existing statistic, since the primary population group may
+--  pnSTG_ID_PRIMARY - Identifier of primary statistic group (optional when creating a new
+--    statistic; ignored when updating an existing statistic, since the primary statistic group may
 --    not be changed).
 --  pnPPG_ID - PPG identifier (optional when creating a new statistic; ignored when updating an
 --    existing statistic, since the PPG may not be changed).
@@ -150,7 +150,7 @@ create or replace package P_STATISTIC is
     pnDIM_ID5 in P_BASE.tnDIM_ID := null,
     psSEX_CODE in P_BASE.tsSEX_CODE := null,
     pnAGR_ID in P_BASE.tnAGR_ID := null,
-    pnPGR_ID_PRIMARY in P_BASE.tnPGR_ID := null,
+    pnSTG_ID_PRIMARY in P_BASE.tnSTG_ID := null,
     pnPPG_ID in P_BASE.tnPPG_ID := null,
     pnVALUE in P_BASE.tmnSTC_VALUE);
 --
@@ -219,6 +219,34 @@ create or replace package P_STATISTIC is
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
+--
+-- ----------------------------------------
+-- INSERT_STATISTIC_IN_GROUP
+-- ----------------------------------------
+--
+-- Add a statistic to a statistic group.
+--
+-- Parameters:
+--  pnSTC_ID - Identifier of statistic to be added to statistic group (mandatory).
+--  pnSTG_ID - Identifier of statistic group (mandatory).
+--
+  procedure INSERT_STATISTIC_IN_GROUP
+   (pnSTC_ID in P_BASE.tmnSTC_ID,
+    pnSTG_ID in P_BASE.tmnSTG_ID);
+--
+-- ----------------------------------------
+-- DELETE_STATISTIC_IN_GROUP
+-- ----------------------------------------
+--
+-- Remove a statistic from a statistic group.
+--
+-- Parameters:
+--  pnSTC_ID - Identifier of statistic to be removed from statistic group (mandatory).
+--  pnSTG_ID - Identifier of statistic group (mandatory).
+--
+  procedure DELETE_STATISTIC_IN_GROUP
+   (pnSTC_ID in P_BASE.tmnSTC_ID,
+    pnSTG_ID in P_BASE.tmnSTG_ID);
 --
 end P_STATISTIC;
 /
