@@ -1,6 +1,6 @@
 create table S_STATISTIC_TYPES_IN_GROUPS 
  (STCT_CODE varchar2(10),
-  STCG_CODE varchar2(10),
+  STTG_CODE varchar2(10),
   NOTES varchar2(4000))
 organization external
  (type oracle_loader
@@ -17,7 +17,7 @@ organization external
     lrtrim
     missing field values are null
      (STCT_CODE char(4000),
-      STCG_CODE char(4000),
+      STTG_CODE char(4000),
       NOTES char(4000)))
   location ('STATISTIC_TYPES_IN_GROUPS.csv'))
 reject limit unlimited;
