@@ -29,7 +29,7 @@ create or replace package body P_STATISTIC_TYPE is
     psDIMT_CODE5 in P_BASE.tsDIMT_CODE := null,
     psSEX_CODE_FLAG in P_BASE.tmsFlag,
     psAGR_ID_FLAG in P_BASE.tmsFlag,
-    psPGR_ID_SUBGROUP_FLAG in P_BASE.tmsFlag,
+    psSTG_ID_SUBGROUP_FLAG in P_BASE.tmsFlag,
     pnDISPLAY_SEQ in P_BASE.tnSTCT_DISPLAY_SEQ := null,
     psACTIVE_FLAG in P_BASE.tmsSTCT_ACTIVE_FLAG := 'Y')
   is
@@ -46,7 +46,7 @@ create or replace package body P_STATISTIC_TYPE is
         psDIM_ID3_FLAG || '~' || psDIMT_CODE3 || '~' ||
         psDIM_ID4_FLAG || '~' || psDIMT_CODE4 || '~' ||
         psDIM_ID5_FLAG || '~' || psDIMT_CODE5 || '~' ||
-        psSEX_CODE_FLAG || '~' || psAGR_ID_FLAG || '~' || psPGR_ID_SUBGROUP_FLAG || '~' ||
+        psSEX_CODE_FLAG || '~' || psAGR_ID_FLAG || '~' || psSTG_ID_SUBGROUP_FLAG || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -58,14 +58,14 @@ create or replace package body P_STATISTIC_TYPE is
       LOC_ID_ORIGIN_COUNTRY_FLAG, LOC_ID_ORIGIN_FLAG,
       DIM_ID1_FLAG, DIMT_CODE1, DIM_ID2_FLAG, DIMT_CODE2, DIM_ID3_FLAG, DIMT_CODE3,
       DIM_ID4_FLAG, DIMT_CODE4, DIM_ID5_FLAG, DIMT_CODE5, SEX_CODE_FLAG, AGR_ID_FLAG,
-      PGR_ID_SUBGROUP_FLAG, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
+      STG_ID_SUBGROUP_FLAG, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values
      (psCODE, psDST_ID_FLAG,
       psLOC_ID_ASYLUM_COUNTRY_FLAG, psLOC_ID_ASYLUM_FLAG,
       psLOC_ID_ORIGIN_COUNTRY_FLAG, psLOC_ID_ORIGIN_FLAG,
       psDIM_ID1_FLAG, psDIMT_CODE1, psDIM_ID2_FLAG, psDIMT_CODE2, psDIM_ID3_FLAG, psDIMT_CODE3,
       psDIM_ID4_FLAG, psDIMT_CODE4, psDIM_ID5_FLAG, psDIMT_CODE5, psSEX_CODE_FLAG, psAGR_ID_FLAG,
-      psPGR_ID_SUBGROUP_FLAG, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
+      psSTG_ID_SUBGROUP_FLAG, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
     P_UTILITY.END_MODULE;
   exception
@@ -99,7 +99,7 @@ create or replace package body P_STATISTIC_TYPE is
     psDIMT_CODE5 in P_BASE.tsDIMT_CODE := null,
     psSEX_CODE_FLAG in P_BASE.tsFlag := null,
     psAGR_ID_FLAG in P_BASE.tsFlag := null,
-    psPGR_ID_SUBGROUP_FLAG in P_BASE.tsFlag := null,
+    psSTG_ID_SUBGROUP_FLAG in P_BASE.tsFlag := null,
     pnDISPLAY_SEQ in P_BASE.tnSTCT_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsSTCT_ACTIVE_FLAG := null)
   is
@@ -118,7 +118,7 @@ create or replace package body P_STATISTIC_TYPE is
         psDIM_ID3_FLAG || '~' || psDIMT_CODE3 || '~' ||
         psDIM_ID4_FLAG || '~' || psDIMT_CODE4 || '~' ||
         psDIM_ID5_FLAG || '~' || psDIMT_CODE5 || '~' ||
-        psSEX_CODE_FLAG || '~' || psAGR_ID_FLAG || '~' || psPGR_ID_SUBGROUP_FLAG || '~' ||
+        psSEX_CODE_FLAG || '~' || psAGR_ID_FLAG || '~' || psSTG_ID_SUBGROUP_FLAG || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -157,7 +157,7 @@ create or replace package body P_STATISTIC_TYPE is
           case when psDIM_ID5_FLAG = 'N' then psDIMT_CODE5 else nvl(psDIMT_CODE5, DIMT_CODE5) end,
         SEX_CODE_FLAG = nvl(psSEX_CODE_FLAG, SEX_CODE_FLAG),
         AGR_ID_FLAG = nvl(psAGR_ID_FLAG, AGR_ID_FLAG),
-        PGR_ID_SUBGROUP_FLAG = nvl(psPGR_ID_SUBGROUP_FLAG, PGR_ID_SUBGROUP_FLAG),
+        STG_ID_SUBGROUP_FLAG = nvl(psSTG_ID_SUBGROUP_FLAG, STG_ID_SUBGROUP_FLAG),
         DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
@@ -199,7 +199,7 @@ create or replace package body P_STATISTIC_TYPE is
     psDIMT_CODE5 in P_BASE.tsDIMT_CODE := null,
     psSEX_CODE_FLAG in P_BASE.tsFlag := null,
     psAGR_ID_FLAG in P_BASE.tsFlag := null,
-    psPGR_ID_SUBGROUP_FLAG in P_BASE.tsFlag := null,
+    psSTG_ID_SUBGROUP_FLAG in P_BASE.tsFlag := null,
     pnDISPLAY_SEQ in P_BASE.tnSTCT_DISPLAY_SEQ := -1e6,
     psACTIVE_FLAG in P_BASE.tsSTCT_ACTIVE_FLAG := null)
   is
@@ -214,7 +214,7 @@ create or replace package body P_STATISTIC_TYPE is
         psDIM_ID3_FLAG || '~' || psDIMT_CODE3 || '~' ||
         psDIM_ID4_FLAG || '~' || psDIMT_CODE4 || '~' ||
         psDIM_ID5_FLAG || '~' || psDIMT_CODE5 || '~' ||
-        psSEX_CODE_FLAG || '~' || psAGR_ID_FLAG || '~' || psPGR_ID_SUBGROUP_FLAG || '~' ||
+        psSEX_CODE_FLAG || '~' || psAGR_ID_FLAG || '~' || psSTG_ID_SUBGROUP_FLAG || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -226,7 +226,7 @@ create or replace package body P_STATISTIC_TYPE is
         psLOC_ID_ORIGIN_COUNTRY_FLAG, psLOC_ID_ORIGIN_FLAG,
         psDIM_ID1_FLAG, psDIMT_CODE1, psDIM_ID2_FLAG, psDIMT_CODE2, psDIM_ID3_FLAG, psDIMT_CODE3,
         psDIM_ID4_FLAG, psDIMT_CODE4, psDIM_ID5_FLAG, psDIMT_CODE5,
-        psSEX_CODE_FLAG, psAGR_ID_FLAG, psPGR_ID_SUBGROUP_FLAG,
+        psSEX_CODE_FLAG, psAGR_ID_FLAG, psSTG_ID_SUBGROUP_FLAG,
         case when pnDISPLAY_SEQ = -1e6 then null else pnDISPLAY_SEQ end,
         nvl(psACTIVE_FLAG, 'Y'));
     --
@@ -238,7 +238,7 @@ create or replace package body P_STATISTIC_TYPE is
         psLOC_ID_ORIGIN_COUNTRY_FLAG, psLOC_ID_ORIGIN_FLAG,
         psDIM_ID1_FLAG, psDIMT_CODE1, psDIM_ID2_FLAG, psDIMT_CODE2, psDIM_ID3_FLAG, psDIMT_CODE3,
         psDIM_ID4_FLAG, psDIMT_CODE4, psDIM_ID5_FLAG, psDIMT_CODE5,
-        psSEX_CODE_FLAG, psAGR_ID_FLAG, psPGR_ID_SUBGROUP_FLAG, pnDISPLAY_SEQ, psACTIVE_FLAG);
+        psSEX_CODE_FLAG, psAGR_ID_FLAG, psSTG_ID_SUBGROUP_FLAG, pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
     P_UTILITY.END_MODULE;
@@ -421,75 +421,75 @@ create or replace package body P_STATISTIC_TYPE is
   end REMOVE_STCT_TEXT;
 --
 -- ----------------------------------------
--- INSERT_STATISTIC_GROUP
+-- INSERT_STATISTIC_TYPE_GROUP
 -- ----------------------------------------
 --
-  procedure INSERT_STATISTIC_GROUP
-   (psCODE in P_BASE.tmsSTCG_CODE,
+  procedure INSERT_STATISTIC_TYPE_GROUP
+   (psCODE in P_BASE.tmsSTTG_CODE,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText,
-    pnDISPLAY_SEQ in P_BASE.tnSTCG_DISPLAY_SEQ := null,
-    psACTIVE_FLAG in P_BASE.tmsSTCG_ACTIVE_FLAG := 'Y')
+    pnDISPLAY_SEQ in P_BASE.tnSTTG_DISPLAY_SEQ := null,
+    psACTIVE_FLAG in P_BASE.tmsSTTG_ACTIVE_FLAG := 'Y')
   is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_STATISTIC_GROUP',
+     (sVersion || '-' || sModule || '.INSERT_STATISTIC_TYPE_GROUP',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-    P_TEXT.SET_TEXT(nITM_ID, 'STCG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    P_TEXT.SET_TEXT(nITM_ID, 'STTG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
-    insert into T_STATISTIC_GROUPS (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
+    insert into T_STATISTIC_TYPE_GROUPS (CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID)
     values (psCODE, pnDISPLAY_SEQ, psACTIVE_FLAG, nITM_ID);
   --
     P_UTILITY.END_MODULE;
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end INSERT_STATISTIC_GROUP;
+  end INSERT_STATISTIC_TYPE_GROUP;
 --
 -- ----------------------------------------
--- UPDATE_STATISTIC_GROUP
+-- UPDATE_STATISTIC_TYPE_GROUP
 -- ----------------------------------------
 --
-  procedure UPDATE_STATISTIC_GROUP
-   (psCODE in P_BASE.tmsSTCG_CODE,
-    pnVERSION_NBR in out P_BASE.tnSTCG_VERSION_NBR,
+  procedure UPDATE_STATISTIC_TYPE_GROUP
+   (psCODE in P_BASE.tmsSTTG_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTTG_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
-    pnDISPLAY_SEQ in P_BASE.tnSTCG_DISPLAY_SEQ := -1e6,
-    psACTIVE_FLAG in P_BASE.tsSTCG_ACTIVE_FLAG := null)
+    pnDISPLAY_SEQ in P_BASE.tnSTTG_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in P_BASE.tsSTTG_ACTIVE_FLAG := null)
   is
     nITM_ID P_BASE.tnITM_ID;
-    nVERSION_NBR P_BASE.tnSTCG_VERSION_NBR;
-    xSTCG_ROWID rowid;
+    nVERSION_NBR P_BASE.tnSTTG_VERSION_NBR;
+    xSTTG_ROWID rowid;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_STATISTIC_GROUP',
+     (sVersion || '-' || sModule || '.UPDATE_STATISTIC_TYPE_GROUP',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) ||
         '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     select ITM_ID, VERSION_NBR, rowid
-    into nITM_ID, nVERSION_NBR, xSTCG_ROWID
-    from T_STATISTIC_GROUPS
+    into nITM_ID, nVERSION_NBR, xSTTG_ROWID
+    from T_STATISTIC_TYPE_GROUPS
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
       if psDescription is not null
-      then P_TEXT.SET_TEXT(nITM_ID, 'STCG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+      then P_TEXT.SET_TEXT(nITM_ID, 'STTG', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
       end if;
     --
-      update T_STATISTIC_GROUPS
+      update T_STATISTIC_TYPE_GROUPS
       set DISPLAY_SEQ = case when pnDISPLAY_SEQ = -1e6 then DISPLAY_SEQ else pnDISPLAY_SEQ end,
         ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
-      where rowid = xSTCG_ROWID
+      where rowid = xSTTG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
       P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Statistic group has been updated by another user');
@@ -499,36 +499,36 @@ create or replace package body P_STATISTIC_TYPE is
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end UPDATE_STATISTIC_GROUP;
+  end UPDATE_STATISTIC_TYPE_GROUP;
 --
 -- ----------------------------------------
--- SET_STATISTIC_GROUP
+-- SET_STATISTIC_TYPE_GROUP
 -- ----------------------------------------
 --
-  procedure SET_STATISTIC_GROUP
-   (psCODE in P_BASE.tmsSTCG_CODE,
-    pnVERSION_NBR in out P_BASE.tnSTCG_VERSION_NBR,
+  procedure SET_STATISTIC_TYPE_GROUP
+   (psCODE in P_BASE.tmsSTTG_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTTG_VERSION_NBR,
     psLANG_CODE in P_BASE.tsLANG_CODE := null,
     psDescription in P_BASE.tsText := null,
-    pnDISPLAY_SEQ in P_BASE.tnSTCG_DISPLAY_SEQ := -1e6,
-    psACTIVE_FLAG in P_BASE.tsSTCG_ACTIVE_FLAG := null)
+    pnDISPLAY_SEQ in P_BASE.tnSTTG_DISPLAY_SEQ := -1e6,
+    psACTIVE_FLAG in P_BASE.tsSTTG_ACTIVE_FLAG := null)
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_STATISTIC_GROUP',
+     (sVersion || '-' || sModule || '.SET_STATISTIC_TYPE_GROUP',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
     if pnVERSION_NBR is null
     then
-      INSERT_STATISTIC_GROUP(psCODE, psLANG_CODE, psDescription,
+      INSERT_STATISTIC_TYPE_GROUP(psCODE, psLANG_CODE, psDescription,
                              case when pnDISPLAY_SEQ = -1e6 then null else pnDISPLAY_SEQ end,
                              nvl(psACTIVE_FLAG, 'Y'));
     --
       pnVERSION_NBR := 1;
     else
-      UPDATE_STATISTIC_GROUP(psCODE, pnVERSION_NBR, psLANG_CODE, psDescription,
+      UPDATE_STATISTIC_TYPE_GROUP(psCODE, pnVERSION_NBR, psLANG_CODE, psDescription,
                              pnDISPLAY_SEQ, psACTIVE_FLAG);
     end if;
   --
@@ -536,33 +536,33 @@ create or replace package body P_STATISTIC_TYPE is
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end SET_STATISTIC_GROUP;
+  end SET_STATISTIC_TYPE_GROUP;
 --
 -- ----------------------------------------
--- DELETE_STATISTIC_GROUP
+-- DELETE_STATISTIC_TYPE_GROUP
 -- ----------------------------------------
 --
-  procedure DELETE_STATISTIC_GROUP
-   (psCODE in P_BASE.tmsSTCG_CODE,
-    pnVERSION_NBR in P_BASE.tnSTCG_VERSION_NBR)
+  procedure DELETE_STATISTIC_TYPE_GROUP
+   (psCODE in P_BASE.tmsSTTG_CODE,
+    pnVERSION_NBR in P_BASE.tnSTTG_VERSION_NBR)
   is
     nITM_ID P_BASE.tnITM_ID;
-    nVERSION_NBR P_BASE.tnSTCG_VERSION_NBR;
-    xSTCG_ROWID rowid;
+    nVERSION_NBR P_BASE.tnSTTG_VERSION_NBR;
+    xSTTG_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_STATISTIC_GROUP',
+     (sVersion || '-' || sModule || '.DELETE_STATISTIC_TYPE_GROUP',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
-    into nITM_ID, nVERSION_NBR, xSTCG_ROWID
-    from T_STATISTIC_GROUPS
+    into nITM_ID, nVERSION_NBR, xSTTG_ROWID
+    from T_STATISTIC_TYPE_GROUPS
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from T_STATISTIC_GROUPS where rowid = xSTCG_ROWID;
+      delete from T_STATISTIC_TYPE_GROUPS where rowid = xSTTG_ROWID;
     --
       P_TEXT.DELETE_TEXT(nITM_ID);
     else
@@ -573,89 +573,89 @@ create or replace package body P_STATISTIC_TYPE is
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end DELETE_STATISTIC_GROUP;
+  end DELETE_STATISTIC_TYPE_GROUP;
 --
 -- ----------------------------------------
--- SET_STCG_DESCRIPTION
+-- SET_STTG_DESCRIPTION
 -- ----------------------------------------
 --
-  procedure SET_STCG_DESCRIPTION
-   (psCODE in P_BASE.tmsSTCG_CODE,
-    pnVERSION_NBR in out P_BASE.tnSTCG_VERSION_NBR,
+  procedure SET_STTG_DESCRIPTION
+   (psCODE in P_BASE.tmsSTTG_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTTG_VERSION_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText)
   is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_STCG_DESCRIPTION',
+     (sVersion || '-' || sModule || '.SET_STTG_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
-    SET_STCG_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
+    SET_STTG_TEXT(psCODE, pnVERSION_NBR, 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
   --
     P_UTILITY.END_MODULE;
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end SET_STCG_DESCRIPTION;
+  end SET_STTG_DESCRIPTION;
 --
 -- ----------------------------------------
--- REMOVE_STCG_DESCRIPTION
+-- REMOVE_STTG_DESCRIPTION
 -- ----------------------------------------
 --
-  procedure REMOVE_STCG_DESCRIPTION
-   (psCODE in P_BASE.tmsSTCG_CODE,
-    pnVERSION_NBR in out P_BASE.tnSTCG_VERSION_NBR,
+  procedure REMOVE_STTG_DESCRIPTION
+   (psCODE in P_BASE.tmsSTTG_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTTG_VERSION_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE)
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_STCG_DESCRIPTION',
+     (sVersion || '-' || sModule || '.REMOVE_STTG_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
-    REMOVE_STCG_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
+    REMOVE_STTG_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
   --
     P_UTILITY.END_MODULE;
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end REMOVE_STCG_DESCRIPTION;
+  end REMOVE_STTG_DESCRIPTION;
 --
 -- ----------------------------------------
--- SET_STCG_TEXT
+-- SET_STTG_TEXT
 -- ----------------------------------------
 --
-  procedure SET_STCG_TEXT
-   (psCODE in P_BASE.tmsSTCG_CODE,
-    pnVERSION_NBR in out P_BASE.tnSTCG_VERSION_NBR,
+  procedure SET_STTG_TEXT
+   (psCODE in P_BASE.tmsSTTG_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTTG_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
     nITM_ID P_BASE.tnITM_ID;
-    nVERSION_NBR P_BASE.tnSTCG_VERSION_NBR;
-    xSTCG_ROWID rowid;
+    nVERSION_NBR P_BASE.tnSTTG_VERSION_NBR;
+    xSTTG_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_STCG_TEXT',
+     (sVersion || '-' || sModule || '.SET_STTG_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
     select ITM_ID, VERSION_NBR, rowid
-    into nITM_ID, nVERSION_NBR, xSTCG_ROWID
-    from T_STATISTIC_GROUPS
+    into nITM_ID, nVERSION_NBR, xSTTG_ROWID
+    from T_STATISTIC_TYPE_GROUPS
     where CODE = psCODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nITM_ID, 'STCG', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'STTG', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
-      update T_STATISTIC_GROUPS
+      update T_STATISTIC_TYPE_GROUPS
       set VERSION_NBR = VERSION_NBR + 1
-      where rowid = xSTCG_ROWID
+      where rowid = xSTTG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
       P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Statistic group has been updated by another user');
@@ -665,31 +665,31 @@ create or replace package body P_STATISTIC_TYPE is
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end SET_STCG_TEXT;
+  end SET_STTG_TEXT;
 --
 -- ----------------------------------------
--- REMOVE_STCG_TEXT
+-- REMOVE_STTG_TEXT
 -- ----------------------------------------
 --
-  procedure REMOVE_STCG_TEXT
-   (psCODE in P_BASE.tmsSTCG_CODE,
-    pnVERSION_NBR in out P_BASE.tnSTCG_VERSION_NBR,
+  procedure REMOVE_STTG_TEXT
+   (psCODE in P_BASE.tmsSTTG_CODE,
+    pnVERSION_NBR in out P_BASE.tnSTTG_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
     nITM_ID P_BASE.tnITM_ID;
-    nVERSION_NBR P_BASE.tnSTCG_VERSION_NBR;
-    xSTCG_ROWID rowid;
+    nVERSION_NBR P_BASE.tnSTTG_VERSION_NBR;
+    xSTTG_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_STCG_TEXT',
+     (sVersion || '-' || sModule || '.REMOVE_STTG_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
     select ITM_ID, VERSION_NBR, rowid
-    into nITM_ID, nVERSION_NBR, xSTCG_ROWID
-    from T_STATISTIC_GROUPS
+    into nITM_ID, nVERSION_NBR, xSTTG_ROWID
+    from T_STATISTIC_TYPE_GROUPS
     where CODE = psCODE
     for update;
   --
@@ -697,9 +697,9 @@ create or replace package body P_STATISTIC_TYPE is
     then
       P_TEXT.DELETE_TEXT(nITM_ID, psTXTT_CODE, pnSEQ_NBR, psLANG_CODE);
     --
-      update T_STATISTIC_GROUPS
+      update T_STATISTIC_TYPE_GROUPS
       set VERSION_NBR = VERSION_NBR + 1
-      where rowid = xSTCG_ROWID
+      where rowid = xSTTG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
       P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'Statistic group has been updated by another user');
@@ -709,57 +709,57 @@ create or replace package body P_STATISTIC_TYPE is
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end REMOVE_STCG_TEXT;
+  end REMOVE_STTG_TEXT;
 --
 -- ----------------------------------------
--- INSERT_STATISTIC_TYPE_GROUPING
+-- INSERT_STATISTIC_TYPE_IN_GROUP
 -- ----------------------------------------
 --
-  procedure INSERT_STATISTIC_TYPE_GROUPING
-   (psSTCG_CODE in P_BASE.tmsSTCG_CODE,
+  procedure INSERT_STATISTIC_TYPE_IN_GROUP
+   (psSTTG_CODE in P_BASE.tmsSTTG_CODE,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE)
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_STATISTIC_TYPE_GROUPING',
-      psSTCG_CODE || '~' || psSTCT_CODE);
+     (sVersion || '-' || sModule || '.INSERT_STATISTIC_TYPE_IN_GROUP',
+      psSTTG_CODE || '~' || psSTCT_CODE);
   --
-    insert into T_STATISTIC_TYPES_IN_GROUPS (STCG_CODE, STCT_CODE)
-    values (psSTCG_CODE, psSTCT_CODE);
+    insert into T_STATISTIC_TYPES_IN_GROUPS (STTG_CODE, STCT_CODE)
+    values (psSTTG_CODE, psSTCT_CODE);
   --
     P_UTILITY.END_MODULE;
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end INSERT_STATISTIC_TYPE_GROUPING;
+  end INSERT_STATISTIC_TYPE_IN_GROUP;
 --
 -- ----------------------------------------
--- DELETE_STATISTIC_TYPE_GROUPING
+-- DELETE_STATISTIC_TYPE_IN_GROUP
 -- ----------------------------------------
 --
-  procedure DELETE_STATISTIC_TYPE_GROUPING
-   (psSTCG_CODE in P_BASE.tmsSTCG_CODE,
+  procedure DELETE_STATISTIC_TYPE_IN_GROUP
+   (psSTTG_CODE in P_BASE.tmsSTTG_CODE,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
-    pnVERSION_NBR in P_BASE.tnSTCTG_VERSION_NBR)
+    pnVERSION_NBR in P_BASE.tnSTTIG_VERSION_NBR)
   is
     nITM_ID P_BASE.tnITM_ID;
-    nVERSION_NBR P_BASE.tnSTCTG_VERSION_NBR;
-    xSTCTG_ROWID rowid;
+    nVERSION_NBR P_BASE.tnSTTIG_VERSION_NBR;
+    xSTTIG_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_STATISTIC_TYPE_GROUPING',
-      psSTCG_CODE || '~' || psSTCT_CODE || '~' || to_char(pnVERSION_NBR));
+     (sVersion || '-' || sModule || '.DELETE_STATISTIC_TYPE_IN_GROUP',
+      psSTTG_CODE || '~' || psSTCT_CODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
-    into nITM_ID, nVERSION_NBR, xSTCTG_ROWID
+    into nITM_ID, nVERSION_NBR, xSTTIG_ROWID
     from T_STATISTIC_TYPES_IN_GROUPS
-    where STCG_CODE = psSTCG_CODE
+    where STTG_CODE = psSTTG_CODE
     and STCT_CODE = psSTCT_CODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      delete from T_STATISTIC_TYPES_IN_GROUPS where rowid = xSTCTG_ROWID;
+      delete from T_STATISTIC_TYPES_IN_GROUPS where rowid = xSTTIG_ROWID;
     --
       if nITM_ID is not null
       then P_TEXT.DELETE_TEXT(nITM_ID);
@@ -772,46 +772,46 @@ create or replace package body P_STATISTIC_TYPE is
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end DELETE_STATISTIC_TYPE_GROUPING;
+  end DELETE_STATISTIC_TYPE_IN_GROUP;
 --
 -- ----------------------------------------
--- SET_STCTG_TEXT
+-- SET_STTIG_TEXT
 -- ----------------------------------------
 --
-  procedure SET_STCTG_TEXT
-   (psSTCG_CODE in P_BASE.tmsSTCG_CODE,
+  procedure SET_STTIG_TEXT
+   (psSTTG_CODE in P_BASE.tmsSTTG_CODE,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
-    pnVERSION_NBR in out P_BASE.tnSTCTG_VERSION_NBR,
+    pnVERSION_NBR in out P_BASE.tnSTTIG_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in out P_BASE.tnTXT_SEQ_NBR,
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psText in P_BASE.tmsText)
   is
     nITM_ID P_BASE.tnITM_ID;
-    nVERSION_NBR P_BASE.tnSTCTG_VERSION_NBR;
-    xSTCTG_ROWID rowid;
+    nVERSION_NBR P_BASE.tnSTTIG_VERSION_NBR;
+    xSTTIG_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_STCTG_TEXT',
-      psSTCG_CODE || '~' || psSTCT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+     (sVersion || '-' || sModule || '.SET_STTIG_TEXT',
+      psSTTG_CODE || '~' || psSTCT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
   --
     select ITM_ID, VERSION_NBR, rowid
-    into nITM_ID, nVERSION_NBR, xSTCTG_ROWID
+    into nITM_ID, nVERSION_NBR, xSTTIG_ROWID
     from T_STATISTIC_TYPES_IN_GROUPS
-    where STCG_CODE = psSTCG_CODE
+    where STTG_CODE = psSTTG_CODE
     and STCT_CODE = psSTCT_CODE
     for update;
   --
     if pnVERSION_NBR = nVERSION_NBR
     then
-      P_TEXT.SET_TEXT(nITM_ID, 'STCTG', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
+      P_TEXT.SET_TEXT(nITM_ID, 'STTIG', psTXTT_CODE, pnSEQ_NBR, psLANG_CODE, psText);
     --
       update T_STATISTIC_TYPES_IN_GROUPS
       set ITM_ID = nITM_ID,
         VERSION_NBR = VERSION_NBR + 1
-      where rowid = xSTCTG_ROWID
+      where rowid = xSTTIG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
       P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Statistic type grouping has been updated by another user');
@@ -821,33 +821,33 @@ create or replace package body P_STATISTIC_TYPE is
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end SET_STCTG_TEXT;
+  end SET_STTIG_TEXT;
 --
 -- ----------------------------------------
--- REMOVE_STCTG_TEXT
+-- REMOVE_STTIG_TEXT
 -- ----------------------------------------
 --
-  procedure REMOVE_STCTG_TEXT
-   (psSTCG_CODE in P_BASE.tmsSTCG_CODE,
+  procedure REMOVE_STTIG_TEXT
+   (psSTTG_CODE in P_BASE.tmsSTTG_CODE,
     psSTCT_CODE in P_BASE.tmsSTCT_CODE,
-    pnVERSION_NBR in out P_BASE.tnSTCTG_VERSION_NBR,
+    pnVERSION_NBR in out P_BASE.tnSTTIG_VERSION_NBR,
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null)
   is
     nITM_ID P_BASE.tnITM_ID;
-    nVERSION_NBR P_BASE.tnSTCTG_VERSION_NBR;
-    xSTCTG_ROWID rowid;
+    nVERSION_NBR P_BASE.tnSTTIG_VERSION_NBR;
+    xSTTIG_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_STCTG_TEXT',
-      psSTCG_CODE || '~' || psSTCT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
+     (sVersion || '-' || sModule || '.REMOVE_STTIG_TEXT',
+      psSTTG_CODE || '~' || psSTCT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
     select ITM_ID, VERSION_NBR, rowid
-    into nITM_ID, nVERSION_NBR, xSTCTG_ROWID
+    into nITM_ID, nVERSION_NBR, xSTTIG_ROWID
     from T_STATISTIC_TYPES_IN_GROUPS
-    where STCG_CODE = psSTCG_CODE
+    where STTG_CODE = psSTTG_CODE
     and STCT_CODE = psSTCT_CODE
     for update;
   --
@@ -857,7 +857,7 @@ create or replace package body P_STATISTIC_TYPE is
     --
       update T_STATISTIC_TYPES_IN_GROUPS
       set VERSION_NBR = VERSION_NBR + 1
-      where rowid = xSTCTG_ROWID
+      where rowid = xSTTIG_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
     else
       P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Statistic type grouping has been updated by another user');
@@ -867,7 +867,7 @@ create or replace package body P_STATISTIC_TYPE is
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end REMOVE_STCTG_TEXT;
+  end REMOVE_STTIG_TEXT;
 --
 -- =====================================
 -- Initialisation
