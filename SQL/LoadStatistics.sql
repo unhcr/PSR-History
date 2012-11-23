@@ -1,11 +1,20 @@
 set serveroutput on size 1000000
 
 declare
-  nPGR_ID P_BASE.tnPGR_ID;
+  nSTG_ID_COUNTRY P_BASE.tnSTG_ID;
+  nSTG_ID_TABLE P_BASE.tnSTG_ID;
+  nSTG_ID P_BASE.tnSTG_ID;
   nSTC_ID P_BASE.tnSTC_ID;
+--
+  sSTATSYEAR varchar2(4);
+  nLOC_ID_REPORTING_COUNTRY P_BASE.tnLOC_ID;
+  sSTTG_CODE P_BASE.tsSTTG_CODE;
+--
   iCount1 pls_integer := 0;
   iCount2 pls_integer := 0;
 begin
+  P_UTILITY.START_MODULE('LoadStatistics');
+--
   for rSTC in
    (with
     UNPIVOTED_STATISTICS as
@@ -409,7 +418,7 @@ begin
           POP_AH_END as 'E/OOCPOP-AH'))),
   --
     AGGREGATED_STATISTICS as
-     (select TABLE_NUMBER, STATSYEAR,
+     (select STATSYEAR, STTG_CODE,
         trunc(to_date(STATSYEAR, 'YYYY'), 'YYYY') as START_DATE_YEAR,
         add_months(trunc(to_date(STATSYEAR, 'YYYY'), 'YYYY'), 12) as END_DATE_YEAR,
         case PERIOD_FLAG
@@ -429,30 +438,44 @@ begin
         PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
         sum(VALUE) as VALUE
       from
-       (select TABLE_NUMBER, STATSYEAR, DST_CODE,
+       (select STATSYEAR, STTG_CODE, DST_CODE,
           COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
           DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
           DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME, PPG_NAME,
           count(distinct nvl(PPG_NAME, 'zzz')) over
-           (partition by TABLE_NUMBER, STATSYEAR, DST_CODE,
+           (partition by STTG_CODE, STATSYEAR, DST_CODE,
             COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
             DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
             DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME) as PPG_COUNT,
           STAGE.CHARAGG(SOURCE) over
-           (partition by TABLE_NUMBER, STATSYEAR, DST_CODE,
+           (partition by STTG_CODE, STATSYEAR, DST_CODE,
             COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
             DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
             DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME, PPG_NAME) as SOURCE,
           STAGE.CHARAGG(BASIS) over
-           (partition by TABLE_NUMBER, STATSYEAR, DST_CODE,
+           (partition by STTG_CODE, STATSYEAR, DST_CODE,
             COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
             DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
             DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME, PPG_NAME) as BASIS,
           PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
           VALUE
         from
-         (select TABLE_NUMBER, STATSYEAR, DST_CODE,
-            COU_CODE_ASYLUM, LOCATION_NAME,
+         (select STATSYEAR,
+            case TABLE_NUMBER
+              when '2' then 'ASRT2'
+              when '3' then 'ASRT3'
+              when '4' then 'ASRT4'
+              when '5' then 'ASRT5'
+              when '6A' then 'ASRT6AB'
+              when '6B' then 'ASRT6AB'
+              when '6C' then 'ASRT6C'
+              when '6D' then 'ASRT6D'
+              when '7A' then 'ASRT7AB'
+              when '7B' then 'ASRT7AB'
+              when '7C' then 'ASRT7C'
+              when '7D' then 'ASRT7D'
+            end as STTG_CODE,
+            DST_CODE, COU_CODE_ASYLUM, LOCATION_NAME,
             decode(COU_CODE_ORIGIN, 'YUG', 'SRB', COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
             DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
             DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME, PPG_NAME,
@@ -461,15 +484,15 @@ begin
             VALUE
           from UNPIVOTED_STATISTICS
           where VALUE != 0))
-      group by TABLE_NUMBER, STATSYEAR, DST_CODE,
+      group by STTG_CODE, STATSYEAR, DST_CODE,
         COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
         DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
         DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME,
         PPG_NAME, PPG_COUNT, SOURCE, BASIS,
         PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM)
   --
-    select STC.TABLE_NUMBER,
-      STC.STATSYEAR,
+    select STC.STATSYEAR,
+      STC.STTG_CODE,
       STC.START_DATE_YEAR,
       STC.END_DATE_YEAR,
       STC.START_DATE,
@@ -509,8 +532,9 @@ begin
       DIM4.ID as DIM_ID4,
       DIM5.ID as DIM_ID5,
       AGR.ID as AGR_ID,
+      case when STC.STTG_CODE = 'ASRT7AB' then OGN.ID else COU.ID end as LOC_ID_REPORTING_COUNTRY,
       row_number() over
-       (partition by STC.STATSYEAR, STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID,
+       (partition by STC.STATSYEAR, STC.STTG_CODE, STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID,
           DIM1.ID, DIM2.ID, DIM3.ID, DIM4.ID, DIM5.ID,
           nvl(STC.SUBGROUP_NAME, case when STC.PPG_COUNT > 1 then STC.PPG_NAME end),
           nvl(PPG1.PPG_ID, PPG2.PPG_ID)
@@ -614,13 +638,14 @@ begin
     left outer join T_AGE_RANGES AGR
       on AGR.AGP_CODE = 'STD'
       and AGR.AGE_FROM = STC.AGE_FROM
-    order by STATSYEAR, DST_CODE, LOC_ID_ASYLUM_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN_COUNTRY,
+    order by STATSYEAR, LOC_ID_REPORTING_COUNTRY, STTG_CODE,
+      DST_CODE, LOC_ID_ASYLUM_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN_COUNTRY,
       DIM_ID1, DIM_ID2, DIM_ID3, DIM_ID4, DIM_ID5, SUBGROUP_NAME,
       PPG_ID, PERIOD_FLAG, STCT_CODE, SEX_CODE, AGR_ID)
   loop
     P_UTILITY.TRACE_POINT
      ('Trace',
-      rSTC.TABLE_NUMBER || '~' || rSTC.STATSYEAR || '~' || rSTC.DST_CODE || '~' ||
+      rSTC.STATSYEAR || '~' || rSTC.STTG_CODE || '~' || rSTC.DST_CODE || '~' ||
         rSTC.COU_CODE_ASYLUM || '~' || rSTC.LOCATION_NAME || '~' || rSTC.COU_CODE_ORIGIN || '~' ||
         rSTC.DIMT_CODE1 || '~' || rSTC.DIM_CODE1 || '~' ||
         rSTC.DIMT_CODE2 || '~' || rSTC.DIM_CODE2 || '~' ||
@@ -633,18 +658,49 @@ begin
     if rSTC.LOC_ID_ASYLUM_COUNTRY = -1
     then
       dbms_output.put_line
-       ('Invalid country of asylum: ' || rSTC.TABLE_NUMBER || '~' || rSTC.STATSYEAR || '~' ||
+       ('Invalid country of asylum: ' || rSTC.STTG_CODE || '~' || rSTC.STATSYEAR || '~' ||
           rSTC.COU_CODE_ASYLUM);
     elsif rSTC.LOC_ID_ORIGIN_COUNTRY = -1
     then
       dbms_output.put_line
-       ('Invalid origin: ' || rSTC.TABLE_NUMBER || '~' || rSTC.STATSYEAR || '~' ||
+       ('Invalid origin: ' || rSTC.STTG_CODE || '~' || rSTC.STATSYEAR || '~' ||
           rSTC.COU_CODE_ORIGIN);
     else
+    --
+    -- Create statistic group for the whole country's statistics.
+    --
+      if rSTC.STATSYEAR = sSTATSYEAR and rSTC.LOC_ID_REPORTING_COUNTRY = nLOC_ID_REPORTING_COUNTRY
+      then null;
+      else
+        sSTATSYEAR := rSTC.STATSYEAR;
+        nLOC_ID_REPORTING_COUNTRY := rSTC.LOC_ID_REPORTING_COUNTRY;
+        sSTTG_CODE := null;
+      --
+        P_STATISTIC_GROUP.INSERT_STATISTIC_GROUP
+         (nSTG_ID_COUNTRY, rSTC.START_DATE_YEAR, rSTC.END_DATE_YEAR,
+          pnLOC_ID_ASYLUM_COUNTRY => rSTC.LOC_ID_REPORTING_COUNTRY);
+        iCount1 := iCount1 + 1;
+      end if;
+    --
+    -- Create statistic group for the statistics in each table in each country.
+    --
+      if rSTC.STTG_CODE = sSTTG_CODE
+      then null;
+      else
+        sSTTG_CODE := rSTC.STTG_CODE;
+      --
+        P_STATISTIC_GROUP.INSERT_STATISTIC_GROUP
+         (nSTG_ID_TABLE, rSTC.START_DATE_YEAR, rSTC.END_DATE_YEAR,
+          psSTTG_CODE => rSTC.STTG_CODE,
+          pnLOC_ID_ASYLUM_COUNTRY => rSTC.LOC_ID_REPORTING_COUNTRY);
+        iCount1 := iCount1 + 1;
+      end if;
+    --
       if rSTC.PSG_CHILD_NUMBER = 1
       then
-        P_POPULATION_GROUP.INSERT_POPULATION_GROUP
-         (nPGR_ID, rSTC.START_DATE_YEAR, rSTC.END_DATE_YEAR,
+        P_STATISTIC_GROUP.INSERT_STATISTIC_GROUP
+         (nSTG_ID, rSTC.START_DATE_YEAR, rSTC.END_DATE_YEAR,
+          psSTTG_CODE => rSTC.STTG_CODE,
           pnDST_ID => rSTC.DST_ID,
           pnLOC_ID_ASYLUM_COUNTRY => rSTC.LOC_ID_ASYLUM_COUNTRY,
           pnLOC_ID_ASYLUM => rSTC.LOC_ID_ASYLUM,
@@ -660,11 +716,11 @@ begin
         iCount1 := iCount1 + 1;
       --
         if rSTC.SOURCE is not null
-        then P_POPULATION_GROUP.INSERT_PGR_ATTRIBUTE(nPGR_ID, 'SOURCE', rSTC.SOURCE);
+        then P_STATISTIC_GROUP.INSERT_STG_ATTRIBUTE(nSTG_ID, 'SOURCE', rSTC.SOURCE);
         end if;
       --
         if rSTC.BASIS is not null
-        then P_POPULATION_GROUP.INSERT_PGR_ATTRIBUTE(nPGR_ID, 'BASIS', rSTC.BASIS);
+        then P_STATISTIC_GROUP.INSERT_STG_ATTRIBUTE(nSTG_ID, 'BASIS', rSTC.BASIS);
         end if;
       end if;
     --
@@ -681,14 +737,21 @@ begin
         pnDIM_ID5 => rSTC.DIM_ID5,
         psSEX_CODE => rSTC.SEX_CODE,
         pnAGR_ID => rSTC.AGR_ID,
-        pnPGR_ID_PRIMARY => nPGR_ID,
+        pnSTG_ID_PRIMARY => nSTG_ID,
         pnPPG_ID => rSTC.PPG_ID,
         pnVALUE => rSTC.VALUE);
       iCount2 := iCount2 + 1;
+    --
+    -- Link this statistic to the groups for its table and country.
+    --
+      P_STATISTIC.INSERT_STATISTIC_IN_GROUP(nSTC_ID, nSTG_ID_COUNTRY);
+      P_STATISTIC.INSERT_STATISTIC_IN_GROUP(nSTC_ID, nSTG_ID_TABLE);
     end if;
   end loop;
 --
-  dbms_output.put_line(to_char(iCount1) || ' population segment records inserted');
+  dbms_output.put_line(to_char(iCount1) || ' statistic group records inserted');
   dbms_output.put_line(to_char(iCount2) || ' statistic records inserted');
+--
+  P_UTILITY.END_MODULE;
 end;
 /
