@@ -61,9 +61,9 @@ prompt LoadStatisticTypes
 prompt ==================
 @LoadStatisticTypes
 
-prompt LoadPopulationGroupAttributeTypes
+prompt LoadStatisticGroupAttributeTypes
 prompt =================================
-@LoadPopulationGroupAttributeTypes
+@LoadStatisticGroupAttributeTypes
 
 prompt LoadLocationTypes
 prompt =================
