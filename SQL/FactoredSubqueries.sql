@@ -270,6 +270,26 @@ Q_STATISTIC_TYPES as
       and ULP.USERID = sys_context('PSR', 'USERID'))
   where RANK = 1)
 --
+Q_STATISTIC_TYPE_GROUPS as
+ (select CODE, DESCRIPTION, LANG_CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID, VERSION_NBR
+  from
+   (select STTG.CODE, TXT.TEXT DESCRIPTION, TXT.LANG_CODE, STTG.DISPLAY_SEQ, STTG.ACTIVE_FLAG,
+      STTG.ITM_ID, STTG.VERSION_NBR,
+      row_number() over
+       (partition by STTG.CODE
+        order by LANG.ACTIVE_FLAG desc, nvl(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) as RANK
+    from T_STATISTIC_TYPE_GROUPS STTG
+    inner join T_TEXT_ITEMS TXT
+      on TXT.ITM_ID = STTG.ITM_ID
+      and TXT.TXTT_CODE = 'DESCR'
+      and TXT.SEQ_NBR = 1
+    inner join T_LANGUAGES LANG
+      on LANG.CODE = TXT.LANG_CODE
+    left outer join T_USER_LANGUAGE_PREFERENCES ULP
+      on ULP.LANG_CODE = TXT.LANG_CODE
+      and ULP.USERID = sys_context('PSR', 'USERID'))
+  where RANK = 1)
+--
 Q_TEXT_ITEMS as
  (select ITM_ID, TXTT_CODE, SEQ_NBR, LANG_CODE, TAB_ALIAS, TEXT, LONG_TEXT
   from
