@@ -76,14 +76,11 @@ create or replace package body P_UTILITY is
       then
         if not LOG_OPEN
         then
-          dbms_output.put_line('Log file not open');
           OPEN_LOG(gsTraceLogFile, true);
-          dbms_output.put_line('Log file now probably open');
           START_OPERATION('Tracing');
         end if;
       --
         LOG(FORMATTED_MESSAGE);
-        dbms_output.put_line(FORMATTED_MESSAGE);
       else dbms_output.put_line(FORMATTED_MESSAGE);
       end if;
     end if;
@@ -341,19 +338,15 @@ create or replace package body P_UTILITY is
     pbAppend boolean := false)
   is
   begin
-    dbms_output.put_line('Opening log ' || psFileName);
     if pbAppend
     then
       begin
         ghFile := utl_file.fopen(gsLogDir, psFileName, 'a');
-        dbms_output.put_line('File opened for append');
       exception
         when utl_file.invalid_operation
         then ghFile := utl_file.fopen(gsLogDir, psFileName, 'w');
-          dbms_output.put_line('File opened for write 1');
       end;
     else ghFile := utl_file.fopen(gsLogDir, psFileName, 'w');
-      dbms_output.put_line('File opened for write 2');
     end if;
   end OPEN_LOG;
 --
