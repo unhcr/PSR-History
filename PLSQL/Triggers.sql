@@ -38,13 +38,13 @@ end TR_LOCR_RBU_AUDIT;
 /
 
 
-create or replace trigger TR_PGR_RBU_AUDIT
-before update on T_POPULATION_GROUPS
+create or replace trigger TR_STG_RBU_AUDIT
+before update on T_STATISTIC_GROUPS
 for each row
 begin
   :new.UPDATE_TIMESTAMP := systimestamp;
   :new.UPDATE_USERID := nvl(sys_context('PSR', 'USERID'), '*' || user);
-end TR_PGR_RBU_AUDIT;
+end TR_STG_RBU_AUDIT;
 /
 
 
