@@ -9,16 +9,16 @@
 <showGrid>false</showGrid>
 <diagramColor>-1</diagramColor>
 <legendPosX>510</legendPosX>
-<legendPosY>1149</legendPosY>
+<legendPosY>1159</legendPosY>
 <legendAttributes>56</legendAttributes>
 <display>false</display>
 <notation>1</notation>
 <objectViews>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="12C1FF7C-86A2-FD61-8AD5-DD24711E21DD" otype="View" vid="D435B140-9C73-5276-C532-A51668E5E246">
-<bounds x="510" y="31" width="211" height="1100"/>
+<bounds x="510" y="31" width="211" height="1110"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="3A1361CD-BEB2-D42F-CB5B-1CBCBE44B16D" otype="View" vid="A52D8729-67C1-B6DB-345F-01D10B3570BB">
-<bounds x="271" y="30" width="211" height="1141"/>
+<bounds x="271" y="30" width="211" height="1151"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="B08CEC94-BFEA-85DD-C5BD-8DBA8FC4A8B5" otype="View" vid="16432282-2EB1-0891-44EF-A1AA1B963D31">
 <bounds x="30" y="30" width="211" height="261"/>
