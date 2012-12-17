@@ -13,6 +13,7 @@ declare
   iCount1 pls_integer := 0;
   iCount2 pls_integer := 0;
 begin
+  --P_UTILITY.ENABLE_TRACE('Trace', pbLogFile => true);
   P_UTILITY.START_MODULE('LoadStatistics');
 --
   for rSTC in
@@ -115,7 +116,8 @@ begin
           ASR.DISPLACEMENT_STATUS,
           upper(ASR.COU_CODE_ASYLUM) as COU_CODE_ASYLUM,
           coalesce(LCOR.CORRECTED_LOCATION_NAME,
-                   ASR.NEW_LOCATION_NAME, ASR.LOCATION_NAME) as LOCATION_NAME,
+                   replace(ASR.NEW_LOCATION_NAME, chr(10), ''),
+                   replace(ASR.LOCATION_NAME, chr(10), '')) as LOCATION_NAME,
           upper(ASR.COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
           ASR.URBAN_RURAL_STATUS, ASR.ACCOMMODATION_TYPE,
           nvl(PCOR.CORRECTED_PPG_NAME, ASR.PPG_NAME) as PPG_NAME,
@@ -144,8 +146,8 @@ begin
         from STAGE.S_ASR_T3 ASR
         left outer join STAGE.S_LOCATION_NAME_CORRECTIONS LCOR
           on LCOR.COU_CODE_ASYLUM = upper(ASR.COU_CODE_ASYLUM)
-          and LCOR.LOCATION_NAME = ASR.LOCATION_NAME
-          and (LCOR.NEW_LOCATION_NAME = ASR.NEW_LOCATION_NAME
+          and LCOR.LOCATION_NAME = replace(ASR.LOCATION_NAME, chr(10), '')
+          and (LCOR.NEW_LOCATION_NAME = replace(ASR.NEW_LOCATION_NAME, chr(10), '')
             or (LCOR.NEW_LOCATION_NAME is null
               and ASR.NEW_LOCATION_NAME is null))
         left outer join STAGE.S_PPG_CORRECTIONS PCOR
@@ -286,7 +288,8 @@ begin
        (select ASR.TABLE_NUMBER, ASR.STATSYEAR,
           ASR.OFFICIAL, ASR.DST_CODE,
           upper(ASR.COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
-          coalesce(LCOR.CORRECTED_LOCATION_NAME, ASR.LOCATION_NAME) as LOCATION_NAME,
+          coalesce(LCOR.CORRECTED_LOCATION_NAME, replace(ASR.LOCATION_NAME, chr(10), ''))
+            as LOCATION_NAME,
           ASR.POP_START, ASR.POP_AH_START,
           ASR.IDPNEW, ASR.IDPOTHINC,
           ASR.RETURN, ASR.RETURN_AH, ASR.IDPRELOC, ASR.IDPOTHDEC,
@@ -295,7 +298,7 @@ begin
         from STAGE.S_ASR_T6 ASR
         left outer join STAGE.S_LOCATION_NAME_CORRECTIONS LCOR
           on LCOR.COU_CODE_ASYLUM = upper(ASR.COU_CODE_ORIGIN)
-          and LCOR.LOCATION_NAME = ASR.LOCATION_NAME)
+          and LCOR.LOCATION_NAME = replace(ASR.LOCATION_NAME, chr(10), ''))
       unpivot
        (VALUE for COLUMN_CODE in
          (POP_START as 'S/POP',
@@ -460,8 +463,8 @@ begin
           PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
           VALUE
         from
-         (select STATSYEAR,
-            case TABLE_NUMBER
+         (select USTC.STATSYEAR,
+            case USTC.TABLE_NUMBER
               when '2' then 'ASRT2'
               when '3' then 'ASRT3'
               when '4' then 'ASRT4'
@@ -475,14 +478,20 @@ begin
               when '7C' then 'ASRT7C'
               when '7D' then 'ASRT7D'
             end as STTG_CODE,
-            DST_CODE, COU_CODE_ASYLUM, LOCATION_NAME,
-            decode(COU_CODE_ORIGIN, 'YUG', 'SRB', COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
-            DIMT_CODE1, DIM_CODE1, DIMT_CODE2, DIM_CODE2, DIMT_CODE3, DIM_CODE3,
-            DIMT_CODE4, DIM_CODE4, DIMT_CODE5, DIM_CODE5, SUBGROUP_NAME, PPG_NAME,
-            SOURCE, BASIS,
-            PERIOD_FLAG, STCT_CODE, SEX_CODE, AGE_FROM,
-            VALUE
-          from UNPIVOTED_STATISTICS
+            USTC.DST_CODE, USTC.COU_CODE_ASYLUM,
+            case
+              when upper(USTC.LOCATION_NAME) = 'VARIOUS' then COU.NAME
+              else trim(regexp_replace(USTC.LOCATION_NAME, ':.*$', ''))
+            end as LOCATION_NAME,
+            decode(USTC.COU_CODE_ORIGIN, 'YUG', 'SRB', USTC.COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
+            USTC.DIMT_CODE1, USTC.DIM_CODE1, USTC.DIMT_CODE2, USTC.DIM_CODE2, USTC.DIMT_CODE3,
+            USTC.DIM_CODE3, USTC.DIMT_CODE4, USTC.DIM_CODE4, USTC.DIMT_CODE5, USTC.DIM_CODE5,
+            USTC.SUBGROUP_NAME, USTC.PPG_NAME, USTC.SOURCE, USTC.BASIS,
+            USTC.PERIOD_FLAG, USTC.STCT_CODE, USTC.SEX_CODE, USTC.AGE_FROM,
+            USTC.VALUE
+          from UNPIVOTED_STATISTICS USTC
+          left outer join COUNTRIES COU
+            on COU.UNHCR_COUNTRY_CODE = USTC.COU_CODE_ASYLUM
           where VALUE != 0))
       group by STTG_CODE, STATSYEAR, DST_CODE,
         COU_CODE_ASYLUM, LOCATION_NAME, COU_CODE_ORIGIN,
@@ -564,7 +573,7 @@ begin
       and LOC.LOCRT_CODE = 'WITHIN'
       and LOC.START_DATE < STC.END_DATE_YEAR
       and LOC.END_DATE >= STC.END_DATE_YEAR
-      and LOC.NAME = trim(regexp_replace(STC.LOCATION_NAME, ':.*$', ''))
+      and LOC.NAME = STC.LOCATION_NAME
     left outer join
      (select LOC.ID, LOC.START_DATE, LOC.END_DATE, LOCA.CHAR_VALUE as UNHCR_COUNTRY_CODE
       from T_LOCATIONS LOC
@@ -753,5 +762,7 @@ begin
   dbms_output.put_line(to_char(iCount2) || ' statistic records inserted');
 --
   P_UTILITY.END_MODULE;
+  --P_UTILITY.DISABLE_TRACE;
+  --P_UTILITY.CLOSE_LOG;
 end;
 /
