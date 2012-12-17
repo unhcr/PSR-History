@@ -5,6 +5,9 @@ declare
   nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
   iCount pls_integer := 0;
 begin
+--
+-- Locations used in ASR spreadsheets
+--
   for rSDIV in
    (with Q_ASR_LOCATIONS as
      (select ASR.COU_CODE,
@@ -21,10 +24,14 @@ begin
                         trim(regexp_replace(ASR.LOCATION_NAME || ':', '^[^:]*:', '')))),
               ':') as LOC_TYPE_DESCRIPTION
       from
-       (select STATSYEAR, COU_CODE_ASYLUM as COU_CODE, LOCATION_NAME, NEW_LOCATION_NAME
+       (select STATSYEAR, COU_CODE_ASYLUM as COU_CODE,
+          replace(LOCATION_NAME, chr(10), '') as LOCATION_NAME,
+          replace(NEW_LOCATION_NAME, chr(10), '') as NEW_LOCATION_NAME
         from STAGE.S_ASR_T3
         union
-        select STATSYEAR, COU_CODE_ORIGIN as COU_CODE, LOCATION_NAME, null as NEW_LOCATION_NAME
+        select STATSYEAR, COU_CODE_ORIGIN as COU_CODE,
+          replace(LOCATION_NAME, chr(10), '') as LOCATION_NAME,
+          null as NEW_LOCATION_NAME
         from STAGE.S_ASR_T6) ASR
       left outer join STAGE.S_LOCATION_NAME_CORRECTIONS LCOR
         on LCOR.COU_CODE_ASYLUM = ASR.COU_CODE
@@ -32,7 +39,7 @@ begin
         and (LCOR.NEW_LOCATION_NAME = ASR.NEW_LOCATION_NAME
           or (LCOR.NEW_LOCATION_NAME is null
             and ASR.NEW_LOCATION_NAME is null))),
-    --
+  --
     Q_MSRP_LOCATIONS as
      (select COU.UNHCR_COUNTRY_CODE as COU_CODE,
         COU.START_DATE, COU.END_DATE,
@@ -42,12 +49,12 @@ begin
       inner join COUNTRIES COU
         on COU.ISO3166_ALPHA3_CODE = substr(AMS.SITE_CODE, 1, 3)
       where upper(AMS.SITE_NAME) != 'VARIOUS')
-    --
+  --
     select distinct ASL.COU_CODE,
       COU.ID as COU_ID,
       COU.START_DATE,
       COU.END_DATE,
-      ASL.LOC_NAME,
+      case when upper(ASL.LOC_NAME) = 'VARIOUS' then COU.NAME else ASL.LOC_NAME end as LOC_NAME,
       MSL.MSRP_CODE,
       nvl(max(LOCTV.LOCT_CODE), 'POINT') as LOCT_CODE,
       max(LOCTV.ID) as LOCTV_ID,
@@ -60,7 +67,11 @@ begin
     left outer join LOCATION_TYPE_VARIANTS LOCTV
       on LOCTV.LOC_ID = COU.ID
       and LOCTV.LOCRT_CODE = 'WITHIN'
-      and LOCTV.DESCRIPTION = ASL.LOC_TYPE_DESCRIPTION
+      and LOCTV.DESCRIPTION =
+        case
+          when upper(ASL.LOC_NAME) = 'VARIOUS' then 'Dispersed in the country / territory'
+          else ASL.LOC_TYPE_DESCRIPTION
+        end
     left outer join Q_MSRP_LOCATIONS MSL
       on MSL.COU_CODE = ASL.COU_CODE
       and MSL.START_DATE <= add_months(trunc(to_date(ASL.STATSYEAR, 'YYYY'), 'YYYY'), 12) - 1
@@ -70,7 +81,7 @@ begin
       COU.ID,
       COU.START_DATE,
       COU.END_DATE,
-      ASL.LOC_NAME,
+      case when upper(ASL.LOC_NAME) = 'VARIOUS' then COU.NAME else ASL.LOC_NAME end,
       MSL.MSRP_CODE)
   loop
     if rSDIV.LOCTV_COUNT > 1
@@ -97,6 +108,38 @@ begin
         nVERSION_NBR := 1;
         P_LOCATION.UPDATE_LOCATION(nLOC_ID, nVERSION_NBR, pnLOCTV_ID => rSDIV.LOCTV_ID);
       end if;
+    end if;
+  end loop;
+--
+  dbms_output.put_line(to_char(iCount) || ' LOCATIONS records inserted');
+--
+-- Locations defined but not used in ASR spreadsheets
+--
+  iCount := 0;
+--
+  for rSDIV in
+   (select ALOC.UNHCR_COUNTRY_CODE, ALOC.COUNTRY_NAME,
+      ALOC.LOCATION_NAME, ALOC.LOCATION_TYPE_DESCRIPTION, ALOC.LOCATION_TYPE_CODE,
+      COU.ID as COU_ID, LOCTV.ID as LOCTV_ID
+    from STAGE.S_ASR_ADDITIONAL_LOCATIONS ALOC
+    join COUNTRIES COU
+      on COU.UNHCR_COUNTRY_CODE = ALOC.UNHCR_COUNTRY_CODE
+    left outer join LOCATION_TYPE_VARIANTS LOCTV
+      on LOCTV.LOC_ID = COU.ID
+      and LOCTV.LOCRT_CODE = 'WITHIN'
+      and LOCTV.DESCRIPTION = ALOC.LOCATION_TYPE_DESCRIPTION
+    order by ALOC.UNHCR_COUNTRY_CODE, ALOC.LOCATION_NAME, ALOC.LOCATION_TYPE_DESCRIPTION)
+  loop
+    iCount := iCount + 1;
+  --
+    P_LOCATION.INSERT_LOCATION(nLOC_ID, 'en', rSDIV.LOCATION_NAME, rSDIV.LOCATION_TYPE_CODE);
+  --
+    P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rSDIV.COU_ID, nLOC_ID, 'WITHIN');
+  --
+    if rSDIV.LOCTV_ID is not null
+    then
+      nVERSION_NBR := 1;
+      P_LOCATION.UPDATE_LOCATION(nLOC_ID, nVERSION_NBR, pnLOCTV_ID => rSDIV.LOCTV_ID);
     end if;
   end loop;
 --
