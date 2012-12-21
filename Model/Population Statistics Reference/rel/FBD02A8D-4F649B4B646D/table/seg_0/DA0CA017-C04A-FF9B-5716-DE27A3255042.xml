@@ -4,48 +4,13 @@
 <createdTime>2011-11-03 16:08:55 UTC</createdTime>
 <comment>Displacement statuses of persons of concern</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>PK_POPC</pkName>
 <typeID>2</typeID>
 <abbreviation>DST</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ID" id="F5C73F48-6A40-DF48-E317-381D087E137E">
 <createdBy>Scott</createdBy>
 <createdTime>2012-11-05 07:49:51 UTC</createdTime>
+<comment>Displacement status identifier</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_DST_ID</constraintName>
 <use>0</use>
