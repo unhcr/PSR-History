@@ -7,7 +7,7 @@ create or replace package P_LOCATION is
 --   attribute types, relationships and relationship types.
 --
 --  Change History:
---  16-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  07-Jan-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -934,7 +934,8 @@ create or replace package P_LOCATION is
 -- INSERT_LOCATION_RELATIONSHIP
 -- ----------------------------------------
 --
--- Create a relationship between two locations.
+-- Create a relationship between two locations. Additional transitive closure relationships may be
+--  created for "within" relationships.
 --
 -- Parameters:
 --  pnLOC_ID_FROM - From location identifier (mandatory).
@@ -1002,6 +1003,78 @@ create or replace package P_LOCATION is
    (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
     pnLOC_ID_TO in P_BASE.tmnLOC_ID,
     psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
+    pdSTART_DATE in P_BASE.tmdDate,
+    pnVERSION_NBR in P_BASE.tnLOCR_VERSION_NBR);
+--
+-- ----------------------------------------
+-- INSERT_LOCATION_WITHIN
+-- ----------------------------------------
+--
+-- Create a "within" relationship between two locations along with any required transitive closure
+--  "within" relationships.
+--
+-- Parameters:
+--  pnLOC_ID_FROM - From location identifier (mandatory).
+--  pnLOC_ID_TO - To location identifier (mandatory).
+--  pdSTART_DATE - Effective start date of this location relationship (optional, the absence of a
+--    start date, or a null value, indicates that the effectivity starts at the latest effective
+--    start date of the two related locations).
+--  pdEND_DATE - Effective end date of this location relationship (optional, the absence of an end
+--    date, or a null value, indicates that the effectivity ends at the earliest effective end date
+--    of the two related locations).
+-- Note that the effective date range for a location relationship cannot extend outside the
+--  effective range of either of the related locations.
+--
+  procedure INSERT_LOCATION_WITHIN
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null);
+--
+-- ----------------------------------------
+-- UPDATE_LOCATION_WITHIN
+-- ----------------------------------------
+--
+-- Update an existing "within" relationship between two locations, updating associated transitive
+--  closure relationships as required.
+--
+-- Parameters:
+--  pnLOC_ID_FROM - From location identifier (mandatory).
+--  pnLOC_ID_TO - To location identifier (mandatory).
+--  pdSTART_DATE - Current effective start date of this location relationship (mandatory).
+--  pnVERSION_NBR - Update version number of location relationship (mandatory: new version number is
+--    returned).
+--  pdSTART_DATE_NEW - New effective start date of this location relationship (optional: if not
+--    specified, the existing start date is left unchanged; a null value indicates that the
+--    effectivity starts indefinitely far in the past).
+--  pdEND_DATE - Effective end date of this location relationship (optional: if not specified, the
+--    existing end date is left unchanged; a null value indicates that the effectivity extends
+--    indefinitely into the future).
+--
+  procedure UPDATE_LOCATION_WITHIN
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
+    pdSTART_DATE in P_BASE.tmdDate,
+    pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
+    pdSTART_DATE_NEW in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE);
+--
+-- ----------------------------------------
+-- DELETE_LOCATION_WITHIN
+-- ----------------------------------------
+--
+-- Delete a "within" relationship between two locations, deleting associated transitive closure
+--  relationships as required..
+--
+-- Parameters:
+--  pnLOC_ID_FROM - From location identifier (mandatory).
+--  pnLOC_ID_TO - To location identifier (mandatory).
+--  pdSTART_DATE - Effective start date of location relationship (mandatory).
+--  pnVERSION_NBR - Update version number of location relationship (mandatory).
+--
+  procedure DELETE_LOCATION_WITHIN
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in P_BASE.tnLOCR_VERSION_NBR);
 --

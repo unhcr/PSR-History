@@ -15,6 +15,381 @@ create or replace package body P_LOCATION is
   gnLOC_ID_CHECK_MODULUS number;
 --
 -- ========================================
+-- Private program units
+-- ========================================
+--
+-- ----------------------------------------
+-- INSERT_LOCATION_RELATIONSHIP1
+-- ----------------------------------------
+--
+  procedure INSERT_LOCATION_RELATIONSHIP1
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
+    psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null)
+  is
+    sACTIVE_FLAG P_BASE.tsLOCRT_ACTIVE_FLAG;
+    dSTART_DATE P_BASE.tdDate;
+    dEND_DATE P_BASE.tdDate;
+  --
+    dSTART_DATE1 P_BASE.tdDate;
+    dEND_DATE1 P_BASE.tdDate;
+    nLOCR_ITM_ID1 P_BASE.tnITM_ID;
+    xLOCR_ROWID1 rowid;
+    dEND_DATE2 P_BASE.tdDate;
+    nLOCR_ITM_ID2 P_BASE.tnITM_ID;
+    xLOCR_ROWID2 rowid;
+  begin
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_LOCATION_RELATIONSHIP1',
+      to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
+        psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
+  --
+    select ACTIVE_FLAG
+    into sACTIVE_FLAG
+    from T_LOCATION_RELATIONSHIP_TYPES
+    where CODE = psLOCRT_CODE;
+  --
+    if sACTIVE_FLAG = 'N'
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 16, 'Inactive location relationship type');
+    end if;
+  --
+  -- Determine effective date range of the combined related locations.
+  --
+    select max(START_DATE), min(END_DATE)
+    into dSTART_DATE, dEND_DATE
+    from LOCATIONS
+    where ID in (pnLOC_ID_FROM, pnLOC_ID_TO);
+  --
+  -- Check that effective date parameters (if specified) fall within the effective date range of the
+  --  related locations, or default them if not specified.
+  --
+    if pdSTART_DATE < dSTART_DATE or pdEND_DATE > dEND_DATE
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 17, 'Location relationship effective date range outside effective date range of related locations');
+    else
+      dSTART_DATE := nvl(pdSTART_DATE, dSTART_DATE);
+      dEND_DATE := nvl(pdEND_DATE, dEND_DATE);
+    end if;
+  --
+    P_UTILITY.TRACE_POINT
+     ('Dates', to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
+        psLOCRT_CODE || '~' || to_char(dSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(dEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
+  --
+  -- Check for an existing relationship between these locations of the same type and with an
+  --  effective date range which is overlapping or contiguously adjacent (the start date of one
+  --  relationship is equal to the end date of the other). An overlapping relationship is currently
+  --  regarded as invalid, although it may be possible to merge the relationships instead.
+  --  Contiguously adjacent relationships are merged with the new relationship where possible.
+  --
+    begin
+    -- Find relationship(s) whose effective date range would overlap with the new relationship or
+    --  which contiguously precedes the new relationship.
+      select START_DATE, END_DATE, ITM_ID, rowid
+      into dSTART_DATE1, dEND_DATE1, nLOCR_ITM_ID1, xLOCR_ROWID1
+      from T_LOCATION_RELATIONSHIPS
+      where LOC_ID_FROM = pnLOC_ID_FROM
+      and LOC_ID_TO = pnLOC_ID_TO
+      and LOCRT_CODE = psLOCRT_CODE
+      and START_DATE < dEND_DATE
+      and END_DATE >= dSTART_DATE;
+    exception
+      when TOO_MANY_ROWS
+      then
+      -- One or more of the found relationships must overlap with the new relationship.
+        P_MESSAGE.DISPLAY_MESSAGE(sComponent, 18, 'Overlapping location relationship already exists');
+    --
+      when NO_DATA_FOUND
+      then null;
+    end;
+  --
+    if dEND_DATE1 > dSTART_DATE
+    then
+    -- Overlapping relationship - report as invalid.
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 18, 'Overlapping location relationship already exists');
+    end if;
+  --
+    begin
+    -- Find relationship whose effective date range contiguously follows the new relationship.
+      select END_DATE, ITM_ID, rowid
+      into dEND_DATE2, nLOCR_ITM_ID2, xLOCR_ROWID2
+      from T_LOCATION_RELATIONSHIPS
+      where LOC_ID_FROM = pnLOC_ID_FROM
+      and LOC_ID_TO = pnLOC_ID_TO
+      and LOCRT_CODE = psLOCRT_CODE
+      and START_DATE = dEND_DATE;
+    exception
+      when NO_DATA_FOUND
+      then null;
+    end;
+  --
+    if xLOCR_ROWID1 is null and xLOCR_ROWID2 is null
+    then
+    -- No adjacent relationship - simply insert new relationship.
+      insert into T_LOCATION_RELATIONSHIPS
+       (LOC_ID_FROM, LOC_ID_TO, LOCRT_CODE, START_DATE, END_DATE)
+      values
+       (pnLOC_ID_FROM, pnLOC_ID_TO, psLOCRT_CODE, dSTART_DATE, dEND_DATE);
+    elsif xLOCR_ROWID1 is null
+    then
+    -- Relationship with effective date range contiguously following the new relationship only -
+    --  extend the effective date range downwards to encompass the new relationship.
+      update T_LOCATION_RELATIONSHIPS
+      set START_DATE = dSTART_DATE,
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xLOCR_ROWID2;
+    elsif xLOCR_ROWID2 is null
+    then
+    -- Relationship with effective date range contiguously preceding the new relationship only -
+    --  extend the effective date range upwards to encompass the new relationship.
+      update T_LOCATION_RELATIONSHIPS
+      set END_DATE = dEND_DATE,
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xLOCR_ROWID1;
+    else
+    -- Relationships with effective date ranges both contiguously preceding and following the new
+    --  relationship - if possible, merge the effective date ranges of the two relationships, which
+    --  will then also encompass the new relationship.
+      if nLOCR_ITM_ID2 is null
+      then
+      -- Following relationship has no associated general data item, so it can be safely deleted.
+        delete from T_LOCATION_RELATIONSHIPS
+        where rowid = xLOCR_ROWID2;
+      -- Update preceding relationship to encompass following and new relationships.
+        update T_LOCATION_RELATIONSHIPS
+        set END_DATE = dEND_DATE2,
+          VERSION_NBR = VERSION_NBR + 1
+        where rowid = xLOCR_ROWID1;
+      elsif nLOCR_ITM_ID1 is null
+      then
+      -- Preceding relationship has no associated general data item, so it can be safely deleted,
+        delete from T_LOCATION_RELATIONSHIPS
+        where rowid = xLOCR_ROWID1;
+      -- Update following relationship to encompass preceding and new relationships.
+        update T_LOCATION_RELATIONSHIPS
+        set START_DATE = dSTART_DATE1,
+          VERSION_NBR = VERSION_NBR + 1
+        where rowid = xLOCR_ROWID2;
+      else
+      -- Both preceding and following relationships have associated general data items, so neither
+      --  can be safely deleted and the relationships cannot easily be merged. For now, simply
+      --  insert the new relationship between the two existing ones. It is not expected that this
+      --  situation will arise very often in practice; however, if experience shows it to be useful,
+      --  a more sophisticated solution can be developed in the future (e.g. merging the attributes
+      --  of the two general data items).
+        insert into T_LOCATION_RELATIONSHIPS
+         (LOC_ID_FROM, LOC_ID_TO, LOCRT_CODE, START_DATE, END_DATE)
+        values
+         (pnLOC_ID_FROM, pnLOC_ID_TO, psLOCRT_CODE, dSTART_DATE, dEND_DATE);
+      end if;
+    end if;
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end INSERT_LOCATION_RELATIONSHIP1;
+--
+-- ----------------------------------------
+-- UPDATE_LOCATION_RELATIONSHIP1
+-- ----------------------------------------
+--
+  procedure UPDATE_LOCATION_RELATIONSHIP1
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
+    psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
+    pdSTART_DATE in P_BASE.tmdDate,
+    pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
+    pdSTART_DATE_NEW in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE)
+  is
+    dEND_DATE P_BASE.tdDate;
+    nVERSION_NBR P_BASE.tnLOCR_VERSION_NBR;
+    xLOCR_ROWID rowid;
+    dSTART_DATE_NEW P_BASE.tdDate;
+    dEND_DATE_NEW P_BASE.tdDate;
+  --
+    dSTART_DATE1 P_BASE.tdDate;
+    dEND_DATE1 P_BASE.tdDate;
+    nLOCR_ITM_ID1 P_BASE.tnITM_ID;
+    xLOCR_ROWID1 rowid;
+    dEND_DATE2 P_BASE.tdDate;
+    nLOCR_ITM_ID2 P_BASE.tnITM_ID;
+    xLOCR_ROWID2 rowid;
+  begin
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_LOCATION_RELATIONSHIP1',
+      to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
+        psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnVERSION_NBR) || '~' || to_char(pdSTART_DATE_NEW, 'YYYY-MM-DD HH24:MI:SS') ||
+        '~' || to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
+  --
+    select END_DATE, VERSION_NBR, rowid
+    into dEND_DATE, nVERSION_NBR, xLOCR_ROWID
+    from T_LOCATION_RELATIONSHIPS
+    where LOC_ID_FROM = pnLOC_ID_FROM
+    and LOC_ID_TO = pnLOC_ID_TO
+    and LOCRT_CODE = psLOCRT_CODE
+    and START_DATE = pdSTART_DATE;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+    --
+    -- Determine new values for dates.
+    --
+      if pdSTART_DATE_NEW = P_BASE.gdFALSE_DATE
+      then dSTART_DATE_NEW := pdSTART_DATE;
+      else dSTART_DATE_NEW := nvl(pdSTART_DATE_NEW, P_BASE.gdMIN_DATE);
+      end if;
+    --
+      if pdEND_DATE = P_BASE.gdFALSE_DATE
+      then dEND_DATE_NEW := dEND_DATE;
+      else dEND_DATE_NEW := nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
+      end if;
+    --
+      P_UTILITY.TRACE_POINT
+       ('Dates', to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
+          psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+          to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+          to_char(dSTART_DATE_NEW, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+          to_char(dEND_DATE_NEW, 'YYYY-MM-DD HH24:MI:SS'));
+    --
+    -- Check for another relationship between these locations of the same type and with an effective
+    --  date range which is overlapping or contiguously adjacent (the start date of one relationship
+    --  is equal to the end date of the other). An overlapping relationship is currently regarded as
+    --  invalid, although it may be possible to merge the relationships instead. Contiguously
+    --  adjacent relationships are merged with the updated relationship where possible.
+    --
+      begin
+      -- Find relationship(s) whose effective date range would overlap with the updated relationship
+      --  or which contiguously precedes the updated relationship.
+        select START_DATE, END_DATE, ITM_ID, rowid
+        into dSTART_DATE1, dEND_DATE1, nLOCR_ITM_ID1, xLOCR_ROWID1
+        from T_LOCATION_RELATIONSHIPS
+        where LOC_ID_FROM = pnLOC_ID_FROM
+        and LOC_ID_TO = pnLOC_ID_TO
+        and LOCRT_CODE = psLOCRT_CODE
+        and START_DATE < dEND_DATE_NEW
+        and END_DATE >= dSTART_DATE_NEW
+        and START_DATE != pdSTART_DATE;
+      exception
+        when TOO_MANY_ROWS
+        then
+        -- One or more of the found relationships must overlap with the updated relationship.
+          P_MESSAGE.DISPLAY_MESSAGE(sComponent, 18, 'Overlapping location relationship already exists');
+      --
+        when NO_DATA_FOUND
+        then null;
+      end;
+    --
+      if dEND_DATE1 > dSTART_DATE_NEW
+      then
+      -- Overlapping relationship - report as invalid.
+        P_MESSAGE.DISPLAY_MESSAGE(sComponent, 18, 'Overlapping location relationship already exists');
+      end if;
+    --
+      begin
+      -- Find relationship whose effective date range contiguously follows the updated relationship.
+        select END_DATE, ITM_ID, rowid
+        into dEND_DATE2, nLOCR_ITM_ID2, xLOCR_ROWID2
+        from T_LOCATION_RELATIONSHIPS
+        where LOC_ID_FROM = pnLOC_ID_FROM
+        and LOC_ID_TO = pnLOC_ID_TO
+        and LOCRT_CODE = psLOCRT_CODE
+        and START_DATE = dEND_DATE_NEW;
+      exception
+        when NO_DATA_FOUND
+        then null;
+      end;
+    --
+      if xLOCR_ROWID1 is not null and nLOCR_ITM_ID1 is null
+      then
+      -- Relationship with effective date range contiguously preceding the updated relationship,
+      --  which has no associated general data item, so it can be safely deleted - delete it and
+      --  adjust the new start date of the updated relationship.
+        delete from T_LOCATION_RELATIONSHIPS
+        where rowid = xLOCR_ROWID1;
+      --
+        dSTART_DATE_NEW := dSTART_DATE1;
+      end if;
+    --
+      if xLOCR_ROWID2 is not null and nLOCR_ITM_ID2 is null
+      then
+      -- Relationship with effective date range contiguously following the updated relationship,
+      --  which has no associated general data item, so it can be safely deleted - delete it and
+      --  adjust the new end date of the updated relationship.
+        delete from T_LOCATION_RELATIONSHIPS
+        where rowid = xLOCR_ROWID2;
+      --
+        dEND_DATE_NEW := dEND_DATE2;
+      end if;
+    --
+      update T_LOCATION_RELATIONSHIPS
+      set START_DATE = dSTART_DATE_NEW,
+        END_DATE = dEND_DATE_NEW,
+        VERSION_NBR = VERSION_NBR + 1
+      where rowid = xLOCR_ROWID
+      returning VERSION_NBR into pnVERSION_NBR;
+    else
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Location relationship has been updated by another user');
+    end if;
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end UPDATE_LOCATION_RELATIONSHIP1;
+--
+-- ----------------------------------------
+-- DELETE_LOCATION_RELATIONSHIP1
+-- ----------------------------------------
+--
+  procedure DELETE_LOCATION_RELATIONSHIP1
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
+    psLOCRT_CODE in P_BASE.tmsLOCRT_CODE,
+    pdSTART_DATE in P_BASE.tmdDate,
+    pnVERSION_NBR in P_BASE.tnLOCR_VERSION_NBR)
+  is
+    nITM_ID P_BASE.tnITM_ID;
+    nVERSION_NBR P_BASE.tnLOCR_VERSION_NBR;
+    xLOCR_ROWID rowid;
+  begin
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_LOCATION_RELATIONSHIP1',
+      to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
+        psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pnVERSION_NBR));
+  --
+    select ITM_ID, VERSION_NBR, rowid
+    into nITM_ID, nVERSION_NBR, xLOCR_ROWID
+    from T_LOCATION_RELATIONSHIPS
+    where LOC_ID_FROM = pnLOC_ID_FROM
+    and LOC_ID_TO = pnLOC_ID_TO
+    and LOCRT_CODE = psLOCRT_CODE
+    and START_DATE = pdSTART_DATE
+    for update;
+  --
+    if pnVERSION_NBR = nVERSION_NBR
+    then
+      delete from T_LOCATION_RELATIONSHIPS where rowid = xLOCR_ROWID;
+    --
+      if nITM_ID is not null
+      then P_TEXT.DELETE_TEXT(nITM_ID);
+      end if;
+    else
+      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Location relationship has been updated by another user');
+    end if;
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end DELETE_LOCATION_RELATIONSHIP1;
+--
+-- ========================================
 -- Public program units
 -- ========================================
 --
@@ -329,8 +704,8 @@ create or replace package body P_LOCATION is
     P_UTILITY.START_MODULE
      (sVersion || '-' || sModule || '.INSERT_LOCATION',
       '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
   --
   -- Special processing for countries.
@@ -350,7 +725,7 @@ create or replace package body P_LOCATION is
           select 'x'
           into sDummy
           from T_LOCATION_ATTRIBUTES LOCA
-          join T_LOCATIONS LOC
+          inner join T_LOCATIONS LOC
             on LOC.ID = LOCA.LOC_ID
           where LOCA.CHAR_VALUE = psCountryCode
           and LOCA.LOCAT_CODE = gsCOUNTRY_LOCAT_CODE
@@ -380,8 +755,8 @@ create or replace package body P_LOCATION is
   --
     P_UTILITY.TRACE_CONTEXT
      (to_char(pnID) || '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
   --
     P_TEXT.SET_TEXT(nITM_ID, 'LOC', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
@@ -436,8 +811,8 @@ create or replace package body P_LOCATION is
      (sVersion || '-' || sModule || '.UPDATE_LOCATION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnLOCTV_ID) || '~' || psCountryCode || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
   --
     select LOCT_CODE, LOCTV_ID, START_DATE, END_DATE, ITM_ID, VERSION_NBR, rowid
@@ -496,7 +871,7 @@ create or replace package body P_LOCATION is
               select 'x'
               into sDummy
               from T_LOCATION_ATTRIBUTES LOCA
-              join T_LOCATIONS LOC
+              inner join T_LOCATIONS LOC
                 on LOC.ID = LOCA.LOC_ID
               where LOCA.CHAR_VALUE = nvl(psCountryCode, sCOUNTRY_CODE)
               and LOCA.LOCAT_CODE = gsCOUNTRY_LOCAT_CODE
@@ -536,7 +911,7 @@ create or replace package body P_LOCATION is
           select 'x'
           into sDummy
           from T_LOCATION_TYPE_VARIANTS LOCTV
-          join T_LOCATION_RELATIONSHIPS LOCR
+          inner join T_LOCATION_RELATIONSHIPS LOCR
             on LOCR.LOC_ID_FROM = LOCTV.LOC_ID
             and LOCR.LOC_ID_TO = pnID
             and LOCR.LOCRT_CODE = LOCTV.LOCRT_CODE
@@ -589,8 +964,8 @@ create or replace package body P_LOCATION is
      (sVersion || '-' || sModule || '.SET_LOCATION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLOCT_CODE || '~' ||
         to_char(pnLOCTV_ID) || '~' || psCountryCode || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
   --
     if pnVERSION_NBR is null
@@ -1190,11 +1565,11 @@ create or replace package body P_LOCATION is
           select 'x'
           into sDummy
           from T_LOCATIONS LOC1
-          join T_LOCATION_ATTRIBUTES LOCA
+          inner join T_LOCATION_ATTRIBUTES LOCA
             on LOCA.LOC_ID != LOC1.ID
             and LOCA.CHAR_VALUE = psCHAR_VALUE
             and LOCA.LOCAT_CODE = gsCOUNTRY_LOCAT_CODE
-          join T_LOCATIONS LOC2
+          inner join T_LOCATIONS LOC2
             on LOC2.ID = LOCA.LOC_ID
             and LOC2.START_DATE < LOC1.END_DATE
             and LOC2.END_DATE > LOC1.START_DATE
@@ -1705,9 +2080,6 @@ create or replace package body P_LOCATION is
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null)
   is
-    sACTIVE_FLAG P_BASE.tsLOCRT_ACTIVE_FLAG;
-    dSTART_DATE P_BASE.tdDate;
-    dEND_DATE P_BASE.tdDate;
   begin
     P_UTILITY.START_MODULE
      (sVersion || '-' || sModule || '.INSERT_LOCATION_RELATIONSHIP',
@@ -1715,60 +2087,13 @@ create or replace package body P_LOCATION is
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
   --
-    select ACTIVE_FLAG into sACTIVE_FLAG from T_LOCATION_RELATIONSHIP_TYPES where CODE = psLOCRT_CODE;
-  --
-    if sACTIVE_FLAG = 'N'
-    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 16, 'Inactive location relationship type');
-    end if;
-  --
-  -- Determine effective date range of the combined related locations.
-  --
-    select max(START_DATE), min(END_DATE)
-    into dSTART_DATE, dEND_DATE
-    from LOCATIONS
-    where ID in (pnLOC_ID_FROM, pnLOC_ID_TO);
-  --
-  -- Check that effective date parameters (if specified) fall within the effective date range of the
-  --  related locations, or default them if not specified.
-  --
-    if pdSTART_DATE < dSTART_DATE or pdEND_DATE > dEND_DATE
-    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 17, 'Location relationship effective date range outside effective date range of related locations');
+    if psLOCRT_CODE = 'WITHIN'
+    then
+      INSERT_LOCATION_WITHIN(pnLOC_ID_FROM, pnLOC_ID_TO, pdSTART_DATE, pdEND_DATE);
     else
-      dSTART_DATE := nvl(pdSTART_DATE, dSTART_DATE);
-      dEND_DATE := nvl(pdEND_DATE, dEND_DATE);
+      INSERT_LOCATION_RELATIONSHIP1
+       (pnLOC_ID_FROM, pnLOC_ID_TO, psLOCRT_CODE, pdSTART_DATE, pdEND_DATE);
     end if;
-    P_UTILITY.TRACE_POINT
-     ('Dates', to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
-        psLOCRT_CODE || '~' || to_char(dSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_char(dEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
-  --
-  -- Check for an existing relationship between these locations of the same type and with an
-  --  overlapping effective date range.
-  --
-    declare
-      sDummy varchar2(1);
-    begin
-      select 'x'
-      into sDummy
-      from T_LOCATION_RELATIONSHIPS
-      where LOC_ID_FROM = pnLOC_ID_FROM
-      and LOC_ID_TO = pnLOC_ID_TO
-      and LOCRT_CODE = psLOCRT_CODE
-      and START_DATE <= dEND_DATE
-      and END_DATE >= dSTART_DATE;
-    --
-      raise TOO_MANY_ROWS;
-    exception
-      when NO_DATA_FOUND then null;
-    --
-      when TOO_MANY_ROWS
-      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 18, 'Overlapping location relationship already exists');
-    end;
-  --
-    insert into T_LOCATION_RELATIONSHIPS
-     (LOC_ID_FROM, LOC_ID_TO, LOCRT_CODE, START_DATE, END_DATE)
-    values
-     (pnLOC_ID_FROM, pnLOC_ID_TO, psLOCRT_CODE, dSTART_DATE, dEND_DATE);
   --
     P_UTILITY.END_MODULE;
   exception
@@ -1789,11 +2114,6 @@ create or replace package body P_LOCATION is
     pdSTART_DATE_NEW in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
     pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE)
   is
-    dEND_DATE P_BASE.tdDate;
-    nVERSION_NBR P_BASE.tnLOCR_VERSION_NBR;
-    xLOCR_ROWID rowid;
-    dSTART_DATE_NEW P_BASE.tdDate;
-    dEND_DATE_NEW P_BASE.tdDate;
   begin
     P_UTILITY.START_MODULE
      (sVersion || '-' || sModule || '.UPDATE_LOCATION_RELATIONSHIP',
@@ -1802,61 +2122,14 @@ create or replace package body P_LOCATION is
         to_char(pnVERSION_NBR) || '~' || to_char(pdSTART_DATE_NEW, 'YYYY-MM-DD HH24:MI:SS') ||
         '~' || to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
   --
-    select END_DATE, VERSION_NBR, rowid
-    into dEND_DATE, nVERSION_NBR, xLOCR_ROWID
-    from T_LOCATION_RELATIONSHIPS
-    where LOC_ID_FROM = pnLOC_ID_FROM
-    and LOC_ID_TO = pnLOC_ID_TO
-    and LOCRT_CODE = psLOCRT_CODE
-    and START_DATE = pdSTART_DATE;
-  --
-    if pnVERSION_NBR = nVERSION_NBR
+    if psLOCRT_CODE = 'WITHIN'
     then
-    --
-    -- Determine new values for dates.
-    --
-      if pdSTART_DATE_NEW = P_BASE.gdFALSE_DATE
-      then dSTART_DATE_NEW := pdSTART_DATE;
-      else dSTART_DATE_NEW := nvl(pdSTART_DATE_NEW, P_BASE.gdMIN_DATE);
-      end if;
-    --
-      if pdEND_DATE = P_BASE.gdFALSE_DATE
-      then dEND_DATE_NEW := dEND_DATE;
-      else dEND_DATE_NEW := nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
-      end if;
-    --
-    -- Check for relationship of the same type between these locations with overlapping effective
-    --  date range.
-    --
-      declare
-        sDummy varchar2(1);
-      begin
-        select 'x'
-        into sDummy
-        from T_LOCATION_RELATIONSHIPS
-        where LOC_ID_FROM = pnLOC_ID_FROM
-        and LOC_ID_TO = pnLOC_ID_TO
-        and LOCRT_CODE = psLOCRT_CODE
-        and START_DATE <= dEND_DATE_NEW
-        and END_DATE >= dSTART_DATE_NEW
-        and START_DATE != pdSTART_DATE;
-      --
-        raise TOO_MANY_ROWS;
-      exception
-        when NO_DATA_FOUND then null;
-      --
-        when TOO_MANY_ROWS
-        then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 18, 'Overlapping location relationship already exists');
-      end;
-    --
-      update T_LOCATION_RELATIONSHIPS
-      set START_DATE = dSTART_DATE_NEW,
-        END_DATE = dEND_DATE_NEW,
-        VERSION_NBR = VERSION_NBR + 1
-      where rowid = xLOCR_ROWID
-      returning VERSION_NBR into pnVERSION_NBR;
+      UPDATE_LOCATION_WITHIN
+       (pnLOC_ID_FROM, pnLOC_ID_TO, pdSTART_DATE, pnVERSION_NBR, pdSTART_DATE_NEW, pdEND_DATE);
     else
-      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Location relationship has been updated by another user');
+      UPDATE_LOCATION_RELATIONSHIP1
+       (pnLOC_ID_FROM, pnLOC_ID_TO, psLOCRT_CODE, pdSTART_DATE,
+        pnVERSION_NBR, pdSTART_DATE_NEW, pdEND_DATE);
     end if;
   --
     P_UTILITY.END_MODULE;
@@ -1876,9 +2149,6 @@ create or replace package body P_LOCATION is
     pdSTART_DATE in P_BASE.tmdDate,
     pnVERSION_NBR in P_BASE.tnLOCR_VERSION_NBR)
   is
-    nITM_ID P_BASE.tnITM_ID;
-    nVERSION_NBR P_BASE.tnLOCR_VERSION_NBR;
-    xLOCR_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
      (sVersion || '-' || sModule || '.DELETE_LOCATION_RELATIONSHIP',
@@ -1886,24 +2156,12 @@ create or replace package body P_LOCATION is
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR));
   --
-    select ITM_ID, VERSION_NBR, rowid
-    into nITM_ID, nVERSION_NBR, xLOCR_ROWID
-    from T_LOCATION_RELATIONSHIPS
-    where LOC_ID_FROM = pnLOC_ID_FROM
-    and LOC_ID_TO = pnLOC_ID_TO
-    and LOCRT_CODE = psLOCRT_CODE
-    and START_DATE = pdSTART_DATE
-    for update;
-  --
-    if pnVERSION_NBR = nVERSION_NBR
+    if psLOCRT_CODE = 'WITHIN'
     then
-      delete from T_LOCATION_RELATIONSHIPS where rowid = xLOCR_ROWID;
-    --
-      if nITM_ID is not null
-      then P_TEXT.DELETE_TEXT(nITM_ID);
-      end if;
+      DELETE_LOCATION_WITHIN(pnLOC_ID_FROM, pnLOC_ID_TO, pdSTART_DATE, pnVERSION_NBR);
     else
-      P_MESSAGE.DISPLAY_MESSAGE(sComponent, 6, 'Location relationship has been updated by another user');
+      DELETE_LOCATION_RELATIONSHIP1
+       (pnLOC_ID_FROM, pnLOC_ID_TO, psLOCRT_CODE, pdSTART_DATE, pnVERSION_NBR);
     end if;
   --
     P_UTILITY.END_MODULE;
@@ -1911,6 +2169,166 @@ create or replace package body P_LOCATION is
     when others
     then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_LOCATION_RELATIONSHIP;
+--
+-- ----------------------------------------
+-- INSERT_LOCATION_WITHIN
+-- ----------------------------------------
+--
+  procedure INSERT_LOCATION_WITHIN
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null)
+  is
+  begin
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.INSERT_LOCATION_WITHIN',
+      to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
+  --
+  -- Insert the requested relationship
+  --
+    INSERT_LOCATION_RELATIONSHIP1
+     (pnLOC_ID_FROM, pnLOC_ID_TO, 'WITHIN', pdSTART_DATE, pdEND_DATE);
+  --
+  -- Insert transitive relationships above the requested one in the hierarchy.
+  --
+    for rLOCR in
+     (select LOCR1.LOC_ID_FROM, LOCR1.START_DATE, LOCR1.END_DATE
+      from
+       (select LOC_ID_FROM,
+          greatest(START_DATE, nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)) as START_DATE,
+          least(END_DATE, nvl(pdEND_DATE, P_BASE.gdMAX_DATE)) as END_DATE
+        from T_LOCATION_RELATIONSHIPS
+        where LOC_ID_TO = pnLOC_ID_FROM
+        and LOCRT_CODE = 'WITHIN'
+        and START_DATE <= nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
+        and END_DATE >=  nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)) LOCR1
+      where not exists
+       (select null
+        from T_LOCATION_RELATIONSHIPS LOCR2
+        where LOCR2.LOC_ID_FROM = LOCR1.LOC_ID_FROM
+        and LOCR2.LOC_ID_TO = pnLOC_ID_TO
+        and LOCR2.LOCRT_CODE = 'WITHIN'
+        and LOCR2.START_DATE < LOCR1.END_DATE
+        and LOCR2.END_DATE > LOCR1.START_DATE))
+    loop
+      INSERT_LOCATION_RELATIONSHIP1
+       (rLOCR.LOC_ID_FROM, pnLOC_ID_TO, 'WITHIN', rLOCR.START_DATE, rLOCR.END_DATE);
+    end loop;
+  --
+  -- Insert transitive relationships below the requested one in the hierarchy.
+  --
+    for rLOCR in
+     (select LOCR3.LOC_ID_FROM, LOCR3.LOC_ID_TO, LOCR3.START_DATE, LOCR3.END_DATE
+      from
+       (select LOCR1.LOC_ID_FROM, LOCR2.LOC_ID_TO,
+          greatest(LOCR1.START_DATE, LOCR2.START_DATE) as START_DATE,
+          greatest(LOCR1.END_DATE, LOCR2.END_DATE) as END_DATE
+        from T_LOCATION_RELATIONSHIPS LOCR1
+        inner join T_LOCATION_RELATIONSHIPS LOCR2
+          on LOCR2.LOC_ID_FROM = LOCR1.LOC_ID_TO
+          and LOCR2.LOCRT_CODE = 'WITHIN'
+          and LOCR2.START_DATE < LOCR1.END_DATE
+          and LOCR2.END_DATE > LOCR1.START_DATE
+        where LOCR1.LOC_ID_TO = pnLOC_ID_TO
+        and LOCR1.LOCRT_CODE = 'WITHIN') LOCR3
+      where not exists
+       (select null
+        from T_LOCATION_RELATIONSHIPS LOCR4
+        where LOCR4.LOC_ID_FROM = LOCR3.LOC_ID_FROM
+        and LOCR4.LOC_ID_TO = LOCR3.LOC_ID_TO
+        and LOCR4.LOCRT_CODE = 'WITHIN'
+        and LOCR4.START_DATE < LOCR3.END_DATE
+        and LOCR4.END_DATE > LOCR3.START_DATE))
+    loop
+      INSERT_LOCATION_RELATIONSHIP1
+       (rLOCR.LOC_ID_FROM, rLOCR.LOC_ID_TO, 'WITHIN', rLOCR.START_DATE, rLOCR.END_DATE);
+    end loop;
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end INSERT_LOCATION_WITHIN;
+--
+-- ----------------------------------------
+-- UPDATE_LOCATION_WITHIN
+-- ----------------------------------------
+--
+  procedure UPDATE_LOCATION_WITHIN
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
+    pdSTART_DATE in P_BASE.tmdDate,
+    pnVERSION_NBR in out P_BASE.tnLOCR_VERSION_NBR,
+    pdSTART_DATE_NEW in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE)
+  is
+  begin
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.UPDATE_LOCATION_WITHIN',
+      to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || to_char(pnVERSION_NBR) || '~' ||
+        to_char(pdSTART_DATE_NEW, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
+  --
+    UPDATE_LOCATION_RELATIONSHIP1
+     (pnLOC_ID_FROM, pnLOC_ID_TO, 'WITHIN', pdSTART_DATE, pnVERSION_NBR, pdSTART_DATE_NEW, pdEND_DATE);
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end UPDATE_LOCATION_WITHIN;
+--
+-- ----------------------------------------
+-- DELETE_LOCATION_WITHIN
+-- ----------------------------------------
+--
+  procedure DELETE_LOCATION_WITHIN
+   (pnLOC_ID_FROM in P_BASE.tmnLOC_ID,
+    pnLOC_ID_TO in P_BASE.tmnLOC_ID,
+    pdSTART_DATE in P_BASE.tmdDate,
+    pnVERSION_NBR in P_BASE.tnLOCR_VERSION_NBR)
+  is
+    dEND_DATE P_BASE.tdDate;
+  begin
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sModule || '.DELETE_LOCATION_WITHIN',
+      to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || to_char(pnVERSION_NBR));
+  --
+    select END_DATE
+    into dEND_DATE
+    from T_LOCATION_RELATIONSHIPS
+    where LOC_ID_FROM = pnLOC_ID_FROM
+    and LOC_ID_TO = pnLOC_ID_TO
+    and LOCRT_CODE = 'WITHIN'
+    and START_DATE = pdSTART_DATE;
+  --
+    DELETE_LOCATION_RELATIONSHIP1
+     (pnLOC_ID_FROM, pnLOC_ID_TO, 'WITHIN', pdSTART_DATE, pnVERSION_NBR);
+  --
+  -- Delete transitive relationships invalidated by the deletion.
+  --
+    for rLOCR in
+     (select LOC_ID_FROM, LOC_ID_TO, START_DATE, VERSION_NBR
+      from T_LOCATION_RELATIONSHIPS
+      where LOC_ID_FROM = pnLOC_ID_TO
+      and LOCRT_CODE = 'WITHIN'
+      and START_DATE >= pdSTART_DATE
+      and END_DATE >= dEND_DATE)
+    loop
+      DELETE_LOCATION_RELATIONSHIP1
+       (pnLOC_ID_FROM, rLOCR.LOC_ID_TO, 'WITHIN', rLOCR.START_DATE, rLOCR.VERSION_NBR);
+    end loop;
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end DELETE_LOCATION_WITHIN;
 --
 -- ----------------------------------------
 -- SET_LOCR_TEXT
