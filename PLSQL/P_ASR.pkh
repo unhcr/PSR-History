@@ -6,7 +6,7 @@ create or replace package P_ASR is
 --  Procedures for maintenance of statistics.
 --
 --  Change History:
---  19-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  23-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -29,10 +29,10 @@ create or replace package P_ASR is
   procedure INSERT_TABLE7AB
    (pnASR_YEAR in P_BASE.tmnYear,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tmnLOC_ID,
-    pnDST_ID in P_BASE.tmnDST_ID,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tmnLOC_ID,
-    psSOURCE in P_BASE.tsPGRA_CHAR_VALUE,
-    psBASIS in P_BASE.tsPGRA_CHAR_VALUE,
+    pnDST_ID in P_BASE.tmnDST_ID,
+    psSOURCE in P_BASE.tsSTGA_CHAR_VALUE,
+    psBASIS in P_BASE.tsSTGA_CHAR_VALUE,
     pnREFRTN_VALUE in P_BASE.tnSTC_VALUE,
     pnREFRTN_AH_VALUE in P_BASE.tnSTC_VALUE);
 --
@@ -47,16 +47,16 @@ create or replace package P_ASR is
   procedure UPDATE_TABLE7AB
    (pnASR_YEAR in P_BASE.tmnYear,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tmnLOC_ID,
-    pnDST_ID in P_BASE.tmnDST_ID,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tmnLOC_ID,
-    psSOURCE in P_BASE.tsPGRA_CHAR_VALUE,
-    psBASIS in P_BASE.tsPGRA_CHAR_VALUE,
+    pnDST_ID in P_BASE.tmnDST_ID,
+    psSOURCE in P_BASE.tsSTGA_CHAR_VALUE,
+    psBASIS in P_BASE.tsSTGA_CHAR_VALUE,
     pnREFRTN_VALUE in P_BASE.tnSTC_VALUE,
     pnREFRTN_AH_VALUE in P_BASE.tnSTC_VALUE,
-    pnPGR_ID_PRIMARY in P_BASE.tmnPGR_ID,
-    pnPGR_VERSION_NBR in P_BASE.tnPGR_VERSION_NBR,  --  ** Not required
-    pnPGRA_VERSION_NBR_SOURCE in P_BASE.tnPGRA_VERSION_NBR,
-    pnPGRA_VERSION_NBR_BASIS in P_BASE.tnPGRA_VERSION_NBR,
+    pnSTG_ID_PRIMARY in P_BASE.tmnSTG_ID,
+    pnSTG_VERSION_NBR in P_BASE.tnSTG_VERSION_NBR,  --  ** Not required
+    pnSTGA_VERSION_NBR_SOURCE in P_BASE.tnSTGA_VERSION_NBR,
+    pnSTGA_VERSION_NBR_BASIS in P_BASE.tnSTGA_VERSION_NBR,
     pnREFRTN_STC_ID in P_BASE.tnSTC_ID,
     pnREFRTN_VERSION_NBR in P_BASE.tnSTC_VERSION_NBR,
     pnREFRTN_AH_STC_ID in P_BASE.tnSTC_ID,
@@ -71,10 +71,10 @@ create or replace package P_ASR is
 -- Parameters:
 --
   procedure DELETE_TABLE7AB
-   (pnPGR_ID_PRIMARY in P_BASE.tnPGR_ID,
-    pnPGR_VERSION_NBR in P_BASE.tnPGR_VERSION_NBR,
-    pnPGRA_VERSION_NBR_SOURCE in P_BASE.tnPGRA_VERSION_NBR,
-    pnPGRA_VERSION_NBR_BASIS in P_BASE.tnPGRA_VERSION_NBR,
+   (pnSTG_ID_PRIMARY in P_BASE.tnSTG_ID,
+    pnSTG_VERSION_NBR in P_BASE.tnSTG_VERSION_NBR,
+    pnSTGA_VERSION_NBR_SOURCE in P_BASE.tnSTGA_VERSION_NBR,
+    pnSTGA_VERSION_NBR_BASIS in P_BASE.tnSTGA_VERSION_NBR,
     pnREFRTN_STC_ID in P_BASE.tnSTC_ID,
     pnREFRTN_VERSION_NBR in P_BASE.tnSTC_VERSION_NBR,
     pnREFRTN_AH_STC_ID in P_BASE.tnSTC_ID,

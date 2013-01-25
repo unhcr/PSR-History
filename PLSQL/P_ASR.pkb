@@ -11,24 +11,24 @@ create or replace package body P_ASR is
   procedure INSERT_TABLE7AB
    (pnASR_YEAR in P_BASE.tmnYear,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tmnLOC_ID,
-    pnDST_ID in P_BASE.tmnDST_ID,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tmnLOC_ID,
-    psSOURCE in P_BASE.tsPGRA_CHAR_VALUE,
-    psBASIS in P_BASE.tsPGRA_CHAR_VALUE,
+    pnDST_ID in P_BASE.tmnDST_ID,
+    psSOURCE in P_BASE.tsSTGA_CHAR_VALUE,
+    psBASIS in P_BASE.tsSTGA_CHAR_VALUE,
     pnREFRTN_VALUE in P_BASE.tnSTC_VALUE,
     pnREFRTN_AH_VALUE in P_BASE.tnSTC_VALUE)
   is
     dSTART_DATE P_BASE.tdDate := to_date(to_char(pnASR_YEAR) || '-01-01', 'YYYY-MM-DD');
     dEND_DATE P_BASE.tdDate := to_date(to_char(pnASR_YEAR+1) || '-01-01', 'YYYY-MM-DD');
-    nPGR_ID P_BASE.tnPGR_ID;
+    nSTG_ID P_BASE.tnSTG_ID;
     nSTC_ID P_BASE.tnSTC_ID;
   begin
     P_UTILITY.START_MODULE
      (sVersion || '-' || sModule || '.INSERT_TABLE7AB',
       to_char(pnASR_YEAR)  || '~' || to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' ||
-        to_char(pnDST_ID) || '~' || to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' ||
-        to_char(pnREFRTN_VALUE) || '~' || to_char(pnREFRTN_AH_VALUE) || '~' ||
-        psSOURCE || '~' || psBASIS);
+        to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' || to_char(pnDST_ID) || '~' ||
+        psSOURCE || '~' || psBASIS || '~' ||
+        to_char(pnREFRTN_VALUE) || '~' || to_char(pnREFRTN_AH_VALUE));
   --
   -- Check that at lease one statistic value has been provided for this row.
   --
@@ -44,8 +44,8 @@ create or replace package body P_ASR is
   --
   -- Create new population group representing this table 7A/B row.
   --
-    P_POPULATION_GROUP.INSERT_POPULATION_GROUP
-     (nPGR_ID, dSTART_DATE, dEND_DATE,
+    P_STATISTIC_GROUP.INSERT_STATISTIC_GROUP
+     (nSTG_ID, dSTART_DATE, dEND_DATE,
       pnDST_ID => pnDST_ID,
       pnLOC_ID_ASYLUM_COUNTRY => pnLOC_ID_ASYLUM_COUNTRY,
       pnLOC_ID_ORIGIN_COUNTRY => pnLOC_ID_ORIGIN_COUNTRY);
@@ -53,11 +53,11 @@ create or replace package body P_ASR is
   -- Create population group attributes for the source and basis.
   --
     if psSOURCE is not null
-    then P_POPULATION_GROUP.INSERT_PGR_ATTRIBUTE(nPGR_ID, 'SOURCE', psSOURCE);
+    then P_STATISTIC_GROUP.INSERT_STG_ATTRIBUTE(nSTG_ID, 'SOURCE', psSOURCE);
     end if;
   --
     if psBASIS is not null
-    then P_POPULATION_GROUP.INSERT_PGR_ATTRIBUTE(nPGR_ID, 'BASIS', psBASIS);
+    then P_STATISTIC_GROUP.INSERT_STG_ATTRIBUTE(nSTG_ID, 'BASIS', psBASIS);
     end if;
   --
   -- Create statistics for the REFRTN and REFRTN_AH statistic types.
@@ -69,7 +69,7 @@ create or replace package body P_ASR is
         pnDST_ID => pnDST_ID,
         pnLOC_ID_ASYLUM_COUNTRY => pnLOC_ID_ASYLUM_COUNTRY,
         pnLOC_ID_ORIGIN_COUNTRY => pnLOC_ID_ORIGIN_COUNTRY,
-        pnPGR_ID_PRIMARY => nPGR_ID,
+        pnSTG_ID_PRIMARY => nSTG_ID,
         pnVALUE => pnREFRTN_VALUE);
     end if;
   --
@@ -80,7 +80,7 @@ create or replace package body P_ASR is
         pnDST_ID => pnDST_ID,
         pnLOC_ID_ASYLUM_COUNTRY => pnLOC_ID_ASYLUM_COUNTRY,
         pnLOC_ID_ORIGIN_COUNTRY => pnLOC_ID_ORIGIN_COUNTRY,
-        pnPGR_ID_PRIMARY => nPGR_ID,
+        pnSTG_ID_PRIMARY => nSTG_ID,
         pnVALUE => pnREFRTN_AH_VALUE);
     end if;
   --
@@ -97,23 +97,23 @@ create or replace package body P_ASR is
   procedure UPDATE_TABLE7AB
    (pnASR_YEAR in P_BASE.tmnYear,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tmnLOC_ID,
-    pnDST_ID in P_BASE.tmnDST_ID,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tmnLOC_ID,
-    psSOURCE in P_BASE.tsPGRA_CHAR_VALUE,
-    psBASIS in P_BASE.tsPGRA_CHAR_VALUE,
+    pnDST_ID in P_BASE.tmnDST_ID,
+    psSOURCE in P_BASE.tsSTGA_CHAR_VALUE,
+    psBASIS in P_BASE.tsSTGA_CHAR_VALUE,
     pnREFRTN_VALUE in P_BASE.tnSTC_VALUE,
     pnREFRTN_AH_VALUE in P_BASE.tnSTC_VALUE,
-    pnPGR_ID_PRIMARY in P_BASE.tmnPGR_ID,
-    pnPGR_VERSION_NBR in P_BASE.tnPGR_VERSION_NBR,
-    pnPGRA_VERSION_NBR_SOURCE in P_BASE.tnPGRA_VERSION_NBR,
-    pnPGRA_VERSION_NBR_BASIS in P_BASE.tnPGRA_VERSION_NBR,
+    pnSTG_ID_PRIMARY in P_BASE.tmnSTG_ID,
+    pnSTG_VERSION_NBR in P_BASE.tnSTG_VERSION_NBR,
+    pnSTGA_VERSION_NBR_SOURCE in P_BASE.tnSTGA_VERSION_NBR,
+    pnSTGA_VERSION_NBR_BASIS in P_BASE.tnSTGA_VERSION_NBR,
     pnREFRTN_STC_ID in P_BASE.tnSTC_ID,
     pnREFRTN_VERSION_NBR in P_BASE.tnSTC_VERSION_NBR,
     pnREFRTN_AH_STC_ID in P_BASE.tnSTC_ID,
     pnREFRTN_AH_VERSION_NBR in P_BASE.tnSTC_VERSION_NBR)
   is
-    nPGRA_VERSION_NBR_SOURCE P_BASE.tnPGRA_VERSION_NBR := pnPGRA_VERSION_NBR_SOURCE;
-    nPGRA_VERSION_NBR_BASIS P_BASE.tnPGRA_VERSION_NBR := pnPGRA_VERSION_NBR_BASIS;
+    nSTGA_VERSION_NBR_SOURCE P_BASE.tnSTGA_VERSION_NBR := pnSTGA_VERSION_NBR_SOURCE;
+    nSTGA_VERSION_NBR_BASIS P_BASE.tnSTGA_VERSION_NBR := pnSTGA_VERSION_NBR_BASIS;
     nREFRTN_VERSION_NBR P_BASE.tnSTC_VERSION_NBR := pnREFRTN_VERSION_NBR;
     nREFRTN_AH_VERSION_NBR P_BASE.tnSTC_VERSION_NBR := pnREFRTN_AH_VERSION_NBR;
     dSTART_DATE P_BASE.tdDate := to_date(to_char(pnASR_YEAR) || '-01-01', 'YYYY-MM-DD');
@@ -123,11 +123,11 @@ create or replace package body P_ASR is
     P_UTILITY.START_MODULE
      (sVersion || '-' || sModule || '.UPDATE_TABLE7AB',
       to_char(pnASR_YEAR) || '~' || to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' ||
-        to_char(pnDST_ID) || '~' || to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' ||
+        to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' || to_char(pnDST_ID) || '~' ||
         psSOURCE || '~' || psBASIS || '~' ||
         to_char(pnREFRTN_VALUE) || '~' || to_char(pnREFRTN_AH_VALUE) || '~' ||
-        to_char(pnPGR_ID_PRIMARY)  || '~' ||
-        to_char(pnPGRA_VERSION_NBR_SOURCE) || '~' || to_char(pnPGRA_VERSION_NBR_BASIS) || '~' ||
+        to_char(pnSTG_ID_PRIMARY)  || '~' ||
+        to_char(pnSTGA_VERSION_NBR_SOURCE) || '~' || to_char(pnSTGA_VERSION_NBR_BASIS) || '~' ||
         to_char(pnREFRTN_STC_ID) || '~' || to_char(pnREFRTN_VERSION_NBR) || '~' ||
         to_char(pnREFRTN_AH_STC_ID) || '~' || to_char(pnREFRTN_AH_VERSION_NBR));
   --
@@ -146,26 +146,26 @@ create or replace package body P_ASR is
   -- Update or insert population group attributes for the source and basis. Delete attributes where
   --  the new value is null.
   --
-    if psSOURCE is null and pnPGRA_VERSION_NBR_SOURCE is not null
+    if psSOURCE is null and pnSTGA_VERSION_NBR_SOURCE is not null
     then
-      P_POPULATION_GROUP.DELETE_PGR_ATTRIBUTE(pnPGR_ID_PRIMARY, 'SOURCE', nPGRA_VERSION_NBR_SOURCE);
-    elsif psSOURCE is not null and pnPGRA_VERSION_NBR_SOURCE is null
+      P_STATISTIC_GROUP.DELETE_STG_ATTRIBUTE(pnSTG_ID_PRIMARY, 'SOURCE', nSTGA_VERSION_NBR_SOURCE);
+    elsif psSOURCE is not null and pnSTGA_VERSION_NBR_SOURCE is null
     then
-      P_POPULATION_GROUP.INSERT_PGR_ATTRIBUTE(pnPGR_ID_PRIMARY, 'SOURCE', psSOURCE);
+      P_STATISTIC_GROUP.INSERT_STG_ATTRIBUTE(pnSTG_ID_PRIMARY, 'SOURCE', psSOURCE);
     else
-      P_POPULATION_GROUP.UPDATE_PGR_ATTRIBUTE
-       (pnPGR_ID_PRIMARY, 'SOURCE', nPGRA_VERSION_NBR_SOURCE, psSOURCE);
+      P_STATISTIC_GROUP.UPDATE_STG_ATTRIBUTE
+       (pnSTG_ID_PRIMARY, 'SOURCE', nSTGA_VERSION_NBR_SOURCE, psSOURCE);
     end if;
   --
-    if psBASIS is null and pnPGRA_VERSION_NBR_BASIS is not null
+    if psBASIS is null and pnSTGA_VERSION_NBR_BASIS is not null
     then
-      P_POPULATION_GROUP.DELETE_PGR_ATTRIBUTE(pnPGR_ID_PRIMARY, 'BASIS', nPGRA_VERSION_NBR_BASIS);
-    elsif psBASIS is not null and pnPGRA_VERSION_NBR_BASIS is null
+      P_STATISTIC_GROUP.DELETE_STG_ATTRIBUTE(pnSTG_ID_PRIMARY, 'BASIS', nSTGA_VERSION_NBR_BASIS);
+    elsif psBASIS is not null and pnSTGA_VERSION_NBR_BASIS is null
     then
-      P_POPULATION_GROUP.INSERT_PGR_ATTRIBUTE(pnPGR_ID_PRIMARY, 'BASIS', psBASIS);
+      P_STATISTIC_GROUP.INSERT_STG_ATTRIBUTE(pnSTG_ID_PRIMARY, 'BASIS', psBASIS);
     else
-      P_POPULATION_GROUP.UPDATE_PGR_ATTRIBUTE
-       (pnPGR_ID_PRIMARY, 'BASIS', nPGRA_VERSION_NBR_BASIS, psBASIS);
+      P_STATISTIC_GROUP.UPDATE_STG_ATTRIBUTE
+       (pnSTG_ID_PRIMARY, 'BASIS', nSTGA_VERSION_NBR_BASIS, psBASIS);
     end if;
   --
   -- Update or insert statistics for the REFRTN and REFRTN_AH statistic types. Delete statistics
@@ -180,7 +180,7 @@ create or replace package body P_ASR is
         pnDST_ID => pnDST_ID,
         pnLOC_ID_ASYLUM_COUNTRY => pnLOC_ID_ASYLUM_COUNTRY,
         pnLOC_ID_ORIGIN_COUNTRY => pnLOC_ID_ORIGIN_COUNTRY,
-        pnPGR_ID_PRIMARY => pnPGR_ID_PRIMARY,
+        pnSTG_ID_PRIMARY => pnSTG_ID_PRIMARY,
         pnVALUE => pnREFRTN_VALUE);
     else
       P_STATISTIC.UPDATE_STATISTIC(pnREFRTN_STC_ID, nREFRTN_VERSION_NBR, pnREFRTN_VALUE);
@@ -195,7 +195,7 @@ create or replace package body P_ASR is
         pnDST_ID => pnDST_ID,
         pnLOC_ID_ASYLUM_COUNTRY => pnLOC_ID_ASYLUM_COUNTRY,
         pnLOC_ID_ORIGIN_COUNTRY => pnLOC_ID_ORIGIN_COUNTRY,
-        pnPGR_ID_PRIMARY => pnPGR_ID_PRIMARY,
+        pnSTG_ID_PRIMARY => pnSTG_ID_PRIMARY,
         pnVALUE => pnREFRTN_AH_VALUE);
     else
       P_STATISTIC.UPDATE_STATISTIC(pnREFRTN_AH_STC_ID, nREFRTN_AH_VERSION_NBR, pnREFRTN_AH_VALUE);
@@ -212,25 +212,25 @@ create or replace package body P_ASR is
 -- ----------------------------------------
 --
   procedure DELETE_TABLE7AB
-   (pnPGR_ID_PRIMARY in P_BASE.tnPGR_ID,
-    pnPGR_VERSION_NBR in P_BASE.tnPGR_VERSION_NBR,
-    pnPGRA_VERSION_NBR_SOURCE in P_BASE.tnPGRA_VERSION_NBR,
-    pnPGRA_VERSION_NBR_BASIS in P_BASE.tnPGRA_VERSION_NBR,
+   (pnSTG_ID_PRIMARY in P_BASE.tnSTG_ID,
+    pnSTG_VERSION_NBR in P_BASE.tnSTG_VERSION_NBR,
+    pnSTGA_VERSION_NBR_SOURCE in P_BASE.tnSTGA_VERSION_NBR,
+    pnSTGA_VERSION_NBR_BASIS in P_BASE.tnSTGA_VERSION_NBR,
     pnREFRTN_STC_ID in P_BASE.tnSTC_ID,
     pnREFRTN_VERSION_NBR in P_BASE.tnSTC_VERSION_NBR,
     pnREFRTN_AH_STC_ID in P_BASE.tnSTC_ID,
     pnREFRTN_AH_VERSION_NBR in P_BASE.tnSTC_VERSION_NBR)
   is
-    nPGR_VERSION_NBR P_BASE.tnPGR_VERSION_NBR := pnPGR_VERSION_NBR;
-    nPGRA_VERSION_NBR_SOURCE P_BASE.tnPGRA_VERSION_NBR := pnPGRA_VERSION_NBR_SOURCE;
-    nPGRA_VERSION_NBR_BASIS P_BASE.tnPGRA_VERSION_NBR := pnPGRA_VERSION_NBR_BASIS;
+    nSTG_VERSION_NBR P_BASE.tnSTG_VERSION_NBR := pnSTG_VERSION_NBR;
+    nSTGA_VERSION_NBR_SOURCE P_BASE.tnSTGA_VERSION_NBR := pnSTGA_VERSION_NBR_SOURCE;
+    nSTGA_VERSION_NBR_BASIS P_BASE.tnSTGA_VERSION_NBR := pnSTGA_VERSION_NBR_BASIS;
     nREFRTN_VERSION_NBR P_BASE.tnSTC_VERSION_NBR := pnREFRTN_VERSION_NBR;
     nREFRTN_AH_VERSION_NBR P_BASE.tnSTC_VERSION_NBR := pnREFRTN_AH_VERSION_NBR;
   begin
     P_UTILITY.START_MODULE
      (sVersion || '-' || sModule || '.DELETE_TABLE7AB',
-      to_char(pnPGR_ID_PRIMARY)  || '~' || to_char(pnPGR_VERSION_NBR) || '~' ||
-        to_char(pnPGRA_VERSION_NBR_SOURCE) || '~' || to_char(pnPGRA_VERSION_NBR_BASIS) || '~' ||
+      to_char(pnSTG_ID_PRIMARY)  || '~' || to_char(pnSTG_VERSION_NBR) || '~' ||
+        to_char(pnSTGA_VERSION_NBR_SOURCE) || '~' || to_char(pnSTGA_VERSION_NBR_BASIS) || '~' ||
         to_char(pnREFRTN_STC_ID) || '~' || to_char(pnREFRTN_VERSION_NBR) || '~' ||
         to_char(pnREFRTN_AH_STC_ID) || '~' || to_char(pnREFRTN_AH_VERSION_NBR));
   --
@@ -243,24 +243,24 @@ create or replace package body P_ASR is
     if pnREFRTN_AH_STC_ID is not null
     then P_STATISTIC.DELETE_STATISTIC(pnREFRTN_AH_STC_ID, nREFRTN_AH_VERSION_NBR);
     end if;
-/*--
+  --
   -- Delete the source and basis population group attributes and the primary population group.
   --
-    if pnPGR_ID_PRIMARY is not null
+    if pnSTG_ID_PRIMARY is not null
     then
-      if nPGRA_VERSION_NBR_SOURCE is not null
+      if nSTGA_VERSION_NBR_SOURCE is not null
       then
-        P_POPULATION_GROUP.DELETE_PGR_ATTRIBUTE(pnPGR_ID_PRIMARY, 'SOURCE', nPGRA_VERSION_NBR_SOURCE);
+        P_STATISTIC_GROUP.DELETE_STG_ATTRIBUTE(pnSTG_ID_PRIMARY, 'SOURCE', nSTGA_VERSION_NBR_SOURCE);
       end if;
     --
-      if nPGRA_VERSION_NBR_BASIS is not null
+      if nSTGA_VERSION_NBR_BASIS is not null
       then
-        P_POPULATION_GROUP.DELETE_PGR_ATTRIBUTE(pnPGR_ID_PRIMARY, 'BASIS', nPGRA_VERSION_NBR_BASIS);
+        P_STATISTIC_GROUP.DELETE_STG_ATTRIBUTE(pnSTG_ID_PRIMARY, 'BASIS', nSTGA_VERSION_NBR_BASIS);
       end if;
     --
-      P_POPULATION_GROUP.DELETE_POPULATION_GROUP(pnPGR_ID_PRIMARY, nPGR_VERSION_NBR);
+      P_STATISTIC_GROUP.DELETE_STATISTIC_GROUP(pnSTG_ID_PRIMARY, nSTG_VERSION_NBR);
     end if;
-*/--
+  --
     P_UTILITY.END_MODULE;
   exception
     when others
