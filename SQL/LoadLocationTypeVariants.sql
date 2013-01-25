@@ -43,8 +43,6 @@ begin
     from STAGE.S_LOCATION_TYPE_VARIANTS LOCTV
     join COUNTRIES COU
       on COU.UNHCR_COUNTRY_CODE = LOCTV.HCRCC
-      and COU.START_DATE <= sysdate
-      and COU.END_DATE > sysdate
     where LOCTV.LOCT_CODE != 'ADMIN0'
     union all
     select 'ADMIN0' as LOCT_CODE,
