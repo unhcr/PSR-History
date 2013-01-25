@@ -15,6 +15,7 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>C7ACAFAE-78E9-4B29-A0F5-69822CBD910F</delegate>
+<generateConstraintInDDL>NO</generateConstraintInDDL>
 <associations>
 <colAssociation fkAssociation="7C83196B-76E1-39A3-E9A4-498F4CA58418" referredColumn="C7ACAFAE-78E9-4B29-A0F5-69822CBD910F"/>
 </associations>
@@ -38,6 +39,7 @@
 <createdTime>2012-05-10 14:46:23 UTC</createdTime>
 <comment>Negation flag for whole rule</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PPGR_NEGATE_FLAG</constraintName>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>6841C73E-E27A-83E1-4728-25113B8D2A58</domain>
@@ -53,6 +55,7 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>F5C73F48-6A40-DF48-E317-381D087E137E</delegate>
+<generateConstraintInDDL>NO</generateConstraintInDDL>
 <associations>
 <colAssociation fkAssociation="F1047819-EDC4-84EB-A816-6984FF5D9FEA" referredColumn="F5C73F48-6A40-DF48-E317-381D087E137E"/>
 </associations>
@@ -62,6 +65,7 @@
 <createdTime>2012-05-10 14:47:40 UTC</createdTime>
 <comment>Displacement status negation flag</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PPGR_DST_NEGATE_FLAG</constraintName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -73,6 +77,7 @@
 <createdTime>2012-05-10 14:11:52 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
 <domain>C2DB2BE5-AB16-8043-FD9B-177C536DC077</domain>
@@ -86,6 +91,7 @@
 <createdTime>2012-05-10 14:11:52 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
 <domain>C2DB2BE5-AB16-8043-FD9B-177C536DC077</domain>
@@ -100,6 +106,7 @@
 <createdTime>2012-05-10 14:11:52 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
 <domain>C2DB2BE5-AB16-8043-FD9B-177C536DC077</domain>
@@ -114,6 +121,7 @@
 <createdTime>2012-05-10 14:11:52 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
 <domain>C2DB2BE5-AB16-8043-FD9B-177C536DC077</domain>
@@ -134,6 +142,7 @@
 <domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>52E6D966-5575-D77E-A8B9-BC8B1C323F87</delegate>
 <autoIncrementCycle>false</autoIncrementCycle>
+<generateConstraintInDDL>NO</generateConstraintInDDL>
 <associations>
 <colAssociation fkAssociation="9DED67C3-FD44-F005-0B2E-815A7BE745C2" referredColumn="52E6D966-5575-D77E-A8B9-BC8B1C323F87"/>
 </associations>
@@ -143,6 +152,7 @@
 <createdTime>2012-05-10 14:49:48 UTC</createdTime>
 <comment>Generic dimension 1 negation flag</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PPGR_DIM1_NEGATE_FLAG</constraintName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -160,6 +170,7 @@
 <domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>52E6D966-5575-D77E-A8B9-BC8B1C323F87</delegate>
 <autoIncrementCycle>false</autoIncrementCycle>
+<generateConstraintInDDL>NO</generateConstraintInDDL>
 <associations>
 <colAssociation fkAssociation="F21868B6-4C99-7926-124F-4F9756EB6A75" referredColumn="52E6D966-5575-D77E-A8B9-BC8B1C323F87"/>
 </associations>
@@ -169,6 +180,7 @@
 <createdTime>2012-05-10 14:50:12 UTC</createdTime>
 <comment>Generic dimension 2 negation flag</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PPGR_DIM2_NEGATE_FLAG</constraintName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -186,6 +198,7 @@
 <domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>52E6D966-5575-D77E-A8B9-BC8B1C323F87</delegate>
 <autoIncrementCycle>false</autoIncrementCycle>
+<generateConstraintInDDL>NO</generateConstraintInDDL>
 <associations>
 <colAssociation fkAssociation="008F7382-795B-097D-D724-1224F8ABA598" referredColumn="52E6D966-5575-D77E-A8B9-BC8B1C323F87"/>
 </associations>
@@ -195,6 +208,7 @@
 <createdTime>2012-05-10 14:50:21 UTC</createdTime>
 <comment>Generic dimension 3 negation flag</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PPGR_DIM3_NEGATE_FLAG</constraintName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -212,6 +226,7 @@
 <domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>52E6D966-5575-D77E-A8B9-BC8B1C323F87</delegate>
 <autoIncrementCycle>false</autoIncrementCycle>
+<generateConstraintInDDL>NO</generateConstraintInDDL>
 <associations>
 <colAssociation fkAssociation="675EFA2E-B4D6-C849-2525-CDE9C35CF5B5" referredColumn="52E6D966-5575-D77E-A8B9-BC8B1C323F87"/>
 </associations>
@@ -221,6 +236,7 @@
 <createdTime>2012-05-10 14:50:33 UTC</createdTime>
 <comment>Generic dimension 4 negation flag</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PPGR_DIM4_NEGATE_FLAG</constraintName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -238,6 +254,7 @@
 <domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>52E6D966-5575-D77E-A8B9-BC8B1C323F87</delegate>
 <autoIncrementCycle>false</autoIncrementCycle>
+<generateConstraintInDDL>NO</generateConstraintInDDL>
 <associations>
 <colAssociation fkAssociation="82C6F1DA-8C38-EF02-D177-A4EC1C983545" referredColumn="52E6D966-5575-D77E-A8B9-BC8B1C323F87"/>
 </associations>
@@ -247,6 +264,7 @@
 <createdTime>2012-05-10 14:50:50 UTC</createdTime>
 <comment>Generic dimension 5 negation flag</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PPGR_DIM5_NEGATE_FLAG</constraintName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -274,6 +292,7 @@
 <createdTime>2012-05-10 14:48:48 UTC</createdTime>
 <comment>Sex code negation flag</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PPGR_SEX_NEGATE_FLAG</constraintName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -291,6 +310,7 @@
 <domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>E887FD2B-4164-C0ED-B1AC-5A298B0AAA7E</delegate>
 <previousColumn>false</previousColumn>
+<generateConstraintInDDL>NO</generateConstraintInDDL>
 <associations>
 <colAssociation fkAssociation="F34B3B74-DFC1-DA20-3016-7A05EF5BA0E8" referredColumn="E887FD2B-4164-C0ED-B1AC-5A298B0AAA7E"/>
 </associations>
@@ -300,6 +320,7 @@
 <createdTime>2012-05-10 14:49:19 UTC</createdTime>
 <comment>Age range negation flag</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PPGR_AGR_NEGATE_FLAG</constraintName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>

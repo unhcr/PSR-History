@@ -5,43 +5,7 @@
 <comment>General data items</comment>
 <notes>This table contains a row for every row in any other table which has an non-null ITM_ID column. It is the means by which text items are associated with data rows throughout the system and also provides a locus by which other extended data may be associated with data rows, including data item permissions, data item sources, and potentially other arbitrary data (images, rich documents, etc.). The primary key of this table is referenced by foreign keys (ITM_ID) in many other tables, and these foreign keys themselves are unique keys in their tables, thus enforcing a one-to-one relationship between T_DATA_ITEMS and each of the referencing tables. The TAB_ALIAS column provides an efficient means of tracing a general data item back to its associated table.</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>PK_TXT</pkName>
 <abbreviation>ITM</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ID" id="2A6FD6C7-5546-B8AB-418B-2F3780605451">
 <createdBy>Scott</createdBy>

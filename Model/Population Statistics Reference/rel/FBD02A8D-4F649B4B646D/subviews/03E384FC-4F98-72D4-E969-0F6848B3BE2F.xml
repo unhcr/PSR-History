@@ -6,6 +6,7 @@
 <boxInbox>true</boxInbox>
 <showLegend>true</showLegend>
 <showLabels>false</showLabels>
+<showRelAttributes>false</showRelAttributes>
 <showGrid>false</showGrid>
 <diagramColor>-1</diagramColor>
 <legendPosX>510</legendPosX>
@@ -27,7 +28,7 @@
 <bounds x="31" y="319" width="211" height="261"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="E2FBFD92-8C66-CACF-7766-38C7CCEED812" otype="View" vid="9A6419D7-FB02-2233-191A-47149F4E8A20">
-<bounds x="31" y="610" width="211" height="261"/>
+<bounds x="31" y="610" width="211" height="311"/>
 </OView>
 </objectViews>
 </Diagram>
