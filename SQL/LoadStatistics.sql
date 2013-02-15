@@ -465,18 +465,18 @@ begin
         from
          (select USTC.STATSYEAR,
             case USTC.TABLE_NUMBER
-              when '2' then 'ASRT2'
-              when '3' then 'ASRT3'
-              when '4' then 'ASRT4'
-              when '5' then 'ASRT5'
-              when '6A' then 'ASRT6AB'
-              when '6B' then 'ASRT6AB'
-              when '6C' then 'ASRT6C'
-              when '6D' then 'ASRT6D'
-              when '7A' then 'ASRT7AB'
-              when '7B' then 'ASRT7AB'
-              when '7C' then 'ASRT7C'
-              when '7D' then 'ASRT7D'
+              when '2' then 'REFUGEE'
+              when '3' then 'DEMOGR'
+              when '4' then 'LGLBASIS'
+              when '5' then 'RSD'
+              when '6A' then 'IDP'
+              when '6B' then 'IDP'
+              when '6C' then 'IDPCNFLCT'
+              when '6D' then 'IDPNTRLDIS'
+              when '7A' then 'RETURNEE'
+              when '7B' then 'RETURNEE'
+              when '7C' then 'STATELESS'
+              when '7D' then 'OOC'
             end as STTG_CODE,
             USTC.DST_CODE, USTC.COU_CODE_ASYLUM,
             case
@@ -541,7 +541,7 @@ begin
       DIM4.ID as DIM_ID4,
       DIM5.ID as DIM_ID5,
       AGR.ID as AGR_ID,
-      case when STC.STTG_CODE = 'ASRT7AB' then OGN.ID else COU.ID end as LOC_ID_REPORTING_COUNTRY,
+      case when STC.STTG_CODE = 'RETURNEE' then OGN.ID else COU.ID end as LOC_ID_REPORTING_COUNTRY,
       row_number() over
        (partition by STC.STATSYEAR, STC.STTG_CODE, STC.DST_CODE, COU.ID, LOC.LOC_ID, OGN.ID,
           DIM1.ID, DIM2.ID, DIM3.ID, DIM4.ID, DIM5.ID,
