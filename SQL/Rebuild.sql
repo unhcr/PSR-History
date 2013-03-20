@@ -13,6 +13,10 @@ prompt Views
 prompt =====
 @Views
 
+prompt MViews
+prompt ======
+@MViews
+
 prompt Packages
 prompt ========
 @Packages
@@ -104,6 +108,10 @@ prompt ==============
 prompt DeactivateCodes
 prompt ===============
 @DeactivateCodes
+
+prompt RefreshMViews
+prompt =============
+@RefreshMViews.sql
 
 --prompt InitTests
 --prompt =========
