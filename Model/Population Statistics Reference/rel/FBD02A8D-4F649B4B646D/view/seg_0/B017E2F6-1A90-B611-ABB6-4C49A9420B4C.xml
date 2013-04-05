@@ -7,21 +7,6 @@
 <userDefinedSQL>SELECT STTIG.STTG_CODE,&lt;br/&gt;  STTIG.STCT_CODE,&lt;br/&gt;  STTIG.ITM_ID,&lt;br/&gt;  STTIG.VERSION_NBR&lt;br/&gt;FROM T_STATISTIC_TYPES_IN_GROUPS STTIG</userDefinedSQL>
 <layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select STTIG.STTG_CODE, STTIG.STCT_CODE, STTIG.ITM_ID, STTIG.VERSION_NBR From T_STATISTIC_TYPES_IN_GROUPS STTIG&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select STTIG.STTG_CODE, STTIG.STCT_CODE, STTIG.ITM_ID, STTIG.VERSION_NBR From T_STATISTIC_TYPES_IN_GROUPS STTIG&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_STATISTIC_TYPES_IN_GROUPS STTIG&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;117&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
 <parsed>true</parsed>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-</fonts>
 <usedContainers>
 <container alias="STTIG" containerID="7FD42201-B423-AA54-74ED-F3AD5A365E39"/>
 </usedContainers>
