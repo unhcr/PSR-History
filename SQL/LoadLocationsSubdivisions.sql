@@ -1,5 +1,10 @@
 set serveroutput on
 
+define StartYear = "&1"
+define EndYear = "&2"
+
+prompt Years from &StartYear to &EndYear
+
 declare
   nLOC_ID P_BASE.tnLOC_ID;
   nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
@@ -12,27 +17,24 @@ begin
    (with Q_ASR_LOCATIONS as
      (select ASR.COU_CODE,
         ASR.STATSYEAR,
-        nvl2(LCOR.CORRECTED_LOCATION_NAME,
-             trim(regexp_replace(LCOR.CORRECTED_LOCATION_NAME, ':.*$', '')),
-             nvl2(ASR.NEW_LOCATION_NAME,
-                  trim(regexp_replace(ASR.NEW_LOCATION_NAME, ':.*$', '')),
-                  trim(regexp_replace(ASR.LOCATION_NAME, ':.*$', '')))) as LOC_NAME,
-        rtrim(nvl2(LCOR.CORRECTED_LOCATION_NAME,
-                   trim(regexp_replace(LCOR.CORRECTED_LOCATION_NAME || ':', '^[^:]*:', '')),
-                   nvl2(ASR.NEW_LOCATION_NAME,
-                        trim(regexp_replace(ASR.NEW_LOCATION_NAME || ':', '^[^:]*:', '')),
-                        trim(regexp_replace(ASR.LOCATION_NAME || ':', '^[^:]*:', '')))),
-              ':') as LOC_TYPE_DESCRIPTION
+        trim(regexp_replace(coalesce(LCOR.CORRECTED_LOCATION_NAME, ASR.NEW_LOCATION_NAME,
+                                     ASR.LOCATION_NAME),
+                            ':.*$', '')) as LOC_NAME,
+        rtrim(trim(regexp_replace(coalesce(LCOR.CORRECTED_LOCATION_NAME, ASR.NEW_LOCATION_NAME,
+                                           ASR.LOCATION_NAME) || ':',
+                                  '^[^:]*:', '')), ':') as LOC_TYPE_DESCRIPTION
       from
        (select STATSYEAR, COU_CODE_ASYLUM as COU_CODE,
           replace(LOCATION_NAME, chr(10), '') as LOCATION_NAME,
           replace(NEW_LOCATION_NAME, chr(10), '') as NEW_LOCATION_NAME
         from STAGE.S_ASR_T3
+        where STATSYEAR between nvl('&StartYear', '0000') and nvl('&EndYear', '9999')
         union
         select STATSYEAR, COU_CODE_ORIGIN as COU_CODE,
           replace(LOCATION_NAME, chr(10), '') as LOCATION_NAME,
           null as NEW_LOCATION_NAME
-        from STAGE.S_ASR_T6) ASR
+        from STAGE.S_ASR_T6
+        where STATSYEAR between nvl('&StartYear', '0000') and nvl('&EndYear', '9999')) ASR
       left outer join STAGE.S_LOCATION_NAME_CORRECTIONS LCOR
         on LCOR.COU_CODE_ASYLUM = ASR.COU_CODE
         and LCOR.LOCATION_NAME = ASR.LOCATION_NAME
