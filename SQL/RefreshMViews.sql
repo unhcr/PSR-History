@@ -1,3 +1,1 @@
-var errors number;
-
-execute dbms_mview.refresh_all_mviews(:errors);
+execute dbms_mview.refresh('ASR_POC_SUMMARY');
