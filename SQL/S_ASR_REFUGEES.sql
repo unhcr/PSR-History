@@ -31,7 +31,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2000.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2000.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -103,7 +103,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2001.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2001.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -175,7 +175,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2002.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2002.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -249,7 +249,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2003.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2003.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -324,7 +324,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2004.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2004.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -395,7 +395,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2005.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2005.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -467,7 +467,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2006.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2006.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -541,7 +541,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2007.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2007.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -615,7 +615,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2008.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2008.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -688,7 +688,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2009.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2009.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -761,7 +761,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2010.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2010.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -834,7 +834,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2011.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2011.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -907,7 +907,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'ASR_REFUGEES_2012.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ASR_REFUGEES_2012.log'
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
@@ -947,168 +947,170 @@ organization external
 reject limit unlimited;
 
 
+create or replace view S_ASR_REFUGEES_CLEANED as
+select ASR.STATSYEAR,
+  nvl(DSC.DST_CODE, nvl(upper(ASR.DISPLACEMENT_STATUS), 'REF')) as DST_CODE,
+  upper(ASR.COU_CODE_ASYLUM) as COU_CODE_ASYLUM,
+  upper(ASR.COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
+  to_number(case when ASR.POP_START in ('-', '.', '\', '`', '..') then null
+                 else ASR.POP_START end) as POP_START,
+  to_number(case when ASR.POP_AH_START in ('-', '.', '\', '`', '..') then null
+                 else ASR.POP_AH_START end) as POP_AH_START,
+  to_number(case when ASR.ARR_GRP in ('-', '.', '\', '`', '..') then null
+                 else ASR.ARR_GRP end) as ARR_GRP,
+  to_number(case when ASR.ARR_IND in ('-', '.', '\', '`', '..') then null
+                 else ASR.ARR_IND end) as ARR_IND,
+  to_number(case when ASR.ARR_RESTL in ('-', '.', '\', '`', '..') then null
+                 else ASR.ARR_RESTL end) as ARR_RESTL,
+  to_number(case when ASR.BIRTH in ('-', '.', '\', '`', '..') then null
+                 else ASR.BIRTH end) as BIRTH,
+  to_number(case when ASR.REFOTHINC in ('-', '.', '\', '`', '..') then null
+                 else ASR.REFOTHINC end) as REFOTHINC,
+  to_number(case when ASR.TOTAL_INCREASE in ('-', '.', '\', '`', '..') then null
+                 else ASR.TOTAL_INCREASE end) as TOTAL_INCREASE,
+  to_number(case when ASR.VOLREP in ('-', '.', '\', '`', '..') then null
+                 else ASR.VOLREP end) as VOLREP,
+  to_number(case when ASR.VOLREP_AH in ('-', '.', '\', '`', '..') then null
+                 else ASR.VOLREP_AH end) as VOLREP_AH,
+  to_number(case when ASR.RESTL in ('-', '.', '\', '`', '..') then null
+                 else ASR.RESTL end) as RESTL,
+  to_number(case when ASR.RESTL_AH in ('-', '.', '\', '`', '..') then null
+                 else ASR.RESTL_AH end) as RESTL_AH,
+  to_number(case when ASR.CESSATION in ('-', '.', '\', '`', '..') then null
+                 else ASR.CESSATION end) as CESSATION,
+  to_number(case when ASR.NATURLZN in ('-', '.', '\', '`', '..') then null
+                 else ASR.NATURLZN end) as NATURLZN,
+  to_number(case when ASR.DEATH in ('-', '.', '\', '`', '..') then null
+                 else ASR.DEATH end) as DEATH,
+  to_number(case when ASR.REFOTHDEC in ('-', '.', '\', '`', '..') then null
+                 else ASR.REFOTHDEC end) as REFOTHDEC,
+  to_number(case when ASR.TOTAL_DECREASE in ('-', '.', '\', '`', '..') then null
+                 else ASR.TOTAL_DECREASE end) as TOTAL_DECREASE,
+  to_number(case when ASR.POP_END in ('-', '.', '\', '`', '..') then null
+                 else ASR.POP_END end) as POP_END,
+  to_number(case when ASR.POP_AH_END in ('-', '.', '\', '`', '..') then null
+                 else ASR.POP_AH_END end) as POP_AH_END,
+  case when SRC.SOURCE is null then upper(ASR.SOURCE) else SRC.CORRECTED_SOURCE end as SOURCE,
+  case when BSC.BASIS is null then upper(ASR.BASIS) else BSC.CORRECTED_BASIS end as BASIS
+from
+ (select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    regexp_replace(upper(SOURCE_BASIS), '^([GNUV]*)/?[CERSV]*$', '\1') as SOURCE,
+    regexp_replace(upper(SOURCE_BASIS), '^[GNUV]*/?([CERSV]*)$', '\1') as BASIS
+  from S_ASR_REFUGEES_2000
+  union all
+  select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    regexp_replace(upper(SOURCE_BASIS), '^([GNUV]?)[CERSV]*$', '\1') as SOURCE,
+    regexp_replace(upper(SOURCE_BASIS), '^[GNUV]?([CERSV]*)$', '\1') as BASIS
+  from S_ASR_REFUGEES_2001
+  union all
+  select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    regexp_replace(upper(SOURCE_BASIS), '^([GNUV]?)[CERSV]*$', '\1') as SOURCE,
+    regexp_replace(upper(SOURCE_BASIS), '^[GNUV]?([CERSV]*)$', '\1') as BASIS
+  from S_ASR_REFUGEES_2002
+  union all
+  select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    regexp_replace(upper(SOURCE_BASIS), '^([GNUV]*)/?[CERSV]*$', '\1') as SOURCE,
+    regexp_replace(upper(SOURCE_BASIS), '^[GNUV]*/?([CERSV]*)$', '\1') as BASIS
+  from S_ASR_REFUGEES_2003
+  union all
+  select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    regexp_replace(upper(SOURCE_BASIS), '^([GNUV]*)/?[CERSV]*$', '\1') as SOURCE,
+    regexp_replace(upper(SOURCE_BASIS), '^[GNUV]*/?([CERSV]*)$', '\1') as BASIS
+  from S_ASR_REFUGEES_2004
+  union all
+  select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    regexp_replace(upper(SOURCE_BASIS), '^([GNUV]*)/?[CERSV]*$', '\1') as SOURCE,
+    regexp_replace(upper(SOURCE_BASIS), '^[GNUV]*/?([CERSV]*)$', '\1') as BASIS
+  from S_ASR_REFUGEES_2005
+  union all
+  select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    SOURCE, BASIS
+  from S_ASR_REFUGEES_2006
+  union all
+  select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    SOURCE, BASIS
+  from S_ASR_REFUGEES_2007
+  union all
+  select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    SOURCE, BASIS
+  from S_ASR_REFUGEES_2008
+  union all
+  select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    SOURCE, BASIS
+  from S_ASR_REFUGEES_2009
+  union all
+  select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    SOURCE, BASIS
+  from S_ASR_REFUGEES_2010
+  union all
+  select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    SOURCE, BASIS
+  from S_ASR_REFUGEES_2011
+  union all
+  select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
+    POP_START, POP_AH_START,
+    ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
+    VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
+    POP_END, POP_AH_END,
+    SOURCE, BASIS
+  from S_ASR_REFUGEES_2012) ASR
+left outer join S_DST_CODE_CORRECTIONS DSC
+  on DSC.DISPLACEMENT_STATUS = ASR.DISPLACEMENT_STATUS
+left outer join S_SOURCE_CORRECTIONS SRC
+  on SRC.SOURCE = ASR.SOURCE
+left outer join S_BASIS_CORRECTIONS BSC
+  on BSC.BASIS = ASR.BASIS;
+
+
 create materialized view S_ASR_REFUGEES build deferred as
-with ASR_REFUGEES_CLEANED as
- (select ASR.STATSYEAR,
-    nvl(DSC.DST_CODE, nvl(upper(ASR.DISPLACEMENT_STATUS), 'REF')) as DST_CODE,
-    upper(ASR.COU_CODE_ASYLUM) as COU_CODE_ASYLUM,
-    upper(ASR.COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
-    to_number(case when ASR.POP_START in ('-', '.', '\', '`', '..') then null
-                   else ASR.POP_START end) as POP_START,
-    to_number(case when ASR.POP_AH_START in ('-', '.', '\', '`', '..') then null
-                   else ASR.POP_AH_START end) as POP_AH_START,
-    to_number(case when ASR.ARR_GRP in ('-', '.', '\', '`', '..') then null
-                   else ASR.ARR_GRP end) as ARR_GRP,
-    to_number(case when ASR.ARR_IND in ('-', '.', '\', '`', '..') then null
-                   else ASR.ARR_IND end) as ARR_IND,
-    to_number(case when ASR.ARR_RESTL in ('-', '.', '\', '`', '..') then null
-                   else ASR.ARR_RESTL end) as ARR_RESTL,
-    to_number(case when ASR.BIRTH in ('-', '.', '\', '`', '..') then null
-                   else ASR.BIRTH end) as BIRTH,
-    to_number(case when ASR.REFOTHINC in ('-', '.', '\', '`', '..') then null
-                   else ASR.REFOTHINC end) as REFOTHINC,
-    to_number(case when ASR.TOTAL_INCREASE in ('-', '.', '\', '`', '..') then null
-                   else ASR.TOTAL_INCREASE end) as TOTAL_INCREASE,
-    to_number(case when ASR.VOLREP in ('-', '.', '\', '`', '..') then null
-                   else ASR.VOLREP end) as VOLREP,
-    to_number(case when ASR.VOLREP_AH in ('-', '.', '\', '`', '..') then null
-                   else ASR.VOLREP_AH end) as VOLREP_AH,
-    to_number(case when ASR.RESTL in ('-', '.', '\', '`', '..') then null
-                   else ASR.RESTL end) as RESTL,
-    to_number(case when ASR.RESTL_AH in ('-', '.', '\', '`', '..') then null
-                   else ASR.RESTL_AH end) as RESTL_AH,
-    to_number(case when ASR.CESSATION in ('-', '.', '\', '`', '..') then null
-                   else ASR.CESSATION end) as CESSATION,
-    to_number(case when ASR.NATURLZN in ('-', '.', '\', '`', '..') then null
-                   else ASR.NATURLZN end) as NATURLZN,
-    to_number(case when ASR.DEATH in ('-', '.', '\', '`', '..') then null
-                   else ASR.DEATH end) as DEATH,
-    to_number(case when ASR.REFOTHDEC in ('-', '.', '\', '`', '..') then null
-                   else ASR.REFOTHDEC end) as REFOTHDEC,
-    to_number(case when ASR.TOTAL_DECREASE in ('-', '.', '\', '`', '..') then null
-                   else ASR.TOTAL_DECREASE end) as TOTAL_DECREASE,
-    to_number(case when ASR.POP_END in ('-', '.', '\', '`', '..') then null
-                   else ASR.POP_END end) as POP_END,
-    to_number(case when ASR.POP_AH_END in ('-', '.', '\', '`', '..') then null
-                   else ASR.POP_AH_END end) as POP_AH_END,
-    case when SRC.SOURCE is null then upper(ASR.SOURCE) else SRC.CORRECTED_SOURCE end as SOURCE,
-    case when BSC.BASIS is null then upper(ASR.BASIS) else BSC.CORRECTED_BASIS end as BASIS
-  from
-   (select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      regexp_replace(upper(SOURCE_BASIS), '^([GNUV]*)/?[CERSV]*$', '\1') as SOURCE,
-      regexp_replace(upper(SOURCE_BASIS), '^[GNUV]*/?([CERSV]*)$', '\1') as BASIS
-    from S_ASR_REFUGEES_2000
-    union all
-    select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      regexp_replace(upper(SOURCE_BASIS), '^([GNUV]?)[CERSV]*$', '\1') as SOURCE,
-      regexp_replace(upper(SOURCE_BASIS), '^[GNUV]?([CERSV]*)$', '\1') as BASIS
-    from S_ASR_REFUGEES_2001
-    union all
-    select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      regexp_replace(upper(SOURCE_BASIS), '^([GNUV]?)[CERSV]*$', '\1') as SOURCE,
-      regexp_replace(upper(SOURCE_BASIS), '^[GNUV]?([CERSV]*)$', '\1') as BASIS
-    from S_ASR_REFUGEES_2002
-    union all
-    select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      regexp_replace(upper(SOURCE_BASIS), '^([GNUV]*)/?[CERSV]*$', '\1') as SOURCE,
-      regexp_replace(upper(SOURCE_BASIS), '^[GNUV]*/?([CERSV]*)$', '\1') as BASIS
-    from S_ASR_REFUGEES_2003
-    union all
-    select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      regexp_replace(upper(SOURCE_BASIS), '^([GNUV]*)/?[CERSV]*$', '\1') as SOURCE,
-      regexp_replace(upper(SOURCE_BASIS), '^[GNUV]*/?([CERSV]*)$', '\1') as BASIS
-    from S_ASR_REFUGEES_2004
-    union all
-    select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      regexp_replace(upper(SOURCE_BASIS), '^([GNUV]*)/?[CERSV]*$', '\1') as SOURCE,
-      regexp_replace(upper(SOURCE_BASIS), '^[GNUV]*/?([CERSV]*)$', '\1') as BASIS
-    from S_ASR_REFUGEES_2005
-    union all
-    select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      SOURCE, BASIS
-    from S_ASR_REFUGEES_2006
-    union all
-    select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      SOURCE, BASIS
-    from S_ASR_REFUGEES_2007
-    union all
-    select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      SOURCE, BASIS
-    from S_ASR_REFUGEES_2008
-    union all
-    select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      SOURCE, BASIS
-    from S_ASR_REFUGEES_2009
-    union all
-    select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      SOURCE, BASIS
-    from S_ASR_REFUGEES_2010
-    union all
-    select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      SOURCE, BASIS
-    from S_ASR_REFUGEES_2011
-    union all
-    select STATSYEAR, DISPLACEMENT_STATUS, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
-      POP_START, POP_AH_START,
-      ARR_GRP, ARR_IND, ARR_RESTL, BIRTH, REFOTHINC, TOTAL_INCREASE,
-      VOLREP, VOLREP_AH, RESTL, RESTL_AH, CESSATION, NATURLZN, DEATH, REFOTHDEC, TOTAL_DECREASE,
-      POP_END, POP_AH_END,
-      SOURCE, BASIS
-    from S_ASR_REFUGEES_2012) ASR
-  left outer join S_DST_CODE_CORRECTIONS DSC
-    on DSC.DISPLACEMENT_STATUS = ASR.DISPLACEMENT_STATUS
-  left outer join S_SOURCE_CORRECTIONS SRC
-    on SRC.SOURCE = ASR.SOURCE
-  left outer join S_BASIS_CORRECTIONS BSC
-    on BSC.BASIS = ASR.BASIS)
 select STATSYEAR, DST_CODE, COU_CODE_ASYLUM, COU_CODE_ORIGIN, SOURCE, BASIS, DATA_POINT, VALUE
 from
  (select STATSYEAR, DST_CODE, COU_CODE_ASYLUM, COU_CODE_ORIGIN,
@@ -1131,7 +1133,7 @@ from
     sum(REFOTHDEC) as REFOTHDEC,
     sum(POP_END) as POP_END,
     sum(POP_AH_END) as POP_AH_END
-  from ASR_REFUGEES_CLEANED
+  from S_ASR_REFUGEES_CLEANED
   group by STATSYEAR, DST_CODE, COU_CODE_ASYLUM, COU_CODE_ORIGIN)
 unpivot
  (VALUE for DATA_POINT in
@@ -1143,3 +1145,33 @@ where VALUE != 0;
 
 
 grant select on S_ASR_REFUGEES to PSR_STAGE;
+
+
+/* Verification query
+select sum(ROW_COUNT) as RAW_ROW_COUNT,
+  count(*) as AGGREGATED_ROW_COUNT,
+  count(*) * 17 as VALUE_COUNT,
+  count(POP_START) + count(POP_AH_START) + count(ARR_GRP) + count(ARR_IND) + count(ARR_RESTL) +
+    count(BIRTH) + count(REFOTHINC) + count(VOLREP) + count(VOLREP_AH) + count(RESTL) +
+    count(RESTL_AH) + count(CESSATION) + count(NATURLZN) + count(DEATH) + count(REFOTHDEC) +
+    count(POP_END) + count(POP_AH_END) as NON_NULL_COUNT,
+  count(case when POP_START != 0 then 1 end) + count(case when POP_AH_START != 0 then 1 end) +
+    count(case when ARR_GRP != 0 then 1 end) + count(case when ARR_IND != 0 then 1 end) +
+    count(case when ARR_RESTL != 0 then 1 end) + count(case when BIRTH != 0 then 1 end) +
+    count(case when REFOTHINC != 0 then 1 end) + count(case when VOLREP != 0 then 1 end) +
+    count(case when VOLREP_AH != 0 then 1 end) + count(case when RESTL != 0 then 1 end) +
+    count(case when RESTL_AH != 0 then 1 end) + count(case when CESSATION != 0 then 1 end) +
+    count(case when NATURLZN != 0 then 1 end) + count(case when DEATH != 0 then 1 end) +
+    count(case when REFOTHDEC != 0 then 1 end) + count(case when POP_END != 0 then 1 end) +
+    count(case when POP_AH_END != 0 then 1 end) as NON_ZERO_COUNT
+from
+ (select STATSYEAR, DST_CODE, COU_CODE_ASYLUM, COU_CODE_ORIGIN, count(*) as ROW_COUNT,
+    sum(POP_START) as POP_START, sum(POP_AH_START) as POP_AH_START, sum(ARR_GRP) as ARR_GRP,
+    sum(ARR_IND) as ARR_IND, sum(ARR_RESTL) as ARR_RESTL, sum(BIRTH) as BIRTH,
+    sum(REFOTHINC) as REFOTHINC, sum(VOLREP) as VOLREP, sum(VOLREP_AH) as VOLREP_AH,
+    sum(RESTL) as RESTL, sum(RESTL_AH) as RESTL_AH, sum(CESSATION) as CESSATION,
+    sum(NATURLZN) as NATURLZN, sum(DEATH) as DEATH, sum(REFOTHDEC) as REFOTHDEC,
+    sum(POP_END) as POP_END, sum(POP_AH_END) as POP_AH_END
+  from S_ASR_REFUGEES_CLEANED
+  group by STATSYEAR, DST_CODE, COU_CODE_ASYLUM, COU_CODE_ORIGIN);
+*/
