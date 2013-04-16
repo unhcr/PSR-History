@@ -1150,6 +1150,15 @@ grant select on S_ASR_REFUGEES to PSR_STAGE;
 /* Verification query
 select sum(ROW_COUNT) as RAW_ROW_COUNT,
   count(*) as AGGREGATED_ROW_COUNT,
+  count(
+    case
+      when POP_START != 0 or POP_AH_START != 0 or
+        ARR_GRP != 0 or ARR_IND != 0 or ARR_RESTL != 0 or BIRTH != 0 or REFOTHINC != 0 or
+        VOLREP != 0 or VOLREP_AH != 0 or RESTL != 0 or RESTL_AH != 0 or CESSATION != 0 or
+        NATURLZN != 0 or DEATH != 0 or REFOTHDEC != 0 or
+        POP_END != 0 or POP_AH_END != 0
+      then 1
+    end) as FILTERED_AGGREGATED_ROW_COUNT,
   count(*) * 17 as VALUE_COUNT,
   count(POP_START) + count(POP_AH_START) + count(ARR_GRP) + count(ARR_IND) + count(ARR_RESTL) +
     count(BIRTH) + count(REFOTHINC) + count(VOLREP) + count(VOLREP_AH) + count(RESTL) +
@@ -1173,5 +1182,11 @@ from
     sum(NATURLZN) as NATURLZN, sum(DEATH) as DEATH, sum(REFOTHDEC) as REFOTHDEC,
     sum(POP_END) as POP_END, sum(POP_AH_END) as POP_AH_END
   from S_ASR_REFUGEES_CLEANED
+  group by STATSYEAR, DST_CODE, COU_CODE_ASYLUM, COU_CODE_ORIGIN);
+
+select count(*) as KEY_COUNT, sum(ROW_COUNT) as ROW_COUNT
+from
+ (select count(*) as ROW_COUNT
+  from S_ASR_REFUGEES
   group by STATSYEAR, DST_CODE, COU_CODE_ASYLUM, COU_CODE_ORIGIN);
 */
