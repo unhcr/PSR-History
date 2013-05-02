@@ -38,7 +38,7 @@ begin
   for rLOC in
    (select KEY, NAME_EN, LOCT_CODE, START_DATE, END_DATE, NAME_FR, UNSDNUM, HCRCD,
       DISPLAYSEQ, RSKEY, NOTES
-    from STAGE.S_LOCATIONS_REGIONS
+    from S_LOCATION_REGIONS
     order by KEY)
   loop
     iCount := iCount + 1;
@@ -75,14 +75,17 @@ begin
     end if;
   end loop;
 --
-  dbms_output.put_line(to_char(iCount) || ' LOCATIONS records inserted');
+  if iCount = 1
+  then dbms_output.put_line('1 LOCATIONS record inserted');
+  else dbms_output.put_line(to_char(iCount) || ' LOCATIONS records inserted');
+  end if;
 --
   iCount := 0;
 --
   for rLOC in
    (select KEY, START_DATE, END_DATE,
       UNSD_FROM_KEY, UNSDA_FROM_KEY, HCRRESP_FROM_KEY, RSGEO_FROM_KEY, RSHCR_FROM_KEY
-    from STAGE.S_LOCATIONS_REGIONS
+    from S_LOCATION_REGIONS
     order by KEY)
   loop
     if rLOC.UNSD_FROM_KEY is not null
@@ -127,6 +130,9 @@ begin
     end if;
   end loop;
 --
-  dbms_output.put_line(to_char(iCount) || ' LOCATION_RELATIONSHIPS records inserted');
+  if iCount = 1
+  then dbms_output.put_line('1 LOCATION_RELATIONSHIPS record inserted');
+  else dbms_output.put_line(to_char(iCount) || ' LOCATION_RELATIONSHIPS records inserted');
+  end if;
 end;
 /
