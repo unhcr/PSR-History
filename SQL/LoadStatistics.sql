@@ -1,4 +1,11 @@
-set serveroutput on size 1000000
+set serveroutput on size 10000
+
+define StartYear = "&1"
+define EndYear = "&2"
+define TableNumbers = "&3"
+
+prompt Table Numbers: &TableNumbers
+prompt Years from &StartYear to &EndYear
 
 declare
   nSTG_ID_COUNTRY P_BASE.tnSTG_ID;
@@ -22,7 +29,7 @@ begin
      (--
       -- Table II
       --
-      select TABLE_NUMBER,
+    /*select TABLE_NUMBER,
         STATSYEAR,
         decode(nvl(upper(DISPLACEMENT_STATUS), 'REF'),
                'REF', 'REF', 'REF-LIKE', 'ROC', 'XXX') as DST_CODE,
@@ -68,26 +75,32 @@ begin
           REFOTHDEC as 'F/REFOTHDEC',
           POP_END as 'E/REFPOP',
           POP_AH_END as 'E/REFPOP-AH'))
-      union all
+      where nvl('&TableNumbers', '23456A6B6C6D7A7B7C7D') like '%2%'
+      and STATSYEAR between nvl('&StartYear', '0000') and nvl('&EndYear', '9999')
+      union all*/
       --
       -- Table III
       --
       select TABLE_NUMBER,
         STATSYEAR,
-        upper(DISPLACEMENT_STATUS) as DST_CODE,
+        decode(upper(DISPLACEMENT_STATUS),
+               'HUM', 'REF', 'IRP', 'OOC', 'RID', 'RDP', 'RRE', 'RET', 'VAR', 'OOC',
+               'REF/ASY', 'RAS', 'RET(EX IDP)', 'RDP', 'RET(EX REF)', 'RET', 
+               'LOCAL RESIDENTS', 'XXX', 'POC', 'XXX', 'REF/POC', 'XXX', 'RET/REF', 'XXX',
+               upper(DISPLACEMENT_STATUS)) as DST_CODE,
         COU_CODE_ASYLUM,
         LOCATION_NAME,
         COU_CODE_ORIGIN,
         'UR' as DIMT_CODE1,
         URBAN_RURAL_STATUS as DIM_CODE1,
         'ACMT' as DIMT_CODE2,
-        case ACCOMMODATION_TYPE
-          when 'Camp' then 'CAMP'
-          when 'Center' then 'CENTRE'
-          when 'Dispersed' then 'DISPERSED'
-          when 'Individual accommodation' then 'INDIVIDUAL'
-          when 'Settlement' then 'SETTLEMENT'
-          when 'Undefined' then 'UNDEFINED'
+        case upper(ACCOMMODATION_TYPE)
+          when 'COLLECTIVE CENTER' then 'CENTER'
+          when 'INDIVIDUAL ACCOMMODATION' then 'INDIVIDUAL'
+          when 'PLANNED/ MANAGED CAMP' then 'CAMPPM'
+          when 'SELF-SETTLED CAMP' then 'CAMPSS'
+          when 'RECEPTION/ TRANSIT CAMP' then 'CAMPRT'
+          else upper(ACCOMMODATION_TYPE)
         end as DIM_CODE2,
         case when BASIS in ('C', 'E', 'R', 'S', 'V') then 'REG' end as DIMT_CODE3,
         case
@@ -153,7 +166,9 @@ begin
         left outer join STAGE.S_PPG_CORRECTIONS PCOR
           on PCOR.STATSYEAR = ASR.STATSYEAR
           and PCOR.COU_CODE_ASYLUM = upper(ASR.COU_CODE_ASYLUM)
-          and PCOR.PPG_NAME = ASR.PPG_NAME)
+          and PCOR.PPG_NAME = ASR.PPG_NAME
+        where nvl('&TableNumbers', '23456A6B6C6D7A7B7C7D') like '%3%'
+        and ASR.STATSYEAR between nvl('&StartYear', '0000') and nvl('&EndYear', '9999'))
       unpivot
        (VALUE for COLUMN_CODE in
          (F0_4 as 'F00',
@@ -207,6 +222,8 @@ begin
           TEMPPROT as 'TEMPPROT',
           OTHER as 'OTHER',
           UNKNOWN as 'UNKNOWN'))
+      where nvl('&TableNumbers', '23456A6B6C6D7A7B7C7D') like '%4%'
+      and STATSYEAR between nvl('&StartYear', '0000') and nvl('&EndYear', '9999')
       union all
       --
       -- Table V
@@ -246,6 +263,8 @@ begin
           ASYOTHCL as 'F/ASYOTHCL',
           ASY_END as 'E/ASYPOP',
           ASY_AH_END as 'E/ASYPOP-AH'))
+      where nvl('&TableNumbers', '23456A6B6C6D7A7B7C7D') like '%5%'
+      and STATSYEAR between nvl('&StartYear', '0000') and nvl('&EndYear', '9999')
       union all
       --
       -- Table VI
@@ -298,7 +317,9 @@ begin
         from STAGE.S_ASR_T6 ASR
         left outer join STAGE.S_LOCATION_NAME_CORRECTIONS LCOR
           on LCOR.COU_CODE_ASYLUM = upper(ASR.COU_CODE_ORIGIN)
-          and LCOR.LOCATION_NAME = replace(ASR.LOCATION_NAME, chr(10), ''))
+          and LCOR.LOCATION_NAME = replace(ASR.LOCATION_NAME, chr(10), '')
+        where nvl('&TableNumbers', '234567A7B7C7D') like '%6%'
+        and ASR.STATSYEAR between nvl('&StartYear', '0000') and nvl('&EndYear', '9999'))
       unpivot
        (VALUE for COLUMN_CODE in
          (POP_START as 'S/POP',
@@ -343,6 +364,9 @@ begin
        (VALUE for COLUMN_CODE in
          (RETURN as 'F/REFRTN',
           RETURN_AH as 'F/REFRTN-AH'))
+      where (nvl('&TableNumbers', '23456A6B6C6D7A7B7C7D') like '%7A%'
+        or nvl('&TableNumbers', '23456A6B6C6D7A7B7C7D') like '%7B%')
+      and STATSYEAR between nvl('&StartYear', '0000') and nvl('&EndYear', '9999')
       union all
       --
       -- Table VII.C
@@ -381,6 +405,8 @@ begin
           STAOTHDEC as 'F/STAOTHDEC',
           POP_END as 'E/STAPOP',
           POP_AH_END as 'E/STAPOP-AH'))
+      where nvl('&TableNumbers', '23456A6B6C6D7A7B7C7D') like '%7C%'
+      and STATSYEAR between nvl('&StartYear', '0000') and nvl('&EndYear', '9999')
       union all
       --
       -- Table VII.D
@@ -418,7 +444,9 @@ begin
           OOCRTN as 'F/OOCRTN',
           OOCOTHDEC as 'F/OOCOTHDEC',
           POP_END as 'E/OOCPOP',
-          POP_AH_END as 'E/OOCPOP-AH'))),
+          POP_AH_END as 'E/OOCPOP-AH'))
+      where nvl('&TableNumbers', '23456A6B6C6D7A7B7C7D') like '%7D%'
+      and STATSYEAR between nvl('&StartYear', '0000') and nvl('&EndYear', '9999')),
   --
     AGGREGATED_STATISTICS as
      (select STATSYEAR, STTG_CODE,
@@ -483,7 +511,7 @@ begin
               when upper(USTC.LOCATION_NAME) = 'VARIOUS' then COU.NAME
               else trim(regexp_replace(USTC.LOCATION_NAME, ':.*$', ''))
             end as LOCATION_NAME,
-            decode(USTC.COU_CODE_ORIGIN, 'YUG', 'SRB', USTC.COU_CODE_ORIGIN) as COU_CODE_ORIGIN,
+            USTC.COU_CODE_ORIGIN,
             USTC.DIMT_CODE1, USTC.DIM_CODE1, USTC.DIMT_CODE2, USTC.DIM_CODE2, USTC.DIMT_CODE3,
             USTC.DIM_CODE3, USTC.DIMT_CODE4, USTC.DIM_CODE4, USTC.DIMT_CODE5, USTC.DIM_CODE5,
             USTC.SUBGROUP_NAME, USTC.PPG_NAME, USTC.SOURCE, USTC.BASIS,
@@ -575,12 +603,15 @@ begin
       and LOC.END_DATE >= STC.END_DATE_YEAR
       and LOC.NAME = STC.LOCATION_NAME
     left outer join
-     (select LOC.ID, LOC.START_DATE, LOC.END_DATE, LOCA.CHAR_VALUE as UNHCR_COUNTRY_CODE
-      from T_LOCATIONS LOC
-      inner join T_LOCATION_ATTRIBUTES LOCA
-        on LOCA.LOC_ID = LOC.ID
-        and LOCA.LOCAT_CODE = 'HCRCC'
-      where LOC.LOCT_CODE in ('COUNTRY', 'OTHORIGIN')) OGN
+     (select LOCA.CHAR_VALUE as UNHCR_COUNTRY_CODE, LOC.START_DATE,
+        lead(LOC.START_DATE, 1, P_BASE.MAX_DATE) over
+          (partition by LOCA.CHAR_VALUE order by LOC.START_DATE) as END_DATE,
+        LOC.ID
+      from T_LOCATION_ATTRIBUTES LOCA
+      inner join T_LOCATIONS LOC
+        on LOC.ID = LOCA.LOC_ID
+        and LOC.LOCT_CODE in ('COUNTRY', 'OTHORIGIN')
+      where LOCA.LOCAT_CODE = 'HCRCC') OGN
       on OGN.UNHCR_COUNTRY_CODE = STC.COU_CODE_ORIGIN
       and OGN.START_DATE < STC.END_DATE_YEAR
       and OGN.END_DATE >= STC.END_DATE_YEAR
@@ -645,7 +676,7 @@ begin
       and PPG2.START_DATE < STC.END_DATE_YEAR
       and PPG2.END_DATE >= STC.END_DATE_YEAR
     left outer join T_AGE_RANGES AGR
-      on AGR.AGP_CODE = 'STD'
+      on AGR.AGP_CODE = case when STATSYEAR <= '2005' then 'STD1' else 'STD' end
       and AGR.AGE_FROM = STC.AGE_FROM
     order by STATSYEAR, LOC_ID_REPORTING_COUNTRY, STTG_CODE,
       DST_CODE, LOC_ID_ASYLUM_COUNTRY, LOC_ID_ASYLUM, LOC_ID_ORIGIN_COUNTRY,
@@ -674,6 +705,12 @@ begin
       dbms_output.put_line
        ('Invalid origin: ' || rSTC.STTG_CODE || '~' || rSTC.STATSYEAR || '~' ||
           rSTC.COU_CODE_ORIGIN);
+    elsif rSTC.STTG_CODE in ('DEMOGR', 'IDP', 'IDPCNFLCT', 'IDPNTRLDIS')
+      and rSTC.LOC_ID_ASYLUM is null
+    then
+      dbms_output.put_line
+       ('Invalid asylum location: ' || rSTC.STTG_CODE || '~' || rSTC.STATSYEAR || '~' ||
+          rSTC.LOCATION_NAME);
     else
     --
     -- Create statistic group for the whole country's statistics.
