@@ -16,7 +16,7 @@ organization external
     characterset WE8MSWIN1252
     badfile 'DIMENSION_VALUES.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'DIMENSION_VALUES.log'
     skip 1 
     fields terminated by ','
     optionally enclosed by '"' and '"'
