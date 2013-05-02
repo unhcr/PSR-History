@@ -1,183 +1,170 @@
 set serveroutput on
 
-define StartYear = "&1"
-define EndYear = "&2"
-
-prompt Years from &StartYear to &EndYear
-
 declare
   nLOC_ID P_BASE.tnLOC_ID;
   nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
-  iCount pls_integer := 0;
+  iCount1 pls_integer := 0;
+  iCount2 pls_integer := 0;
 begin
---
--- Locations used in ASR spreadsheets
---
   for rSDIV in
-   (with Q_ASR_LOCATIONS as
-     (select ASR.COU_CODE,
-        ASR.STATSYEAR,
-        trim(regexp_replace(coalesce(LCOR.CORRECTED_LOCATION_NAME, ASR.NEW_LOCATION_NAME,
-                                     ASR.LOCATION_NAME),
-                            ':.*$', '')) as LOC_NAME,
-        rtrim(trim(regexp_replace(coalesce(LCOR.CORRECTED_LOCATION_NAME, ASR.NEW_LOCATION_NAME,
-                                           ASR.LOCATION_NAME) || ':',
-                                  '^[^:]*:', '')), ':') as LOC_TYPE_DESCRIPTION
-      from
-       (select STATSYEAR, COU_CODE_ASYLUM as COU_CODE,
-          replace(LOCATION_NAME, chr(10), '') as LOCATION_NAME,
-          replace(NEW_LOCATION_NAME, chr(10), '') as NEW_LOCATION_NAME
-        from STAGE.S_ASR_T3
-        where STATSYEAR between nvl('&StartYear', '0000') and nvl('&EndYear', '9999')
-        union
-        select STATSYEAR, COU_CODE_ORIGIN as COU_CODE,
-          replace(LOCATION_NAME, chr(10), '') as LOCATION_NAME,
-          null as NEW_LOCATION_NAME
-        from STAGE.S_ASR_T6
-        where STATSYEAR between nvl('&StartYear', '0000') and nvl('&EndYear', '9999')) ASR
-      left outer join STAGE.S_LOCATION_NAME_CORRECTIONS LCOR
-        on LCOR.COU_CODE_ASYLUM = ASR.COU_CODE
-        and LCOR.LOCATION_NAME = ASR.LOCATION_NAME
-        and (LCOR.NEW_LOCATION_NAME = ASR.NEW_LOCATION_NAME
-          or (LCOR.NEW_LOCATION_NAME is null
-            and ASR.NEW_LOCATION_NAME is null))),
-  --
-    Q_MSRP_LOCATIONS as
-     (select COU.UNHCR_COUNTRY_CODE as COU_CODE,
-        COU.START_DATE, COU.END_DATE,
-        AMS.SITE_CODE as MSRP_CODE,
-        AMS.SITE_NAME as LOCATION_NAME
-      from STAGE.S_ACTIVE_MSRP_SITES AMS
-      inner join COUNTRIES COU
-        on COU.ISO3166_ALPHA3_CODE = substr(AMS.SITE_CODE, 1, 3)
-      where upper(AMS.SITE_NAME) != 'VARIOUS')
-  --
-    select distinct ASL.COU_CODE,
+   (select LSD.COU_CODE,
+      nvl(LSD.COU_START_DATE, P_BASE.MIN_DATE) as COU_START_DATE,
+      LSD.LOCATION_NAME_EN,
+      LSD.MSRP_CODE,
+      LSD.HLEVEL,
+      LSD.LOCT_CODE,
+      LSD.LOC_TYPE_DESCRIPTION_EN,
+      nvl(LSD.LOC_START_DATE, P_BASE.MIN_DATE) as LOC_START_DATE,
+      nvl(LSD.LOC_END_DATE, P_BASE.MAX_DATE) as LOC_END_DATE,
+      nvl(LSD.LOCR_START_DATE, P_BASE.MIN_DATE) as LOCR_START_DATE,
+      nvl(LSD.LOCR_END_DATE, P_BASE.MAX_DATE) as LOCR_END_DATE,
+      LSD.COU_CODE_PREV,
+      nvl(LSD.COU_START_DATE_PREV, P_BASE.MIN_DATE) as COU_START_DATE_PREV,
       COU.ID as COU_ID,
-      COU.START_DATE,
-      COU.END_DATE,
-      case when upper(ASL.LOC_NAME) = 'VARIOUS' then COU.NAME else ASL.LOC_NAME end as LOC_NAME,
-      MSL.MSRP_CODE,
-      nvl(max(LOCTV.LOCT_CODE), 'POINT') as LOCT_CODE,
-      max(LOCTV.ID) as LOCTV_ID,
-      count(distinct LOCTV.ID) LOCTV_COUNT
-    from Q_ASR_LOCATIONS ASL
-    inner join COUNTRIES COU
-      on COU.UNHCR_COUNTRY_CODE = ASL.COU_CODE
-      and COU.START_DATE < add_months(to_date(ASL.STATSYEAR || '0101', 'YYYYMMDD'), 12)
-      and COU.END_DATE >= add_months(to_date(ASL.STATSYEAR || '0101', 'YYYYMMDD'), 12)
-    left outer join LOCATION_TYPE_VARIANTS LOCTV
-      on LOCTV.LOC_ID = COU.ID
+      count(distinct LOCTV.ID) as LOCTV_COUNT,
+      max(LOCTV.ID) as LOCTV_ID
+    from S_LOCATION_SUBDIVISIONS LSD
+    left outer join
+     (select LOC.ID, LOC.START_DATE, LOCA.CHAR_VALUE as UNHCR_COUNTRY_CODE
+      from T_LOCATIONS LOC
+      inner join T_LOCATION_ATTRIBUTES LOCA
+        on LOCA.LOC_ID = LOC.ID
+        and LOCA.LOCAT_CODE = 'HCRCC') COU
+      on COU.UNHCR_COUNTRY_CODE = LSD.COU_CODE
+      and COU.START_DATE = nvl(LSD.COU_START_DATE, P_BASE.MIN_DATE)
+    left outer join
+     (select LOCTV.ID, LOCTV.LOC_ID, LOCTV.LOCT_CODE, LOCTV.LOCRT_CODE, TXT.TEXT as DESCRIPTION
+      from T_LOCATION_TYPE_VARIANTS LOCTV
+      inner join T_TEXT_ITEMS TXT
+        on TXT.ITM_ID = LOCTV.ITM_ID
+        and TXT.TXTT_CODE = 'DESCR'
+        and TXT.SEQ_NBR = 1
+        and TXT.LANG_CODE = 'en') LOCTV
+      on LOCTV.LOCT_CODE = LSD.LOCT_CODE
+      and LOCTV.LOC_ID = COU.ID
       and LOCTV.LOCRT_CODE = 'WITHIN'
-      and LOCTV.DESCRIPTION =
-        case
-          when upper(ASL.LOC_NAME) = 'VARIOUS' then 'Dispersed in the country / territory'
-          else ASL.LOC_TYPE_DESCRIPTION
-        end
-    left outer join Q_MSRP_LOCATIONS MSL
-      on MSL.COU_CODE = ASL.COU_CODE
-      and MSL.START_DATE < add_months(to_date(ASL.STATSYEAR || '0101', 'YYYYMMDD'), 12)
-      and MSL.END_DATE >= add_months(to_date(ASL.STATSYEAR || '0101', 'YYYYMMDD'), 12)
-      and upper(MSL.LOCATION_NAME) = upper(ASL.LOC_NAME)
-    group by ASL.COU_CODE,
-      COU.ID,
-      COU.START_DATE,
-      COU.END_DATE,
-      case when upper(ASL.LOC_NAME) = 'VARIOUS' then COU.NAME else ASL.LOC_NAME end,
-      MSL.MSRP_CODE)
+      and LOCTV.DESCRIPTION = LSD.LOC_TYPE_DESCRIPTION_EN
+    group by LSD.COU_CODE,
+      LSD.COU_START_DATE,
+      LSD.LOCATION_NAME_EN,
+      LSD.MSRP_CODE,
+      LSD.HLEVEL,
+      LSD.LOCT_CODE,
+      LSD.LOC_TYPE_DESCRIPTION_EN,
+      LSD.LOC_START_DATE,
+      LSD.LOC_END_DATE,
+      LSD.LOCR_START_DATE,
+      LSD.LOCR_END_DATE,
+      LSD.COU_CODE_PREV,
+      LSD.COU_START_DATE_PREV,
+      COU.ID
+    order by COU_CODE_PREV nulls first, COU_START_DATE_PREV, COU_CODE, COU_START_DATE)
   loop
-    if rSDIV.LOCTV_COUNT > 1
-    then dbms_output.put_line('Duplicate location: ' || rSDIV.COU_CODE || '|' || rSDIV.LOC_NAME);
+    P_UTILITY.TRACE_POINT('Trace1', rSDIV.COU_CODE || '~' ||
+      to_char(rSDIV.COU_START_DATE, 'YYYY-MM-DD') || '~' ||
+      rSDIV.LOCATION_NAME_EN || '~' || rSDIV.LOC_TYPE_DESCRIPTION_EN || '~' ||
+      to_char(rSDIV.LOC_START_DATE, 'YYYY-MM-DD') || '~' ||
+      to_char(rSDIV.LOC_END_DATE, 'YYYY-MM-DD') || '~' ||
+      to_char(rSDIV.LOCR_START_DATE, 'YYYY-MM-DD') || '~' ||
+      to_char(rSDIV.LOCR_END_DATE, 'YYYY-MM-DD'));
+  --
+    if rSDIV.COU_ID is null
+    then dbms_output.put_line('Country not found: ' || rSDIV.COU_CODE || '|' ||
+                                to_char(rSDIV.COU_START_DATE, 'YYYY-MM-DD'));
+    elsif rSDIV.LOCTV_COUNT > 1
+    then dbms_output.put_line('Ambiguous location type variant: ' || rSDIV.COU_CODE || '|' ||
+                                to_char(rSDIV.COU_START_DATE, 'YYYY-MM-DD') || '|' ||
+                                rSDIV.LOCT_CODE || '|' || rSDIV.LOCATION_NAME_EN);
     else
-      iCount := iCount + 1;
-    --
-      P_LOCATION.INSERT_LOCATION
-       (nLOC_ID, 'en', rSDIV.LOC_NAME, nvl(rSDIV.LOCT_CODE, 'POINT'),
-        pdSTART_DATE => rSDIV.START_DATE, pdEND_DATE => rSDIV.END_DATE);
-    --
-      P_LOCATION.INSERT_LOCATION_RELATIONSHIP
-       (rSDIV.COU_ID, nLOC_ID, 'WITHIN',
-        pdSTART_DATE => rSDIV.START_DATE, pdEND_DATE => rSDIV.END_DATE);
-    --
-      if rSDIV.MSRP_CODE is not null
+      if rSDIV.COU_CODE_PREV is null
       then
-        nVERSION_NBR := 1;
-        P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'MSRPLOC', psCHAR_VALUE => rSDIV.MSRP_CODE);
-      end if;
-    --
-      if rSDIV.LOCTV_ID is not null
-      then
-        nVERSION_NBR := 1;
-        P_LOCATION.UPDATE_LOCATION(nLOC_ID, nVERSION_NBR, pnLOCTV_ID => rSDIV.LOCTV_ID);
+        P_LOCATION.INSERT_LOCATION
+         (nLOC_ID, 'en', rSDIV.LOCATION_NAME_EN, rSDIV.LOCT_CODE,
+          pdSTART_DATE => rSDIV.LOC_START_DATE, pdEND_DATE => rSDIV.LOC_END_DATE);
+        iCount1 := iCount1 + 1;
+      --
+        if rSDIV.MSRP_CODE is not null
+        then
+          P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'MSRPLOC', psCHAR_VALUE => rSDIV.MSRP_CODE);
+        end if;
+      --
+        if rSDIV.LOCTV_ID is not null
+        then
+          nVERSION_NBR := 1;
+          P_LOCATION.UPDATE_LOCATION(nLOC_ID, nVERSION_NBR, pnLOCTV_ID => rSDIV.LOCTV_ID);
+        end if;
+      --
+        P_LOCATION.INSERT_LOCATION_RELATIONSHIP
+         (rSDIV.COU_ID, nLOC_ID, 'WITHIN',
+          pdSTART_DATE => rSDIV.LOCR_START_DATE, pdEND_DATE => rSDIV.LOCR_END_DATE);
+        iCount2 := iCount2 + 1;
+      else
+        P_UTILITY.TRACE_POINT('Trace2', rSDIV.COU_CODE_PREV || '~' ||
+          to_char(rSDIV.COU_START_DATE_PREV, 'YYYY-MM-DD') || '~' ||
+          rSDIV.LOCATION_NAME_EN || '~' || rSDIV.LOC_TYPE_DESCRIPTION_EN || '~' ||
+          to_char(rSDIV.LOC_START_DATE, 'YYYY-MM-DD') || '~' ||
+          to_char(rSDIV.LOC_END_DATE, 'YYYY-MM-DD') || '~' ||
+          to_char(rSDIV.LOCR_START_DATE, 'YYYY-MM-DD') || '~' ||
+          to_char(rSDIV.LOCR_END_DATE, 'YYYY-MM-DD'));
+      --
+        select LOC.ID
+        into nLOC_ID
+        from T_LOCATION_ATTRIBUTES LOCA
+        inner join T_LOCATIONS COU
+          on COU.ID = LOCA.LOC_ID
+        inner join T_LOCATION_RELATIONSHIPS LOCR
+          on LOCR.LOC_ID_FROM = COU.ID
+          and LOCR.LOCRT_CODE = 'WITHIN'
+        inner join
+         (select LOC.ID, LOC.LOCT_CODE, LOC.LOCTV_ID, TXT.TEXT as NAME
+          from T_LOCATIONS LOC
+          inner join T_TEXT_ITEMS TXT
+            on TXT.ITM_ID = LOC.ITM_ID
+            and TXT.TXTT_CODE = 'NAME'
+            and TXT.SEQ_NBR = 1
+            and TXT.LANG_CODE = 'en') LOC
+          on LOC.ID = LOCR.LOC_ID_TO
+        inner join
+         (select LOCT.CODE, TXT.TEXT as DESCRIPTION
+          from T_LOCATION_TYPES LOCT
+          inner join T_TEXT_ITEMS TXT
+            on TXT.ITM_ID = LOCT.ITM_ID
+            and TXT.TXTT_CODE = 'DESCR'
+            and TXT.SEQ_NBR = 1
+            and TXT.LANG_CODE = 'en') LOCT
+          on LOCT.CODE = LOC.LOCT_CODE
+        left outer join
+         (select LOCTV.ID, TXT.TEXT as DESCRIPTION
+          from T_LOCATION_TYPE_VARIANTS LOCTV
+          inner join T_TEXT_ITEMS TXT
+            on TXT.ITM_ID = LOCTV.ITM_ID
+            and TXT.TXTT_CODE = 'DESCR'
+            and TXT.SEQ_NBR = 1
+            and TXT.LANG_CODE = 'en') LOCTV
+          on LOCTV.ID = LOC.LOCTV_ID
+        where LOCA.LOCAT_CODE = 'HCRCC'
+        and LOCA.CHAR_VALUE = rSDIV.COU_CODE_PREV
+        and COU.LOCT_CODE = 'COUNTRY'
+        and COU.START_DATE = rSDIV.COU_START_DATE_PREV
+        and LOC.NAME = rSDIV.LOCATION_NAME_EN
+        and nvl(LOCTV.DESCRIPTION, LOCT.DESCRIPTION) = rSDIV.LOC_TYPE_DESCRIPTION_EN;
+      --
+        P_LOCATION.INSERT_LOCATION_RELATIONSHIP
+         (rSDIV.COU_ID, nLOC_ID, 'WITHIN',
+          pdSTART_DATE => rSDIV.LOCR_START_DATE, pdEND_DATE => rSDIV.LOCR_END_DATE);
+        iCount2 := iCount2 + 1;
       end if;
     end if;
   end loop;
 --
-  dbms_output.put_line(to_char(iCount) || ' LOCATIONS records inserted');
+  if iCount1 = 1
+  then dbms_output.put_line('1 LOCATIONS record inserted');
+  else dbms_output.put_line(to_char(iCount1) || ' LOCATIONS records inserted');
+  end if;
 --
--- Locations defined but not used in ASR spreadsheets
---
-  iCount := 0;
---
-  for rSDIV in
-   (select ALOC.UNHCR_COUNTRY_CODE, ALOC.COUNTRY_NAME,
-      ALOC.LOCATION_NAME, ALOC.LOCATION_TYPE_DESCRIPTION, ALOC.LOCATION_TYPE_CODE,
-      COU.ID as COU_ID, LOCTV.ID as LOCTV_ID
-    from STAGE.S_ASR_ADDITIONAL_LOCATIONS ALOC
-    inner join COUNTRIES COU
-      on COU.UNHCR_COUNTRY_CODE = ALOC.UNHCR_COUNTRY_CODE
-    left outer join LOCATION_TYPE_VARIANTS LOCTV
-      on LOCTV.LOC_ID = COU.ID
-      and LOCTV.LOCRT_CODE = 'WITHIN'
-      and LOCTV.DESCRIPTION = ALOC.LOCATION_TYPE_DESCRIPTION
-    order by ALOC.UNHCR_COUNTRY_CODE, ALOC.LOCATION_NAME, ALOC.LOCATION_TYPE_DESCRIPTION)
-  loop
-    iCount := iCount + 1;
-  --
-    P_LOCATION.INSERT_LOCATION(nLOC_ID, 'en', rSDIV.LOCATION_NAME, rSDIV.LOCATION_TYPE_CODE);
-  --
-    P_LOCATION.INSERT_LOCATION_RELATIONSHIP(rSDIV.COU_ID, nLOC_ID, 'WITHIN');
-  --
-    if rSDIV.LOCTV_ID is not null
-    then
-      nVERSION_NBR := 1;
-      P_LOCATION.UPDATE_LOCATION(nLOC_ID, nVERSION_NBR, pnLOCTV_ID => rSDIV.LOCTV_ID);
-    end if;
-  end loop;
---
-  dbms_output.put_line(to_char(iCount) || ' LOCATIONS records inserted');
---
--- Merge duplicate locations in countries that have split, merged, or changed their details
---
-  for rLOCR in
-   (select LOCR1.LOC_ID_FROM as LOC_ID_FROM1, LOCR1.LOC_ID_TO as LOC_ID_TO1,
-      LOCR1.VERSION_NBR as LOCR_VERSION_NBR, LOC1.VERSION_NBR as LOC_VERSION_NBR1,
-      LOCR2.LOC_ID_FROM as LOC_ID_FROM2, LOCR2.LOC_ID_TO as LOC_ID_TO2,
-      LOCR2.START_DATE, LOCR2.END_DATE, LOC2.VERSION_NBR as LOC_VERSION_NBR2,
-      LOCR1.LOCRT_CODE, LOCR.LOCRT_CODE as LOCRT_CODE1, LOC1.NAME
-    from T_LOCATION_RELATIONSHIPS LOCR
-    inner join T_LOCATION_RELATIONSHIPS LOCR1
-      on LOCR1.LOC_ID_FROM = LOCR.LOC_ID_FROM
-      and LOCR1.LOCRT_CODE not in ('CSPLIT', 'CMERGE', 'CCHANGE')
-    inner join LOCATIONS LOC1
-      on LOC1.ID = LOCR1.LOC_ID_TO
-    inner join T_LOCATION_RELATIONSHIPS LOCR2
-      on LOCR2.LOC_ID_FROM = LOCR.LOC_ID_TO
-      and LOCR2.LOCRT_CODE not in ('CSPLIT', 'CMERGE', 'CCHANGE')
-    inner join LOCATIONS LOC2
-      on LOC2.ID = LOCR2.LOC_ID_TO
-    where LOCR.LOCRT_CODE in ('CSPLIT', 'CMERGE', 'CCHANGE')
-    and LOCR2.LOCRT_CODE = LOCR1.LOCRT_CODE
-    and LOC2.LOCT_CODE != 'ADMIN0'
-    and LOC2.NAME = LOC1.NAME)
-  loop
-    P_LOCATION.UPDATE_LOCATION
-     (rLOCR.LOC_ID_TO1, rLOCR.LOC_VERSION_NBR1, pdEND_DATE => rLOCR.END_DATE);
-  --
-    P_LOCATION.INSERT_LOCATION_RELATIONSHIP
-     (rLOCR.LOC_ID_FROM2, rLOCR.LOC_ID_TO1, rLOCR.LOCRT_CODE, rLOCR.START_DATE, rLOCR.END_DATE);
-  --
-    P_LOCATION.DELETE_LOCATION(rLOCR.LOC_ID_TO2, rLOCR.LOC_VERSION_NBR2);
-  end loop;
+  if iCount2 = 1
+  then dbms_output.put_line('1 LOCATION_RELATIONSHIPS record inserted');
+  else dbms_output.put_line(to_char(iCount2) || ' LOCATION_RELATIONSHIPS records inserted');
+  end if;
 end;
 /
