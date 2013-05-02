@@ -1147,7 +1147,7 @@ where VALUE != 0;
 grant select on S_ASR_REFUGEES to PSR_STAGE;
 
 
-/* Verification query
+/* Verification queries
 select sum(ROW_COUNT) as RAW_ROW_COUNT,
   count(*) as AGGREGATED_ROW_COUNT,
   count(
