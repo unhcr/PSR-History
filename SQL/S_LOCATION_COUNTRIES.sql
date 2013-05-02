@@ -1,12 +1,12 @@
-create table S_LOCATIONS_COUNTRIES 
+create table S_LOCATION_COUNTRIES 
  (KEY integer,
-  IS03166A3 varchar2(3),
+  ISO3166A3 varchar2(3),
   ISO_NAME_EN varchar2(1000),
   LOCT_CODE varchar2(10),
   START_DATE date,
   END_DATE date,
-  IS03166A2 varchar2(2),
-  IS03166NUM varchar2(3),
+  ISO3166A2 varchar2(2),
+  ISO3166NUM varchar2(3),
   HCRCC varchar2(3),
   ISO_NAME_FR varchar2(1000),
   ISO_FULL_NAME_EN varchar2(1000),
@@ -32,22 +32,22 @@ organization external
   access parameters 
    (records delimited by newline
     characterset WE8MSWIN1252
-    badfile 'LOCATIONS_COUNTRIES.bad'
+    badfile 'LOCATION_COUNTRIES.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'LOCATION_COUNTRIES.log'
     skip 1 
     fields terminated by ','
     optionally enclosed by '"' and '"'
     lrtrim
     missing field values are null
      (KEY char(4000),
-      IS03166A3 char(4000),
+      ISO3166A3 char(4000),
       ISO_NAME_EN char(4000),
       LOCT_CODE char(4000),
       START_DATE date "YYYY-MM-DD",
       END_DATE date "YYYY-MM-DD",
-      IS03166A2 char(4000),
-      IS03166NUM char(4000),
+      ISO3166A2 char(4000),
+      ISO3166NUM char(4000),
       HCRCC char(4000),
       ISO_NAME_FR char(4000),
       ISO_FULL_NAME_EN char(4000),
@@ -70,7 +70,7 @@ organization external
       CCHANGE_FROM_KEY char(4000),
       CCHANGE_DESC char(4000),
       NOTES char(4000)))
-  location ('LOCATIONS_COUNTRIES.csv'))
+  location ('LOCATION_COUNTRIES.csv'))
 reject limit unlimited;
 
-grant select on S_LOCATIONS_COUNTRIES to PSR_STAGE;
+grant select on S_LOCATION_COUNTRIES to PSR_STAGE;
