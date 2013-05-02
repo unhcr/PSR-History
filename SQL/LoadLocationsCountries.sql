@@ -10,12 +10,12 @@ declare
   iCount2 pls_integer := 0;
 begin
   for rLOC in
-   (select LOC.KEY, LOC.IS03166A3, LOC.ISO_NAME_EN, LOC.LOCT_CODE, LOC.START_DATE, LOC.END_DATE,
-      LOC.IS03166A2, LOC.IS03166NUM, LOC.HCRCC,
+   (select LOC.KEY, LOC.ISO3166A3, LOC.ISO_NAME_EN, LOC.LOCT_CODE, LOC.START_DATE, LOC.END_DATE,
+      LOC.ISO3166A2, LOC.ISO3166NUM, LOC.HCRCC,
       LOC.ISO_NAME_FR, LOC.ISO_FULL_NAME_EN, LOC.ISO_FULL_NAME_FR,
       LOC.GAWCC, LOC.GAACC, LOC.GAHCC, LOC.NOTES,
       LOCA1.LOC_ID as LOC_ID_UNSD, LOCA2.LOC_ID as LOC_ID_HCRRESP1, LOCA3.LOC_ID as LOC_ID_HCRRESP2
-    from STAGE.S_LOCATIONS_COUNTRIES LOC
+    from S_LOCATION_COUNTRIES LOC
     left outer join T_LOCATION_ATTRIBUTES LOCA1
       on LOCA1.LOCAT_CODE = 'UNSDNUM'
       and LOCA1.CHAR_VALUE = LOC.UNSD_FROM
@@ -31,21 +31,21 @@ begin
   --
     P_LOCATION.INSERT_LOCATION
      (nLOC_ID, 'en', rLOC.ISO_NAME_EN, rLOC.LOCT_CODE,
-      case when rLOC.LOCT_CODE = 'COUNTRY' then rLOC.IS03166A3 end,
+      case when rLOC.LOCT_CODE = 'COUNTRY' then rLOC.ISO3166A3 end,
       rLOC.START_DATE, rLOC.END_DATE);
     anLOC_ID(rLOC.KEY) := nLOC_ID;
     nVERSION_NBR := 1;
   --
-    if rLOC.LOCT_CODE != 'COUNTRY' and rLOC.IS03166A3 is not null
-    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'IS03166A3', rLOC.IS03166A3);
+    if rLOC.LOCT_CODE != 'COUNTRY' and rLOC.ISO3166A3 is not null
+    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'ISO3166A3', rLOC.ISO3166A3);
     end if;
   --
-    if rLOC.IS03166A2 is not null
-    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'IS03166A2', rLOC.IS03166A2);
+    if rLOC.ISO3166A2 is not null
+    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'ISO3166A2', rLOC.ISO3166A2);
     end if;
   --
-    if rLOC.IS03166NUM is not null
-    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'IS03166NUM', rLOC.IS03166NUM);
+    if rLOC.ISO3166NUM is not null
+    then P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID, 'ISO3166NUM', rLOC.ISO3166NUM);
     end if;
   --
     if rLOC.HCRCC is not null
@@ -111,11 +111,14 @@ begin
     end if;
   end loop;
 --
-  dbms_output.put_line(to_char(iCount1) || ' LOCATIONS records inserted');
+  if iCount1 = 1
+  then dbms_output.put_line('1 LOCATIONS record inserted');
+  else dbms_output.put_line(to_char(iCount1) || ' LOCATIONS records inserted');
+  end if;
 --
   for rLOC in
    (select KEY, CSPLIT_FROM_KEY, CMERGE_TO_KEY, CCHANGE_FROM_KEY
-    from STAGE.S_LOCATIONS_COUNTRIES)
+    from S_LOCATION_COUNTRIES)
   loop
     if rLOC.CSPLIT_FROM_KEY is not null
     then
@@ -136,6 +139,9 @@ begin
     end if;
   end loop;
 --
-  dbms_output.put_line(to_char(iCount2) || ' LOCATION_RELATIONSHIPS records inserted');
+  if iCount2 = 1
+  then dbms_output.put_line('1 LOCATION_RELATIONSHIPS record inserted');
+  else dbms_output.put_line(to_char(iCount2) || ' LOCATION_RELATIONSHIPS records inserted');
+  end if;
 end;
 /
