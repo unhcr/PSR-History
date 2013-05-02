@@ -10,26 +10,19 @@ begin
   P_UTILITY.START_MODULE('LoadRefugeeStatistics');
 --
   for rSTC in
-   (select STC.STATSYEAR,
-      STC.START_DATE_YEAR,
-      STC.END_DATE_YEAR,
-      STC.START_DATE,
-      STC.END_DATE,
-      STC.DST_CODE,
-      STC.COU_CODE_ASYLUM,
+   (select STC.STATSYEAR, STC.START_DATE_YEAR, STC.END_DATE_YEAR, STC.START_DATE, STC.END_DATE,
+      STC.DST_CODE, DST.ID as DST_ID,
+      STC.COU_CODE_ASYLUM, COU.ID as LOC_ID_ASYLUM_COUNTRY,
       STC.COU_CODE_ORIGIN,
-      STC.SOURCE,
-      STC.BASIS,
-      STC.STCT_CODE,
-      STC.VALUE,
-      DST.ID as DST_ID,
-      nvl(COU.ID, -1) as LOC_ID_ASYLUM_COUNTRY,
       case
         when STC.COU_CODE_ORIGIN = 'VAR' then null
         else nvl(OGN.ID, -1)
       end as LOC_ID_ORIGIN_COUNTRY,
+      STC.SOURCE, STC.BASIS,
+      STC.STCT_CODE,
+      STC.VALUE,
       row_number() over
-       (partition by STC.STATSYEAR, COU.ID, OGN.ID, DST.ID
+       (partition by STC.STATSYEAR, DST.ID, COU.ID, OGN.ID
         order by STC.START_DATE, STC.STCT_CODE) as STG_CHILD_NUMBER
     from 
      (select STATSYEAR,
@@ -52,7 +45,7 @@ begin
           else replace(DATA_POINT, '_', '-')
         end as STCT_CODE,
         VALUE
-      from STAGE.S_ASR_REFUGEES) STC
+      from S_ASR_REFUGEES) STC
     left outer join T_DISPLACEMENT_STATUSES DST
       on DST.CODE = STC.DST_CODE
       and DST.START_DATE < STC.END_DATE_YEAR
@@ -83,13 +76,15 @@ begin
     order by STATSYEAR, LOC_ID_ASYLUM_COUNTRY, LOC_ID_ORIGIN_COUNTRY, DST_ID,
       START_DATE, STCT_CODE)
   loop
-    P_UTILITY.TRACE_POINT
-     ('Trace',
-      rSTC.STATSYEAR || '~' || rSTC.DST_CODE || '~' ||
-        rSTC.COU_CODE_ASYLUM || '~' || rSTC.COU_CODE_ORIGIN || '~' ||
-        rSTC.STCT_CODE || '~' || to_char(rSTC.START_DATE, 'YYYY-MM-DD'));
+    P_UTILITY.TRACE_CONTEXT
+     (rSTC.STATSYEAR || '~' || rSTC.STCT_CODE || '~' || to_char(rSTC.START_DATE, 'YYYY-MM-DD') ||
+        '~' || rSTC.DST_CODE || '~' || rSTC.COU_CODE_ASYLUM || '~' || rSTC.COU_CODE_ORIGIN);
   --
-    if rSTC.LOC_ID_ASYLUM_COUNTRY = -1
+    if rSTC.DST_ID is null
+    then
+      dbms_output.put_line
+       ('Invalid displacement status: ' || rSTC.STATSYEAR || '~' || rSTC.DST_CODE);
+    elsif rSTC.LOC_ID_ASYLUM_COUNTRY is null
     then
       dbms_output.put_line
        ('Invalid country of asylum: ' || rSTC.STATSYEAR || '~' || rSTC.COU_CODE_ASYLUM);
@@ -128,8 +123,15 @@ begin
     end if;
   end loop;
 --
-  dbms_output.put_line(to_char(iCount1) || ' statistic group records inserted');
-  dbms_output.put_line(to_char(iCount2) || ' statistic records inserted');
+  if iCount1 = 1
+  then dbms_output.put_line('1 statistic group record inserted');
+  else dbms_output.put_line(to_char(iCount1) || ' statistic group records inserted');
+  end if;
+--
+  if iCount2 = 1
+  then dbms_output.put_line('1 statistic record inserted');
+  else dbms_output.put_line(to_char(iCount2) || ' statistic records inserted');
+  end if;
 --
   P_UTILITY.END_MODULE;
 end;
