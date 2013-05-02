@@ -1,4 +1,4 @@
-create table S_LOCATIONS_REGIONS 
+create table S_LOCATION_REGIONS 
  (KEY integer,
   NAME_EN varchar2(1000),
   LOCT_CODE varchar2(10),
@@ -20,10 +20,10 @@ organization external
   default directory PSRDATA
   access parameters 
    (records delimited by newline
-    characterset we8mswin1252
-    badfile 'LOCATIONS_REGIONS.bad'
+    characterset WE8MSWIN1252
+    badfile 'LOCATION_REGIONS.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'LOCATION_REGIONS.log'
     skip 1 
     fields terminated by ','
     optionally enclosed by '"' and '"'
@@ -50,7 +50,7 @@ organization external
       RSHCR_FROM_KEY char(4000),
       RSHCR_DESC char(4000),
       NOTES char(4000)))
-  location ('LOCATIONS_REGIONS.csv'))
+  location ('LOCATION_REGIONS.csv'))
 reject limit unlimited;
 
-grant select on S_LOCATIONS_REGIONS to PSR_STAGE;
+grant select on S_LOCATION_REGIONS to PSR_STAGE;
