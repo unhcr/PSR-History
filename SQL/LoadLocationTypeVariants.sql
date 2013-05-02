@@ -42,28 +42,7 @@ begin
       LOCTV.DESCRIPTION_FR, NOTES, COU.ID as LOC_ID
     from STAGE.S_LOCATION_TYPE_VARIANTS LOCTV
     join COUNTRIES COU
-      on COU.UNHCR_COUNTRY_CODE = LOCTV.HCRCC
-    where LOCTV.LOCT_CODE != 'ADMIN0'
-    union all
-    select 'ADMIN0' as LOCT_CODE,
-      UNHCR_COUNTRY_CODE as HCRCC,
-      'WITHIN' as LOCRT_CODE,
-      'Dispersed in the country / territory' as DESCRIPTION_EN,
-      to_number(null) as DISPLAY_SEQ,
-      null as DESCRIPTION_FR,
-      null as NOTES,
-      COU.ID as LOC_ID
-    from COUNTRIES COU
-    union all
-    select 'POINT' as LOCT_CODE,
-      UNHCR_COUNTRY_CODE as HCRCC,
-      'WITHIN' as LOCRT_CODE,
-      'Point' as DESCRIPTION_EN,
-      to_number(null) as DISPLAY_SEQ,
-      null as DESCRIPTION_FR,
-      null as NOTES,
-      COU.ID as LOC_ID
-    from COUNTRIES COU)
+      on COU.UNHCR_COUNTRY_CODE = LOCTV.HCRCC)
   loop
     iCount := iCount + 1;
   --
