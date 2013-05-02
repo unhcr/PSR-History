@@ -650,10 +650,6 @@ with Q_ASR_TABLE4 as
     from T_STATISTIC_TYPES_IN_GROUPS STTIG
     inner join T_STATISTICS STC
       on STC.STCT_CODE = STTIG.STCT_CODE
-    inner join T_DIMENSION_VALUES DIM1
-      on DIM1.ID = STC.DIM_ID1
-    inner join T_DIMENSION_VALUES DIM2
-      on DIM2.ID = STC.DIM_ID2
     where STTIG.STTG_CODE = 'RSD')
   pivot
    (sum(VALUE) as VALUE, max(STC_ID) as STC_ID, max(VERSION_NBR) as VERSION_NBR,
