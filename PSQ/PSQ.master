@@ -1,0 +1,31 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="PSQ.master.cs" Inherits="PSQ" %>
+<!DOCTYPE html>
+<html>
+<head runat="server">
+  <title></title>
+  <link href="~/Styles/PSR.css" rel="stylesheet" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <asp:ContentPlaceHolder id="HeaderPlaceHolder" runat="server" />
+</head>
+<body>
+  <form runat="server">
+    <div class="container">
+      <div class="navbar">
+        <a class="logo" href="Default.aspx">
+          <img src="img/UNHCR-Logo.png" alt="UNHCR" /> 
+          <span>UNHCR Population Statistics</span>
+        </a>
+        <a id="poc-overview" href="PSQ_POC.aspx">Overview</a>
+        <a id="poc-time-series" href="PSQ_TMS.aspx">Time Series</a>
+        <a id="demographics" href="PSQ_DEM.aspx">Demographics</a>
+        <a id="rsd" href="PSQ_RSD.aspx">Asylum Seekers</a>
+      </div> <!-- /.navbar -->
+      <asp:ContentPlaceHolder id="BodyPlaceHolder" runat="server" />
+    </div> <!-- /.container -->
+    <script type="text/javascript" src="Scripts/jquery.js"></script>
+    <asp:ContentPlaceHolder id="ScriptPlaceHolder" runat="server" />
+  </form>
+</body>
+</html>
