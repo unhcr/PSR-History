@@ -3,20 +3,13 @@
   CodeFile="PSQ_POC.aspx.cs" Inherits="PSQ_POC" %>
 
 <asp:Content ID="HeaderContent" ContentPlaceHolderID="HeaderPlaceHolder" Runat="Server">
-  <style type="text/css">
-    <% if (!selectionMode) { %>.selection-box { display:none; } <% } %>
-    <% if (selectionMode) { %>.main-body { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowRES) { %>.hide-RES { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowOGN) { %>.hide-OGN { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowREF) { %>.hide-REF { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowASY) { %>.hide-ASY { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowRET) { %>.hide-RET { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowIDP) { %>.hide-IDP { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowRDP) { %>.hide-RDP { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowSTA) { %>.hide-STA { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowOOC) { %>.hide-OOC { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowPOC) { %>.hide-POC { display:none; } <% } %>
-  </style>
+  <% if (selectionMode)
+     { %>
+  <style type="text/css"> .main-body { display:none; }  </style>
+  <% } else
+     {%>
+  <style type="text/css"> .selection-box { display:none; } </style>
+  <% } %>
 </asp:Content>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="BodyPlaceHolder" Runat="Server">
@@ -32,7 +25,6 @@
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>"
     SelectCommand="select distinct COU_CODE_RESIDENCE, COU_NAME_RESIDENCE_EN from QRY_ASR_POC_SUMMARY_EN order by COU_NAME_RESIDENCE_EN" />
-  </asp:SqlDataSource>
 
   <asp:SqlDataSource ID="dsORIGIN" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
@@ -134,32 +126,82 @@
           <caption>
             Persons of concern to UNHCR &ndash; Overview
           </caption>
-          <colgroup>
+          <colgroup runat="server">
             <col class="year" />
-            <col class="hide-RES" />
-            <col class="hide-OGN" />
-            <col class="digits-9 hide-REF" />
-            <col class="digits-9 hide-ASY" />
-            <col class="digits-9 hide-RET" />
-            <col class="digits-9 hide-IDP" />
-            <col class="digits-9 hide-RDP" />
-            <col class="digits-9 hide-STA" />
-            <col class="digits-9 hide-OOC" />
-            <col class="digits-9 hide-POC" />
+            <% if (selectionCriteria.ShowRES)
+               { %>
+            <col />
+            <% } %>
+            <% if (selectionCriteria.ShowOGN)
+               { %>
+            <col />
+            <% } %>
+            <% if (selectionCriteria.ShowREF)
+               { %>
+            <col class="digits-9" />
+            <% } %>
+            <% if (selectionCriteria.ShowASY)
+               { %>
+            <col class="digits-9" />
+            <% } %>
+            <% if (selectionCriteria.ShowRET)
+               { %>
+            <col class="digits-9" />
+            <% } %>
+            <% if (selectionCriteria.ShowIDP)
+               { %>
+            <col class="digits-9" />
+            <% } %>
+            <% if (selectionCriteria.ShowRDP)
+               { %>
+            <col class="digits-9" />
+            <% } %>
+            <% if (selectionCriteria.ShowSTA)
+               { %>
+            <col class="digits-9" />
+            <% } %>
+            <% if (selectionCriteria.ShowOOC)
+               { %>
+            <col class="digits-9" />
+            <% } %>
+            <% if (selectionCriteria.ShowPOC)
+               { %>
+            <col class="digits-9" />
+            <% } %>
           </colgroup>
-          <thead>
+          <thead runat="server">
             <tr>
               <th>Year</th>
-              <th class="hide-RES" title="Country or territory of residence">Country/territory of residence</th>
-              <th class="hide-OGN" title="Country or territory of origin or from which persons of concern have returned">Origin / Returned from</th>
-              <th class="numeric hide-REF" title="Refugees and people in a refugee-like situation">Refugees</th>
-              <th class="numeric hide-ASY" title="Asylum seekers (pending cases)">Asylum seekers</th>
-              <th class="numeric hide-RET" title="Returned refugees and people in a refugee-like situation">Returned refugees</th>
-              <th class="numeric hide-IDP" title="Internally displaced persons protected / assisted by UNHCR">IDPs</th>
-              <th class="numeric hide-RDP" title="Returned internally displaced persons">Returned IDPs</th>
-              <th class="numeric hide-STA" title="Persons under UNHCR statelessness mandate">Stateless</th>
-              <th class="numeric hide-OOC" title="Other persons of concern to UNHCR">Others of concern</th>
-              <th class="numeric hide-POC" title="Total population of concern to UNHCR">Total population</th>
+              <% if (selectionCriteria.ShowRES) { %>
+              <th title="Country or territory of residence">Country/territory of residence</th>
+              <% } %>
+              <% if (selectionCriteria.ShowOGN) { %>
+              <th title="Country or territory of origin or from which persons of concern have returned">Origin / Returned from</th>
+              <% } %>
+              <% if (selectionCriteria.ShowREF) { %>
+              <th class="numeric" title="Refugees and people in a refugee-like situation">Refugees</th>
+              <% } %>
+              <% if (selectionCriteria.ShowASY) { %>
+              <th class="numeric" title="Asylum seekers (pending cases)">Asylum seekers</th>
+              <% } %>
+              <% if (selectionCriteria.ShowRET) { %>
+              <th class="numeric" title="Returned refugees and people in a refugee-like situation">Returned refugees</th>
+              <% } %>
+              <% if (selectionCriteria.ShowIDP) { %>
+              <th class="numeric" title="Internally displaced persons protected / assisted by UNHCR">IDPs</th>
+              <% } %>
+              <% if (selectionCriteria.ShowRDP) { %>
+              <th class="numeric" title="Returned internally displaced persons">Returned IDPs</th>
+              <% } %>
+              <% if (selectionCriteria.ShowSTA) { %>
+              <th class="numeric" title="Persons under UNHCR statelessness mandate">Stateless</th>
+              <% } %>
+              <% if (selectionCriteria.ShowOOC) { %>
+              <th class="numeric" title="Other persons of concern to UNHCR">Others of concern</th>
+              <% } %>
+              <% if (selectionCriteria.ShowPOC) { %>
+              <th class="numeric" title="Total population of concern to UNHCR">Total population</th>
+              <% } %>
             </tr>
           </thead>
           <tbody>
@@ -173,36 +215,66 @@
           <td class="year">
             <asp:Label ID="lblASR_YEAR" runat="server" Text='<%# Eval("ASR_YEAR") %>' />
           </td>
-          <td class="hide-RES">
+          <% if (selectionCriteria.ShowRES)
+             { %>
+          <td>
             <asp:Label ID="lblCOU_NAME_RESIDENCE_EN" runat="server" Text='<%# Eval("COU_NAME_RESIDENCE_EN") %>' />
           </td>
-          <td class="hide-OGN ">
+          <% } %>
+          <% if (selectionCriteria.ShowOGN)
+             { %>
+          <td>
             <asp:Label ID="lblCOU_NAME_ORIGIN_EN" runat="server" Text='<%# Eval("COU_NAME_ORIGIN_EN") %>' />
           </td>
-          <td class="numeric hide-REF">
+          <% } %>
+          <% if (selectionCriteria.ShowREF)
+             { %>
+          <td class="numeric">
             <asp:Label ID="lblREFPOP_VALUE" runat="server" Text='<%# Eval("REFPOP_VALUE", "{0:N0}") %>' />
           </td>
-          <td class="numeric hide-ASY">
+          <% } %>
+          <% if (selectionCriteria.ShowASY)
+             { %>
+          <td class="numeric">
             <asp:Label ID="lblASYPOP_VALUE" runat="server" Text='<%# Eval("ASYPOP_VALUE", "{0:N0}") %>' />
           </td>
-          <td class="numeric hide-RET">
+          <% } %>
+          <% if (selectionCriteria.ShowRET)
+             { %>
+          <td class="numeric">
             <asp:Label ID="lblREFRTN_VALUE" runat="server" Text='<%# Eval("REFRTN_VALUE", "{0:N0}") %>' />
           </td>
-          <td class="numeric hide-IDP">
+          <% } %>
+          <% if (selectionCriteria.ShowIDP)
+             { %>
+          <td class="numeric">
             <asp:Label ID="lblIDPHPOP_VALUE" runat="server" Text='<%# Eval("IDPHPOP_VALUE", "{0:N0}") %>' />
           </td>
-          <td class="numeric hide-RDP">
+          <% } %>
+          <% if (selectionCriteria.ShowRDP)
+             { %>
+          <td class="numeric">
             <asp:Label ID="lblIDPHRTN_VALUE" runat="server" Text='<%# Eval("IDPHRTN_VALUE", "{0:N0}") %>' />
           </td>
-          <td class="numeric hide-STA">
+          <% } %>
+          <% if (selectionCriteria.ShowSTA)
+             { %>
+          <td class="numeric">
             <asp:Label ID="lblSTAPOP_VALUE" runat="server" Text='<%# Eval("STAPOP_VALUE", "{0:N0}") %>' />
           </td>
-          <td class="numeric hide-OOC">
+          <% } %>
+          <% if (selectionCriteria.ShowOOC)
+             { %>
+          <td class="numeric">
             <asp:Label ID="lblOOCPOP_VALUE" runat="server" Text='<%# Eval("OOCPOP_VALUE", "{0:N0}") %>' />
           </td>
-          <td class="numeric hide-POC">
+          <% } %>
+          <% if (selectionCriteria.ShowPOC)
+             { %>
+          <td class="numeric">
             <asp:Label ID="lblTPOC_VALUE" runat="server" Text='<%# Eval("TPOC_VALUE", "{0:N0}") %>' />
           </td>
+          <% } %>
         </tr>
       </ItemTemplate>
     </asp:ListView>
