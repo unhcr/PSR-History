@@ -3,16 +3,13 @@
   CodeFile="PSQ_DEM.aspx.cs" Inherits="PSQ_DEM" %>
 
 <asp:Content ID="HeaderContent" ContentPlaceHolderID="HeaderPlaceHolder" Runat="Server">
-  <style type="text/css">
-    <% if (!selectionMode) { %>.selection-box { display:none; } <% } %>
-    <% if (selectionMode) { %>.main-body { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowRES) { %>.hide-RES { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowLOC) { %>.hide-LOC { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowAGE) { %>.hide-AGE { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowSEX) { %>.hide-SEX { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowNone) { %>.hide-all { display:none; } <% } %>
-    <% if (!selectionCriteria.ShowAGE && !selectionCriteria.ShowSEX) { %>.hide-both { display:none; } <% } %>
-  </style>
+  <% if (selectionMode)
+     { %>
+  <style type="text/css"> .main-body { display:none; }  </style>
+  <% } else
+     {%>
+  <style type="text/css"> .selection-box { display:none; } </style>
+  <% } %>
 </asp:Content>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="BodyPlaceHolder" Runat="Server">
@@ -113,20 +110,36 @@
           <caption>
             Demographic composition of populations of concern to UNHCR
           </caption>
-          <colgroup>
+          <colgroup runat="server">
             <col class="year" />
-            <col class="hide-RES" />
-            <col class="hide-LOC" />
-            <col class="sex-label hide-AGE" />
-            <col span="5" class="digits-8 hide-AGE" />
-            <col span="2" class="digits-8 hide-both" />
+            <% if (selectionCriteria.ShowRES) { %>
+            <col />
+            <% } %>
+            <% if (selectionCriteria.ShowLOC) { %>
+            <col />
+            <% } %>
+            <% if (selectionCriteria.ShowAGE) { %>
+            <col class="sex-label" />
+            <col span="5" class="digits-8" />
+            <% } %>
+            <% if (selectionCriteria.ShowAGE || selectionCriteria.ShowSEX) { %>
+            <col span="2" class="digits-8" />
+            <% } %>
             <col class="digits-8" />
           </colgroup>
-          <thead>
-            <tr class="hide-AGE">
+          <thead runat="server">
+            <tr>
               <th>Year</th>
-              <th class="hide-RES" title="Country or territory of residence">Country / territory of residence</th>
-              <th class="hide-LOC" title="Location of residence">Location of residence</th>
+              <% if (selectionCriteria.ShowRES)
+                 { %>
+              <th title="Country or territory of residence">Country / territory of residence</th>
+              <% } %>
+              <% if (selectionCriteria.ShowLOC) 
+                 { %>
+              <th title="Location of residence">Location of residence</th>
+              <% } %>
+              <% if (selectionCriteria.ShowAGE) 
+                 { %>
               <th></th>
               <th class="numeric">0&minus;4</th>
               <th class="numeric">5&minus;11</th>
@@ -136,22 +149,15 @@
               <th class="numeric">Unknown age</th>
               <th class="numeric">Total by sex</th>
               <th class="numeric">Overall total</th>
-            </tr>
-            <tr class="hide-SEX">
-              <th>Year</th>
-              <th class="hide-RES" title="Country or territory of residence">Country / territory of residence</th>
-              <th class="hide-LOC" title="Location of residence">Location of residence</th>
-              <th colspan="6" class="hide-AGE"></th>
+              <% } else 
+                 {
+                   if (selectionCriteria.ShowSEX) 
+                   { %>
               <th class="numeric">Female</th>
               <th class="numeric">Male</th>
-              <th class="numeric">Overall total</th>
-            </tr>
-            <tr class="hide-all">
-              <th>Year</th>
-              <th class="hide-RES" title="Country or territory of residence">Country / territory of residence</th>
-              <th class="hide-LOC" title="Location of residence">Location of residence</th>
-              <th colspan="8" class="hide-AGE hide-SEX"></th>
+                <% } %>
               <th class="numeric">Total</th>
+              <% } %>
             </tr>
           </thead>
           <tbody>
@@ -161,16 +167,24 @@
         </table>
       </LayoutTemplate>
       <ItemTemplate>
-        <tr class="hide-AGE">
+        <% if (selectionCriteria.ShowAGE)
+           { %>
+        <tr>
           <td rowspan="2" class="year">
             <asp:Label id="lblASR_YEAR" runat="server" Text='<%# Eval("ASR_YEAR") %>' />
           </td>
-          <td rowspan="2" class="hide-RES">
+          <% if (selectionCriteria.ShowRES)
+             { %>
+          <td rowspan="2">
             <asp:Label id="lblCOU_NAME_RESIDENCE_EN" runat="server" Text='<%# Eval("COU_NAME_RESIDENCE_EN") %>' />
           </td>
-          <td rowspan="2" class="hide-LOC">
+          <% } %>
+          <% if (selectionCriteria.ShowLOC)
+             { %>
+          <td rowspan="2">
             <asp:Label id="lblLOC_NAME_RESIDENCE_EN" runat="server" Text='<%# Eval("LOC_NAME_RESIDENCE_EN") %>' />
           </td>
+          <% } %>
           <th>Female:</th>
           <td class="numeric">
             <asp:Label id="lblF0_VALUE" runat="server" Text='<%# Eval("F0_VALUE", "{0:N0}") %>' />
@@ -197,7 +211,7 @@
             <asp:Label id="lblTOTAL_VALUE" runat="server" Text='<%# Eval("TOTAL_VALUE", "{0:N0}") %>' />
           </td>
         </tr>
-        <tr class="male-row hide-AGE">
+        <tr class="male-row">
           <th class="force-vertical-dividers">Male:</th>
           <td class="numeric">
             <asp:Label id="lblM0_VALUE" runat="server" Text='<%# Eval("M0_VALUE", "{0:N0}") %>' />
@@ -221,42 +235,38 @@
             <asp:Label id="lblMTOTAL_VALUE" runat="server" Text='<%# Eval("MTOTAL_VALUE", "{0:N0}") %>' />
           </td>
         </tr>
-        <tr class="hide-SEX">
+        <% } else
+           { %>
+        <tr>
           <td class="year">
             <asp:Label id="Label2" runat="server" Text='<%# Eval("ASR_YEAR") %>' />
           </td>
-          <td class="hide-RES">
+          <% if (selectionCriteria.ShowRES)
+             { %>
+          <td>
             <asp:Label id="Label3" runat="server" Text='<%# Eval("COU_NAME_RESIDENCE_EN") %>' />
           </td>
-          <td class="hide-LOC">
+          <% } %>
+          <% if (selectionCriteria.ShowLOC)
+             { %>
+          <td>
             <asp:Label id="Label4" runat="server" Text='<%# Eval("LOC_NAME_RESIDENCE_EN") %>' />
           </td>
-          <td colspan="6" class="hide-AGE"></td>
+          <% } %>
+          <% if (selectionCriteria.ShowSEX)
+             { %>
           <td class="numeric">
             <asp:Label id="Label10" runat="server" Text='<%# Eval("FTOTAL_VALUE", "{0:N0}") %>' />
           </td>
           <td class="numeric">
             <asp:Label id="Label11" runat="server" Text='<%# Eval("MTOTAL_VALUE", "{0:N0}") %>' />
           </td>
+          <% } %>
           <td class="numeric">
             <asp:Label id="Label12" runat="server" Text='<%# Eval("TOTAL_VALUE", "{0:N0}") %>' />
           </td>
         </tr>
-        <tr class="hide-all">
-          <td class="year">
-            <asp:Label id="Label5" runat="server" Text='<%# Eval("ASR_YEAR") %>' />
-          </td>
-          <td class="hide-RES">
-            <asp:Label id="Label6" runat="server" Text='<%# Eval("COU_NAME_RESIDENCE_EN") %>' />
-          </td>
-          <td class="hide-LOC">
-            <asp:Label id="Label7" runat="server" Text='<%# Eval("LOC_NAME_RESIDENCE_EN") %>' />
-          </td>
-          <td colspan="8" class="hide-AGE hide-SEX"></td>
-          <td class="numeric">
-            <asp:Label id="Label13" runat="server" Text='<%# Eval("TOTAL_VALUE", "{0:N0}") %>' />
-          </td>
-        </tr>
+        <% } %>
       </ItemTemplate>
     </asp:ListView>
     <div class="bottom-pager">
