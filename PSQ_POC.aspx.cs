@@ -43,7 +43,7 @@ public class SelectionCriteriaPOC
 
   public SelectionCriteriaPOC()
   {
-    StartYear = "0000";
+    StartYear = "1950";
     EndYear = "9999";
     ResidenceCodes = new List<string>();
     OriginCodes = new List<string>();
@@ -466,8 +466,10 @@ public partial class PSQ_POC : System.Web.UI.Page
     }
 
     Response.Clear();
-    Response.ContentType = "application/csv";
     Response.AddHeader("content-disposition", "attachment; filename=PSQ_POC.csv");
+    Response.ContentType = "application/csv";
+    Response.ContentEncoding = Encoding.UTF8;
+    Response.BinaryWrite(Encoding.UTF8.GetPreamble());
     Response.Write(csv.ToString());
     Response.End();
   }
