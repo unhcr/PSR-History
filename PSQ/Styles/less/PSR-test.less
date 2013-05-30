@@ -51,9 +51,23 @@ cite {
     color: #888;
   }
 
+  .date-range-selection {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+
+    label {
+      padding: 0 5px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 60px;
+    }
+  }
+
   .country-selection {
     display: block;
-    width: 282px;
     width: ((@SelectionBoxWidth - (2 * (5px + 1px + 5px))));
     margin: 10px 5px 0;
 
@@ -68,18 +82,19 @@ cite {
     }
   }
 
-  .date-range-selection {
-    width: 100%;
-    text-align: center;
-    margin-top: 10px;
+  .poptype-selection {
+    display: block;
+    width: ((@SelectionBoxWidth - (2 * (5px + 1px + 5px))));
+    margin: 10px 5px 0;
 
-    label {
-      padding: 0 5px;
+    &>label {
+      display: block;
+      padding: 2px 5px;
       font-weight: bold;
     }
 
-    select {
-      width: 60px;
+    input[type="checkbox"] {
+      margin: 1px 10px;
     }
   }
 
@@ -99,7 +114,7 @@ cite {
 
     .dimensions {
       float: left;
-      width: 180px;
+      width: 190px;
       padding-top: 10px;
     }
 
