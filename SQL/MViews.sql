@@ -77,23 +77,25 @@ create materialized view QRY_ASR_POC_DETAILS_EN as
 select ASR_YEAR,
   COU_CODE_RESIDENCE, COU_NAME_RESIDENCE_EN,
   COU_CODE_ORIGIN, COU_NAME_ORIGIN_EN,
-  substr(POPULATION_TYPE, 2) as POPULATION_TYPE_EN,
+  substr(POPULATION_TYPE, 2, 2) as POPULATION_TYPE_CODE,
+  substr(POPULATION_TYPE, 4) as POPULATION_TYPE_EN,
   to_number(substr(POPULATION_TYPE, 1, 1)) as POPULATION_TYPE_SEQ,
   VALUE
 from QRY_ASR_POC_SUMMARY_EN
 unpivot
  (VALUE for POPULATION_TYPE in
-   (REFPOP_VALUE as '1Refugees',
-    ASYPOP_VALUE as '2Asylum seekers',
-    REFRTN_VALUE as '3Returned refugees',
-    IDPHPOP_VALUE as '4IDPs',
-    IDPHRTN_VALUE as '5Returned IDPs',
-    STAPOP_VALUE as '6Stateless',
-    OOCPOP_VALUE as '7Others of concern'));
+   (REFPOP_VALUE as '1RFRefugees',
+    ASYPOP_VALUE as '2ASAsylum seekers',
+    REFRTN_VALUE as '3RTReturned refugees',
+    IDPHPOP_VALUE as '4IDIDPs',
+    IDPHRTN_VALUE as '5RDReturned IDPs',
+    STAPOP_VALUE as '6STStateless',
+    OOCPOP_VALUE as '7OCOthers of concern'));
 
 create index IX_QPOCDE_YEAR on QRY_ASR_POC_DETAILS_EN (ASR_YEAR);
 create index IX_QPOCDE_COU_RES on QRY_ASR_POC_DETAILS_EN (COU_CODE_RESIDENCE);
 create index IX_QPOCDE_COU_OGN on QRY_ASR_POC_DETAILS_EN (COU_CODE_ORIGIN);
+create index IX_QPOCDE_COU_PTC on QRY_ASR_POC_DETAILS_EN (POPULATION_TYPE_CODE);
 
 
 --
