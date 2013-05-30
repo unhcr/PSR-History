@@ -31,7 +31,7 @@ public class SelectionCriteriaDEM
 
   public SelectionCriteriaDEM()
   {
-    StartYear = "0000";
+    StartYear = "1950";
     EndYear = "9999";
     ResidenceCodes = new List<string>();
     ShowRES = true;
@@ -369,9 +369,10 @@ public partial class PSQ_DEM : System.Web.UI.Page
     }
 
     Response.Clear();
-    Response.ContentType = "text/csv";
-    Response.ContentEncoding = Encoding.UTF8;
     Response.AddHeader("content-disposition", "attachment; filename=PSQ_DEM.csv");
+    Response.ContentType = "application/csv";
+    Response.ContentEncoding = Encoding.UTF8;
+    Response.BinaryWrite(Encoding.UTF8.GetPreamble());
     Response.Write(csv.ToString());
     Response.End();
   }
