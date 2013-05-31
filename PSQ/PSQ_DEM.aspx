@@ -40,7 +40,7 @@
           CssClass="year end-year" />
       </div>
       <div class="country-selection">
-        <label>Country/territory of residence</label>
+        <label>Country / territory of residence</label>
         <asp:ListBox ID="lbxCOUNTRY" runat="server" ViewStateMode="Disabled" 
           DataSourceID="dsCOUNTRY" DataTextField="COU_NAME_RESIDENCE_EN" DataValueField="COU_CODE_RESIDENCE" 
           Rows="12" SelectionMode="Multiple" 
@@ -51,7 +51,7 @@
     <fieldset class="column-selection">
       <legend>Data items to display</legend>
       <div class="dimensions">
-        <label><asp:CheckBox ID="cbxRES" runat="server" ViewStateMode="Disabled" Checked="true" />Country/territory of residence</label>
+        <label><asp:CheckBox ID="cbxRES" runat="server" ViewStateMode="Disabled" Checked="true" />Country / territory of residence</label>
         <label><asp:CheckBox ID="cbxLOC" runat="server" ViewStateMode="Disabled" Checked="true" />Location of residence</label>
       </div>
       <div class="values">
@@ -70,7 +70,7 @@
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>">
     <SelectParameters>
-      <asp:Parameter Name="START_YEAR" Type="String" DefaultValue="0000" />
+      <asp:Parameter Name="START_YEAR" Type="String" DefaultValue="1950" />
       <asp:Parameter Name="END_YEAR" Type="String" DefaultValue="9999" />
     </SelectParameters>
   </asp:SqlDataSource>
@@ -283,7 +283,7 @@
 </asp:Content>
 
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="ScriptPlaceHolder" Runat="Server">
-  <script type="text/javascript" src="Scripts/PSQ_DEM.js"></script>
+  <script type="text/javascript" src="Scripts/PSQ.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
       "use strict";
