@@ -304,7 +304,7 @@ public partial class PSQ_TMS : System.Web.UI.Page
     }
     if (selectionCriteria.ShowPOPT)
     {
-      selectStatement.Append(separator + "POPULATION_TYPE_EN, POPULATION_TYPE_SEQ");
+      selectStatement.Append(separator + "replace(POPULATION_TYPE_EN, ' persons', '') as POPULATION_TYPE_EN, POPULATION_TYPE_SEQ");
       separator = ", ";
     }
     selectStatement.Append(separator + "ASR_YEAR, VALUE from QRY_ASR_POC_DETAILS_EN where ASR_YEAR in (");
@@ -337,18 +337,15 @@ public partial class PSQ_TMS : System.Web.UI.Page
       }
       selectStatement.Append(")");
     }
-    separator = "";
+    selectStatement.Append(" and POPULATION_TYPE_CODE in (''");
     if (selectionCriteria.PopulationTypes != null && selectionCriteria.PopulationTypes.Count > 0)
     {
-      selectStatement.Append(" and POPULATION_TYPE_CODE in (");
       foreach (string code in selectionCriteria.PopulationTypes)
       {
-        selectStatement.Append(separator + "'" + code + "'");
-        separator = ",";
+        selectStatement.Append(",'" + code + "'");
       }
-      selectStatement.Append(")");
     }
-    selectStatement.Append(") pivot (sum(VALUE) as VALUE for ASR_YEAR in (");
+    selectStatement.Append(")) pivot (sum(VALUE) as VALUE for ASR_YEAR in (");
     separator = "";
     foreach (string year in selectionCriteria.StatisticYears)
     {
@@ -444,7 +441,7 @@ public partial class PSQ_TMS : System.Web.UI.Page
 
     if (selectionCriteria.ShowRES)
     {
-      csv.Append(separator + "Country/territory of residence");
+      csv.Append(separator + "Country / territory of residence");
       separator = ",";
     }
     if (selectionCriteria.ShowOGN)
