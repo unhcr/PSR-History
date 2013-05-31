@@ -45,7 +45,7 @@
           CssClass="year end-year" />
       </div>
       <div class="country-selection">
-        <label>Country/territory of residence</label>
+        <label>Country / territory of residence</label>
         <asp:ListBox ID="lbxCOUNTRY" runat="server" ViewStateMode="Disabled" 
           DataSourceID="dsCOUNTRY" DataTextField="COU_NAME_RESIDENCE_EN" DataValueField="COU_CODE_RESIDENCE" 
           Rows="5" SelectionMode="Multiple" 
@@ -63,14 +63,14 @@
     <fieldset class="column-selection">
       <legend>Data items to display</legend>
       <div class="dimensions">
-        <label><asp:CheckBox ID="cbxRES" runat="server" ViewStateMode="Disabled" Checked="true" />Country/territory of residence</label>
+        <label><asp:CheckBox ID="cbxRES" runat="server" ViewStateMode="Disabled" Checked="true" />Country / territory of residence</label>
         <label><asp:CheckBox ID="cbxOGN" runat="server" ViewStateMode="Disabled" Checked="true" />Origin / Returned from</label>
       </div>
       <div class="values">
         <label><asp:CheckBox ID="cbxREF" runat="server" ViewStateMode="Disabled" Checked="true" />Refugees</label><br />
         <label><asp:CheckBox ID="cbxASY" runat="server" ViewStateMode="Disabled" Checked="true" />Asylum-seekers</label><br />
         <label><asp:CheckBox ID="cbxRET" runat="server" ViewStateMode="Disabled" Checked="true" />Returned refugees</label><br />
-        <label><asp:CheckBox ID="cbxIDP" runat="server" ViewStateMode="Disabled" Checked="true" />IDPs</label><br />
+        <label><asp:CheckBox ID="cbxIDP" runat="server" ViewStateMode="Disabled" Checked="true" />Internally displaced persons</label><br />
         <label><asp:CheckBox ID="cbxRDP" runat="server" ViewStateMode="Disabled" Checked="true" />Returned IDPs</label><br />
         <label><asp:CheckBox ID="cbxSTA" runat="server" ViewStateMode="Disabled" Checked="true" />Stateless</label><br />
         <label><asp:CheckBox ID="cbxOOC" runat="server" ViewStateMode="Disabled" Checked="true" />Others of concern</label><br />
@@ -86,7 +86,7 @@
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>">
     <SelectParameters>
-      <asp:Parameter Name="START_YEAR" Type="String" DefaultValue="0000" />
+      <asp:Parameter Name="START_YEAR" Type="String" DefaultValue="1950" />
       <asp:Parameter Name="END_YEAR" Type="String" DefaultValue="9999" />
     </SelectParameters>
   </asp:SqlDataSource>
@@ -138,35 +138,35 @@
             <% } %>
             <% if (selectionCriteria.ShowREF)
                { %>
-            <col class="digits-9" />
+            <col class="digits-8" />
             <% } %>
             <% if (selectionCriteria.ShowASY)
                { %>
-            <col class="digits-9" />
+            <col class="digits-8" />
             <% } %>
             <% if (selectionCriteria.ShowRET)
                { %>
-            <col class="digits-9" />
+            <col class="digits-8" />
             <% } %>
             <% if (selectionCriteria.ShowIDP)
                { %>
-            <col class="digits-9" />
+            <col class="digits-8" />
             <% } %>
             <% if (selectionCriteria.ShowRDP)
                { %>
-            <col class="digits-9" />
+            <col class="digits-8" />
             <% } %>
             <% if (selectionCriteria.ShowSTA)
                { %>
-            <col class="digits-9" />
+            <col class="digits-8" />
             <% } %>
             <% if (selectionCriteria.ShowOOC)
                { %>
-            <col class="digits-9" />
+            <col class="digits-8" />
             <% } %>
             <% if (selectionCriteria.ShowPOC)
                { %>
-            <col class="digits-9" />
+            <col class="digits-8" />
             <% } %>
           </colgroup>
           <thead runat="server">
@@ -194,7 +194,7 @@
               <th class="numeric" title="Returned internally displaced persons">Returned IDPs</th>
               <% } %>
               <% if (selectionCriteria.ShowSTA) { %>
-              <th class="numeric" title="Persons under UNHCR statelessness mandate">Stateless</th>
+              <th class="numeric" title="Persons under UNHCR statelessness mandate">Stateless persons</th>
               <% } %>
               <% if (selectionCriteria.ShowOOC) { %>
               <th class="numeric" title="Other persons of concern to UNHCR">Others of concern</th>
@@ -292,7 +292,7 @@
 </asp:Content>
 
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="ScriptPlaceHolder" Runat="Server">
-  <script type="text/javascript" src="Scripts/PSQ_POC.js"></script>
+  <script type="text/javascript" src="Scripts/PSQ.js"></script>
   <script type="text/javascript">
     $( document ).ready(function () {
       "use strict";
