@@ -50,7 +50,7 @@
           CssClass="year end-year" />
       </div>
       <div class="country-selection">
-        <label>Country/territory of residence</label>
+        <label>Country / territory of residence</label>
         <asp:ListBox ID="lbxCOUNTRY" runat="server" ViewStateMode="Disabled" 
           DataSourceID="dsCOUNTRY" DataTextField="COU_NAME_RESIDENCE_EN" DataValueField="COU_CODE_RESIDENCE" 
           Rows="5" SelectionMode="Multiple" 
@@ -121,16 +121,16 @@
       <LayoutTemplate>
         <table class="standard-table">
           <caption>
-            Persons of concern to UNHCR &ndash; Overview
+            Persons of concern to UNHCR &ndash; Time series
           </caption>
           <colgroup runat="server">
             <% if (selectionCriteria.ShowRES)
                { %>
-            <col style="min-width: 100px;" />
+            <col />
             <% } %>
             <% if (selectionCriteria.ShowOGN)
                { %>
-            <col style="min-width: 100px;" />
+            <col />
             <% } %>
             <% if (selectionCriteria.ShowPOPT)
                { %>
@@ -144,10 +144,10 @@
           <thead runat="server">
             <tr>
               <% if (selectionCriteria.ShowRES) { %>
-              <th style="min-width: 100px;" title="Country or territory of residence">Country / territory of residence</th>
+              <th title="Country or territory of residence">Country / territory of residence</th>
               <% } %>
               <% if (selectionCriteria.ShowOGN) { %>
-              <th style="min-width: 100px;" title="Country or territory of origin or from which persons of concern have returned">Origin / Returned from</th>
+              <th title="Country or territory of origin or from which persons of concern have returned">Origin / Returned from</th>
               <% } %>
               <% if (selectionCriteria.ShowPOPT) { %>
               <th class="population-type-short" title="Type of population of concern to UNHCR">Population type</th>
@@ -181,6 +181,7 @@
 </asp:Content>
 
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="ScriptPlaceHolder" Runat="Server">
+  <script type="text/javascript" src="Scripts/PSQ.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
       "use strict";
