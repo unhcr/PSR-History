@@ -87,9 +87,9 @@ unpivot
    (REFPOP_VALUE as '1RFRefugees',
     ASYPOP_VALUE as '2ASAsylum seekers',
     REFRTN_VALUE as '3RTReturned refugees',
-    IDPHPOP_VALUE as '4IDIDPs',
+    IDPHPOP_VALUE as '4IDInternally displaced persons',
     IDPHRTN_VALUE as '5RDReturned IDPs',
-    STAPOP_VALUE as '6STStateless',
+    STAPOP_VALUE as '6STStateless persons',
     OOCPOP_VALUE as '7OCOthers of concern'));
 
 create index IX_QPOCDE_YEAR on QRY_ASR_POC_DETAILS_EN (ASR_YEAR);
