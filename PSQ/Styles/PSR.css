@@ -507,7 +507,7 @@ td.numeric input {
   text-align: center;
 }
 .year {
-  width: 35px;
+  width: 30px;
   text-align: center;
 }
 .accent {
@@ -609,7 +609,7 @@ cite {
 }
 .selection-box {
   position: absolute;
-  top: 150px;
+  top: 100px;
   left: 50%;
   width: 400px;
   margin-left: -204px;
@@ -673,7 +673,7 @@ cite {
 }
 .selection-box .column-selection div {
   display: inline-block;
-  padding: 3px 10px;
+  padding: 3px;
 }
 .selection-box .column-selection div label {
   display: block;
@@ -684,7 +684,7 @@ cite {
   padding-top: 10px;
 }
 .selection-box .column-selection .values {
-  width: 150px;
+  width: 180px;
 }
 .selection-box .column-selection .values label {
   display: inline;
