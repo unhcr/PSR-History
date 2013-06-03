@@ -187,7 +187,7 @@ public partial class PSQ_RSD : System.Web.UI.Page
       "nvl(sum(ASYREC_CV_VALUE), 0) + nvl(sum(ASYREC_CP_VALUE), 0) + " +
       "nvl(sum(ASYREJ_VALUE), 0) + nvl(sum(ASYOTHCL_VALUE), 0) as TOTAL_DECISIONS_VALUE, " +
       "sum(ASYPOP_END_VALUE) as ASYPOP_END_VALUE, sum(ASYPOP_AH_END_VALUE) as ASYPOP_AH_END_VALUE " +
-      "from QRY_ASR_RSD_EN where ASR_YEAR between :START_YEAR and :END_YEAR ");
+      "from ASR_RSD_EN where ASR_YEAR between :START_YEAR and :END_YEAR ");
     if (selectionCriteria.ResidenceCodes != null && selectionCriteria.ResidenceCodes.Count > 0)
     {
       selectStatement.Append("and COU_CODE_ASYLUM in ('");
@@ -241,9 +241,9 @@ public partial class PSQ_RSD : System.Web.UI.Page
       selectStatement.Append(", RSD_PROC_LEVEL_CODE");
     }
 
-    dsQRY_ASR_RSD.SelectCommand = selectStatement.ToString();
+    dsASR_RSD.SelectCommand = selectStatement.ToString();
 
-    foreach (Parameter param in dsQRY_ASR_RSD.SelectParameters)
+    foreach (Parameter param in dsASR_RSD.SelectParameters)
     {
       switch (param.Name)
       {
@@ -291,13 +291,13 @@ public partial class PSQ_RSD : System.Web.UI.Page
     if (ddlPageRows.SelectedValue == "0")
     {
       // Switch off paging. Note that 966367641 is the largest page size accepted without misbehaviour of the DataPager.
-      dpgQRY_ASR_RSD1.PageSize = 966367641;
-      dpgQRY_ASR_RSD2.PageSize = 966367641;
+      dpgASR_RSD1.PageSize = 966367641;
+      dpgASR_RSD2.PageSize = 966367641;
     }
     else
     {
-      dpgQRY_ASR_RSD1.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
-      dpgQRY_ASR_RSD2.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
+      dpgASR_RSD1.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
+      dpgASR_RSD2.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
     }
   }
 
@@ -305,8 +305,8 @@ public partial class PSQ_RSD : System.Web.UI.Page
   {
     selectionCriteria = GetSelectionDialog();
 
-    dpgQRY_ASR_RSD1.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
-    dpgQRY_ASR_RSD2.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
+    dpgASR_RSD1.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
+    dpgASR_RSD2.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
 
     selectionMode = false;
   }
@@ -345,7 +345,7 @@ public partial class PSQ_RSD : System.Web.UI.Page
 
     ConstructSelectStatement();
 
-    foreach (DataRow row in ((DataView)dsQRY_ASR_RSD.Select(DataSourceSelectArguments.Empty)).ToTable().Rows)
+    foreach (DataRow row in ((DataView)dsASR_RSD.Select(DataSourceSelectArguments.Empty)).ToTable().Rows)
     {
       csv.Append(row.ItemArray[0]);
       if (selectionCriteria.ShowRES)
@@ -402,12 +402,12 @@ public partial class PSQ_RSD : System.Web.UI.Page
     lbxORIGIN.Items.Insert(0, new ListItem { Text = "All origins", Value = "0", Selected = true });
   }
 
-  protected void lvwQRY_ASR_RSD_DataBound(object sender, EventArgs e)
+  protected void lvwASR_RSD_DataBound(object sender, EventArgs e)
   {
-    lblNoData.Visible = (dpgQRY_ASR_RSD1.TotalRowCount == 0);
-    lblPager.Visible = (dpgQRY_ASR_RSD1.TotalRowCount > 0);
-    btnCSV.Visible = (dpgQRY_ASR_RSD1.TotalRowCount > 0);
-    dpgQRY_ASR_RSD2.Visible = (dpgQRY_ASR_RSD2.TotalRowCount > dpgQRY_ASR_RSD2.PageSize);
+    lblNoData.Visible = (dpgASR_RSD1.TotalRowCount == 0);
+    lblPager.Visible = (dpgASR_RSD1.TotalRowCount > 0);
+    btnCSV.Visible = (dpgASR_RSD1.TotalRowCount > 0);
+    dpgASR_RSD2.Visible = (dpgASR_RSD2.TotalRowCount > dpgASR_RSD2.PageSize);
   }
 
 }

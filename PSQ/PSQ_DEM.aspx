@@ -5,7 +5,7 @@
 <asp:Content ID="HeaderContent" ContentPlaceHolderID="HeaderPlaceHolder" Runat="Server">
   <% if (selectionMode)
      { %>
-  <style type="text/css"> .main-body { display:none; }  </style>
+  <style type="text/css"> .main-body { display:none; } </style>
   <% } else
      {%>
   <style type="text/css"> .selection-box { display:none; } </style>
@@ -19,12 +19,12 @@
   <asp:SqlDataSource ID="dsASR_YEAR" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>"
-    SelectCommand="select distinct ASR_YEAR from QRY_ASR_POC_SUMMARY_EN order by ASR_YEAR desc" />
+    SelectCommand="select distinct ASR_YEAR from ASR_POC_SUMMARY_EN order by ASR_YEAR desc" />
 
   <asp:SqlDataSource ID="dsCOUNTRY" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>"
-    SelectCommand="select distinct COU_CODE_RESIDENCE, COU_NAME_RESIDENCE_EN from QRY_ASR_POC_SUMMARY_EN order by COU_NAME_RESIDENCE_EN" />
+    SelectCommand="select distinct COU_CODE_RESIDENCE, COU_NAME_RESIDENCE_EN from ASR_POC_SUMMARY_EN order by COU_NAME_RESIDENCE_EN" />
  
   <div ID="divSelectionBox" runat="server" class="selection-box">
     <fieldset>
@@ -66,7 +66,7 @@
     </div>
   </div>
 
-  <asp:SqlDataSource id="dsQRY_ASR_DEMOGRAPHICS" runat="server" 
+  <asp:SqlDataSource id="dsASR_DEMOGRAPHICS" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>">
     <SelectParameters>
@@ -91,7 +91,7 @@
           <asp:ListItem Value="250" />
           <asp:ListItem Text="All" Value="0" />
         </asp:DropDownList>
-        <asp:DataPager ID="dpgQRY_ASR_DEMOGRAPHICS1" runat="server" PagedControlID="lvwQRY_ASR_DEMOGRAPHICS" 
+        <asp:DataPager ID="dpgASR_DEMOGRAPHICS1" runat="server" PagedControlID="lvwASR_DEMOGRAPHICS" 
           PageSize="25" ViewStateMode="Disabled">
           <Fields>
             <asp:NextPreviousPagerField ButtonType="Button"
@@ -103,8 +103,8 @@
       </asp:Label>
       <asp:Button ID="btnNewQuery" runat="server" Text="New Query" onclick="btnNewQuery_Click" />
     </div>
-    <asp:ListView ID="lvwQRY_ASR_DEMOGRAPHICS" runat="server" DataSourceID="dsQRY_ASR_DEMOGRAPHICS" 
-      ItemPlaceholderID="itemPlaceholder" OnDataBound="lvwQRY_ASR_DEMOGRAPHICS_DataBound"> 
+    <asp:ListView ID="lvwASR_DEMOGRAPHICS" runat="server" DataSourceID="dsASR_DEMOGRAPHICS" 
+      ItemPlaceholderID="itemPlaceholder" OnDataBound="lvwASR_DEMOGRAPHICS_DataBound"> 
       <LayoutTemplate>
         <table class="standard-table">
           <caption>
@@ -270,7 +270,7 @@
       </ItemTemplate>
     </asp:ListView>
     <div class="bottom-pager">
-      <asp:DataPager ID="dpgQRY_ASR_DEMOGRAPHICS2" runat="server" PagedControlID="lvwQRY_ASR_DEMOGRAPHICS" 
+      <asp:DataPager ID="dpgASR_DEMOGRAPHICS2" runat="server" PagedControlID="lvwASR_DEMOGRAPHICS" 
         PageSize="25" ViewStateMode="Disabled">
         <Fields>
           <asp:NumericPagerField ButtonCount="20" ButtonType="Button" CurrentPageLabelCssClass="current-page-button" /> 

@@ -183,7 +183,7 @@ public partial class PSQ_DEM : System.Web.UI.Page
     {
       selectStatement.Append("null as MTOTAL_VALUE, ");
     }
-    selectStatement.Append("sum(TOTAL_VALUE) as TOTAL_VALUE from QRY_ASR_DEMOGRAPHICS_EN " +
+    selectStatement.Append("sum(TOTAL_VALUE) as TOTAL_VALUE from ASR_DEMOGRAPHICS_EN " +
       "where ASR_YEAR between :START_YEAR and :END_YEAR ");
     if (selectionCriteria.ResidenceCodes != null && selectionCriteria.ResidenceCodes.Count > 0)
     {
@@ -213,9 +213,9 @@ public partial class PSQ_DEM : System.Web.UI.Page
       selectStatement.Append(", LOC_NAME_RESIDENCE_EN");
     }
 
-    dsQRY_ASR_DEMOGRAPHICS.SelectCommand = selectStatement.ToString();
+    dsASR_DEMOGRAPHICS.SelectCommand = selectStatement.ToString();
 
-    foreach (Parameter param in dsQRY_ASR_DEMOGRAPHICS.SelectParameters)
+    foreach (Parameter param in dsASR_DEMOGRAPHICS.SelectParameters)
     {
       switch (param.Name)
       {
@@ -263,13 +263,13 @@ public partial class PSQ_DEM : System.Web.UI.Page
     if (ddlPageRows.SelectedValue == "0")
     {
       // Switch off paging. Note that 966,367,641 is the largest page size accepted without misbehaviour of the DataPager.
-      dpgQRY_ASR_DEMOGRAPHICS1.PageSize = 966367641;
-      dpgQRY_ASR_DEMOGRAPHICS2.PageSize = 966367641;
+      dpgASR_DEMOGRAPHICS1.PageSize = 966367641;
+      dpgASR_DEMOGRAPHICS2.PageSize = 966367641;
     }
     else
     {
-      dpgQRY_ASR_DEMOGRAPHICS1.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
-      dpgQRY_ASR_DEMOGRAPHICS2.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
+      dpgASR_DEMOGRAPHICS1.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
+      dpgASR_DEMOGRAPHICS2.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
     }
   }
 
@@ -277,8 +277,8 @@ public partial class PSQ_DEM : System.Web.UI.Page
   {
     selectionCriteria = GetSelectionDialog();
 
-    dpgQRY_ASR_DEMOGRAPHICS1.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
-    dpgQRY_ASR_DEMOGRAPHICS2.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
+    dpgASR_DEMOGRAPHICS1.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
+    dpgASR_DEMOGRAPHICS2.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
 
     selectionMode = false;
   }
@@ -322,7 +322,7 @@ public partial class PSQ_DEM : System.Web.UI.Page
 
     ConstructSelectStatement();
 
-    foreach (DataRow row in ((DataView)dsQRY_ASR_DEMOGRAPHICS.Select(DataSourceSelectArguments.Empty)).ToTable().Rows)
+    foreach (DataRow row in ((DataView)dsASR_DEMOGRAPHICS.Select(DataSourceSelectArguments.Empty)).ToTable().Rows)
     {
       csv.Append(row.ItemArray[0]);
       if (selectionCriteria.ShowRES)
@@ -382,11 +382,11 @@ public partial class PSQ_DEM : System.Web.UI.Page
     lbxCOUNTRY.Items.Insert(0, new ListItem { Text = "All countries / territories", Value = "0", Selected = true });
   }
 
-  protected void lvwQRY_ASR_DEMOGRAPHICS_DataBound(object sender, EventArgs e)
+  protected void lvwASR_DEMOGRAPHICS_DataBound(object sender, EventArgs e)
   {
-    lblNoData.Visible = (dpgQRY_ASR_DEMOGRAPHICS1.TotalRowCount == 0);
-    lblPager.Visible = (dpgQRY_ASR_DEMOGRAPHICS1.TotalRowCount > 0);
-    btnCSV.Visible = (dpgQRY_ASR_DEMOGRAPHICS1.TotalRowCount > 0);
-    dpgQRY_ASR_DEMOGRAPHICS2.Visible = (dpgQRY_ASR_DEMOGRAPHICS2.TotalRowCount > dpgQRY_ASR_DEMOGRAPHICS2.PageSize);
+    lblNoData.Visible = (dpgASR_DEMOGRAPHICS1.TotalRowCount == 0);
+    lblPager.Visible = (dpgASR_DEMOGRAPHICS1.TotalRowCount > 0);
+    btnCSV.Visible = (dpgASR_DEMOGRAPHICS1.TotalRowCount > 0);
+    dpgASR_DEMOGRAPHICS2.Visible = (dpgASR_DEMOGRAPHICS2.TotalRowCount > dpgASR_DEMOGRAPHICS2.PageSize);
   }
 }
