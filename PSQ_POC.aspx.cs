@@ -240,7 +240,7 @@ public partial class PSQ_POC : System.Web.UI.Page
         "sum(nvl(REFPOP_VALUE,0) + nvl(ASYPOP_VALUE,0) + nvl(REFRTN_VALUE,0) + " +
           "nvl(IDPHPOP_VALUE,0) + nvl(IDPHRTN_VALUE,0) + nvl(STAPOP_VALUE,0) + nvl(OOCPOP_VALUE,0))" :
         "null") + " as TPOC_VALUE ");
-    selectStatement.Append("from QRY_ASR_POC_SUMMARY_EN where ASR_YEAR between :START_YEAR and :END_YEAR ");
+    selectStatement.Append("from ASR_POC_SUMMARY_EN where ASR_YEAR between :START_YEAR and :END_YEAR ");
     if (selectionCriteria.ResidenceCodes != null && selectionCriteria.ResidenceCodes.Count > 0)
     {
       selectStatement.Append("and COU_CODE_RESIDENCE in ('");
@@ -280,9 +280,9 @@ public partial class PSQ_POC : System.Web.UI.Page
       selectStatement.Append(", COU_NAME_ORIGIN_EN");
     }
 
-    dsQRY_ASR_POC_SUMMARY.SelectCommand = selectStatement.ToString();
+    dsASR_POC_SUMMARY.SelectCommand = selectStatement.ToString();
 
-    foreach (Parameter param in dsQRY_ASR_POC_SUMMARY.SelectParameters)
+    foreach (Parameter param in dsASR_POC_SUMMARY.SelectParameters)
     {
       switch (param.Name)
       {
@@ -330,13 +330,13 @@ public partial class PSQ_POC : System.Web.UI.Page
     if (ddlPageRows.SelectedValue == "0")
     {
       // Switch off paging. Note that 966367641 is the largest page size accepted without misbehaviour of the DataPager.
-      dpgQRY_ASR_POC_SUMMARY1.PageSize = 966367641;
-      dpgQRY_ASR_POC_SUMMARY2.PageSize = 966367641;
+      dpgASR_POC_SUMMARY1.PageSize = 966367641;
+      dpgASR_POC_SUMMARY2.PageSize = 966367641;
     }
     else
     {
-      dpgQRY_ASR_POC_SUMMARY1.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
-      dpgQRY_ASR_POC_SUMMARY2.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
+      dpgASR_POC_SUMMARY1.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
+      dpgASR_POC_SUMMARY2.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
     }
   }
   
@@ -344,8 +344,8 @@ public partial class PSQ_POC : System.Web.UI.Page
   {
     selectionCriteria = GetSelectionDialog();
 
-    dpgQRY_ASR_POC_SUMMARY1.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
-    dpgQRY_ASR_POC_SUMMARY2.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
+    dpgASR_POC_SUMMARY1.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
+    dpgASR_POC_SUMMARY2.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
     
     selectionMode = false;
   }
@@ -405,7 +405,7 @@ public partial class PSQ_POC : System.Web.UI.Page
 
     ConstructSelectStatement();
 
-    foreach (DataRow row in ((DataView)dsQRY_ASR_POC_SUMMARY.Select(DataSourceSelectArguments.Empty)).ToTable().Rows)
+    foreach (DataRow row in ((DataView)dsASR_POC_SUMMARY.Select(DataSourceSelectArguments.Empty)).ToTable().Rows)
     {
       csv.Append(row.ItemArray[0]);
       if (selectionCriteria.ShowRES)
@@ -484,12 +484,12 @@ public partial class PSQ_POC : System.Web.UI.Page
     lbxORIGIN.Items.Insert(0, new ListItem { Text = "All origins", Value = "0", Selected = true });
   }
 
-  protected void lvwQRY_ASR_POC_SUMMARY_DataBound(object sender, EventArgs e)
+  protected void lvwASR_POC_SUMMARY_DataBound(object sender, EventArgs e)
   {
-    lblNoData.Visible = (dpgQRY_ASR_POC_SUMMARY1.TotalRowCount == 0);
-    lblPager.Visible = (dpgQRY_ASR_POC_SUMMARY1.TotalRowCount > 0);
-    btnCSV.Visible = (dpgQRY_ASR_POC_SUMMARY1.TotalRowCount > 0);
-    dpgQRY_ASR_POC_SUMMARY2.Visible = (dpgQRY_ASR_POC_SUMMARY2.TotalRowCount > dpgQRY_ASR_POC_SUMMARY2.PageSize);
+    lblNoData.Visible = (dpgASR_POC_SUMMARY1.TotalRowCount == 0);
+    lblPager.Visible = (dpgASR_POC_SUMMARY1.TotalRowCount > 0);
+    btnCSV.Visible = (dpgASR_POC_SUMMARY1.TotalRowCount > 0);
+    dpgASR_POC_SUMMARY2.Visible = (dpgASR_POC_SUMMARY2.TotalRowCount > dpgASR_POC_SUMMARY2.PageSize);
   }
 
 }

@@ -307,7 +307,7 @@ public partial class PSQ_TMS : System.Web.UI.Page
       selectStatement.Append(separator + "replace(POPULATION_TYPE_EN, ' persons', '') as POPULATION_TYPE_EN, POPULATION_TYPE_SEQ");
       separator = ", ";
     }
-    selectStatement.Append(separator + "ASR_YEAR, VALUE from QRY_ASR_POC_DETAILS_EN where ASR_YEAR in (");
+    selectStatement.Append(separator + "ASR_YEAR, VALUE from ASR_POC_DETAILS_EN where ASR_YEAR in (");
     separator = "";
     foreach (string year in selectionCriteria.StatisticYears)
     {
@@ -370,7 +370,7 @@ public partial class PSQ_TMS : System.Web.UI.Page
       separator = ", ";
     }
 
-    dsQRY_ASR_POC_DETAILS.SelectCommand = selectStatement.ToString();
+    dsASR_POC_DETAILS.SelectCommand = selectStatement.ToString();
 
     //Label1.Text = selectStatement.ToString() + "<br />" + DateTime.Now;
   }
@@ -380,12 +380,12 @@ public partial class PSQ_TMS : System.Web.UI.Page
     if (IsPostBack)
     {
       RestoreFromViewState();
-      lvwQRY_ASR_POC_DETAILS.ItemTemplate = new ListViewTemplate(selectionCriteria);
+      lvwASR_POC_DETAILS.ItemTemplate = new ListViewTemplate(selectionCriteria);
     }
     else if (Request.QueryString.Count > 0)
     {
       UnpackQueryString();
-      lvwQRY_ASR_POC_DETAILS.ItemTemplate = new ListViewTemplate(selectionCriteria);
+      lvwASR_POC_DETAILS.ItemTemplate = new ListViewTemplate(selectionCriteria);
     }
     else
     {
@@ -407,23 +407,23 @@ public partial class PSQ_TMS : System.Web.UI.Page
     if (ddlPageRows.SelectedValue == "0")
     {
       // Switch off paging. Note that 966367641 is the largest page size accepted without misbehaviour of the DataPager.
-      dpgQRY_ASR_POC_DETAILS1.PageSize = 966367641;
-      dpgQRY_ASR_POC_DETAILS2.PageSize = 966367641;
+      dpgASR_POC_DETAILS1.PageSize = 966367641;
+      dpgASR_POC_DETAILS2.PageSize = 966367641;
     }
     else
     {
-      dpgQRY_ASR_POC_DETAILS1.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
-      dpgQRY_ASR_POC_DETAILS2.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
+      dpgASR_POC_DETAILS1.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
+      dpgASR_POC_DETAILS2.PageSize = Convert.ToInt32(ddlPageRows.SelectedValue);
     }
   }
 
   protected void btnSubmit_Click(object sender, EventArgs e)
   {
     selectionCriteria = GetSelectionDialog();
-    lvwQRY_ASR_POC_DETAILS.ItemTemplate = new ListViewTemplate(selectionCriteria);
+    lvwASR_POC_DETAILS.ItemTemplate = new ListViewTemplate(selectionCriteria);
 
-    dpgQRY_ASR_POC_DETAILS1.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
-    dpgQRY_ASR_POC_DETAILS2.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
+    dpgASR_POC_DETAILS1.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
+    dpgASR_POC_DETAILS2.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
 
     selectionMode = false;
   }
@@ -463,7 +463,7 @@ public partial class PSQ_TMS : System.Web.UI.Page
 
     ConstructSelectStatement();
 
-    foreach (DataRow row in ((DataView)dsQRY_ASR_POC_DETAILS.Select(DataSourceSelectArguments.Empty)).ToTable().Rows)
+    foreach (DataRow row in ((DataView)dsASR_POC_DETAILS.Select(DataSourceSelectArguments.Empty)).ToTable().Rows)
     {
       int i = 0;
       separator = "";
@@ -533,12 +533,12 @@ public partial class PSQ_TMS : System.Web.UI.Page
     }
   }
 
-  protected void lvwQRY_ASR_POC_DETAILS_DataBound(object sender, EventArgs e)
+  protected void lvwASR_POC_DETAILS_DataBound(object sender, EventArgs e)
   {
-    lblNoData.Visible = (dpgQRY_ASR_POC_DETAILS1.TotalRowCount == 0);
-    lblPager.Visible = (dpgQRY_ASR_POC_DETAILS1.TotalRowCount > 0);
-    btnCSV.Visible = (dpgQRY_ASR_POC_DETAILS1.TotalRowCount > 0);
-    dpgQRY_ASR_POC_DETAILS2.Visible = (dpgQRY_ASR_POC_DETAILS2.TotalRowCount > dpgQRY_ASR_POC_DETAILS2.PageSize);
+    lblNoData.Visible = (dpgASR_POC_DETAILS1.TotalRowCount == 0);
+    lblPager.Visible = (dpgASR_POC_DETAILS1.TotalRowCount > 0);
+    btnCSV.Visible = (dpgASR_POC_DETAILS1.TotalRowCount > 0);
+    dpgASR_POC_DETAILS2.Visible = (dpgASR_POC_DETAILS2.TotalRowCount > dpgASR_POC_DETAILS2.PageSize);
   }
 
 }
