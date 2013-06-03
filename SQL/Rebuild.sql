@@ -109,10 +109,6 @@ prompt LoadPPGs
 prompt ========
 @LoadPPGs
 
---prompt LoadStatistics
---prompt ==============
---@LoadStatistics
-
 prompt LoadRefugeeStatistics
 prompt =====================
 @LoadRefugeeStatistics
