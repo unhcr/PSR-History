@@ -44,8 +44,7 @@
         <asp:ListBox ID="lbxCOUNTRY" runat="server" ViewStateMode="Disabled" 
           DataSourceID="dsCOUNTRY" DataTextField="COU_NAME_RESIDENCE_EN" DataValueField="COU_CODE_RESIDENCE" 
           Rows="12" SelectionMode="Multiple" 
-          CssClass="country" OnDataBound="lbxCOUNTRY_DataBound">
-        </asp:ListBox>
+          CssClass="country" OnDataBound="lbxCOUNTRY_DataBound" />
       </div>
     </fieldset>
     <fieldset class="column-selection">
@@ -108,7 +107,7 @@
       <LayoutTemplate>
         <table class="standard-table">
           <caption>
-            Demographic composition of populations of concern to UNHCR
+            <asp:Label ID="capASR_DEMOGRAPHICS" runat="server" Text="Demographic composition of populations of concern to UNHCR" />
           </caption>
           <colgroup runat="server">
             <col class="year" />
