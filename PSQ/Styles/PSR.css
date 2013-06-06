@@ -134,10 +134,10 @@ body {
   background-color: #fffffd;
 }
 h1 {
-  margin: 2em;
+  margin: 1em;
   text-align: center;
   color: #004baa;
-  font-size: 33px;
+  font-size: 20px;
   font-weight: bold;
 }
 .container {
@@ -149,7 +149,7 @@ h1 {
 .navbar {
   height: 26px;
   padding: 2px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border: 1px solid #003380;
   border-radius: 8px;
   background-color: #003380;
@@ -313,7 +313,7 @@ table.standard-table td.sub-table {
 }
 table.standard-table .sub-table table {
   margin-top: 5px;
-  background-color: #e2efff;
+  background-color: #d3e6ff;
 }
 table.standard-table .no-vertical-dividers td,
 table.standard-table .no-vertical-dividers th {
@@ -333,7 +333,7 @@ table.framework-table > tbody > tr:first-child > td {
 }
 caption {
   padding: 12px 0 5px;
-  font-size: larger;
+  font-size: 13px;
   font-weight: bold;
 }
 table.standard-table input,
@@ -609,7 +609,7 @@ cite {
 }
 .selection-box {
   position: absolute;
-  top: 100px;
+  top: 70px;
   left: 50%;
   width: 400px;
   margin-left: -204px;
@@ -752,5 +752,70 @@ select {
   border-radius: 6px;
 }
 .male-row {
-  background-color: #e2efff;
+  background-color: #d3e6ff;
+}
+div.frs {
+  width: 731px;
+  margin: auto;
+}
+div.frs div.residing,
+div.frs div.origin {
+  float: left;
+  width: 315px;
+  padding: 5px 25px;
+}
+div.frs div.residing h2,
+div.frs div.origin h2 {
+  margin: 0.2em 0 0.6em;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+div.frs div.residing h3,
+div.frs div.origin h3 {
+  margin: 0.5em 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+div.frs div.residing li,
+div.frs div.origin li {
+  margin: 0.3em 0;
+}
+div.frs div.residing a,
+div.frs div.origin a {
+  margin: 0 10px;
+  color: #004baa;
+  font-size: 14px;
+  text-decoration: none;
+}
+div.frs div.residing a:hover,
+div.frs div.origin a:hover {
+  color: #117aff;
+  text-decoration: underline;
+}
+div.frs div.residing select,
+div.frs div.origin select {
+  width: 315px;
+  margin: 5px;
+}
+div.frs div.residing {
+  border-right: 1px solid grey;
+}
+div.frs div.others {
+  clear: both;
+  padding: 10px 0 20px;
+  text-align: center;
+}
+div.frs div.others li {
+  margin: 0.6em 0;
+}
+div.frs div.others a {
+  margin: 0 10px;
+  color: #004baa;
+  font-size: 14px;
+  text-decoration: none;
+}
+div.frs div.others a:hover {
+  color: #117aff;
+  text-decoration: underline;
 }
