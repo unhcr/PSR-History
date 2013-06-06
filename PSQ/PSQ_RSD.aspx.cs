@@ -230,7 +230,7 @@ public partial class PSQ_RSD : System.Web.UI.Page
     }
     if (selectionCriteria.ShowOGN)
     {
-      selectStatement.Append(", COU_NAME_ORIGIN_EN");
+      selectStatement.Append(", decode(COU_NAME_ORIGIN_EN, 'Various', '_', COU_NAME_ORIGIN_EN)");
     }
     if (selectionCriteria.ShowRSDP)
     {
@@ -259,6 +259,58 @@ public partial class PSQ_RSD : System.Web.UI.Page
     //Label1.Text = selectStatement.ToString() + "<br />" +
     //  selectionCriteria.StartYear + " / " + selectionCriteria.EndYear + "<br />" +
     //  DateTime.Now;
+  }
+
+  string GetCaption()
+  {
+    var caption = new StringBuilder("Asylum applications and refugee status determination");
+    string conjunction = " for asylum seekers";
+    int limit = selectionCriteria.ResidenceCodes.Count - 1;
+
+    if (!selectionCriteria.ShowRES && limit >= 0 && limit < 5)
+    {
+      caption.Append(conjunction + " residing in ");
+      for (int i = 0; i <= limit; i++)
+      {
+        if (i > 0)
+        {
+          if (i == limit)
+          {
+            caption.Append(" or ");
+          }
+          else
+          {
+            caption.Append(", ");
+          }
+        }
+        caption.Append(lbxCOUNTRY.Items.FindByValue(selectionCriteria.ResidenceCodes[i]).Text);
+        conjunction = " and";
+      }
+    }
+
+    limit = selectionCriteria.OriginCodes.Count - 1;
+
+    if (!selectionCriteria.ShowOGN && limit >= 0 && limit < 5)
+    {
+      caption.Append(conjunction + " originating from ");
+      for (int i = 0; i <= limit; i++)
+      {
+        if (i > 0)
+        {
+          if (i == limit)
+          {
+            caption.Append(" or ");
+          }
+          else
+          {
+            caption.Append(", ");
+          }
+        }
+        caption.Append(lbxORIGIN.Items.FindByValue(selectionCriteria.OriginCodes[i]).Text);
+      }
+    }
+
+    return caption.ToString();
   }
 
   protected void Page_Load(object sender, EventArgs e)
@@ -291,8 +343,8 @@ public partial class PSQ_RSD : System.Web.UI.Page
     if (ddlPageRows.SelectedValue == "0")
     {
       // Switch off paging. Note that 966367641 is the largest page size accepted without misbehaviour of the DataPager.
-      dpgASR_RSD1.PageSize = 966367641;
-      dpgASR_RSD2.PageSize = 966367641;
+      dpgASR_RSD1.PageSize = 100000000;
+      dpgASR_RSD2.PageSize = 100000000;
     }
     else
     {
@@ -305,8 +357,12 @@ public partial class PSQ_RSD : System.Web.UI.Page
   {
     selectionCriteria = GetSelectionDialog();
 
-    dpgASR_RSD1.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
-    dpgASR_RSD2.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
+    dpgASR_RSD1.SetPageProperties(0,
+      (ddlPageRows.SelectedValue == "0") ? 100000000 : Convert.ToInt32(ddlPageRows.SelectedValue),
+      true);
+    dpgASR_RSD2.SetPageProperties(0,
+      (ddlPageRows.SelectedValue == "0") ? 100000000 : Convert.ToInt32(ddlPageRows.SelectedValue),
+      true);
 
     selectionMode = false;
   }
@@ -320,6 +376,13 @@ public partial class PSQ_RSD : System.Web.UI.Page
   protected void btnCSV_Click(object sender, EventArgs e)
   {
     StringBuilder csv = new StringBuilder();
+
+    csv.AppendLine("\"Extracted from the UNHCR Population Statistics Reference Database, " +
+      "United Nations High Commissioner for Refugees.\"");
+    csv.AppendLine("Date extracted: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm K"));
+    csv.AppendLine();
+    csv.AppendLine('"' + GetCaption() + '"');
+    csv.AppendLine();
 
     csv.Append("Year");
     if (selectionCriteria.ShowRES)
@@ -408,6 +471,12 @@ public partial class PSQ_RSD : System.Web.UI.Page
     lblPager.Visible = (dpgASR_RSD1.TotalRowCount > 0);
     btnCSV.Visible = (dpgASR_RSD1.TotalRowCount > 0);
     dpgASR_RSD2.Visible = (dpgASR_RSD2.TotalRowCount > dpgASR_RSD2.PageSize);
+
+    var caption = (Label)(lvwASR_RSD.FindControl("capASR_RSD"));
+    if (caption != null)
+    {
+      caption.Text = GetCaption();
+    }
   }
 
 }
