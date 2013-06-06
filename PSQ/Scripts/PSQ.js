@@ -38,6 +38,18 @@ $(document).ready(function () {
     }
   });
 
+  // Open new page on country selection in Frequently Requested Statistics
+  $(".frs .residing select").change(function (event) {
+    if (event.target.value !== "0") {
+      window.open("PSQ_TMS.aspx?SYR=2000&EYR=2012&RES=" + event.target.value + "&POPT=RF&DRES=N&DPOPT=N")
+    }
+  });
+  $(".frs .origin select").change(function (event) {
+    if (event.target.value !== "0") {
+      window.open("PSQ_TMS.aspx?SYR=2000&EYR=2012&OGN=" + event.target.value + "&POPT=RF&DOGN=N&DPOPT=N")
+    }
+  });
+
   // Ensure at least one numeric value column is selected
   var popTypes = $(".values input");
   popTypes.click(function () {
