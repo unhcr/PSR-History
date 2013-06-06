@@ -54,8 +54,7 @@
         <asp:ListBox ID="lbxCOUNTRY" runat="server" ViewStateMode="Disabled" 
           DataSourceID="dsCOUNTRY" DataTextField="COU_NAME_RESIDENCE_EN" DataValueField="COU_CODE_RESIDENCE" 
           Rows="5" SelectionMode="Multiple" 
-          CssClass="country" OnDataBound="lbxCOUNTRY_DataBound">
-        </asp:ListBox>
+          CssClass="country" OnDataBound="lbxCOUNTRY_DataBound" />
       </div>
       <div class="country-selection">
         <label>Origin / Returned from</label>
@@ -121,7 +120,7 @@
       <LayoutTemplate>
         <table class="standard-table">
           <caption>
-            Persons of concern to UNHCR &ndash; Time series
+            <asp:Label ID="capASR_POC_DETAILS" runat="server" Text="Persons of concern to UNHCR – Time series" />
           </caption>
           <colgroup runat="server">
             <% if (selectionCriteria.ShowRES)

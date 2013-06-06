@@ -49,8 +49,7 @@
         <asp:ListBox ID="lbxCOUNTRY" runat="server" ViewStateMode="Disabled" 
           DataSourceID="dsCOUNTRY" DataTextField="COU_NAME_ASYLUM_EN" DataValueField="COU_CODE_ASYLUM" 
           Rows="5" SelectionMode="Multiple" 
-          CssClass="country" OnDataBound="lbxCOUNTRY_DataBound">
-        </asp:ListBox>
+          CssClass="country" OnDataBound="lbxCOUNTRY_DataBound" />
       </div>
       <div class="country-selection">
         <label>Origin / Returned from</label>
@@ -116,7 +115,7 @@
       <LayoutTemplate>
         <table class="standard-table">
           <caption>
-            Asylum applications and refugee status determination
+            <asp:Label ID="capASR_RSD" runat="server" Text="Asylum applications and refugee status determination" />
           </caption>
           <colgroup id="Colgroup1" runat="server">
             <col class="year" />

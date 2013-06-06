@@ -49,8 +49,7 @@
         <asp:ListBox ID="lbxCOUNTRY" runat="server" ViewStateMode="Disabled" 
           DataSourceID="dsCOUNTRY" DataTextField="COU_NAME_RESIDENCE_EN" DataValueField="COU_CODE_RESIDENCE" 
           Rows="5" SelectionMode="Multiple" 
-          CssClass="country" OnDataBound="lbxCOUNTRY_DataBound">
-        </asp:ListBox>
+          CssClass="country" OnDataBound="lbxCOUNTRY_DataBound" />
       </div>
       <div class="country-selection">
         <label>Origin / Returned from</label>
@@ -123,8 +122,8 @@
       ItemPlaceholderID="itemPlaceholder" OnDataBound="lvwASR_POC_SUMMARY_DataBound"> 
       <LayoutTemplate>
         <table class="standard-table">
-          <caption>
-            Persons of concern to UNHCR &ndash; Overview
+          <caption runat="server">
+            <asp:Label ID="capASR_POC_SUMMARY" runat="server" Text="Persons of concern to UNHCR – Overview" />
           </caption>
           <colgroup runat="server">
             <col class="year" />
@@ -173,7 +172,7 @@
             <tr>
               <th>Year</th>
               <% if (selectionCriteria.ShowRES) { %>
-              <th title="Country or territory of residence">Country/territory of residence</th>
+              <th title="Country or territory of residence">Country / territory of residence</th>
               <% } %>
               <% if (selectionCriteria.ShowOGN) { %>
               <th title="Country or territory of origin or from which persons of concern have returned">Origin / Returned from</th>
