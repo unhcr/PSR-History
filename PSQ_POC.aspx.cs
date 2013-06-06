@@ -277,7 +277,7 @@ public partial class PSQ_POC : System.Web.UI.Page
     }
     if (selectionCriteria.ShowOGN)
     {
-      selectStatement.Append(", COU_NAME_ORIGIN_EN");
+      selectStatement.Append(", decode(COU_NAME_ORIGIN_EN, 'Various', '_', COU_NAME_ORIGIN_EN)");
     }
 
     dsASR_POC_SUMMARY.SelectCommand = selectStatement.ToString();
@@ -298,6 +298,70 @@ public partial class PSQ_POC : System.Web.UI.Page
     //Label1.Text = selectStatement.ToString() + "<br />" +
     //  selectionCriteria.StartYear + " / " + selectionCriteria.EndYear + "<br />" +
     //  DateTime.Now;
+  }
+
+  string GetCaption()
+  {
+    var caption = new StringBuilder("Overview – Persons of concern to UNHCR");
+    string conjunction = "";
+    int limit = selectionCriteria.ResidenceCodes.Count - 1;
+
+    if (!selectionCriteria.ShowRES && limit >= 0 && limit < 5)
+    {
+      caption.Append(" residing in ");
+      for (int i = 0; i <= limit; i++)
+      {
+        if (i > 0)
+        {
+          if (i == limit)
+          {
+            caption.Append(" or ");
+          }
+          else
+          {
+            caption.Append(", ");
+          }
+        }
+        caption.Append(lbxCOUNTRY.Items.FindByValue(selectionCriteria.ResidenceCodes[i]).Text);
+        conjunction = " and";
+      }
+    }
+
+    limit = selectionCriteria.OriginCodes.Count - 1;
+
+    if (!selectionCriteria.ShowOGN && limit >= 0 && limit < 5)
+    {
+      caption.Append(conjunction);
+      conjunction = "";
+      if (selectionCriteria.ShowREF || selectionCriteria.ShowASY || selectionCriteria.ShowIDP ||
+        selectionCriteria.ShowSTA || selectionCriteria.ShowOOC || selectionCriteria.ShowPOC)
+      {
+        caption.Append(" originating");
+        conjunction = " or";
+      }
+      if (selectionCriteria.ShowRET || selectionCriteria.ShowRDP || selectionCriteria.ShowPOC)
+      {
+        caption.Append(conjunction + " returning");
+      }
+      caption.Append(" from ");
+      for (int i = 0; i <= limit; i++)
+      {
+        if (i > 0)
+        {
+          if (i == limit)
+          {
+            caption.Append(" or ");
+          }
+          else
+          {
+            caption.Append(", ");
+          }
+        }
+        caption.Append(lbxORIGIN.Items.FindByValue(selectionCriteria.OriginCodes[i]).Text);
+      }
+    }
+
+    return caption.ToString();
   }
 
   protected void Page_Load(object sender, EventArgs e)
@@ -330,8 +394,8 @@ public partial class PSQ_POC : System.Web.UI.Page
     if (ddlPageRows.SelectedValue == "0")
     {
       // Switch off paging. Note that 966367641 is the largest page size accepted without misbehaviour of the DataPager.
-      dpgASR_POC_SUMMARY1.PageSize = 966367641;
-      dpgASR_POC_SUMMARY2.PageSize = 966367641;
+      dpgASR_POC_SUMMARY1.PageSize = 100000000;
+      dpgASR_POC_SUMMARY2.PageSize = 100000000;
     }
     else
     {
@@ -344,8 +408,12 @@ public partial class PSQ_POC : System.Web.UI.Page
   {
     selectionCriteria = GetSelectionDialog();
 
-    dpgASR_POC_SUMMARY1.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
-    dpgASR_POC_SUMMARY2.SetPageProperties(0, Convert.ToInt32(ddlPageRows.SelectedValue), true);
+    dpgASR_POC_SUMMARY1.SetPageProperties(0,
+      (ddlPageRows.SelectedValue == "0") ? 100000000 : Convert.ToInt32(ddlPageRows.SelectedValue),
+      true);
+    dpgASR_POC_SUMMARY2.SetPageProperties(0,
+      (ddlPageRows.SelectedValue == "0") ? 100000000 : Convert.ToInt32(ddlPageRows.SelectedValue),
+      true);
     
     selectionMode = false;
   }
@@ -359,6 +427,13 @@ public partial class PSQ_POC : System.Web.UI.Page
   protected void btnCSV_Click(object sender, EventArgs e)
   {
     StringBuilder csv = new StringBuilder();
+
+    csv.AppendLine("\"Extracted from the UNHCR Population Statistics Reference Database, " +
+      "United Nations High Commissioner for Refugees.\"");
+    csv.AppendLine("Date extracted: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm K"));
+    csv.AppendLine();
+    csv.AppendLine('"' + GetCaption() + '"');
+    csv.AppendLine();
 
     csv.Append("Year");
     if (selectionCriteria.ShowRES)
@@ -490,6 +565,12 @@ public partial class PSQ_POC : System.Web.UI.Page
     lblPager.Visible = (dpgASR_POC_SUMMARY1.TotalRowCount > 0);
     btnCSV.Visible = (dpgASR_POC_SUMMARY1.TotalRowCount > 0);
     dpgASR_POC_SUMMARY2.Visible = (dpgASR_POC_SUMMARY2.TotalRowCount > dpgASR_POC_SUMMARY2.PageSize);
+
+    var caption = (Label)(lvwASR_POC_SUMMARY.FindControl("capASR_POC_SUMMARY"));
+    if (caption != null)
+    {
+      caption.Text = GetCaption();
+    }
   }
 
 }
