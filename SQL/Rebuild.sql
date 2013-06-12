@@ -141,6 +141,10 @@ prompt DeactivateCodes
 prompt ===============
 @DeactivateCodes
 
+prompt FixKosovoPPGs
+prompt =============
+@FixKosovoPPGs
+
 prompt RefreshMViews
 prompt =============
 @RefreshMViews.sql
