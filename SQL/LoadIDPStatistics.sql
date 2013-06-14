@@ -74,11 +74,17 @@ begin
         and DST.START_DATE < STC.END_DATE_YEAR
         and DST.END_DATE >= STC.END_DATE_YEAR
       left outer join -- Country
-       (select LOCA.CHAR_VALUE as UNHCR_COUNTRY_CODE, LOC.START_DATE, LOC.END_DATE, LOC.ID
+       (select LOCA.CHAR_VALUE as UNHCR_COUNTRY_CODE, LOC.START_DATE, LOC.END_DATE, LOC.ID,
+          TXT.TEXT as NAME
         from T_LOCATION_ATTRIBUTES LOCA
         inner join T_LOCATIONS LOC
           on LOC.ID = LOCA.LOC_ID
           and LOC.LOCT_CODE = 'COUNTRY'
+        inner join T_TEXT_ITEMS TXT
+          on TXT.ITM_ID = LOC.ITM_ID
+          and TXT.TXTT_CODE = 'NAME'
+          and TXT.SEQ_NBR = 1
+          and TXT.LANG_CODE = 'en'
         where LOCA.LOCAT_CODE = 'HCRCC') COU
         on COU.UNHCR_COUNTRY_CODE = STC.COU_CODE_ASYLUM
         and COU.START_DATE < STC.END_DATE_YEAR
@@ -138,7 +144,7 @@ begin
         and LOC2.LOCRT_CODE = 'WITHIN'
         and LOC2.START_DATE < STC.END_DATE_YEAR
         and LOC2.END_DATE >= STC.END_DATE_YEAR
-        and LOC2.NAME_EN = STC.LOCATION_NAME_EN
+        and LOC2.NAME_EN = nvl(STC.LOCATION_NAME_EN, COU.NAME)
       left outer join T_DIMENSION_VALUES DIM
         on DIM.DIMT_CODE = 'OFFICIAL'
         and DIM.CODE = STC.OFFICIAL
