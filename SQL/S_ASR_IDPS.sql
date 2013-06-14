@@ -226,11 +226,99 @@ organization external
   location ('ASR_IDP_DISASTER_2011_2012.csv'))
 reject limit unlimited;
 
+create table S_ASR_IDP_HCR_1993_2005 
+ (COU_CODE_ASYLUM varchar2(3),
+  Y1993 varchar2(40),
+  Y1994 varchar2(40),
+  Y1995 varchar2(40),
+  Y1996 varchar2(40),
+  Y1997 varchar2(40),
+  Y1998 varchar2(40),
+  Y1999 varchar2(40),
+  Y2000 varchar2(40),
+  Y2001 varchar2(40),
+  Y2002 varchar2(40),
+  Y2003 varchar2(40),
+  Y2004 varchar2(40),
+  Y2005 varchar2(40))
+organization external
+ (type oracle_loader
+  default directory PSRDATA
+  access parameters 
+   (records delimited by newline
+    characterset WE8MSWIN1252
+    badfile 'ASR_IDP_HCR_1993_2005.bad'
+    nodiscardfile
+    logfile PSRLOG:'ASR_IDP_HCR_1993_2005.log'
+    skip 0 
+    fields terminated by ','
+    optionally enclosed by '"' and '"'
+    lrtrim
+    missing field values are null
+     (COU_CODE_ASYLUM CHAR(4000),
+      FILLER1 char(4000),
+      Y1993 char(4000),
+      Y1994 char(4000),
+      Y1995 char(4000),
+      Y1996 char(4000),
+      Y1997 char(4000),
+      Y1998 char(4000),
+      Y1999 char(4000),
+      Y2000 char(4000),
+      Y2001 char(4000),
+      Y2002 char(4000),
+      Y2003 char(4000),
+      Y2004 char(4000),
+      Y2005 char(4000)))
+  location ('ASR_IDP_HCR_1993_2005.csv'))
+reject limit unlimited;
+
+create table S_ASR_IDP_RETURNS_1997_2005 
+ (COU_CODE_ASYLUM varchar2(3),
+  Y1997 varchar2(40),
+  Y1998 varchar2(40),
+  Y1999 varchar2(40),
+  Y2000 varchar2(40),
+  Y2001 varchar2(40),
+  Y2002 varchar2(40),
+  Y2003 varchar2(40),
+  Y2004 varchar2(40),
+  Y2005 varchar2(40))
+organization external
+ (type oracle_loader
+  default directory PSRDATA
+  access parameters 
+   (records delimited by newline
+    characterset WE8MSWIN1252
+    badfile 'ASR_IDP_RETURNS_1997_2005.bad'
+    nodiscardfile
+    logfile PSRLOG:'ASR_IDP_RETURNS_1997_2005.log'
+    skip 0 
+    fields terminated by ','
+    optionally enclosed by '"' and '"'
+    lrtrim
+    missing field values are null
+     (COU_CODE_ASYLUM CHAR(4000),
+      FILLER1 char(4000),
+      Y1997 char(4000),
+      Y1998 char(4000),
+      Y1999 char(4000),
+      Y2000 char(4000),
+      Y2001 char(4000),
+      Y2002 char(4000),
+      Y2003 char(4000),
+      Y2004 char(4000),
+      Y2005 char(4000)))
+  location ('ASR_IDP_RETURNS_1997_2005.csv'))
+reject limit unlimited;
+
 
 create materialized view S_ASR_IDPS_CLEANED build deferred as
 select STTG_CODE, STATSYEAR, DST_CODE, COU_CODE_ASYLUM,
   trim(regexp_replace(LOCATION_NAME, ':.*$', '')) as LOCATION_NAME_EN,
   case
+    when LOCATION_NAME is null
+    then null
     when nvl(rtrim(ltrim(regexp_substr(LOCATION_NAME, ':.*$'), ': ')), 'Point') = 'Point'
     then 'Undefined'
     else rtrim(ltrim(regexp_substr(LOCATION_NAME, ':.*$'), ': '))
@@ -271,7 +359,227 @@ from
     to_number(case when ASR.POP_AH_END in ('-', '..') then null
                    else ASR.POP_AH_END end) as POP_AH_END
   from
-   (select STTG_CODE, STATSYEAR, DST_CODE,
+   (/*select 'IDP' as STTG_CODE, '1993' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      null as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y1993 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '1994' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      Y1993 as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y1994 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '1995' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      Y1994 as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y1995 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '1996' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      Y1995 as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y1996 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '1997' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      Y1996 as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y1997 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '1997' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      null as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      Y1997 as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      null as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_RETURNS_1997_2005
+    union all
+    select 'IDP' as STTG_CODE, '1998' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      Y1997 as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y1998 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '1998' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      null as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      Y1998 as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      null as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_RETURNS_1997_2005
+    union all
+    select 'IDP' as STTG_CODE, '1999' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      Y1998 as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y1999 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '1999' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      null as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      Y1999 as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      null as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_RETURNS_1997_2005
+    union all*/
+    select 'IDP' as STTG_CODE, '2000' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      Y1999 as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y2000 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '2000' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      null as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      Y2000 as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      null as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_RETURNS_1997_2005
+    union all
+    select 'IDP' as STTG_CODE, '2001' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      Y2000 as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y2001 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '2001' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      null as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      Y2001 as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      null as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_RETURNS_1997_2005
+    union all
+    select 'IDP' as STTG_CODE, '2002' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      Y2001 as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y2002 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '2002' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      null as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      Y2002 as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      null as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_RETURNS_1997_2005
+    union all
+    select 'IDP' as STTG_CODE, '2003' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      Y2002 as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y2003 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '2003' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      null as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      Y2003 as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      null as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_RETURNS_1997_2005
+    union all
+    select 'IDP' as STTG_CODE, '2004' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      Y2003 as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y2004 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '2004' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      null as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      Y2004 as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      null as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_RETURNS_1997_2005
+    union all
+    select 'IDP' as STTG_CODE, '2005' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      Y2004 as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      null as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      Y2005 as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_HCR_1993_2005
+    union all
+    select 'IDP' as STTG_CODE, '2005' as STATSYEAR, 'IDP' as DST_CODE,
+      COU_CODE_ASYLUM, null as LOCATION_NAME,
+      'yes' as OFFICIAL,
+      null as POP_START, null as POP_AH_START,
+      null as IDPNEW, null as IDPOTHINC,
+      Y2005 as RETURN, null as RETURN_AH, null as IDPRELOC, null as IDPOTHDEC,
+      null as POP_END, null as POP_AH_END,
+      null as SOURCE, null as BASIS
+    from S_ASR_IDP_RETURNS_1997_2005
+    union all
+    select STTG_CODE, STATSYEAR, DST_CODE,
       COU_CODE_ASYLUM, LOCATION_NAME,
       OFFICIAL,
       POP_START, POP_AH_START,
