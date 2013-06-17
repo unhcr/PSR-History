@@ -30,11 +30,11 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters 
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset WE8MSWIN1252
     badfile 'STATISTIC_TYPES.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'STATISTIC_TYPES.log'
     skip 1 
     fields terminated by ','
     optionally enclosed by '"' and '"'

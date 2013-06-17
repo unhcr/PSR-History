@@ -6,11 +6,11 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters 
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset WE8MSWIN1252
     badfile 'ACTIVE_MSRP_SITES.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'ACTIVE_MSRP_SITES.log'
     skip 1 
     fields terminated by ','
     optionally enclosed by '"' and '"'

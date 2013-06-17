@@ -6,11 +6,11 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters 
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset WE8MSWIN1252
     badfile PSRDATA:'STATISTIC_TYPES_IN_GROUPS.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'STATISTIC_TYPES_IN_GROUPS.log'
     skip 1 
     fields terminated by ','
     optionally enclosed by '"' and '"'

@@ -28,7 +28,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2000.bad'
     nodiscardfile
@@ -101,7 +101,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2001.bad'
     nodiscardfile
@@ -172,7 +172,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2002.bad'
     nodiscardfile
@@ -248,7 +248,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2003.bad'
     nodiscardfile
@@ -322,7 +322,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2004.bad'
     nodiscardfile
@@ -396,7 +396,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2005.bad'
     nodiscardfile
@@ -470,7 +470,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2006.bad'
     nodiscardfile
@@ -544,7 +544,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2007.bad'
     nodiscardfile
@@ -618,7 +618,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2008.bad'
     nodiscardfile
@@ -692,7 +692,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2009.bad'
     nodiscardfile
@@ -766,7 +766,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2010.bad'
     nodiscardfile
@@ -840,7 +840,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2011.bad'
     nodiscardfile
@@ -914,7 +914,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset we8mswin1252
     badfile 'ASR_DEMOGRAPHICS_2012.bad'
     nodiscardfile

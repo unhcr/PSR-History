@@ -5,11 +5,11 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters 
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset WE8MSWIN1252
     badfile 'DST_CODE_CORRECTIONS.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'DST_CODE_CORRECTIONS.log'
     skip 1 
     fields terminated by ','
     optionally enclosed by '"' and '"'

@@ -21,7 +21,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters 
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset WE8MSWIN1252
     badfile 'ASR_IDP_HCR_2006_2012.bad'
     nodiscardfile
@@ -78,7 +78,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters 
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset WE8MSWIN1252
     badfile 'ASR_IDP_LIKE_HCR_2007_2012.bad'
     nodiscardfile
@@ -135,7 +135,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset WE8MSWIN1252
     badfile 'ASR_IDP_CONFLICT_2006_2012.bad'
     nodiscardfile
@@ -192,7 +192,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters 
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset WE8MSWIN1252
     badfile 'ASR_IDP_DISASTER_2011_2012.bad'
     nodiscardfile
@@ -245,7 +245,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters 
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset WE8MSWIN1252
     badfile 'ASR_IDP_HCR_1993_2005.bad'
     nodiscardfile
@@ -288,7 +288,7 @@ organization external
  (type oracle_loader
   default directory PSRDATA
   access parameters 
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset WE8MSWIN1252
     badfile 'ASR_IDP_RETURNS_1997_2005.bad'
     nodiscardfile

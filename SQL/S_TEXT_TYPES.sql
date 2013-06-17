@@ -12,11 +12,11 @@ organization external
  (type oracle_loader
   default DIRECTORY PSRDATA
   access parameters 
-   (records delimited by newline
+   (records delimited by '\r\n'
     characterset UTF16
     badfile 'TEXT_TYPES.bad'
     nodiscardfile
-    nologfile
+    logfile PSRLOG:'TEXT_TYPES.log'
     skip 1 
     fields terminated by X'0009'
     lrtrim
