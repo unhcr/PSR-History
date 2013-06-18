@@ -94,14 +94,14 @@ from
  (select STATSYEAR, DST_CODE, COU_CODE_ASYLUM, COU_CODE_ORIGIN, DESCRIPTION, POPT_CODE,
     STAGE.CHARAGG(SOURCE) as SOURCE,
     STAGE.CHARAGG(BASIS) as BASIS,
-    sum(POP_START) as POP_START,
-    sum(POP_AH_START) as POP_AH_START,
-    sum(NATLOSS) as NATLOSS,
-    sum(STAOTHINC) as STAOTHINC,
-    sum(NATACQ) as NATACQ,
-    sum(STAOTHDEC) as STAOTHDEC,
-    sum(POP_END) as POP_END,
-    sum(POP_AH_END) as POP_AH_END
+    round(sum(POP_START)) as POP_START,
+    round(sum(POP_AH_START)) as POP_AH_START,
+    round(sum(NATLOSS)) as NATLOSS,
+    round(sum(STAOTHINC)) as STAOTHINC,
+    round(sum(NATACQ)) as NATACQ,
+    round(sum(STAOTHDEC)) as STAOTHDEC,
+    round(sum(POP_END)) as POP_END,
+    round(sum(POP_AH_END)) as POP_AH_END
   from S_ASR_STATELESS_CLEANED
   group by STATSYEAR, DST_CODE, COU_CODE_ASYLUM, COU_CODE_ORIGIN, DESCRIPTION, POPT_CODE)
 unpivot

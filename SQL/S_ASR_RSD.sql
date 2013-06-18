@@ -1017,15 +1017,15 @@ select STATSYEAR, DST_CODE, COU_CODE_ASYLUM, RSD_TYPE, RSD_LEVEL, COU_CODE_ORIGI
   DATA_POINT, VALUE
 from
  (select STATSYEAR, DST_CODE, COU_CODE_ASYLUM, RSD_TYPE, RSD_LEVEL, COU_CODE_ORIGIN,
-    sum(ASY_START) as ASY_START,
-    sum(ASY_AH_START) as ASY_AH_START,
-    sum(ASYAPP) as ASYAPP,
-    sum(ASYREC_CV) as ASYREC_CV,
-    sum(ASYREC_CP) as ASYREC_CP,
-    sum(ASYREJ) as ASYREJ,
-    sum(ASYOTHCL) as ASYOTHCL,
-    sum(ASY_END) as ASY_END,
-    sum(ASY_AH_END) as ASY_AH_END
+    round(sum(ASY_START)) as ASY_START,
+    round(sum(ASY_AH_START)) as ASY_AH_START,
+    round(sum(ASYAPP)) as ASYAPP,
+    round(sum(ASYREC_CV)) as ASYREC_CV,
+    round(sum(ASYREC_CP)) as ASYREC_CP,
+    round(sum(ASYREJ)) as ASYREJ,
+    round(sum(ASYOTHCL)) as ASYOTHCL,
+    round(sum(ASY_END)) as ASY_END,
+    round(sum(ASY_AH_END)) as ASY_AH_END
   from S_ASR_RSD_CLEANED
   group by STATSYEAR, DST_CODE, COU_CODE_ASYLUM, RSD_TYPE, RSD_LEVEL, COU_CODE_ORIGIN)
 unpivot

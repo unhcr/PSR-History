@@ -91,14 +91,14 @@ from
  (select STATSYEAR, DST_CODE, COU_CODE_ASYLUM, COU_CODE_ORIGIN, DESCRIPTION,
     STAGE.CHARAGG(SOURCE) as SOURCE,
     STAGE.CHARAGG(BASIS) as BASIS,
-    sum(POP_START) as POP_START,
-    sum(POP_AH_START) as POP_AH_START,
-    sum(OOCARR) as OOCARR,
-    sum(OOCOTHINC) as OOCOTHINC,
-    sum(OOCRTN) as OOCRTN,
-    sum(OOCOTHDEC) as OOCOTHDEC,
-    sum(POP_END) as POP_END,
-    sum(POP_AH_END) as POP_AH_END
+    round(sum(POP_START)) as POP_START,
+    round(sum(POP_AH_START)) as POP_AH_START,
+    round(sum(OOCARR)) as OOCARR,
+    round(sum(OOCOTHINC)) as OOCOTHINC,
+    round(sum(OOCRTN)) as OOCRTN,
+    round(sum(OOCOTHDEC)) as OOCOTHDEC,
+    round(sum(POP_END)) as POP_END,
+    round(sum(POP_AH_END)) as POP_AH_END
   from S_ASR_OOC_CLEANED
   group by STATSYEAR, DST_CODE, COU_CODE_ASYLUM, COU_CODE_ORIGIN, DESCRIPTION)
 unpivot

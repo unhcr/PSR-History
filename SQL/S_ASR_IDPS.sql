@@ -634,16 +634,16 @@ from
     LOCATION_NAME_EN, LOC_TYPE_DESCRIPTION_EN, OFFICIAL, 
     STAGE.CHARAGG(SOURCE) as SOURCE,
     STAGE.CHARAGG(BASIS) as BASIS,
-    sum(POP_START) as POP_START,
-    sum(POP_AH_START) as POP_AH_START,
-    sum(IDPNEW) as IDPNEW,
-    sum(IDPOTHINC) as IDPOTHINC,
-    sum(RETURN) as RETURN,
-    sum(RETURN_AH) as RETURN_AH,
-    sum(IDPRELOC) as IDPRELOC,
-    sum(IDPOTHDEC) as IDPOTHDEC,
-    sum(POP_END) as POP_END,
-    sum(POP_AH_END) as POP_AH_END
+    round(sum(POP_START)) as POP_START,
+    round(sum(POP_AH_START)) as POP_AH_START,
+    round(sum(IDPNEW)) as IDPNEW,
+    round(sum(IDPOTHINC)) as IDPOTHINC,
+    round(sum(RETURN)) as RETURN,
+    round(sum(RETURN_AH)) as RETURN_AH,
+    round(sum(IDPRELOC)) as IDPRELOC,
+    round(sum(IDPOTHDEC)) as IDPOTHDEC,
+    round(sum(POP_END)) as POP_END,
+    round(sum(POP_AH_END)) as POP_AH_END
   from S_ASR_IDPS_CLEANED
   group by STTG_CODE, STATSYEAR, DST_CODE, COU_CODE_ASYLUM,
     LOCATION_NAME_EN, LOC_TYPE_DESCRIPTION_EN, OFFICIAL)

@@ -1203,10 +1203,10 @@ from
  (select STATSYEAR, DST_CODE, COU_CODE_ASYLUM, LOCATION_NAME_EN, LOC_TYPE_DESCRIPTION_EN,
     COU_CODE_ORIGIN, URBAN_RURAL_STATUS, ACMT_CODE, PPG_NAME,
     STAGE.CHARAGG(BASIS) as BASIS,
-    sum(F0) as F0, sum(F5) as F5, sum(F12) as F12, sum(F18) as F18, sum(F60) as F60,
-    sum(FOTHER) as FOTHER,
-    sum(M0) as M0, sum(M5) as M5, sum(M12) as M12, sum(M18) as M18, sum(M60) as M60,
-    sum(MOTHER) as MOTHER, sum(TOTAL) as TOTAL
+    round(sum(F0)) as F0, round(sum(F5)) as F5, round(sum(F12)) as F12, round(sum(F18)) as F18,
+    round(sum(F60)) as F60, round(sum(FOTHER)) as FOTHER,
+    round(sum(M0)) as M0, round(sum(M5)) as M5, round(sum(M12)) as M12, round(sum(M18)) as M18,
+    round(sum(M60)) as M60, round(sum(MOTHER)) as MOTHER, round(sum(TOTAL)) as TOTAL
   from S_ASR_DEMOGRAPHICS_CLEANED
   group by STATSYEAR, DST_CODE, COU_CODE_ASYLUM, LOCATION_NAME_EN, LOC_TYPE_DESCRIPTION_EN,
     COU_CODE_ORIGIN, URBAN_RURAL_STATUS, ACMT_CODE, PPG_NAME)
