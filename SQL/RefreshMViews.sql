@@ -22,13 +22,13 @@ create index IX_POCDE_COU_PTC on ASR_POC_DETAILS_EN (POPULATION_TYPE_CODE);
 
 drop index IX_DEME_YEAR;
 drop index IX_DEME_COU_RES;
-drop index IX_DEME_COU_OGN;
+--drop index IX_DEME_COU_OGN;
 
 execute dbms_mview.refresh('ASR_DEMOGRAPHICS_EN');
 
 create index IX_DEME_YEAR on ASR_DEMOGRAPHICS_EN (ASR_YEAR);
 create index IX_DEME_COU_RES on ASR_DEMOGRAPHICS_EN (COU_CODE_RESIDENCE);
-create index IX_DEME_COU_OGN on ASR_DEMOGRAPHICS_EN (COU_CODE_ORIGIN);
+--create index IX_DEME_COU_OGN on ASR_DEMOGRAPHICS_EN (COU_CODE_ORIGIN);
 
 drop index IX_RSDE_YEAR;
 drop index IX_RSDE_COU_ASY;
