@@ -24,12 +24,12 @@
   <asp:SqlDataSource ID="dsCOUNTRY" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>"
-    SelectCommand="select distinct COU_CODE_RESIDENCE, COU_NAME_RESIDENCE_EN from ASR_POC_SUMMARY_EN order by COU_NAME_RESIDENCE_EN" />
+    SelectCommand="select distinct COU_CODE_RESIDENCE, COU_NAME_RESIDENCE_EN from ASR_POC_SUMMARY_EN order by nlssort(COU_NAME_RESIDENCE_EN, 'NLS_SORT=BINARY_AI')" />
 
   <asp:SqlDataSource ID="dsORIGIN" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>"
-    SelectCommand="select distinct COU_CODE_ORIGIN, COU_NAME_ORIGIN_EN from ASR_POC_SUMMARY_EN order by COU_NAME_ORIGIN_EN" />
+    SelectCommand="select distinct COU_CODE_ORIGIN, COU_NAME_ORIGIN_EN from ASR_POC_SUMMARY_EN order by nlssort(COU_NAME_ORIGIN_EN, 'NLS_SORT=BINARY_AI')" />
 
   <div ID="divSelectionBox" runat="server" class="selection-box">
     <fieldset>
@@ -71,7 +71,7 @@
         <label><asp:CheckBox ID="cbxRET" runat="server" ViewStateMode="Disabled" Checked="true" />Returned refugees</label><br />
         <label><asp:CheckBox ID="cbxIDP" runat="server" ViewStateMode="Disabled" Checked="true" />Internally displaced persons</label><br />
         <label><asp:CheckBox ID="cbxRDP" runat="server" ViewStateMode="Disabled" Checked="true" />Returned IDPs</label><br />
-        <label><asp:CheckBox ID="cbxSTA" runat="server" ViewStateMode="Disabled" Checked="true" />Stateless</label><br />
+        <label><asp:CheckBox ID="cbxSTA" runat="server" ViewStateMode="Disabled" Checked="true" />Stateless persons</label><br />
         <label><asp:CheckBox ID="cbxOOC" runat="server" ViewStateMode="Disabled" Checked="true" />Others of concern</label><br />
         <label><asp:CheckBox ID="cbxPOC" runat="server" ViewStateMode="Disabled" Checked="true" />Total population</label>
       </div>

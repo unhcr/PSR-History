@@ -24,12 +24,12 @@
   <asp:SqlDataSource ID="dsCOUNTRY" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>"
-    SelectCommand="select distinct COU_CODE_ASYLUM, COU_NAME_ASYLUM_EN from ASR_RSD_EN order by COU_NAME_ASYLUM_EN" />
+    SelectCommand="select distinct COU_CODE_ASYLUM, COU_NAME_ASYLUM_EN from ASR_RSD_EN order by nlssort(COU_NAME_ASYLUM_EN, 'NLS_SORT=BINARY_AI')" />
 
   <asp:SqlDataSource ID="dsORIGIN" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>"
-    SelectCommand="select distinct COU_CODE_ORIGIN, COU_NAME_ORIGIN_EN from ASR_RSD_EN order by COU_NAME_ORIGIN_EN" />
+    SelectCommand="select distinct COU_CODE_ORIGIN, COU_NAME_ORIGIN_EN from ASR_RSD_EN order by nlssort(COU_NAME_ORIGIN_EN, 'NLS_SORT=BINARY_AI')" />
 
   <div ID="divSelectionBox" runat="server" class="selection-box">
     <fieldset>

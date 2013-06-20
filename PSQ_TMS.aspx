@@ -24,12 +24,12 @@
   <asp:SqlDataSource ID="dsCOUNTRY" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>"
-    SelectCommand="select distinct COU_CODE_RESIDENCE, COU_NAME_RESIDENCE_EN from ASR_POC_DETAILS_EN order by COU_NAME_RESIDENCE_EN" />
+    SelectCommand="select distinct COU_CODE_RESIDENCE, COU_NAME_RESIDENCE_EN from ASR_POC_DETAILS_EN order by nlssort(COU_NAME_RESIDENCE_EN, 'NLS_SORT=BINARY_AI')" />
 
   <asp:SqlDataSource ID="dsORIGIN" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>"
-    SelectCommand="select distinct COU_CODE_ORIGIN, COU_NAME_ORIGIN_EN from ASR_POC_DETAILS_EN order by COU_NAME_ORIGIN_EN" />
+    SelectCommand="select distinct COU_CODE_ORIGIN, COU_NAME_ORIGIN_EN from ASR_POC_DETAILS_EN order by nlssort(COU_NAME_ORIGIN_EN, 'NLS_SORT=BINARY_AI')" />
 
   <asp:SqlDataSource ID="dsPOP_TYPE" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
