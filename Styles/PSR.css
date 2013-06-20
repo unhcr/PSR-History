@@ -819,3 +819,27 @@ div.frs div.others a:hover {
   color: #117aff;
   text-decoration: underline;
 }
+.introduction {
+  padding: 15px 50px 30px;
+}
+.introduction p {
+  font-size: 14px;
+  margin-bottom: 0.6em;
+}
+.introduction p a {
+  color: #004baa;
+  font-weight: bold;
+  text-decoration: none;
+}
+.introduction p a:hover {
+  color: #117aff;
+  text-decoration: underline;
+}
+.introduction p em {
+  font-weight: bold;
+}
+.introduction h2 {
+  font-size: 15px;
+  font-weight: bold;
+  margin: 1em 0 0.3em;
+}
