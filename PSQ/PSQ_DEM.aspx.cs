@@ -144,47 +144,76 @@ public partial class PSQ_DEM : System.Web.UI.Page
 
   void ConstructSelectStatement()
   {
-    var selectStatement = new StringBuilder("select ASR_YEAR, ", 1000);
+    var selectStatement = new StringBuilder("select ASR_YEAR, COU_NAME_RESIDENCE_EN, LOC_NAME_RESIDENCE_EN, " +
+      "case when F0_VALUE is null and F0_REDACTED_FLAG = 1 then '*' else trim(to_char(F0_VALUE, '999,999,999')) end as F0_VALUE, " +
+      "case when F5_VALUE is null and F0_REDACTED_FLAG = 1 then '*' else trim(to_char(F5_VALUE, '999,999,999')) end as F5_VALUE, " +
+      "case when F12_VALUE is null and F12_REDACTED_FLAG = 1 then '*' else trim(to_char(F12_VALUE, '999,999,999')) end as F12_VALUE, " +
+      "case when F18_VALUE is null and F18_REDACTED_FLAG = 1 then '*' else trim(to_char(F18_VALUE, '999,999,999')) end as F18_VALUE, " +
+      "case when F60_VALUE is null and F60_REDACTED_FLAG = 1 then '*' else trim(to_char(F60_VALUE, '999,999,999')) end as F60_VALUE, " +
+      "case when FOTHER_VALUE is null and FOTHER_REDACTED_FLAG = 1 then '*' else trim(to_char(FOTHER_VALUE, '999,999,999')) end as FOTHER_VALUE, " +
+      "case when FTOTAL_VALUE is null and FTOTAL_REDACTED_FLAG = 1 then '*' else trim(to_char(FTOTAL_VALUE, '999,999,999')) end as FTOTAL_VALUE, " +
+      "case when M0_VALUE is null and M0_REDACTED_FLAG = 1 then '*' else trim(to_char(M0_VALUE, '999,999,999')) end as M0_VALUE, " +
+      "case when M5_VALUE is null and M0_REDACTED_FLAG = 1 then '*' else trim(to_char(M5_VALUE, '999,999,999')) end as M5_VALUE, " +
+      "case when M12_VALUE is null and M12_REDACTED_FLAG = 1 then '*' else trim(to_char(M12_VALUE, '999,999,999')) end as M12_VALUE, " +
+      "case when M18_VALUE is null and M18_REDACTED_FLAG = 1 then '*' else trim(to_char(M18_VALUE, '999,999,999')) end as M18_VALUE, " +
+      "case when M60_VALUE is null and M60_REDACTED_FLAG = 1 then '*' else trim(to_char(M60_VALUE, '999,999,999')) end as M60_VALUE, " +
+      "case when MOTHER_VALUE is null and MOTHER_REDACTED_FLAG = 1 then '*' else trim(to_char(MOTHER_VALUE, '999,999,999')) end as MOTHER_VALUE, " +
+      "case when MTOTAL_VALUE is null and MTOTAL_REDACTED_FLAG = 1 then '*' else trim(to_char(MTOTAL_VALUE, '999,999,999')) end as MTOTAL_VALUE, " +
+      "case when TOTAL_VALUE is null and TOTAL_REDACTED_FLAG = 1 then '*' else trim(to_char(TOTAL_VALUE, '999,999,999')) end as TOTAL_VALUE " +
+      "from (select ASR_YEAR, ",
+      1000);
+
+
     selectStatement.Append((selectionCriteria.ShowRES ? String.Empty : "null as ") + "COU_NAME_RESIDENCE_EN, ");
     selectStatement.Append((selectionCriteria.ShowLOC ? String.Empty : "null as ") + "LOC_NAME_RESIDENCE_EN, ");
     if (selectionCriteria.ShowAGE)
     {
-      selectStatement.Append("sum(F0_VALUE) as F0_VALUE, sum(F5_VALUE) as F5_VALUE, sum(F12_VALUE) as F12_VALUE, " +
-        "sum(F18_VALUE) as F18_VALUE, sum(F60_VALUE) as F60_VALUE, sum(FOTHER_VALUE) as FOTHER_VALUE, ");
+      selectStatement.Append("sum(F0_VALUE) as F0_VALUE, max(F0_REDACTED_FLAG) as F0_REDACTED_FLAG, " +
+        "sum(F5_VALUE) as F5_VALUE, max(F5_REDACTED_FLAG) as F5_REDACTED_FLAG, " +
+        "sum(F12_VALUE) as F12_VALUE, max(F12_REDACTED_FLAG) as F12_REDACTED_FLAG, " +
+        "sum(F18_VALUE) as F18_VALUE, max(F18_REDACTED_FLAG) as F18_REDACTED_FLAG, " +
+        "sum(F60_VALUE) as F60_VALUE, max(F60_REDACTED_FLAG) as F60_REDACTED_FLAG, " +
+        "sum(FOTHER_VALUE) as FOTHER_VALUE, max(FOTHER_REDACTED_FLAG) as FOTHER_REDACTED_FLAG, ");
     }
     else
     {
-      selectStatement.Append("null as F0_VALUE, null as F5_VALUE, null as F12_VALUE, " +
-        "null as F18_VALUE, null as F60_VALUE, null as FOTHER_VALUE, ");
+      selectStatement.Append("null as F0_VALUE, null as F0_REDACTED_FLAG, null as F5_VALUE, null as F5_REDACTED_FLAG, " +
+        "null as F12_VALUE, null as F12_REDACTED_FLAG, null as F18_VALUE, null as F18_REDACTED_FLAG, " +
+        "null as F60_VALUE, null as F60_REDACTED_FLAG, null as FOTHER_VALUE, null as FOTHER_REDACTED_FLAG, ");
     }
     if (!selectionCriteria.ShowNone)
     {
-      selectStatement.Append("sum(FTOTAL_VALUE) as FTOTAL_VALUE, ");
+      selectStatement.Append("sum(FTOTAL_VALUE) as FTOTAL_VALUE, max(FTOTAL_REDACTED_FLAG) as FTOTAL_REDACTED_FLAG, ");
     }
     else
     {
-      selectStatement.Append("null as FTOTAL_VALUE, ");
+      selectStatement.Append("null as FTOTAL_VALUE, null as FTOTAL_REDACTED_FLAG, ");
     }
     if (selectionCriteria.ShowAGE)
     {
-      selectStatement.Append("sum(M0_VALUE) as M0_VALUE, sum(M5_VALUE) as M5_VALUE, sum(M12_VALUE) as M12_VALUE, " +
-        "sum(M18_VALUE) as M18_VALUE, sum(M60_VALUE) as M60_VALUE, sum(MOTHER_VALUE) as MOTHER_VALUE, ");
+      selectStatement.Append("sum(M0_VALUE) as M0_VALUE, max(M0_REDACTED_FLAG) as M0_REDACTED_FLAG, " +
+        "sum(M5_VALUE) as M5_VALUE, max(M5_REDACTED_FLAG) as M5_REDACTED_FLAG, " +
+        "sum(M12_VALUE) as M12_VALUE, max(M12_REDACTED_FLAG) as M12_REDACTED_FLAG, " +
+        "sum(M18_VALUE) as M18_VALUE, max(M18_REDACTED_FLAG) as M18_REDACTED_FLAG, " +
+        "sum(M60_VALUE) as M60_VALUE, max(M60_REDACTED_FLAG) as M60_REDACTED_FLAG, " +
+        "sum(MOTHER_VALUE) as MOTHER_VALUE, max(MOTHER_REDACTED_FLAG) as MOTHER_REDACTED_FLAG, ");
     }
     else
     {
-      selectStatement.Append("null as M0_VALUE, null as M5_VALUE, null as M12_VALUE, " +
-        "null as M18_VALUE, null as M60_VALUE, null as MOTHER_VALUE, ");
+      selectStatement.Append("null as M0_VALUE, null as M0_REDACTED_FLAG, null as M5_VALUE, null as M5_REDACTED_FLAG, " +
+        "null as M12_VALUE, null as M12_REDACTED_FLAG, null as M18_VALUE, null as M18_REDACTED_FLAG, " +
+        "null as M60_VALUE, null as M60_REDACTED_FLAG, null as MOTHER_VALUE, null as MOTHER_REDACTED_FLAG, ");
     }
     if (!selectionCriteria.ShowNone)
     {
-      selectStatement.Append("sum(MTOTAL_VALUE) as MTOTAL_VALUE, ");
+      selectStatement.Append("sum(MTOTAL_VALUE) as MTOTAL_VALUE, max(MTOTAL_REDACTED_FLAG) as MTOTAL_REDACTED_FLAG, ");
     }
     else
     {
-      selectStatement.Append("null as MTOTAL_VALUE, ");
+      selectStatement.Append("null as MTOTAL_VALUE, null as MTOTAL_REDACTED_FLAG, ");
     }
-    selectStatement.Append("sum(TOTAL_VALUE) as TOTAL_VALUE from ASR_DEMOGRAPHICS_EN " +
-      "where ASR_YEAR between :START_YEAR and :END_YEAR ");
+    selectStatement.Append("sum(TOTAL_VALUE) as TOTAL_VALUE, max(TOTAL_REDACTED_FLAG) as TOTAL_REDACTED_FLAG " +
+      "from ASR_DEMOGRAPHICS_EN where ASR_YEAR between :START_YEAR and :END_YEAR ");
     if (selectionCriteria.ResidenceCodes != null && selectionCriteria.ResidenceCodes.Count > 0)
     {
       selectStatement.Append("and COU_CODE_RESIDENCE in ('");
@@ -203,7 +232,7 @@ public partial class PSQ_DEM : System.Web.UI.Page
     {
       selectStatement.Append(", LOC_NAME_RESIDENCE_EN");
     }
-    selectStatement.Append(" order by ASR_YEAR desc");
+    selectStatement.Append(") order by ASR_YEAR desc");
     if (selectionCriteria.ShowRES)
     {
       selectStatement.Append(", COU_NAME_RESIDENCE_EN");
@@ -388,23 +417,92 @@ public partial class PSQ_DEM : System.Web.UI.Page
       }
       if (selectionCriteria.ShowAGE)
       {
-        csv.Append("," + row.ItemArray[3] + "," + row.ItemArray[4] + "," + row.ItemArray[5] + "," +
-          row.ItemArray[6] + "," + row.ItemArray[7] + "," + row.ItemArray[8]);
+        csv.Append(",");
+        if (row.ItemArray[3].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[3])).Replace(",", ""));
+        }
+        csv.Append(",");
+        if (row.ItemArray[4].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[4])).Replace(",", ""));
+        }
+        csv.Append(",");
+        if (row.ItemArray[5].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[5])).Replace(",", ""));
+        }
+        csv.Append(",");
+        if (row.ItemArray[6].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[6])).Replace(",", ""));
+        }
+        csv.Append(",");
+        if (row.ItemArray[7].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[7])).Replace(",", ""));
+        }
+        csv.Append(",");
+        if (row.ItemArray[8].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[8])).Replace(",", ""));
+        }
       }
       if (!selectionCriteria.ShowNone)
       {
-        csv.Append("," + row.ItemArray[9]);
+        csv.Append(",");
+        if (row.ItemArray[9].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[9])).Replace(",", ""));
+        }
       }
       if (selectionCriteria.ShowAGE)
       {
-        csv.Append("," + row.ItemArray[10] + "," + row.ItemArray[11] + "," + row.ItemArray[12] + "," +
-          row.ItemArray[13] + "," + row.ItemArray[14] + "," + row.ItemArray[15]);
+        csv.Append(",");
+        if (row.ItemArray[10].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[10])).Replace(",", ""));
+        }
+        csv.Append(",");
+        if (row.ItemArray[11].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[11])).Replace(",", ""));
+        }
+        csv.Append(",");
+        if (row.ItemArray[12].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[12])).Replace(",", ""));
+        }
+        csv.Append(",");
+        if (row.ItemArray[13].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[13])).Replace(",", ""));
+        }
+        csv.Append(",");
+        if (row.ItemArray[14].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[14])).Replace(",", ""));
+        }
+        csv.Append(",");
+        if (row.ItemArray[15].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[15])).Replace(",", ""));
+        }
       }
       if (!selectionCriteria.ShowNone)
       {
-        csv.Append("," + row.ItemArray[16]);
+        csv.Append(",");
+        if (row.ItemArray[16].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[16])).Replace(",", ""));
+        }
       }
-      csv.AppendLine("," + row.ItemArray[17]);
+      csv.Append(",");
+      if (row.ItemArray[17].GetType() == typeof(string))
+      {
+        csv.Append(((String)(row.ItemArray[17])).Replace(",", ""));
+      }
+      csv.AppendLine();
     }
 
     Response.Clear();
