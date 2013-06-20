@@ -358,12 +358,12 @@ public partial class PSQ_TMS : System.Web.UI.Page
     separator = " order by ";
     if (selectionCriteria.ShowRES)
     {
-      selectStatement.Append(separator + "COU_NAME_RESIDENCE_EN");
+      selectStatement.Append(separator + "nlssort(COU_NAME_RESIDENCE_EN, 'NLS_SORT=BINARY_AI')");
       separator = ", ";
     }
     if (selectionCriteria.ShowOGN)
     {
-      selectStatement.Append(separator + "decode(COU_NAME_ORIGIN_EN, 'Various', 'ZZZ', COU_NAME_ORIGIN_EN)");
+      selectStatement.Append(separator + "nlssort(decode(COU_NAME_ORIGIN_EN, 'Various', 'ZZZ', COU_NAME_ORIGIN_EN), 'NLS_SORT=BINARY_AI')");
       separator = ", ";
     }
     if (selectionCriteria.ShowPOPT)

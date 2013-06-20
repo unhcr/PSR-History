@@ -235,7 +235,7 @@ public partial class PSQ_DEM : System.Web.UI.Page
     selectStatement.Append(") order by ASR_YEAR desc");
     if (selectionCriteria.ShowRES)
     {
-      selectStatement.Append(", COU_NAME_RESIDENCE_EN");
+      selectStatement.Append(", nlssort(COU_NAME_RESIDENCE_EN, 'NLS_SORT=BINARY_AI')");
     }
     if (selectionCriteria.ShowLOC)
     {
