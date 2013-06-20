@@ -288,7 +288,7 @@ public partial class PSQ_TMS : System.Web.UI.Page
     foreach (string year in selectionCriteria.StatisticYears)
     {
       selectStatement.Append(separator + "case when Y" + year + "_VALUE is null and Y" + year +
-        "_REDACTED_COUNT > 0 then '*' else trim(to_char(Y" + year +
+        "_REDACTED_FLAG = 1 then '*' else trim(to_char(Y" + year +
         "_VALUE, '999,999,999')) end as Y" + year + "_VALUE");
       separator = ", ";
     }
@@ -309,7 +309,7 @@ public partial class PSQ_TMS : System.Web.UI.Page
       selectStatement.Append(separator + "replace(POPULATION_TYPE_EN, ' persons', '') as POPULATION_TYPE_EN, POPULATION_TYPE_SEQ");
       separator = ", ";
     }
-    selectStatement.Append(separator + "ASR_YEAR, VALUE from ASR_POC_DETAILS_EN where ASR_YEAR in (");
+    selectStatement.Append(separator + "ASR_YEAR, VALUE, REDACTED_FLAG from ASR_POC_DETAILS_EN where ASR_YEAR in (");
     separator = "";
     foreach (string year in selectionCriteria.StatisticYears)
     {
@@ -347,8 +347,7 @@ public partial class PSQ_TMS : System.Web.UI.Page
         selectStatement.Append(",'" + code + "'");
       }
     }
-    selectStatement.Append(")) pivot (sum(case when VALUE >= 5 then VALUE end) as VALUE, " +
-      "count(case when VALUE < 5 then 1 end) as REDACTED_COUNT for ASR_YEAR in (");
+    selectStatement.Append(")) pivot (sum(VALUE) as VALUE, max(REDACTED_FLAG) as REDACTED_FLAG for ASR_YEAR in (");
     separator = "";
     foreach (string year in selectionCriteria.StatisticYears)
     {
@@ -614,11 +613,11 @@ public partial class PSQ_TMS : System.Web.UI.Page
       }
       foreach (string year in selectionCriteria.StatisticYears)
       {
+        csv.Append(",");
         if (row.ItemArray[i].GetType() == typeof(string))
         {
-          csv.Append(separator + ((String)(row.ItemArray[i])).Replace(",", ""));
+          csv.Append(((String)(row.ItemArray[i])).Replace(",", ""));
         }
-        separator = ",";
         i++;
       }
       csv.AppendLine();
