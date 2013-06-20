@@ -223,23 +223,98 @@ public partial class PSQ_POC : System.Web.UI.Page
   {
     var selectStatement =
       new StringBuilder("select ASR_YEAR, COU_NAME_RESIDENCE_EN, COU_NAME_ORIGIN_EN, " +
-        "REFPOP_VALUE, ASYPOP_VALUE, REFRTN_VALUE, IDPHPOP_VALUE, IDPHRTN_VALUE, STAPOP_VALUE, " +
-        "OOCPOP_VALUE, TPOC_VALUE from (select ASR_YEAR, ",
-        1000);
+        "case when REFPOP_VALUE is null and REFPOP_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(REFPOP_VALUE, '999,999,999')) end as REFPOP_VALUE, " +
+        "case when ASYPOP_VALUE is null and ASYPOP_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(ASYPOP_VALUE, '999,999,999')) end as ASYPOP_VALUE, " +
+        "case when REFRTN_VALUE is null and REFRTN_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(REFRTN_VALUE, '999,999,999')) end as REFRTN_VALUE, " +
+        "case when IDPHPOP_VALUE is null and IDPHPOP_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(IDPHPOP_VALUE, '999,999,999')) end as IDPHPOP_VALUE, " +
+        "case when IDPHRTN_VALUE is null and IDPHRTN_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(IDPHRTN_VALUE, '999,999,999')) end as IDPHRTN_VALUE, " +
+        "case when STAPOP_VALUE is null and STAPOP_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(STAPOP_VALUE, '999,999,999')) end as STAPOP_VALUE, " +
+        "case when OOCPOP_VALUE is null and OOCPOP_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(OOCPOP_VALUE, '999,999,999')) end as OOCPOP_VALUE, " +
+        "case when TPOC_VALUE is null and TPOC_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(TPOC_VALUE, '999,999,999')) end as TPOC_VALUE " +
+        "from (select ASR_YEAR, ",
+        2000);
 
     selectStatement.Append((selectionCriteria.ShowRES ? String.Empty : "null as ") + "COU_NAME_RESIDENCE_EN, ");
     selectStatement.Append((selectionCriteria.ShowOGN ? String.Empty : "null as ") + "COU_NAME_ORIGIN_EN, ");
-    selectStatement.Append((selectionCriteria.ShowREF ? "sum(REFPOP_VALUE)" : "null") + " as REFPOP_VALUE, ");
-    selectStatement.Append((selectionCriteria.ShowASY ? "sum(ASYPOP_VALUE)" : "null") + " as ASYPOP_VALUE, ");
-    selectStatement.Append((selectionCriteria.ShowRET ? "sum(REFRTN_VALUE)" : "null") + " as REFRTN_VALUE, ");
-    selectStatement.Append((selectionCriteria.ShowIDP ? "sum(IDPHPOP_VALUE)" : "null") + " as IDPHPOP_VALUE, ");
-    selectStatement.Append((selectionCriteria.ShowRDP ? "sum(IDPHRTN_VALUE)" : "null") + " as IDPHRTN_VALUE, ");
-    selectStatement.Append((selectionCriteria.ShowSTA ? "sum(STAPOP_VALUE)" : "null") + " as STAPOP_VALUE, ");
-    selectStatement.Append((selectionCriteria.ShowOOC ? "sum(OOCPOP_VALUE)" : "null") + " as OOCPOP_VALUE, ");
-    selectStatement.Append((selectionCriteria.ShowPOC ?
-        "sum(nvl(REFPOP_VALUE,0) + nvl(ASYPOP_VALUE,0) + nvl(REFRTN_VALUE,0) + " +
-          "nvl(IDPHPOP_VALUE,0) + nvl(IDPHRTN_VALUE,0) + nvl(STAPOP_VALUE,0) + nvl(OOCPOP_VALUE,0))" :
-        "null") + " as TPOC_VALUE ");
+    if (selectionCriteria.ShowREF)
+    {
+      selectStatement.Append("sum(REFPOP_VALUE) as REFPOP_VALUE, sign(sum(REFPOP_REDACTED_FLAG)) as REFPOP_REDACTED_FLAG, ");
+    }
+    else
+    {
+      selectStatement.Append("null as REFPOP_VALUE, null as REFPOP_REDACTED_FLAG, ");
+    }
+    if (selectionCriteria.ShowASY)
+    {
+      selectStatement.Append("sum(ASYPOP_VALUE) as ASYPOP_VALUE, sign(sum(ASYPOP_REDACTED_FLAG)) as ASYPOP_REDACTED_FLAG, ");
+    }
+    else
+    {
+      selectStatement.Append("null as ASYPOP_VALUE, null as ASYPOP_REDACTED_FLAG, ");
+    }
+    if (selectionCriteria.ShowRET)
+    {
+      selectStatement.Append("sum(REFRTN_VALUE) as REFRTN_VALUE, sign(sum(REFRTN_REDACTED_FLAG)) as REFRTN_REDACTED_FLAG, ");
+    }
+    else
+    {
+      selectStatement.Append("null as REFRTN_VALUE, null as REFRTN_REDACTED_FLAG, ");
+    }
+    if (selectionCriteria.ShowIDP)
+    {
+      selectStatement.Append("sum(IDPHPOP_VALUE) as IDPHPOP_VALUE, sign(sum(IDPHPOP_REDACTED_FLAG)) as IDPHPOP_REDACTED_FLAG, ");
+    }
+    else
+    {
+      selectStatement.Append("null as IDPHPOP_VALUE, null as IDPHPOP_REDACTED_FLAG, ");
+    }
+    if (selectionCriteria.ShowRDP)
+    {
+      selectStatement.Append("sum(IDPHRTN_VALUE) as IDPHRTN_VALUE, sign(sum(IDPHRTN_REDACTED_FLAG)) as IDPHRTN_REDACTED_FLAG, ");
+    }
+    else
+    {
+      selectStatement.Append("null as IDPHRTN_VALUE, null as IDPHRTN_REDACTED_FLAG, ");
+    }
+    if (selectionCriteria.ShowSTA)
+    {
+      selectStatement.Append("sum(STAPOP_VALUE) as STAPOP_VALUE, sign(sum(STAPOP_REDACTED_FLAG)) as STAPOP_REDACTED_FLAG, ");
+    }
+    else
+    {
+      selectStatement.Append("null as STAPOP_VALUE, null as STAPOP_REDACTED_FLAG, ");
+    }
+    if (selectionCriteria.ShowOOC)
+    {
+      selectStatement.Append("sum(OOCPOP_VALUE) as OOCPOP_VALUE, sign(sum(OOCPOP_REDACTED_FLAG)) as OOCPOP_REDACTED_FLAG, ");
+    }
+    else
+    {
+      selectStatement.Append("null as OOCPOP_VALUE, null as OOCPOP_REDACTED_FLAG, ");
+    }
+
+    if (selectionCriteria.ShowPOC)
+    {
+      selectStatement.Append("sum(case when nvl(REFPOP_VALUE,0) + nvl(ASYPOP_VALUE,0) + nvl(REFRTN_VALUE,0) + " +
+        "nvl(IDPHPOP_VALUE,0) + nvl(IDPHRTN_VALUE,0) + nvl(STAPOP_VALUE,0) + nvl(OOCPOP_VALUE,0) > 0 " +
+        "then nvl(REFPOP_VALUE,0) + nvl(ASYPOP_VALUE,0) + nvl(REFRTN_VALUE,0) + nvl(IDPHPOP_VALUE,0) + " +
+        "nvl(IDPHRTN_VALUE,0) + nvl(STAPOP_VALUE,0) + nvl(OOCPOP_VALUE,0) end) as TPOC_VALUE, " +
+        "sign(sum(coalesce(REFPOP_REDACTED_FLAG, ASYPOP_REDACTED_FLAG, REFRTN_REDACTED_FLAG, " +
+        "IDPHPOP_REDACTED_FLAG, IDPHRTN_REDACTED_FLAG, STAPOP_REDACTED_FLAG, OOCPOP_REDACTED_FLAG))) " +
+        "as TPOC_REDACTED_FLAG ");
+    }
+    else
+    {
+      selectStatement.Append("null as TPOC_VALUE, null as TPOC_REDACTED_FLAG ");
+    }
     selectStatement.Append("from ASR_POC_SUMMARY_EN where ASR_YEAR between :START_YEAR and :END_YEAR ");
     if (selectionCriteria.ResidenceCodes != null && selectionCriteria.ResidenceCodes.Count > 0)
     {
@@ -269,7 +344,9 @@ public partial class PSQ_POC : System.Web.UI.Page
       selectStatement.Append(", COU_NAME_ORIGIN_EN");
     }
     selectStatement.Append(") where coalesce(REFPOP_VALUE, ASYPOP_VALUE, REFRTN_VALUE, " +
-      "IDPHPOP_VALUE, IDPHRTN_VALUE, STAPOP_VALUE, OOCPOP_VALUE, TPOC_VALUE) is not null " +
+      "IDPHPOP_VALUE, IDPHRTN_VALUE, STAPOP_VALUE, OOCPOP_VALUE, TPOC_VALUE, " +
+      "REFPOP_REDACTED_FLAG, ASYPOP_REDACTED_FLAG, REFRTN_REDACTED_FLAG, IDPHPOP_REDACTED_FLAG, " +
+      "IDPHRTN_REDACTED_FLAG, STAPOP_REDACTED_FLAG, OOCPOP_REDACTED_FLAG, TPOC_REDACTED_FLAG) is not null " +
       "order by ASR_YEAR desc");
     if (selectionCriteria.ShowRES)
     {
@@ -507,35 +584,67 @@ public partial class PSQ_POC : System.Web.UI.Page
       }
       if (selectionCriteria.ShowREF)
       {
-        csv.Append("," + row.ItemArray[3]);
+        csv.Append(",");
+        if (row.ItemArray[3].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[3])).Replace(",", ""));
+        }
       }
       if (selectionCriteria.ShowASY)
       {
-        csv.Append("," + row.ItemArray[4]);
+        csv.Append(",");
+        if (row.ItemArray[4].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[4])).Replace(",", ""));
+        }
       }
       if (selectionCriteria.ShowRET)
       {
-        csv.Append("," + row.ItemArray[5]);
+        csv.Append(",");
+        if (row.ItemArray[5].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[5])).Replace(",", ""));
+        }
       }
       if (selectionCriteria.ShowIDP)
       {
-        csv.Append("," + row.ItemArray[6]);
+        csv.Append(",");
+        if (row.ItemArray[6].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[6])).Replace(",", ""));
+        }
       }
       if (selectionCriteria.ShowRDP)
       {
-        csv.Append("," + row.ItemArray[7]);
+        csv.Append(",");
+        if (row.ItemArray[7].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[7])).Replace(",", ""));
+        }
       }
       if (selectionCriteria.ShowSTA)
       {
-        csv.Append("," + row.ItemArray[8]);
+        csv.Append(",");
+        if (row.ItemArray[8].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[8])).Replace(",", ""));
+        }
       }
       if (selectionCriteria.ShowOOC)
       {
-        csv.Append("," + row.ItemArray[9]);
+        csv.Append(",");
+        if (row.ItemArray[9].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[9])).Replace(",", ""));
+        }
       }
       if (selectionCriteria.ShowPOC)
       {
-        csv.Append("," + row.ItemArray[10]);
+        csv.Append(",");
+        if (row.ItemArray[10].GetType() == typeof(string))
+        {
+          csv.Append(((String)(row.ItemArray[10])).Replace(",", ""));
+        }
       }
       csv.AppendLine();
     }
