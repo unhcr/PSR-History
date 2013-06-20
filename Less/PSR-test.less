@@ -269,7 +269,6 @@ div.frs {
       margin: 0 10px;
       color: (darken(@BaseColour, 20%));
       font-size: 14px;
-      // font-weight: bold;
       text-decoration: none;
 
       &:hover {
@@ -277,5 +276,33 @@ div.frs {
         text-decoration: underline;
       }
     }
+  }
+}
+
+.introduction {
+  padding: 15px 50px 30px;
+  p {
+    font-size: 14px;
+    margin-bottom: 0.6em;
+
+    a {
+      color: (darken(@BaseColour, 20%));
+      font-weight: bold;
+      text-decoration: none;
+
+      &:hover {
+        color: @BaseColour;
+        text-decoration: underline;
+      }
+    }
+
+    em {
+      font-weight: bold;
+    }
+  }
+  h2 {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 1em 0 0.3em;
   }
 }
