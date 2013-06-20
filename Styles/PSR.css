@@ -820,26 +820,52 @@ div.frs div.others a:hover {
   text-decoration: underline;
 }
 .introduction {
-  padding: 15px 50px 30px;
-}
-.introduction p {
-  font-size: 14px;
-  margin-bottom: 0.6em;
-}
-.introduction p a {
-  color: #004baa;
-  font-weight: bold;
-  text-decoration: none;
-}
-.introduction p a:hover {
-  color: #117aff;
-  text-decoration: underline;
-}
-.introduction p em {
-  font-weight: bold;
+  padding: 0 10px 0;
 }
 .introduction h2 {
   font-size: 15px;
   font-weight: bold;
+}
+.introduction .main-content {
+  display: inline-block;
+  vertical-align: top;
+  width: 570px;
+  margin-right: 10px;
+}
+.introduction .main-content p {
+  font-size: 14px;
+  margin-bottom: 0.7em;
+  text-align: justify;
+}
+.introduction .main-content p a {
+  color: #004baa;
+  font-weight: bold;
+  text-decoration: none;
+}
+.introduction .main-content p a:hover {
+  color: #117aff;
+  text-decoration: underline;
+}
+.introduction .main-content h2 {
   margin: 1em 0 0.3em;
+}
+.introduction .poc-definitions {
+  display: inline-block;
+  vertical-align: top;
+  width: 380px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  border-left: 1px solid #dddddd;
+}
+.introduction .poc-definitions p {
+  font-size: 13px;
+  margin-bottom: 0.3em;
+  text-align: justify;
+}
+.introduction .poc-definitions p em {
+  font-weight: bold;
+}
+.introduction .poc-definitions h2 {
+  margin: 0 0 0.3em;
+  text-align: center;
 }
