@@ -172,7 +172,31 @@ public partial class PSQ_RSD : System.Web.UI.Page
   void ConstructSelectStatement()
   {
     var selectStatement =
-      new StringBuilder("select ASR_YEAR, ", 1000);
+      new StringBuilder("select ASR_YEAR, COU_NAME_ASYLUM_EN, COU_NAME_ORIGIN_EN, " +
+        "RSD_PROC_TYPE_CODE, RSD_PROC_TYPE_DESCRIPTION_EN, RSD_PROC_LEVEL_CODE, RSD_PROC_LEVEL_DESCRIPTION_EN, " +
+        "case when ASYPOP_START_VALUE is null and ASYPOP_START_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(ASYPOP_START_VALUE, '999,999,999')) end as ASYPOP_START_VALUE, " +
+        "case when ASYPOP_AH_START_VALUE is null and ASYPOP_AH_START_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(ASYPOP_AH_START_VALUE, '999,999,999')) end as ASYPOP_AH_START_VALUE, " +
+        "case when ASYPOP_START_VALUE is null and ASYPOP_START_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(ASYPOP_START_VALUE, '999,999,999')) end as ASYPOP_START_VALUE, " +
+        "case when ASYAPP_VALUE is null and ASYAPP_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(ASYAPP_VALUE, '999,999,999')) end as ASYAPP_VALUE, " +
+        "case when ASYREC_CV_VALUE is null and ASYREC_CV_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(ASYREC_CV_VALUE, '999,999,999')) end as ASYREC_CV_VALUE, " +
+        "case when ASYREC_CP_VALUE is null and ASYREC_CP_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(ASYREC_CP_VALUE, '999,999,999')) end as ASYREC_CP_VALUE, " +
+        "case when ASYREJ_VALUE is null and ASYREJ_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(ASYREJ_VALUE, '999,999,999')) end as ASYREJ_VALUE, " +
+        "case when ASYOTHCL_VALUE is null and ASYOTHCL_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(ASYOTHCL_VALUE, '999,999,999')) end as ASYOTHCL_VALUE, " +
+        "case when TOTAL_DECISIONS_VALUE is null and TOTAL_DECISIONS_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(TOTAL_DECISIONS_VALUE, '999,999,999')) end as TOTAL_DECISIONS_VALUE, " +
+        "case when ASYPOP_END_VALUE is null and ASYPOP_END_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(ASYPOP_END_VALUE, '999,999,999')) end as ASYPOP_END_VALUE, " +
+        "case when ASYPOP_AH_END_VALUE is null and ASYPOP_AH_END_REDACTED_FLAG = 1 then '*' " +
+        "else trim(to_char(ASYPOP_AH_END_VALUE, '999,999,999')) end as ASYPOP_AH_END_VALUE " +
+        "from (select ASR_YEAR, ", 1000);
 
     selectStatement.Append((selectionCriteria.ShowRES ? String.Empty : "null as ") + "COU_NAME_ASYLUM_EN, ");
     selectStatement.Append((selectionCriteria.ShowOGN ? String.Empty : "null as ") + "COU_NAME_ORIGIN_EN, ");
@@ -180,13 +204,19 @@ public partial class PSQ_RSD : System.Web.UI.Page
     selectStatement.Append((selectionCriteria.ShowRSDP ? String.Empty : "null as ") + "RSD_PROC_TYPE_DESCRIPTION_EN, ");
     selectStatement.Append((selectionCriteria.ShowRSDL ? String.Empty : "null as ") + "RSD_PROC_LEVEL_CODE, ");
     selectStatement.Append((selectionCriteria.ShowRSDL ? String.Empty : "null as ") + "RSD_PROC_LEVEL_DESCRIPTION_EN, ");
-    selectStatement.Append("sum(ASYPOP_START_VALUE) as ASYPOP_START_VALUE, " +
-      "sum(ASYPOP_AH_START_VALUE) as ASYPOP_AH_START_VALUE, sum(ASYAPP_VALUE) as ASYAPP_VALUE, " +
-      "sum(ASYREC_CV_VALUE) as ASYREC_CV_VALUE, sum(ASYREC_CP_VALUE) as ASYREC_CP_VALUE, " +
-      "sum(ASYREJ_VALUE) as ASYREJ_VALUE, sum(ASYOTHCL_VALUE) as ASYOTHCL_VALUE, " +
-      "nvl(sum(ASYREC_CV_VALUE), 0) + nvl(sum(ASYREC_CP_VALUE), 0) + " +
-      "nvl(sum(ASYREJ_VALUE), 0) + nvl(sum(ASYOTHCL_VALUE), 0) as TOTAL_DECISIONS_VALUE, " +
-      "sum(ASYPOP_END_VALUE) as ASYPOP_END_VALUE, sum(ASYPOP_AH_END_VALUE) as ASYPOP_AH_END_VALUE " +
+    selectStatement.Append("sum(ASYPOP_START_VALUE) as ASYPOP_START_VALUE, max(ASYPOP_START_REDACTED_FLAG) as ASYPOP_START_REDACTED_FLAG, " +
+      "sum(ASYPOP_AH_START_VALUE) as ASYPOP_AH_START_VALUE, max(ASYPOP_AH_START_REDACTED_FLAG) as ASYPOP_AH_START_REDACTED_FLAG, " +
+      "sum(ASYPOP_START_VALUE) as ASYAPP_VALUE, max(ASYAPP_REDACTED_FLAG) as ASYAPP_REDACTED_FLAG, " +
+      "sum(ASYREC_CV_VALUE) as ASYREC_CV_VALUE, max(ASYREC_CV_REDACTED_FLAG) as ASYREC_CV_REDACTED_FLAG, " +
+      "sum(ASYREC_CP_VALUE) as ASYREC_CP_VALUE, max(ASYREC_CP_REDACTED_FLAG) as ASYREC_CP_REDACTED_FLAG, " +
+      "sum(ASYREJ_VALUE) as ASYREJ_VALUE, max(ASYREJ_REDACTED_FLAG) as ASYREJ_REDACTED_FLAG, " +
+      "sum(ASYOTHCL_VALUE) as ASYOTHCL_VALUE, max(ASYOTHCL_REDACTED_FLAG) as ASYOTHCL_REDACTED_FLAG, " +
+      "case when coalesce(sum(ASYREC_CV_VALUE), sum(ASYREC_CP_VALUE), sum(ASYREJ_VALUE), sum(ASYOTHCL_VALUE)) is not null " +
+      "then nvl(sum(ASYREC_CV_VALUE), 0) + nvl(sum(ASYREC_CP_VALUE), 0) + nvl(sum(ASYREJ_VALUE), 0) + nvl(sum(ASYOTHCL_VALUE), 0) " +
+      "end as TOTAL_DECISIONS_VALUE, " +
+      "coalesce(max(ASYREC_CV_REDACTED_FLAG), max(ASYREC_CP_REDACTED_FLAG), max(ASYREJ_REDACTED_FLAG), max(ASYOTHCL_REDACTED_FLAG)) as TOTAL_DECISIONS_REDACTED_FLAG, " +
+      "sum(ASYPOP_END_VALUE) as ASYPOP_END_VALUE, max(ASYPOP_END_REDACTED_FLAG) as ASYPOP_END_REDACTED_FLAG, " +
+      "sum(ASYPOP_AH_END_VALUE) as ASYPOP_AH_END_VALUE, max(ASYPOP_AH_END_REDACTED_FLAG) as ASYPOP_AH_END_REDACTED_FLAG " +
       "from ASR_RSD_EN where ASR_YEAR between :START_YEAR and :END_YEAR ");
     if (selectionCriteria.ResidenceCodes != null && selectionCriteria.ResidenceCodes.Count > 0)
     {
@@ -223,7 +253,7 @@ public partial class PSQ_RSD : System.Web.UI.Page
     {
       selectStatement.Append(", RSD_PROC_LEVEL_CODE, RSD_PROC_LEVEL_DESCRIPTION_EN");
     }
-    selectStatement.Append(" order by ASR_YEAR desc");
+    selectStatement.Append(") order by ASR_YEAR desc");
     if (selectionCriteria.ShowRES)
     {
       selectStatement.Append(", COU_NAME_ASYLUM_EN");
@@ -441,9 +471,57 @@ public partial class PSQ_RSD : System.Web.UI.Page
       {
         csv.Append("," + row.ItemArray[5]);
       }
-      csv.AppendLine("," + row.ItemArray[7] + "," + row.ItemArray[8] + "," + row.ItemArray[8] +
-        "," + row.ItemArray[10] + "," + row.ItemArray[11] + "," + row.ItemArray[12] + "," + row.ItemArray[13] +
-        "," + row.ItemArray[14] + "," + row.ItemArray[15] + "," + row.ItemArray[16]);
+      csv.Append(",");
+      if (row.ItemArray[7].GetType() == typeof(string))
+      {
+        csv.Append(((String)(row.ItemArray[7])).Replace(",", ""));
+      }
+      csv.Append(",");
+      if (row.ItemArray[8].GetType() == typeof(string))
+      {
+        csv.Append(((String)(row.ItemArray[8])).Replace(",", ""));
+      }
+      csv.Append(",");
+      if (row.ItemArray[9].GetType() == typeof(string))
+      {
+        csv.Append(((String)(row.ItemArray[9])).Replace(",", ""));
+      }
+      csv.Append(",");
+      if (row.ItemArray[10].GetType() == typeof(string))
+      {
+        csv.Append(((String)(row.ItemArray[10])).Replace(",", ""));
+      }
+      csv.Append(",");
+      if (row.ItemArray[11].GetType() == typeof(string))
+      {
+        csv.Append(((String)(row.ItemArray[11])).Replace(",", ""));
+      }
+      csv.Append(",");
+      if (row.ItemArray[12].GetType() == typeof(string))
+      {
+        csv.Append(((String)(row.ItemArray[12])).Replace(",", ""));
+      }
+      csv.Append(",");
+      if (row.ItemArray[13].GetType() == typeof(string))
+      {
+        csv.Append(((String)(row.ItemArray[13])).Replace(",", ""));
+      }
+      csv.Append(",");
+      if (row.ItemArray[14].GetType() == typeof(string))
+      {
+        csv.Append(((String)(row.ItemArray[14])).Replace(",", ""));
+      }
+      csv.Append(",");
+      if (row.ItemArray[15].GetType() == typeof(string))
+      {
+        csv.Append(((String)(row.ItemArray[15])).Replace(",", ""));
+      }
+      csv.Append(",");
+      if (row.ItemArray[16].GetType() == typeof(string))
+      {
+        csv.Append(((String)(row.ItemArray[16])).Replace(",", ""));
+      }
+      csv.AppendLine();
     }
 
     Response.Clear();
