@@ -256,11 +256,11 @@ public partial class PSQ_RSD : System.Web.UI.Page
     selectStatement.Append(") order by ASR_YEAR desc");
     if (selectionCriteria.ShowRES)
     {
-      selectStatement.Append(", COU_NAME_ASYLUM_EN");
+      selectStatement.Append(", nlssort(COU_NAME_ASYLUM_EN, 'NLS_SORT=BINARY_AI')");
     }
     if (selectionCriteria.ShowOGN)
     {
-      selectStatement.Append(", decode(COU_NAME_ORIGIN_EN, 'Various', '_', COU_NAME_ORIGIN_EN)");
+      selectStatement.Append(", nlssort(decode(COU_NAME_ORIGIN_EN, 'Various', '_', COU_NAME_ORIGIN_EN), 'NLS_SORT=BINARY_AI')");
     }
     if (selectionCriteria.ShowRSDP)
     {
@@ -425,11 +425,11 @@ public partial class PSQ_RSD : System.Web.UI.Page
     }
     if (selectionCriteria.ShowRSDP)
     {
-      csv.Append(",RSD procedure type");
+      csv.Append(",RSD procedure type code,RSD procedure type description");
     }
     if (selectionCriteria.ShowRSDL)
     {
-      csv.Append(",RSD procedure level");
+      csv.Append(",RSD procedure level code,RSD procedure level description");
     }
     csv.AppendLine(",Total persons pending at start of year,Persons assisted by UNHCR at start of year" +
       ",Persons applied during year,Positive decisions (convention status)," +
@@ -465,11 +465,11 @@ public partial class PSQ_RSD : System.Web.UI.Page
       }
       if (selectionCriteria.ShowRSDP)
       {
-        csv.Append("," + row.ItemArray[3]);
+        csv.Append("," + row.ItemArray[3] + "," + row.ItemArray[4]);
       }
       if (selectionCriteria.ShowRSDL)
       {
-        csv.Append("," + row.ItemArray[5]);
+        csv.Append("," + row.ItemArray[5] + "," + row.ItemArray[6]);
       }
       csv.Append(",");
       if (row.ItemArray[7].GetType() == typeof(string))
