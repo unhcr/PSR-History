@@ -350,11 +350,11 @@ public partial class PSQ_POC : System.Web.UI.Page
       "order by ASR_YEAR desc");
     if (selectionCriteria.ShowRES)
     {
-      selectStatement.Append(", COU_NAME_RESIDENCE_EN");
+      selectStatement.Append(", nlssort(COU_NAME_RESIDENCE_EN, 'NLS_SORT=BINARY_AI')");
     }
     if (selectionCriteria.ShowOGN)
     {
-      selectStatement.Append(", decode(COU_NAME_ORIGIN_EN, 'Various', '_', COU_NAME_ORIGIN_EN)");
+      selectStatement.Append(", nlssort(decode(COU_NAME_ORIGIN_EN, 'Various', '_', COU_NAME_ORIGIN_EN), 'NLS_SORT=BINARY_AI')");
     }
 
     dsASR_POC_SUMMARY.SelectCommand = selectStatement.ToString();
