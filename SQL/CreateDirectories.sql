@@ -1,5 +1,5 @@
-create or replace directory PSRDATA as '/n02/RASRUAT/staging';
+create or replace directory PSRDATA as '/n01/RASRPRD/staging';
 grant read, write on directory PSRDATA to PSR_STAGE;
 
-create or replace directory PSRLOG as '/n02/RASRUAT/staging/log';
+create or replace directory PSRLOG as '/n01/RASRPRD/staging/log';
 grant read, write on directory PSRLOG to PSR_STAGE;
