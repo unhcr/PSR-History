@@ -13,7 +13,7 @@
       "select distinct COU_CODE_RESIDENCE, COU_NAME_RESIDENCE_EN
        from ASR_POC_SUMMARY_EN
        where COU_CODE_RESIDENCE not in ('PAK','IRN','DEU','KEN','SYR','ETH','TCD','JOR','TUR','YEM','BGD','SDN')
-       order by COU_NAME_RESIDENCE_EN" />
+       order by nlssort(COU_NAME_RESIDENCE_EN, 'NLS_SORT=BINARY_AI')" />
 
   <asp:SqlDataSource ID="dsORIGIN" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
@@ -22,7 +22,7 @@
       "select distinct COU_CODE_ORIGIN, COU_NAME_ORIGIN_EN
        from ASR_POC_SUMMARY_EN
        where COU_CODE_ORIGIN not in ('AFG','SOM','IRQ','SYR','SDN','COD','MMR','COL','ERI','CHN','SRB','SCG','YUG','MLI')
-       order by COU_NAME_ORIGIN_EN" />
+       order by nlssort(COU_NAME_ORIGIN_EN, 'NLS_SORT=BINARY_AI')" />
 
   <div class="main-body">
     <h1>Frequently Requested Statistics: Quick Queries</h1>
