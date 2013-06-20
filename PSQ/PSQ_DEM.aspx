@@ -24,7 +24,7 @@
   <asp:SqlDataSource ID="dsCOUNTRY" runat="server" 
     ConnectionString="<%$ ConnectionStrings:PSR %>" 
     ProviderName="<%$ ConnectionStrings:PSR.ProviderName %>"
-    SelectCommand="select distinct COU_CODE_RESIDENCE, COU_NAME_RESIDENCE_EN from ASR_POC_SUMMARY_EN order by COU_NAME_RESIDENCE_EN" />
+    SelectCommand="select distinct COU_CODE_RESIDENCE, COU_NAME_RESIDENCE_EN from ASR_POC_SUMMARY_EN order by nlssort(COU_NAME_RESIDENCE_EN, 'NLS_SORT=BINARY_AI')" />
  
   <div ID="divSelectionBox" runat="server" class="selection-box">
     <fieldset>
