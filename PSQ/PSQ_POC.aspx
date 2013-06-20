@@ -48,14 +48,14 @@
         <label>Country / territory of residence</label>
         <asp:ListBox ID="lbxCOUNTRY" runat="server" ViewStateMode="Disabled" 
           DataSourceID="dsCOUNTRY" DataTextField="COU_NAME_RESIDENCE_EN" DataValueField="COU_CODE_RESIDENCE" 
-          Rows="5" SelectionMode="Multiple" 
+          Rows="8" SelectionMode="Multiple" 
           CssClass="country" OnDataBound="lbxCOUNTRY_DataBound" />
       </div>
       <div class="country-selection">
         <label>Origin / Returned from</label>
         <asp:ListBox ID="lbxORIGIN" runat="server" ViewStateMode="Disabled" 
           DataSourceID="dsORIGIN" DataTextField="COU_NAME_ORIGIN_EN" DataValueField="COU_CODE_ORIGIN" 
-          Rows="5" SelectionMode="Multiple" 
+          Rows="8" SelectionMode="Multiple" 
           CssClass="origin" OnDataBound="lbxORIGIN_DataBound" />
       </div>
     </fieldset>
