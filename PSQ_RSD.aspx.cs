@@ -178,8 +178,6 @@ public partial class PSQ_RSD : System.Web.UI.Page
         "else trim(to_char(ASYPOP_START_VALUE, '999,999,999')) end as ASYPOP_START_VALUE, " +
         "case when ASYPOP_AH_START_VALUE is null and ASYPOP_AH_START_REDACTED_FLAG = 1 then '*' " +
         "else trim(to_char(ASYPOP_AH_START_VALUE, '999,999,999')) end as ASYPOP_AH_START_VALUE, " +
-        "case when ASYPOP_START_VALUE is null and ASYPOP_START_REDACTED_FLAG = 1 then '*' " +
-        "else trim(to_char(ASYPOP_START_VALUE, '999,999,999')) end as ASYPOP_START_VALUE, " +
         "case when ASYAPP_VALUE is null and ASYAPP_REDACTED_FLAG = 1 then '*' " +
         "else trim(to_char(ASYAPP_VALUE, '999,999,999')) end as ASYAPP_VALUE, " +
         "case when ASYREC_CV_VALUE is null and ASYREC_CV_REDACTED_FLAG = 1 then '*' " +
@@ -196,7 +194,7 @@ public partial class PSQ_RSD : System.Web.UI.Page
         "else trim(to_char(ASYPOP_END_VALUE, '999,999,999')) end as ASYPOP_END_VALUE, " +
         "case when ASYPOP_AH_END_VALUE is null and ASYPOP_AH_END_REDACTED_FLAG = 1 then '*' " +
         "else trim(to_char(ASYPOP_AH_END_VALUE, '999,999,999')) end as ASYPOP_AH_END_VALUE " +
-        "from (select ASR_YEAR, ", 1000);
+        "from (select ASR_YEAR, ", 4000);
 
     selectStatement.Append((selectionCriteria.ShowRES ? String.Empty : "null as ") + "COU_NAME_ASYLUM_EN, ");
     selectStatement.Append((selectionCriteria.ShowOGN ? String.Empty : "null as ") + "COU_NAME_ORIGIN_EN, ");
@@ -206,7 +204,7 @@ public partial class PSQ_RSD : System.Web.UI.Page
     selectStatement.Append((selectionCriteria.ShowRSDL ? String.Empty : "null as ") + "RSD_PROC_LEVEL_DESCRIPTION_EN, ");
     selectStatement.Append("sum(ASYPOP_START_VALUE) as ASYPOP_START_VALUE, max(ASYPOP_START_REDACTED_FLAG) as ASYPOP_START_REDACTED_FLAG, " +
       "sum(ASYPOP_AH_START_VALUE) as ASYPOP_AH_START_VALUE, max(ASYPOP_AH_START_REDACTED_FLAG) as ASYPOP_AH_START_REDACTED_FLAG, " +
-      "sum(ASYPOP_START_VALUE) as ASYAPP_VALUE, max(ASYAPP_REDACTED_FLAG) as ASYAPP_REDACTED_FLAG, " +
+      "sum(ASYAPP_VALUE) as ASYAPP_VALUE, max(ASYAPP_REDACTED_FLAG) as ASYAPP_REDACTED_FLAG, " +
       "sum(ASYREC_CV_VALUE) as ASYREC_CV_VALUE, max(ASYREC_CV_REDACTED_FLAG) as ASYREC_CV_REDACTED_FLAG, " +
       "sum(ASYREC_CP_VALUE) as ASYREC_CP_VALUE, max(ASYREC_CP_REDACTED_FLAG) as ASYREC_CP_REDACTED_FLAG, " +
       "sum(ASYREJ_VALUE) as ASYREJ_VALUE, max(ASYREJ_REDACTED_FLAG) as ASYREJ_REDACTED_FLAG, " +
