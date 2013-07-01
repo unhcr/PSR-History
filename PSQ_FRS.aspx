@@ -28,8 +28,7 @@
     <h1>Frequently Requested Statistics: Quick Queries</h1>
     <div class="frs">
     <div class="residing">
-      <h2>By country / territory of asylum</h2>
-      <h3>Refugees residing in:</h3>
+      <h2>Refugees by country / territory of asylum</h2>
       <ul>
         <li><a href="PSQ_TMS.aspx?SYR=2000&EYR=2012&RES=PAK&POPT=RF&DRES=N&DPOPT=N" target="_blank">Pakistan</a></li>
         <li><a href="PSQ_TMS.aspx?SYR=2000&EYR=2012&RES=IRN&POPT=RF&DRES=N&DPOPT=N" target="_blank">Islamic Republic of Iran</a></li>
@@ -51,8 +50,7 @@
       </ul>
     </div>
     <div class="origin">
-      <h2>By origin</h2>
-      <h3>Refugees from:</h3>
+      <h2>Refugees by origin</h2>
       <ul>
         <li><a href="PSQ_TMS.aspx?SYR=2000&EYR=2012&OGN=AFG&POPT=RF&DOGN=N&DPOPT=N" target="_blank">Afghanistan</a></li>
         <li><a href="PSQ_TMS.aspx?SYR=2000&EYR=2012&OGN=SOM&POPT=RF&DOGN=N&DPOPT=N" target="_blank">Somalia</a></li>
