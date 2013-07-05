@@ -332,9 +332,60 @@ div.frs {
         font-weight: bold;
       }
     }
+
     h2 {
       margin: 0 0 0.3em;
       text-align: center;
     }
+  }
+}
+
+@CountrySelectionHeight:      500px;
+@CountrySelectionWidth:       300px;
+@CountrySelectionTreeIndent:  18px;
+@CheckBoxSize:                13px;
+
+.country-selection {
+  height: @CountrySelectionHeight;
+  width: @CountrySelectionWidth;
+  overflow-y: auto;
+  padding: 0 5px;
+  border: @TableBorder;
+  background-color: @TableBackground;
+
+  ul {
+    margin-left: @CountrySelectionTreeIndent;
+    margin-top: 2px;
+  }
+
+  li {
+    list-style: none;
+    padding: 1px 0;
+  }
+
+  img {
+    width: @CheckBoxSize;
+    height: @CheckBoxSize;
+    vertical-align: top;
+    margin-right: @CountrySelectionTreeIndent - (@CheckBoxSize + 3px);
+    margin-left: -@CountrySelectionTreeIndent;
+  }
+
+  label {
+    display: inline-block;
+    padding-left: @CountrySelectionTreeIndent;
+    text-indent: -@CountrySelectionTreeIndent;
+  }
+
+  input[type="checkbox"] {
+    position: relative;
+    width: @CheckBoxSize;
+    height: @CheckBoxSize;
+    padding: 0;
+    margin: 0;
+    margin-right: @CountrySelectionTreeIndent - (@CheckBoxSize + 3px);
+    border: none;
+    vertical-align: bottom;
+    top: -1px;
   }
 }

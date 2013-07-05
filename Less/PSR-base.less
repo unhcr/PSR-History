@@ -6,6 +6,8 @@
 @BaseColour:          #117aff;
 @PageBackground:      #fffffd;
 @PageWidth:           1000px;
+@HeaderColour:        #005a98;
+@HeaderDepth:         60px;
 
 html {
   overflow-y: scroll;
@@ -20,11 +22,45 @@ body {
 }
 
 h1 {
-  margin: 1em;
-  text-align: center;
-  color: (darken(@BaseColour, 20%));
+  margin: 0.7em;
+  // color: white;
   font-size: 20px;
   font-weight: bold;
+  text-align: center;
+}
+
+.header {
+  // height: @HeaderDepth;
+  background-color: @HeaderColour;
+}
+
+.header_caps {
+  width: @PageWidth;
+  margin: 0 auto;
+  background-image: url('../Images/header_caps.jpg');
+  background-position: center top;
+  background-repeat: repeat-x;
+}
+
+.header_back {
+  position: relative;
+  height: @HeaderDepth;
+  margin: 0 10px;
+  background-image: url('../Images/header_back.jpg');
+  background-position: center top;
+  background-repeat: repeat-x;
+}
+
+.header img {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.header h1 {
+  position: absolute;
+  right: 0;
+  color: white;
 }
 
 .container {
