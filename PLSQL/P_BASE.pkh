@@ -52,6 +52,24 @@ create or replace package P_BASE is
   subtype tmnAGR_AGE_TO is tnAGR_AGE_TO not null;
   subtype tnAGR_VERSION_NBR is T_AGE_RANGES.VERSION_NBR%type;
 --
+-- T_CODE_TYPES
+--
+  subtype tsCDET_CODE is T_CODE_TYPES.CODE%type;
+  subtype tmsCDET_CODE is tsCDET_CODE not null;
+  subtype tnCDET_DISPLAY_SEQ is T_CODE_TYPES.DISPLAY_SEQ%type;
+  subtype tsCDET_ACTIVE_FLAG is T_CODE_TYPES.ACTIVE_FLAG%type;
+  subtype tmsCDET_ACTIVE_FLAG is tsCDET_ACTIVE_FLAG not null;
+  subtype tnCDET_VERSION_NBR is T_CODE_TYPES.VERSION_NBR%type;
+--
+-- T_CODES
+--
+  subtype tsCDE_CODE is T_CODES.CODE%type;
+  subtype tmsCDE_CODE is tsCDE_CODE not null;
+  subtype tnCDE_DISPLAY_SEQ is T_CODES.DISPLAY_SEQ%type;
+  subtype tsCDE_ACTIVE_FLAG is T_CODES.ACTIVE_FLAG%type;
+  subtype tmsCDE_ACTIVE_FLAG is tsCDE_ACTIVE_FLAG not null;
+  subtype tnCDE_VERSION_NBR is T_CODES.VERSION_NBR%type;
+--
 -- T_COMPONENTS
 --
   subtype tsCOMP_CODE is T_COMPONENTS.CODE%type;
