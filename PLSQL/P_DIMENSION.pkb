@@ -340,7 +340,7 @@ create or replace package body P_DIMENSION is
       when NO_DATA_FOUND then null;
     --
       when TOO_MANY_ROWS
-      then P_MESSAGE.DISPLAY_MESSAGE('DST', 3, 'Dimension value with this type and code already exists');
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'Dimension value with this type and code already exists');
     end;
   --
     P_TEXT.SET_TEXT(nITM_ID, 'DIM', 'DESCR', nSEQ_NBR, psLANG_CODE, psDescription);
