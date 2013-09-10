@@ -30,9 +30,13 @@
 <notes>Values are as follows. This is not likely to change substantially.&lt;br/&gt;  REF - Refugees&lt;br/&gt;  ROC - Persons in a refugee-like situation&lt;br/&gt;  ASY - Asylum-seekers&lt;br/&gt;  RET - Returned refugees (recorded by country of origin to which they are returning)&lt;br/&gt;  RPT - Repatriated refugees (recorded by country of asylum which they are leaving)&lt;br/&gt;  IDP - Internally displaced persons&lt;br/&gt;  IOC - Persons in an IDP-like situation&lt;br/&gt;  RDP - Persons returned from an IDP or IDP-like situation&lt;br/&gt;  STA - Stateless persons&lt;br/&gt;  OOC - Others of concern&lt;br/&gt;  RAS - Refugees and asylum seekers (recorded only in situations where a distinction has not been made)&lt;br/&gt;RPT is a code which has been introduced in PSR to make clear the distinction between returnees counted in the country they are leaving and the country they are returning to. In ASR, the same code is used for both. In general, the higher of the RET and the RPT values is reported.</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_DST_CODE</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="CODE = trim(upper(CODE))"/>
+</checkConstraint>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="START_DATE" id="5778BBA0-20AE-F57B-D594-395FDF4F2A6A">
 <createdBy>Scott</createdBy>

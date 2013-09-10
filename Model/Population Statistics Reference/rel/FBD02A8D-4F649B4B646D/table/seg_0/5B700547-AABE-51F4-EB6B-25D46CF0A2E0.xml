@@ -4,43 +4,7 @@
 <createdTime>2011-11-03 14:03:23 UTC</createdTime>
 <notes>It is possible for START_DATE and END_DATE to be equal in this table, i.e. the period of effectivity is zero. This occurs with a relationship which records the transition from one location to another, e.g. relationship type CSPLIT which records one country splitting into two or more others. The period of effectivity of the location of the &quot;from&quot; country ends on the same date as the start of the period of effectivity of the location of the &quot;to&quot; counties. Since the effective period of relationship between these two locations is not allowed to extend outside the effective period of either of the related locations, the start and end date of the relationship must necessarily be the same. This is reasonable, because the relationship represents an instantaneous event, rather than a relationship over a period of time.</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>PK_LOCR</pkName>
 <abbreviation>LOCR</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="LOC_ID_FROM" id="8B016EB7-DD2C-79D5-C1F4-4EB3CF8DF97B">
 <createdBy>Scott</createdBy>

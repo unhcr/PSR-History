@@ -1,0 +1,126 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="864DCE60-0063-D36E-0834-840A2509D407" directorySegmentName="seg_0" name="T_CODES">
+<createdBy>Scott</createdBy>
+<createdTime>2013-08-13 09:09:49 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<abbreviation>CDE</abbreviation>
+<allowColumnReorder>false</allowColumnReorder>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="CDET_CODE" id="E9A4C549-F2EE-A2F1-ABCB-CB3AFC19718B">
+<createdBy>Scott</createdBy>
+<createdTime>2013-08-13 09:12:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<delegate>01983D8A-5488-0153-FA3D-F545B237DA09</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<generateConstraintInDDL>NO</generateConstraintInDDL>
+<associations>
+<colAssociation fkAssociation="AD18668A-ACFB-402F-A327-62B716C2F445" referredColumn="01983D8A-5488-0153-FA3D-F545B237DA09"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="CODE" id="8E9E56C4-2008-18DB-3CFF-8B55E961F8A9">
+<createdBy>Scott</createdBy>
+<createdTime>2013-08-13 09:12:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_CDE_CODE</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="0080C2EB-8FA3-C105-7B4F-3EE56F007D57">
+<createdBy>Scott</createdBy>
+<createdTime>2013-08-13 09:12:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>840F48B2-9E9B-88BD-9B9C-8728A6AABAE2</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ACTIVE_FLAG" id="DBB4F56C-65CC-D4E8-E2A3-42786364D0D8">
+<createdBy>Scott</createdBy>
+<createdTime>2013-08-13 09:12:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_CDE_ACTIVE_FLAG</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<defaultValue>Y</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>3B91463A-AACE-D95D-B376-EDAC835F2D90</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="ACTIVE_FLAG in (&apos;Y&apos;, &apos;N&apos;)"/>
+</checkConstraint>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="0040A43C-5291-A19D-E658-AB44D8C40328">
+<createdBy>Scott</createdBy>
+<createdTime>2013-08-13 09:12:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="B59E1EB0-1F68-9BD8-E205-62B87FF38C6C" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="DAF291F3-877E-C3C2-0BFC-2C353086507E">
+<createdBy>Scott</createdBy>
+<createdTime>2013-08-13 09:12:09 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>1</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>C708458E-1701-E597-89A0-AB5975C13369</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="A48971CE-9470-914C-CBB4-ECB9CC65E607" name="PK_CDE">
+<createdBy>Scott</createdBy>
+<createdTime>2013-08-13 09:12:47 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E9A4C549-F2EE-A2F1-ABCB-CB3AFC19718B"/>
+<colUsage columnID="8E9E56C4-2008-18DB-3CFF-8B55E961F8A9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="3AA42914-3D4D-077F-7FC5-6928174137E6" name="UK_CDE_ITM_ID">
+<createdBy>Scott</createdBy>
+<createdTime>2013-08-13 09:12:47 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0040A43C-5291-A19D-E658-AB44D8C40328"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="041D1480-70A4-F45F-8DCA-F65644AD0F04" name="FK_CDE_ITM">
+<createdBy>Scott</createdBy>
+<createdTime>2013-08-13 09:13:50 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0040A43C-5291-A19D-E658-AB44D8C40328"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="AF60F884-AEB4-B7F1-5A0D-880C58CC2EB2" name="FK_CDE_CDET">
+<createdBy>Scott</createdBy>
+<createdTime>2013-08-13 09:44:24 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E9A4C549-F2EE-A2F1-ABCB-CB3AFC19718B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

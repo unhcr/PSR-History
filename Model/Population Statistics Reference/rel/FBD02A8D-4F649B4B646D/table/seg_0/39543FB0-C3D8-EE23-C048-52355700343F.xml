@@ -33,9 +33,9 @@
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
-<delegate>975D9BA4-3CC1-7CF8-60DB-0A57EBEEA04C</delegate>
+<delegate>98F95E26-58F6-F4D0-CCC2-6E0C27544E95</delegate>
 <associations>
-<colAssociation fkAssociation="01B5A409-1881-8E5C-C9E5-35670E0B5BA0" referredColumn="975D9BA4-3CC1-7CF8-60DB-0A57EBEEA04C"/>
+<colAssociation fkAssociation="01B5A409-1881-8E5C-C9E5-35670E0B5BA0" referredColumn="98F95E26-58F6-F4D0-CCC2-6E0C27544E95"/>
 </associations>
 </Column>
 </columns>

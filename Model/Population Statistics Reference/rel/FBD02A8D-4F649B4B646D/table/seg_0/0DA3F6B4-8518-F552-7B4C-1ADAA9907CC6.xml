@@ -4,44 +4,8 @@
 <createdTime>2011-10-26 10:37:49 UTC</createdTime>
 <generatorID>4322327C-468C-22CC-2C1F-D48612BD13EC</generatorID>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>PK_STATISTIC</pkName>
 <typeID>1</typeID>
 <abbreviation>STC</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ID" id="9DBA208D-CE95-1051-9F37-5BC61B6244C2">
 <createdBy>Scott</createdBy>
@@ -104,7 +68,7 @@
 <use>0</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
 <domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
-<delegate>097325F8-9568-7D0B-7885-33E8D97336B3</delegate>
+<delegate>F5C73F48-6A40-DF48-E317-381D087E137E</delegate>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
 <colAssociation fkAssociation="1372499E-BA22-EF43-FB05-369D834B4910" referredColumn="F5C73F48-6A40-DF48-E317-381D087E137E"/>
@@ -282,7 +246,7 @@
 <use>0</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
 <domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
-<delegate>0F169528-51D5-2E96-A990-8BD3EEFC0CFE</delegate>
+<delegate>E887FD2B-4164-C0ED-B1AC-5A298B0AAA7E</delegate>
 <previousColumn>false</previousColumn>
 <associations>
 <colAssociation fkAssociation="9EA24DFD-571F-BCEC-B9BB-5F8EA2C8266B" referredColumn="E887FD2B-4164-C0ED-B1AC-5A298B0AAA7E"/>

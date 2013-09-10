@@ -4,44 +4,8 @@
 <createdTime>2011-10-26 10:37:49 UTC</createdTime>
 <generatorID>A638DA77-7EB4-C03E-D139-6A42F9524D06</generatorID>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>STATISTIC TYPE UI</pkName>
 <typeID>2</typeID>
 <abbreviation>STCT</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="CODE" id="EB338200-AC8F-6607-A8D2-6B97B7122060">
 <createdBy>Scott</createdBy>
@@ -50,9 +14,13 @@
 <generatorID>78A04E1B-6B0A-03B0-A910-5D49EEEB7CDF</generatorID>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_STCT_CODE</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="CODE = trim(upper(CODE))"/>
+</checkConstraint>
 <previousColumn>false</previousColumn>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DST_ID_FLAG" id="A6E7F4CB-4BE1-6BB6-BB11-49967172EDD3">

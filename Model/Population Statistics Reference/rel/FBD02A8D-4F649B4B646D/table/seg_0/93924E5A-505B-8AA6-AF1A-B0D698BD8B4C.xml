@@ -4,47 +4,12 @@
 <createdTime>2011-12-05 10:02:57 UTC</createdTime>
 <comment>System tables and their standard aliases</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>PK_TAB</pkName>
 <abbreviation>TAB</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
+<allowColumnReorder>false</allowColumnReorder>
 <columns>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ALIAS" id="975D9BA4-3CC1-7CF8-60DB-0A57EBEEA04C">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ALIAS" id="98F95E26-58F6-F4D0-CCC2-6E0C27544E95">
 <createdBy>Scott</createdBy>
-<createdTime>2011-12-05 10:03:34 UTC</createdTime>
+<createdTime>2013-08-13 13:08:28 UTC</createdTime>
 <comment>Table alias code</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_TAB_ALIAS</constraintName>
@@ -55,6 +20,7 @@
 <checkConstraint>
 <implementationDef dbType="Generic Constraint" definition="ALIAS = trim(upper(ALIAS))"/>
 </checkConstraint>
+<autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="TABLE_NAME" id="5F534694-0A5C-A5D0-F9F2-1977D151752D">
 <createdBy>Scott</createdBy>
@@ -72,9 +38,8 @@
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="0C482E01-F5BA-5A50-D465-45A2590E17B6" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
@@ -89,7 +54,7 @@
 <pk>true</pk>
 <indexState>Primary Constraint</indexState>
 <indexColumnUsage>
-<colUsage columnID="975D9BA4-3CC1-7CF8-60DB-0A57EBEEA04C"/>
+<colUsage columnID="98F95E26-58F6-F4D0-CCC2-6E0C27544E95"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="325190BD-0D80-209A-7280-3153B830540E" name="UK_TAB_TABLE_NAME">
