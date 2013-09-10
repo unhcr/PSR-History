@@ -7,7 +7,7 @@ create or replace package P_LOCATION is
 --   attribute types, relationships and relationship types.
 --
 --  Change History:
---  07-Jan-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  06-Sep-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -1437,39 +1437,6 @@ create or replace package P_LOCATION is
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
-/*
---
--- ----------------------------------------
--- SET_COUNTRY
--- ----------------------------------------
---
--- Create a new location record or update an existing one.
---
--- Parameters:
---  psCODE - Location identifier (mandatory).
---  psLANG_CODE - Language code of the location name (optional when updating an existing location
---    but must be specified if psName is specified).
---  psName - Location name text (optional when updating an existing location; if not specified, the
---    name is not changed).
---  psLOCT_CODE - Location type code (mandatory when creating an new location; not allowed when
---    updating an existing location).
---  psCOUNTRY_CODE - Country code (optional: only allowed and required when the location type is
---    country; if allowed but not specified, the existing value is not changed).
---  pdSTART_DATE - Effective start date of details of this location (optional when updating an
---    existing location; if not specified, the name is not changed).
---  pdEND_DATE - Effective end date of details of this location (optional when updating an existing
---    location; if not specified, the name is not changed).
---
---
-  procedure SET_COUNTRY
-   (psCODE in T_LOCATIONS.CODE%type,
-    psLANG_CODE in T_LANGUAGES.CODE%type := null,
-    psName in P_BASE.tsText := null,
-    psLOCT_CODE in P_BASE.tsLOCT_CODE := null,
-    psCOUNTRY_CODE in P_BASE.tsLOC_COUNTRY_CODE := null,
-    pdSTART_DATE in T_LOCATIONS.START_DATE%type := null,
-    pdEND_DATE in T_LOCATIONS.END_DATE%type := null);
-*/
 --
 end P_LOCATION;
 /
