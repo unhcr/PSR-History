@@ -143,5 +143,36 @@ begin
   then dbms_output.put_line('1 LOCATION_RELATIONSHIPS record inserted');
   else dbms_output.put_line(to_char(iCount2) || ' LOCATION_RELATIONSHIPS records inserted');
   end if;
+--
+  iCount1 := 0;
+--
+  for rLOC in
+   (select KEY, TXTT_CODE, NAME_EN, NAME_FR
+    from S_LOCATION_COUNTRY_NAMES)
+  loop
+    select ID, VERSION_NBR
+    into nLOC_ID, nVERSION_NBR
+    from T_LOCATIONS
+    where ID = anLOC_ID(rLOC.KEY);
+  --
+    nSEQ_NBR := null;
+  --
+    if rLOC.NAME_EN is not null
+    then
+      iCount1 := iCount1 + 1;
+      P_LOCATION.SET_LOC_TEXT(nLOC_ID, nVERSION_NBR, rLOC.TXTT_CODE, nSEQ_NBR, 'en', rLOC.NAME_EN);
+    end if;
+  --
+    if rLOC.NAME_FR is not null
+    then
+      iCount1 := iCount1 + 1;
+      P_LOCATION.SET_LOC_TEXT(nLOC_ID, nVERSION_NBR, rLOC.TXTT_CODE, nSEQ_NBR, 'fr', rLOC.NAME_FR);
+    end if;
+  end loop;
+--
+  if iCount1 = 1
+  then dbms_output.put_line('1 additional TEXT_ITEMS record inserted');
+  else dbms_output.put_line(to_char(iCount1) || ' additional TEXT_ITEMS records inserted');
+  end if;
 end;
 /
