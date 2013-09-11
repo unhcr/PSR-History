@@ -58,7 +58,7 @@ begin
       LSD.COU_CODE_PREV,
       LSD.COU_START_DATE_PREV,
       COU.ID
-    order by COU_CODE_PREV nulls first, COU_START_DATE_PREV, COU_CODE, COU_START_DATE)
+    order by COU_CODE_PREV nulls first, COU_START_DATE_PREV nulls first, COU_CODE, COU_START_DATE)
   loop
     P_UTILITY.TRACE_POINT('Trace1', rSDIV.COU_CODE || '~' ||
       to_char(rSDIV.COU_START_DATE, 'YYYY-MM-DD') || '~' ||
@@ -78,6 +78,11 @@ begin
     else
       if rSDIV.COU_CODE_PREV is null
       then
+      --
+      -- This is the first or only country in which this location occurs - create the loction and
+      --  its attributes and location type variants along with its 'WITHIN' relationship to its
+      --  country.
+      --
         P_LOCATION.INSERT_LOCATION
          (nLOC_ID, 'en', rSDIV.LOCATION_NAME_EN, rSDIV.LOCT_CODE,
           pdSTART_DATE => rSDIV.LOC_START_DATE, pdEND_DATE => rSDIV.LOC_END_DATE);
@@ -99,6 +104,10 @@ begin
           pdSTART_DATE => rSDIV.LOCR_START_DATE, pdEND_DATE => rSDIV.LOCR_END_DATE);
         iCount2 := iCount2 + 1;
       else
+      --
+      -- This location exists in a previous country - use the existing location and link it to this
+      --  country with a 'WITHIN' relationship.
+      --
         P_UTILITY.TRACE_POINT('Trace2', rSDIV.COU_CODE_PREV || '~' ||
           to_char(rSDIV.COU_START_DATE_PREV, 'YYYY-MM-DD') || '~' ||
           rSDIV.LOCATION_NAME_EN || '~' || rSDIV.LOC_TYPE_DESCRIPTION_EN || '~' ||
@@ -155,6 +164,74 @@ begin
         iCount2 := iCount2 + 1;
       end if;
     end if;
+  end loop;
+--
+-- Link locations in an administrative hierarchy where defined.
+--
+  for rSDIV in
+   (with Q_LOCATION as
+     (select LOCR.LOC_ID_FROM as COU_ID, LOC.LOCATION_NAME_EN,
+        nvl(LOCTV.LOCTV_DESCRIPTION_EN, LOCT.LOC_TYPE_DESCRIPTION_EN) as LOC_TYPE_DESCRIPTION_EN,
+        LOC.ID, LOC.START_DATE, LOC.END_DATE
+      from T_LOCATION_RELATIONSHIPS LOCR
+      inner join
+       (select LOC.ID, LOC.LOCT_CODE, LOC.LOCTV_ID, LOC.START_DATE, LOC.END_DATE,
+          TXT.TEXT as LOCATION_NAME_EN
+        from T_LOCATIONS LOC
+        inner join T_TEXT_ITEMS TXT
+          on TXT.ITM_ID = LOC.ITM_ID
+          and TXT.TXTT_CODE = 'NAME'
+          and TXT.SEQ_NBR = 1
+          and TXT.LANG_CODE = 'en') LOC
+        on LOC.ID = LOCR.LOC_ID_TO
+      inner join
+       (select LOCT.CODE, TXT.TEXT as LOC_TYPE_DESCRIPTION_EN
+        from LOCATION_TYPES LOCT
+        inner join T_TEXT_ITEMS TXT
+          on TXT.ITM_ID = LOCT.ITM_ID
+          and TXT.TXTT_CODE = 'DESCR'
+          and TXT.SEQ_NBR = 1
+          and TXT.LANG_CODE = 'en') LOCT
+        on LOCT.CODE = LOC.LOCT_CODE
+      left outer join
+       (select LOCTV.ID, TXT.TEXT as LOCTV_DESCRIPTION_EN
+        from T_LOCATION_TYPE_VARIANTS LOCTV
+        inner join T_TEXT_ITEMS TXT
+          on TXT.ITM_ID = LOCTV.ITM_ID
+          and TXT.TXTT_CODE = 'DESCR'
+          and TXT.SEQ_NBR = 1
+          and TXT.LANG_CODE = 'en') LOCTV
+        on LOCTV.ID = LOC.LOCTV_ID
+      where LOCR.LOCRT_CODE = 'WITHIN')
+  --
+    select LOC1.ID as LOC_ID_TO, LOC2.ID as LOC_ID_FROM,
+      nvl(LSD.LOCR_START_DATE, greatest(LOC1.START_DATE, LOC2.START_DATE)) as LOCR_START_DATE,
+      nvl(LSD.LOCR_END_DATE, greatest(LOC1.END_DATE, LOC2.END_DATE)) as LOCR_END_DATE
+    from S_LOCATION_SUBDIVISIONS LSD
+    inner join
+     (select LOCA.CHAR_VALUE as COU_CODE, COU.ID
+      from T_LOCATIONS COU
+      inner join T_LOCATION_ATTRIBUTES LOCA
+        on LOCA.LOC_ID = COU.ID
+        and LOCA.LOCAT_CODE = 'HCRCC'
+      where COU.LOCT_CODE = 'COUNTRY') COU
+      on COU.COU_CODE = LSD.COU_CODE
+    inner join Q_LOCATION LOC1
+      on LOC1.COU_ID = COU.ID
+      and LOC1.LOCATION_NAME_EN = LSD.LOCATION_NAME_EN
+      and LOC1.LOC_TYPE_DESCRIPTION_EN = LSD.LOC_TYPE_DESCRIPTION_EN
+    left outer join Q_LOCATION LOC2
+      on LOC2.COU_ID = COU.ID
+      and LOC2.LOCATION_NAME_EN = trim(regexp_replace(LSD.LOCATION_NAME_FROM, ':.*$', ''))
+      and (rtrim(ltrim(regexp_substr(LSD.LOCATION_NAME_FROM, ':.*$'), ': ')) is null
+        or LOC2.LOC_TYPE_DESCRIPTION_EN = rtrim(ltrim(regexp_substr(LSD.LOCATION_NAME_FROM, ':.*$'), ': ')))
+    where LSD.LOCATION_NAME_FROM is not null
+    order by LSD.COU_CODE, LSD.LOCATION_NAME_FROM)
+  loop
+    P_LOCATION.INSERT_LOCATION_RELATIONSHIP
+     (rSDIV.LOC_ID_FROM, rSDIV.LOC_ID_TO, 'ADMIN',
+      pdSTART_DATE => rSDIV.LOCR_START_DATE, pdEND_DATE => rSDIV.LOCR_END_DATE);
+    iCount2 := iCount2 + 1;
   end loop;
 --
   if iCount1 = 1
