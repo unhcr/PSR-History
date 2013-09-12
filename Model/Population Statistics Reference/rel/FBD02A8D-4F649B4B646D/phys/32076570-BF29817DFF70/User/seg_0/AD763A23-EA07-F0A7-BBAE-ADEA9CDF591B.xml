@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<UserOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UserOraclev10g" name="MPS" id="AD763A23-EA07-F0A7-BBAE-ADEA9CDF591B" directorySegmentName="seg_0">
+<createdBy>Scott</createdBy>
+<createdTime>2011-11-21 08:39:39 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<privileges>UNLIMITED TABLESPACE</privileges>
+<profile>DEFAULT</profile>
+</UserOraclev10g>

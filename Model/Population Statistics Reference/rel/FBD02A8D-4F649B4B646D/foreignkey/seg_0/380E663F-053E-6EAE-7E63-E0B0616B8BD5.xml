@@ -1,0 +1,12 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" id="380E663F-053E-6EAE-7E63-E0B0616B8BD5" directorySegmentName="seg_0" name="FK_UAT_UATT">
+<createdBy>Scott</createdBy>
+<createdTime>2012-01-25 10:24:34 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<containerWithKeyObject>998463B9-03FD-779D-83D7-E85880603FCF</containerWithKeyObject>
+<deleteRule>RESTRICT</deleteRule>
+<localFKIndex>E093A12E-38B3-F85F-DD49-5743738CF60E</localFKIndex>
+<keyObject>9389F5FE-CBB3-4BC8-DCB8-FB791A9FBF35</keyObject>
+<mandatory>true</mandatory>
+<transferable>false</transferable>
+</FKIndexAssociation>

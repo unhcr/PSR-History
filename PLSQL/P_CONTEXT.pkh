@@ -1,0 +1,32 @@
+create or replace package P_CONTEXT is
+--
+-- -------------------------------------------------------------------------------------------------
+--
+--  Package P_CONTEXT
+--  Procedures for managing the PSR application context.
+--
+--  Change History:
+--  16-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--
+-- -------------------------------------------------------------------------------------------------
+--
+  sModule varchar2(30) := $$PLSQL_UNIT;
+  sVersion varchar2(10) := 'D0.1';
+  sComponent varchar2(30) := 'CTXT';
+--
+-- ----------------------------------------
+-- SET_USERID
+-- ----------------------------------------
+--
+-- Create a new language record or update an existing one.
+--
+-- Parameters:
+--  psUSERID - The user ID to be set in the PSR application context.
+--
+  procedure SET_USERID
+   (psUSERID in P_BASE.tmsUSR_USERID);
+--
+end P_CONTEXT;
+/
+
+show errors

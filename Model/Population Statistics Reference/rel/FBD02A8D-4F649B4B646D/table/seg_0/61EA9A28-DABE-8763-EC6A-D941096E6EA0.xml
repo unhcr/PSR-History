@@ -1,0 +1,186 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="61EA9A28-DABE-8763-EC6A-D941096E6EA0" directorySegmentName="seg_0" name="T_TEST_CASE_ARGUMENTS">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-24 08:51:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pkName>PK_TCO</pkName>
+<abbreviation>TCA</abbreviation>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>PK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>FK Element</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>UK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Not Null</foType>
+<colorRGB>-65536</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Key</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+</fonts>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="TST_CODE" id="7264D221-0C16-DCD2-C8EC-9166DF4ADB74">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-24 08:51:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<delegate>63732A10-AABA-8BF0-0D3B-705209057DE7</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="9A0F257D-8C2C-7B4A-FBE7-54488F2340D7" referredColumn="63732A10-AABA-8BF0-0D3B-705209057DE7"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="STP_SEQ_NBR" id="DCD5E11B-D010-E6D0-6960-8B71A0062694">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-24 08:51:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>4DEE2B98-924B-3C9C-5F42-8D1F2F4A8E54</domain>
+<delegate>C27B5550-1C78-A7B6-33A1-E0B58D1A17CD</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="9A0F257D-8C2C-7B4A-FBE7-54488F2340D7" referredColumn="C27B5550-1C78-A7B6-33A1-E0B58D1A17CD"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PARAMETER_NAME" id="87A45313-90A2-DA6E-16F5-70B11AF0B3AF">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-24 08:51:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>383B7890-E22E-BD7E-0EDF-6938FBD88467</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="VARIABLE_NAME" id="B92CBC49-179F-89CC-6FDE-5FAC195DD485">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-30 07:06:48 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>05F2A504-0687-B53F-A131-4CA7AB3606B9</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="CHAR_VALUE_IN" id="7C632340-6227-10C5-5DEE-B62A877AB0FE">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-24 08:51:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>1000</dataTypeSize>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="CHAR_VALUE_OUT" id="259CFD32-9D55-05AB-D686-541517777B9C">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-30 07:28:12 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>1000</dataTypeSize>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="NUM_VALUE_IN" id="F163F773-37BF-F737-0086-30E02389BC4B">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-24 08:51:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="NUM_VALUE_OUT" id="CF806082-FE9D-A325-E13F-8367AC194F21">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-30 07:28:47 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DATE_VALUE_IN" id="C23FDE4F-FB37-2D95-101B-87994A3E7AA2">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-24 08:51:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DATE_VALUE_OUT" id="D59655D2-9DBB-C7C7-5A28-1F306B320E2C">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-30 07:28:47 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="203ABAD8-8A07-7F35-EFB3-F7C9A8203DD0" name="PK_TCA">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-24 08:51:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="7264D221-0C16-DCD2-C8EC-9166DF4ADB74"/>
+<colUsage columnID="DCD5E11B-D010-E6D0-6960-8B71A0062694"/>
+<colUsage columnID="87A45313-90A2-DA6E-16F5-70B11AF0B3AF"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="F810C5EF-D649-39D0-1324-5452CD919A22" name="FK_TCA_TCS">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-24 08:51:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="7264D221-0C16-DCD2-C8EC-9166DF4ADB74"/>
+<colUsage columnID="DCD5E11B-D010-E6D0-6960-8B71A0062694"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+<tableCheckConstraints>
+<tableCheckConstraint class="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint" name="CH_TCA_PARAMETER" id="949EE5B1-2330-CB60-A1E3-B026476CEE49" directorySegmentName="seg_1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-30 07:07:28 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<rule>(VARIABLE_NAME is not null or&lt;br/&gt; CHAR_VALUE_IN is not null or CHAR_VALUE_OUT is not null or&lt;br/&gt; NUM_VALUE_IN is not null or NUM_VALUE_OUT is not null or&lt;br/&gt; DATE_VALUE_IN is not null or DATE_VALUE_OUT is not null) and&lt;br/&gt;(((CHAR_VALUE_IN is not null or CHAR_VALUE_OUT is not null) and&lt;br/&gt;   NUM_VALUE_IN is null and NUM_VALUE_OUT is null and&lt;br/&gt;   DATE_VALUE_IN is null and DATE_VALUE_OUT is null) or&lt;br/&gt;  (CHAR_VALUE_IN is null and CHAR_VALUE_OUT is null and&lt;br/&gt;   (NUM_VALUE_IN is not null or NUM_VALUE_OUT is not null) and&lt;br/&gt;   DATE_VALUE_IN is null or DATE_VALUE_OUT is null) or&lt;br/&gt;  (CHAR_VALUE_IN is null and CHAR_VALUE_OUT is null and&lt;br/&gt;   NUM_VALUE_IN is null and NUM_VALUE_OUT is null and&lt;br/&gt;   (DATE_VALUE_IN is not null or DATE_VALUE_OUT is not null)))&lt;br/&gt;</rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
+</Table>

@@ -1,0 +1,174 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="F31AD90A-1C29-BA43-DE06-91DD800AE95C" directorySegmentName="seg_0" name="POPULATION SEGMENT">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-05 14:24:26 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+</engineerTo>
+<pkName>PK_POPULATION SEGMENT</pkName>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Attribute</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>PK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>FK Element</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>UK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Not Null</foType>
+<colorRGB>-65536</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Key</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+</fonts>
+<attributes>
+<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Sub-group sequence number" id="54E02A3A-0894-7653-1F48-CB815A676316">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-07 07:02:32 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>4DEE2B98-924B-3C9C-5F42-8D1F2F4A8E54</domain>
+</Attribute>
+<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Description" id="24EEEA5C-008C-FA2B-C4A8-C9AD8AF83634">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-05 15:33:58 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>83316272-3728-7FC3-B754-18D76E70A6DF</domain>
+</Attribute>
+<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Code" id="B8318240-1ED5-6E76-4EA2-B7CA6924065A">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-05 14:25:06 UTC</createdTime>
+<generatorID>AE86D14E-16AF-F094-159D-9D9C98516D82</generatorID>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>CBEE85F2-A211-FEA0-9065-80F9690DF0F6</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+</Attribute>
+<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="PPG Code" id="6C569721-E1B5-35D1-EA19-C2827C0DB609">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-05 14:25:17 UTC</createdTime>
+<generatorID>496A5D68-3E93-4AB7-9ABD-348D4AABF88C</generatorID>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>94874183-80D5-A37E-E8CD-9E1B3F429036</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>B5A68D1F-B108-2FE3-7D9C-3D1A7D886D64</domain>
+</Attribute>
+<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Start Date" id="EBA466E1-9181-26C9-C49D-CFE0ADBC708F">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-05 14:25:17 UTC</createdTime>
+<generatorID>496A5D68-3E93-4AB7-9ABD-348D4AABF88C</generatorID>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>3FF80011-610D-C913-48DF-2D5E22F85E22</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
+</Attribute>
+<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="ISO alpha-3 country code" id="B0B228C7-DD0D-78CC-28AE-99B16E81AFCC">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-05 14:25:40 UTC</createdTime>
+<generatorID>A5807FC9-C9E7-9724-8E42-ACC8F9150EBF</generatorID>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+</engineerTo>
+<referedAttribute>8F3686B7-9024-EFB7-3026-F35BBE3AC4F5</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>8A9C9816-0977-3A07-D461-D379AA619002</domain>
+</Attribute>
+<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="ID" id="E7594D4C-2673-81AD-BF87-124D2D631F51">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-05 14:25:47 UTC</createdTime>
+<generatorID>4039FF5D-F226-FD41-DE42-1536B89EFFE6</generatorID>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+</engineerTo>
+<referedAttribute>6680C9E7-F94B-2749-B55C-CC09EEB5ED9B</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
+</Attribute>
+<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="ID1" id="1D99EA1A-AC33-4183-A943-9F971D11DA89">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-05 14:25:53 UTC</createdTime>
+<generatorID>DA959D69-B3FD-5053-EEDB-8A9C72184980</generatorID>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>6680C9E7-F94B-2749-B55C-CC09EEB5ED9B</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
+</Attribute>
+<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="ID2" id="53EE580A-EA1A-1BCB-54F2-392B74816DA7">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-05 14:27:43 UTC</createdTime>
+<generatorID>3B963FF1-1780-BC8B-CC90-D629D08CDBED</generatorID>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>6680C9E7-F94B-2749-B55C-CC09EEB5ED9B</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
+</Attribute>
+</attributes>
+</Entity>

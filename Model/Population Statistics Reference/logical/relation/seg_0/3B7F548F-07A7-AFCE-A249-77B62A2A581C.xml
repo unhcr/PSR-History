@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="PPG Operation" id="3B7F548F-07A7-AFCE-A249-77B62A2A581C" directorySegmentName="seg_0">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-11 11:42:36 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>32FB5DB5-A9A5-D05F-681C-FF79C4B248E3</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>8CA4B18B-F8B6-6D34-4FC4-B1DC05D55C86</targetEntity>
+<transferable>true</transferable>
+</Relation>

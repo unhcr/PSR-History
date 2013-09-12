@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Country of Asylum" id="A5807FC9-C9E7-9724-8E42-ACC8F9150EBF" directorySegmentName="seg_0">
+<createdBy>Scott</createdBy>
+<createdTime>2012-09-05 14:25:40 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>BB3D0A02-0F5E-B1E8-3C17-FA27F421F5C3</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>F31AD90A-1C29-BA43-DE06-91DD800AE95C</targetEntity>
+<transferable>true</transferable>
+</Relation>

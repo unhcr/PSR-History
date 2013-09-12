@@ -1,0 +1,141 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="92A106D1-8714-73C2-6136-6CE5D0EBB7D5" directorySegmentName="seg_0" name="T_LANGUAGES">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 10:32:00 UTC</createdTime>
+<comment>Languages in which text items can be expressed</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pkName>PK_LANG</pkName>
+<abbreviation>LANG</abbreviation>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>PK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>FK Element</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>UK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Not Null</foType>
+<colorRGB>-65536</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Key</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+</fonts>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="CODE" id="A16EEFAB-1230-4A27-2F9C-6AF0DCC10F03">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 10:33:52 UTC</createdTime>
+<comment>Language code</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_LANG_CODE</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>F6A9320E-05AC-2FB8-8934-BB7C80823755</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="CODE = trim(CODE)"/>
+</checkConstraint>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="7FEA94C8-B60A-1E4A-8275-3EF81EB341A1">
+<createdBy>Scott</createdBy>
+<createdTime>2012-01-04 14:53:03 UTC</createdTime>
+<comment>Number controlling the sequence of display of languages</comment>
+<notes>This column determines the global (system-wide) language preferences. If a user has not defined individual language preferences, or if a text item is not available in any of his/her preferred languages, then the text item chosen is the one with lowest value of this column. If none of the languages associated with available text items has a value in this column, then an arbitrary text item is chosen.</notes>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>840F48B2-9E9B-88BD-9B9C-8728A6AABAE2</domain>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ACTIVE_FLAG" id="B200B4BA-A37C-8B70-CE3A-C874D115E603">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 10:33:52 UTC</createdTime>
+<comment>Is this language currently active (Y/N)?</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_LANG_ACTIVE_FLAG</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<defaultValue>Y</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>6841C73E-E27A-83E1-4728-25113B8D2A58</domain>
+<usesDefaultValue>true</usesDefaultValue>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="ACTIVE_FLAG in (&apos;Y&apos;, &apos;N&apos;)"/>
+</checkConstraint>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="718F3A1F-1EA5-C321-F3E4-12B321682346">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 10:33:52 UTC</createdTime>
+<comment>General data item identifier of this language</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
+<associations>
+<colAssociation fkAssociation="82641CCF-8F47-4E56-EBAD-E3CD4A3E9E19" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="E342B848-9BBE-C4EA-53D8-5AB228298B6B">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-28 12:54:30 UTC</createdTime>
+<comment>Update version number of this language</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>1</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>C708458E-1701-E597-89A0-AB5975C13369</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="90BE28DA-9CD0-2EEC-791B-0B847347950B" name="PK_LANG">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 10:33:52 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="A16EEFAB-1230-4A27-2F9C-6AF0DCC10F03"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="94658623-E5C6-53C6-1E85-319EED410145" name="UK_LANG_ITM_ID">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-08 08:51:01 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="718F3A1F-1EA5-C321-F3E4-12B321682346"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="F91B041E-212A-6486-F9BE-230DF627E971" name="FK_LANG_ITM">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 10:35:05 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="718F3A1F-1EA5-C321-F3E4-12B321682346"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

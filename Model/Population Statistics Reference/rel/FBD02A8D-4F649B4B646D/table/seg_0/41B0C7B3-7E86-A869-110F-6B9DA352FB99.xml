@@ -1,0 +1,89 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="41B0C7B3-7E86-A869-110F-6B9DA352FB99" directorySegmentName="seg_0" name="T_SEXES">
+<createdBy>Scott</createdBy>
+<createdTime>2012-04-04 06:16:03 UTC</createdTime>
+<comment>Sexes</comment>
+<notes>Values are Female and Male. This is unlikely to change.</notes>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<typeID>2</typeID>
+<abbreviation>SEX</abbreviation>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="CODE" id="85DC063C-7C1C-DC9C-49F2-C56F40C0F8E8">
+<createdBy>Scott</createdBy>
+<createdTime>2012-04-04 06:17:10 UTC</createdTime>
+<comment>Sex code (F/M)</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_SEX_CODE</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>66D61FA5-E6FC-8A0C-8A86-570E5077EE6C</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="F64AC317-8A27-DC28-2407-83D3A72BB435">
+<createdBy>Scott</createdBy>
+<createdTime>2012-04-04 06:21:06 UTC</createdTime>
+<comment>Number controlling the sequence of display of sexes</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>840F48B2-9E9B-88BD-9B9C-8728A6AABAE2</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="25381B8A-86C6-3FAD-393F-A980E1976A39">
+<createdBy>Scott</createdBy>
+<createdTime>2012-04-04 06:17:10 UTC</createdTime>
+<comment>General data item identifier of this sex</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="39AD108B-606E-36A3-96DE-0549C5792EA9" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="698FB9EB-4F18-4EF3-740B-6A181145D8D4">
+<createdBy>Scott</createdBy>
+<createdTime>2012-04-04 06:17:10 UTC</createdTime>
+<comment>Update version number of this sex</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>1</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>C708458E-1701-E597-89A0-AB5975C13369</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="F3D6A61B-6DBE-B1FE-DA10-D4E5CE3E4309" name="PK_SEX">
+<createdBy>Scott</createdBy>
+<createdTime>2012-04-04 06:17:10 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="85DC063C-7C1C-DC9C-49F2-C56F40C0F8E8"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="C693D3CB-9DA8-C3A0-39E0-C53EDFD2ABAC" name="UK_SEX_ITM_ID">
+<createdBy>Scott</createdBy>
+<createdTime>2012-04-04 06:17:32 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="25381B8A-86C6-3FAD-393F-A980E1976A39"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="8284A243-F0AF-A685-DBBB-64C9ECDCD8F6" name="FK_SEX_ITM">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 11:00:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="25381B8A-86C6-3FAD-393F-A980E1976A39"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

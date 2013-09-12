@@ -1,0 +1,77 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableView class="oracle.dbtools.crest.model.design.relational.TableView" id="B017E2F6-1A90-B611-ABB6-4C49A9420B4C" directorySegmentName="seg_0" name="STATISTIC_TYPES_IN_GROUPS">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:55:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<userDefined>true</userDefined>
+<userDefinedSQL>SELECT STTIG.STTG_CODE,&lt;br/&gt;  STTIG.STCT_CODE,&lt;br/&gt;  STTIG.ITM_ID,&lt;br/&gt;  STTIG.VERSION_NBR&lt;br/&gt;FROM T_STATISTIC_TYPES_IN_GROUPS STTIG</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select STTIG.STTG_CODE, STTIG.STCT_CODE, STTIG.ITM_ID, STTIG.VERSION_NBR From T_STATISTIC_TYPES_IN_GROUPS STTIG&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select STTIG.STTG_CODE, STTIG.STCT_CODE, STTIG.ITM_ID, STTIG.VERSION_NBR From T_STATISTIC_TYPES_IN_GROUPS STTIG&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_STATISTIC_TYPES_IN_GROUPS STTIG&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;117&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<parsed>true</parsed>
+<usedContainers>
+<container alias="STTIG" containerID="7FD42201-B423-AA54-74ED-F3AD5A365E39"/>
+</usedContainers>
+<viewElements>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="STTG_CODE" id="40594E26-CDEC-6CC2-3686-49C3A9EC1D64">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:55:55 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (10)</dataType>
+<reference>false</reference>
+<referencedColumn>C1194BB7-98A5-E8A2-7BBF-23C7847AE0F9</referencedColumn>
+<table>7FD42201-B423-AA54-74ED-F3AD5A365E39</table>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="STCT_CODE" id="3C06376D-B0D7-5B3D-C2C0-FC3E05C6274C">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:55:55 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (10)</dataType>
+<reference>false</reference>
+<referencedColumn>86243398-ED02-CDE4-D949-C01F55A90CAD</referencedColumn>
+<table>7FD42201-B423-AA54-74ED-F3AD5A365E39</table>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ITM_ID" id="49BEC5A2-8E34-740D-9562-FBB1FD8F39E2">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:55:55 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>INTEGER</dataType>
+<reference>false</reference>
+<referencedColumn>760DFBC8-F834-612E-88E8-1A4B7B6DC057</referencedColumn>
+<table>7FD42201-B423-AA54-74ED-F3AD5A365E39</table>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="VERSION_NBR" id="D614B781-226D-231C-A3DA-DE15AE31E045">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:55:55 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>INTEGER</dataType>
+<reference>false</reference>
+<referencedColumn>9A02898F-ABD2-850B-7A66-1A696E585E05</referencedColumn>
+<table>7FD42201-B423-AA54-74ED-F3AD5A365E39</table>
+</viewElement>
+</viewElements>
+<usedObjects>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="7FD42201-B423-AA54-74ED-F3AD5A365E39">
+<container>true</container>
+<tableName>T_STATISTIC_TYPES_IN_GROUPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C1194BB7-98A5-E8A2-7BBF-23C7847AE0F9">
+<columnName>STTG_CODE</columnName>
+<tableName>T_STATISTIC_TYPES_IN_GROUPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="86243398-ED02-CDE4-D949-C01F55A90CAD">
+<columnName>STCT_CODE</columnName>
+<tableName>T_STATISTIC_TYPES_IN_GROUPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="760DFBC8-F834-612E-88E8-1A4B7B6DC057">
+<columnName>ITM_ID</columnName>
+<tableName>T_STATISTIC_TYPES_IN_GROUPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="9A02898F-ABD2-850B-7A66-1A696E585E05">
+<columnName>VERSION_NBR</columnName>
+<tableName>T_STATISTIC_TYPES_IN_GROUPS</tableName>
+</UsedObject>
+</usedObjects>
+</TableView>

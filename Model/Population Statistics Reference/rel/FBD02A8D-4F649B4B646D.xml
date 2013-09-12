@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<relationalModel class="oracle.dbtools.crest.model.design.relational.RelationalDesign" name="PSR" id="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" mainViewID="B783D507-A4F5-7337-BFA4-B20BC9A5B738">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-26 08:33:26 UTC</createdTime>
+<ownerDesignName>Master Population Statistics</ownerDesignName>
+<shouldBeOpen>true</shouldBeOpen>
+<selectedRDBMSSite>32076570-2523-435C-2E92-BF29817DFF70</selectedRDBMSSite>
+</relationalModel>

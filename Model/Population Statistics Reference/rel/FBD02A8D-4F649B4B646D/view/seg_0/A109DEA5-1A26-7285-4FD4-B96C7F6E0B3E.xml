@@ -1,0 +1,165 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableView class="oracle.dbtools.crest.model.design.relational.TableView" id="A109DEA5-1A26-7285-4FD4-B96C7F6E0B3E" directorySegmentName="seg_0" name="TEXT_TYPES">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-14 09:24:07 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<userDefined>true</userDefined>
+<userDefinedSQL>SELECT CODE,&lt;br/&gt;  DESCRIPTION,&lt;br/&gt;  LANG_CODE,&lt;br/&gt;  DISPLAY_SEQ,&lt;br/&gt;  ACTIVE_FLAG,&lt;br/&gt;  ITM_ID,&lt;br/&gt;  VERSION_NBR&lt;br/&gt;FROM&lt;br/&gt;  (SELECT TXTT.CODE,&lt;br/&gt;    TXT.TEXT DESCRIPTION,&lt;br/&gt;    TXT.LANG_CODE,&lt;br/&gt;    TXTT.DISPLAY_SEQ,&lt;br/&gt;    TXTT.ACTIVE_FLAG,&lt;br/&gt;    TXTT.ITM_ID,&lt;br/&gt;    TXTT.VERSION_NBR,&lt;br/&gt;    row_number() OVER (PARTITION BY TXTT.CODE ORDER BY LANG.ACTIVE_FLAG DESC, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK&lt;br/&gt;  FROM T_TEXT_TYPES TXTT&lt;br/&gt;  INNER JOIN T_TEXT_ITEMS TXT&lt;br/&gt;  ON TXT.ITM_ID     = TXTT.ITM_ID&lt;br/&gt;  AND TXT.TXTT_CODE = &apos;DESCR&apos;&lt;br/&gt;  AND TXT.SEQ_NBR   = 1&lt;br/&gt;  INNER JOIN T_LANGUAGES LANG&lt;br/&gt;  ON LANG.CODE = TXT.LANG_CODE&lt;br/&gt;  LEFT OUTER JOIN T_USER_LANGUAGE_PREFERENCES ULP&lt;br/&gt;  ON ULP.LANG_CODE = TXT.LANG_CODE&lt;br/&gt;  AND ULP.USERID   = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)&lt;br/&gt;  )&lt;br/&gt;WHERE RANK = 1</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select CODE, DESCRIPTION, LANG_CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID, VERSION_NBR From (Select TXTT.CODE, TXT.TEXT DESCRIPTION, TXT.LANG_CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.ITM_ID, TXTT.VERSION_NBR, row_number() Over (Partition By TXTT.CODE Order By LANG.ACTIVE_FLAG Desc, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK From T_TEXT_TYPES TXTT Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = TXTT.ITM_ID And TXT.TXTT_CODE = &apos;DESCR&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)) Where RANK = 1&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select CODE, DESCRIPTION, LANG_CODE, DISPLAY_SEQ, ACTIVE_FLAG, ITM_ID, VERSION_NBR From (Select TXTT.CODE, TXT.TEXT DESCRIPTION, TXT.LANG_CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.ITM_ID, TXTT.VERSION_NBR, row_number() Over (Partition By TXTT.CODE Order By LANG.ACTIVE_FLAG Desc, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK From T_TEXT_TYPES TXTT Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = TXTT.ITM_ID And TXT.TXTT_CODE = &apos;DESCR&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)) Where RANK = 1&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;(Select TXTT.CODE, TXT.TEXT DESCRIPTION, TXT.LANG_CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.ITM_ID, TXTT.VERSION_NBR, row_number() Over (Partition By TXTT.CODE Order By LANG.ACTIVE_FLAG Desc, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK From T_TEXT_TYPES TXTT Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = TXTT.ITM_ID And TXT.TXTT_CODE = &apos;DESCR&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;))&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;189&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select TXTT.CODE, TXT.TEXT DESCRIPTION, TXT.LANG_CODE, TXTT.DISPLAY_SEQ, TXTT.ACTIVE_FLAG, TXTT.ITM_ID, TXTT.VERSION_NBR, row_number() Over (Partition By TXTT.CODE Order By LANG.ACTIVE_FLAG Desc, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK From T_TEXT_TYPES TXTT Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = TXTT.ITM_ID And TXT.TXTT_CODE = &apos;DESCR&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_TEXT_TYPES TXTT&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;135&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_TEXT_ITEMS TXT&quot; X=&quot;240&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_LANGUAGES LANG&quot; X=&quot;430&quot; Y=&quot;20&quot; Height=&quot;135&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_USER_LANGUAGE_PREFERENCES ULP&quot; X=&quot;620&quot; Y=&quot;20&quot; Height=&quot;153&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<parsed>true</parsed>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+</fonts>
+<viewElements>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="CODE" id="E944314E-CC60-EF88-118F-70D427C86350">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-14 09:26:16 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="DESCRIPTION" id="F69066F6-ABC2-C777-5D98-6702ECF791AD">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-14 09:26:16 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>DESCRIPTION</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LANG_CODE" id="2436C2D6-6884-628F-1369-FD8592FB9C73">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-14 09:26:16 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>LANG_CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="DISPLAY_SEQ" id="86490110-0384-BD7F-9B95-21FE4D095CF7">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-14 09:26:16 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>DISPLAY_SEQ</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ACTIVE_FLAG" id="96B0B123-7C25-5D99-F9F9-4B51D4FB6C5C">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-14 09:26:16 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>ACTIVE_FLAG</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ITM_ID" id="5083214B-B0F6-0EB1-F56C-E96187D61924">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 11:09:07 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>ITM_ID</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="VERSION_NBR" id="FAA4A320-3202-CDD1-78D0-ABB09B72D669">
+<createdBy>Scott</createdBy>
+<createdTime>2012-03-08 11:19:11 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>VERSION_NBR</expression>
+<reference>false</reference>
+</viewElement>
+</viewElements>
+<usedObjects>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="84D84F75-566E-940B-0BAF-5D632441BD7A">
+<container>true</container>
+<tableName>T_TEXT_TYPES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C6EF9F7D-47DE-E234-EDC3-DE29E06A570D">
+<container>true</container>
+<tableName>T_TEXT_ITEMS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="92A106D1-8714-73C2-6136-6CE5D0EBB7D5">
+<container>true</container>
+<tableName>T_LANGUAGES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="E1BE2C4F-E65C-0B9B-3DA1-8AC96ADACB14">
+<container>true</container>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="3E525A08-9A02-A435-0594-8D60BABD9DB4">
+<columnName>CODE</columnName>
+<tableName>T_TEXT_TYPES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="AB45B7A8-6535-BB9C-ADAB-8DAD4FB538C8">
+<columnName>TEXT</columnName>
+<tableName>T_TEXT_ITEMS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="B5DA6C77-B602-95BE-01F7-6D6D96B396DE">
+<columnName>LANG_CODE</columnName>
+<tableName>T_TEXT_ITEMS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="94F7B520-58D9-A903-7D38-2E8B198586BB">
+<columnName>DISPLAY_SEQ</columnName>
+<tableName>T_TEXT_TYPES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="747FE07B-0DC1-7E28-D7A5-EB49065AFA07">
+<columnName>ACTIVE_FLAG</columnName>
+<tableName>T_TEXT_TYPES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C55262C2-7DB4-4345-DA84-350BC072631C">
+<columnName>ITM_ID</columnName>
+<tableName>T_TEXT_TYPES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="58DB7DC1-0BED-3195-5475-3503CEAE2E09">
+<columnName>VERSION_NBR</columnName>
+<tableName>T_TEXT_TYPES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="B200B4BA-A37C-8B70-CE3A-C874D115E603">
+<columnName>ACTIVE_FLAG</columnName>
+<tableName>T_LANGUAGES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="5D602486-5911-41A2-6928-E808C796104C">
+<columnName>PREF_SEQ</columnName>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="7FEA94C8-B60A-1E4A-8275-3EF81EB341A1">
+<columnName>DISPLAY_SEQ</columnName>
+<tableName>T_LANGUAGES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="51D3FAE8-03BC-CA88-2E1C-F13FA7B605C3">
+<columnName>ITM_ID</columnName>
+<tableName>T_TEXT_ITEMS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="62976973-9CB7-22BF-8254-C402BE09D18B">
+<columnName>TXTT_CODE</columnName>
+<tableName>T_TEXT_ITEMS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C17D7429-4995-4DCF-7552-3DB5FE1408E1">
+<columnName>SEQ_NBR</columnName>
+<tableName>T_TEXT_ITEMS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="A16EEFAB-1230-4A27-2F9C-6AF0DCC10F03">
+<columnName>CODE</columnName>
+<tableName>T_LANGUAGES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="3FEE7FAE-C375-7441-91AA-E5D62A3A7883">
+<columnName>LANG_CODE</columnName>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="05C90251-8F54-4954-A7AB-C3134EB08068">
+<columnName>USERID</columnName>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+</usedObjects>
+</TableView>

@@ -1,0 +1,141 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableView class="oracle.dbtools.crest.model.design.relational.TableView" id="07B9D6AF-971B-12D8-2E16-CCA623693D1A" directorySegmentName="seg_0" name="USER_ATTRIBUTES">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:46:53 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<userDefined>true</userDefined>
+<userDefinedSQL>SELECT UAT.USERID,&lt;br/&gt;  UAT.UATT_CODE,&lt;br/&gt;  UAT.CHAR_VALUE,&lt;br/&gt;  UAT.NUM_VALUE,&lt;br/&gt;  UAT.DATE_VALUE,&lt;br/&gt;  UAT.ITM_ID,&lt;br/&gt;  UAT.VERSION_NBR&lt;br/&gt;FROM T_USER_ATTRIBUTES UAT</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select UAT.USERID, UAT.UATT_CODE, UAT.CHAR_VALUE, UAT.NUM_VALUE, UAT.DATE_VALUE, UAT.ITM_ID, UAT.VERSION_NBR From T_USER_ATTRIBUTES UAT&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select UAT.USERID, UAT.UATT_CODE, UAT.CHAR_VALUE, UAT.NUM_VALUE, UAT.DATE_VALUE, UAT.ITM_ID, UAT.VERSION_NBR From T_USER_ATTRIBUTES UAT&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_USER_ATTRIBUTES UAT&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<parsed>true</parsed>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+</fonts>
+<usedContainers>
+<container alias="UAT" containerID="998463B9-03FD-779D-83D7-E85880603FCF"/>
+</usedContainers>
+<viewElements>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="USERID" id="9FA9AEA0-C129-63E3-60AB-FA08B3EEB979">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:47:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (30)</dataType>
+<reference>false</reference>
+<referencedColumn>C1575267-EF95-75F5-5235-541CD5089335</referencedColumn>
+<table>998463B9-03FD-779D-83D7-E85880603FCF</table>
+<tableAlias>UAT</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="UATT_CODE" id="09776A05-A84B-4CF5-14A7-4745D45FE927">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:47:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (10)</dataType>
+<reference>false</reference>
+<referencedColumn>5754F68F-85FF-3CBB-4997-8D237A4FA48B</referencedColumn>
+<table>998463B9-03FD-779D-83D7-E85880603FCF</table>
+<tableAlias>UAT</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="CHAR_VALUE" id="0566A345-A57C-D8B3-4AEF-3821BC1DE78B">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:47:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (1000)</dataType>
+<reference>false</reference>
+<referencedColumn>C06A9944-62CB-4F06-448B-52FE868C3C7D</referencedColumn>
+<table>998463B9-03FD-779D-83D7-E85880603FCF</table>
+<tableAlias>UAT</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="NUM_VALUE" id="975BC587-B8BA-18F8-82D2-B848792E8DEF">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:47:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>NUMBER</dataType>
+<reference>false</reference>
+<referencedColumn>885CC14A-348E-6EA2-0B2E-6859C47AAF60</referencedColumn>
+<table>998463B9-03FD-779D-83D7-E85880603FCF</table>
+<tableAlias>UAT</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="DATE_VALUE" id="024969F4-FA57-B846-8400-4CE16390A0E5">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:47:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>DATE</dataType>
+<reference>false</reference>
+<referencedColumn>0D3993A9-28AB-3512-BDF7-E8C90F4EC52C</referencedColumn>
+<table>998463B9-03FD-779D-83D7-E85880603FCF</table>
+<tableAlias>UAT</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ITM_ID" id="591F4474-E134-CAFE-DA90-B4E22FA8132A">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:47:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>INTEGER</dataType>
+<reference>false</reference>
+<referencedColumn>512F26CE-05AC-2305-5375-5322DEDCD5DD</referencedColumn>
+<table>998463B9-03FD-779D-83D7-E85880603FCF</table>
+<tableAlias>UAT</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="VERSION_NBR" id="BDFFF4B4-5DA2-75C0-C2F7-2BC13053127A">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:47:19 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>INTEGER</dataType>
+<reference>false</reference>
+<referencedColumn>ED9B2407-EEC1-333B-F629-4D27D583F0A0</referencedColumn>
+<table>998463B9-03FD-779D-83D7-E85880603FCF</table>
+<tableAlias>UAT</tableAlias>
+</viewElement>
+</viewElements>
+<usedObjects>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="998463B9-03FD-779D-83D7-E85880603FCF">
+<container>true</container>
+<tableName>T_USER_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C1575267-EF95-75F5-5235-541CD5089335">
+<columnName>USERID</columnName>
+<tableName>T_USER_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="5754F68F-85FF-3CBB-4997-8D237A4FA48B">
+<columnName>UATT_CODE</columnName>
+<tableName>T_USER_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C06A9944-62CB-4F06-448B-52FE868C3C7D">
+<columnName>CHAR_VALUE</columnName>
+<tableName>T_USER_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="885CC14A-348E-6EA2-0B2E-6859C47AAF60">
+<columnName>NUM_VALUE</columnName>
+<tableName>T_USER_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="0D3993A9-28AB-3512-BDF7-E8C90F4EC52C">
+<columnName>DATE_VALUE</columnName>
+<tableName>T_USER_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="512F26CE-05AC-2305-5375-5322DEDCD5DD">
+<columnName>ITM_ID</columnName>
+<tableName>T_USER_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="ED9B2407-EEC1-333B-F629-4D27D583F0A0">
+<columnName>VERSION_NBR</columnName>
+<tableName>T_USER_ATTRIBUTES</tableName>
+</UsedObject>
+</usedObjects>
+</TableView>

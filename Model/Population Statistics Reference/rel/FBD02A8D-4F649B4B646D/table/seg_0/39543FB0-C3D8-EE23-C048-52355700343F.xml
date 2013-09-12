@@ -1,0 +1,63 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="39543FB0-C3D8-EE23-C048-52355700343F" directorySegmentName="seg_0" name="T_DATA_ITEMS">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 09:27:28 UTC</createdTime>
+<comment>General data items</comment>
+<notes>This table contains a row for every row in any other table which has an non-null ITM_ID column. It is the means by which text items are associated with data rows throughout the system and also provides a locus by which other extended data may be associated with data rows, including data item permissions, data item sources, and potentially other arbitrary data (images, rich documents, etc.). The primary key of this table is referenced by foreign keys (ITM_ID) in many other tables, and these foreign keys themselves are unique keys in their tables, thus enforcing a one-to-one relationship between T_DATA_ITEMS and each of the referencing tables. The TAB_ALIAS column provides an efficient means of tracing a general data item back to its associated table.</notes>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<abbreviation>ITM</abbreviation>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ID" id="2A6FD6C7-5546-B8AB-418B-2F3780605451">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 09:29:15 UTC</createdTime>
+<comment>General data item identifier</comment>
+<notes>Auto-generated from sequence ITM_SEQ</notes>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_ITM_ID</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<autoIncrementColumn>true</autoIncrementColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementOrder>false</autoIncrementOrder>
+<autoIncrementSequenceName>ITM_SEQ</autoIncrementSequenceName>
+<autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="TAB_ALIAS" id="5F82B63A-1B84-98A2-A242-70F24087DEC5">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 09:36:46 UTC</createdTime>
+<comment>Alias of associated table</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<delegate>975D9BA4-3CC1-7CF8-60DB-0A57EBEEA04C</delegate>
+<associations>
+<colAssociation fkAssociation="01B5A409-1881-8E5C-C9E5-35670E0B5BA0" referredColumn="975D9BA4-3CC1-7CF8-60DB-0A57EBEEA04C"/>
+</associations>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="FC8521CF-3C83-6C2E-9A7D-7B2B9B0A5C7E" name="PK_ITM">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 09:30:45 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="D80571CA-0D9A-4324-6F76-9E71C8E3BAF0" name="FK_ITM_TAB">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 10:06:06 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="5F82B63A-1B84-98A2-A242-70F24087DEC5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

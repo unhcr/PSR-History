@@ -1,0 +1,114 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="58FCD3B8-488C-A722-6EFD-5787865FE5E6" directorySegmentName="seg_0" name="T_DATA_ITEM_SOURCES">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-09 07:39:31 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pkName>PK_DIS</pkName>
+<abbreviation>DIS</abbreviation>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>PK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>FK Element</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>UK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Not Null</foType>
+<colorRGB>-65536</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Key</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+</fonts>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="2870898B-B85D-0508-AB38-A1FAC1648D31">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-09 07:40:30 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
+<delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="CB705C64-AB6C-1CD1-B18B-F088C9AAD92A" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="SOU_ID" id="A2043BCD-1BCB-14AD-BC36-2CEDEE9936A4">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-09 07:40:30 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
+<delegate>2E95CA22-9C1A-2F02-EEE2-6A87EC833266</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="3E0600FF-515C-7B4B-3752-B367AB8EC320" referredColumn="2E95CA22-9C1A-2F02-EEE2-6A87EC833266"/>
+</associations>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="448670D9-532D-184C-2411-F3FF1A4C268E" name="PK_DIS">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-09 07:40:30 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="2870898B-B85D-0508-AB38-A1FAC1648D31"/>
+<colUsage columnID="A2043BCD-1BCB-14AD-BC36-2CEDEE9936A4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="F1396DF7-6DF2-0156-90BF-F5FE8905D654" name="UK_DIS">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-09 07:40:42 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="A2043BCD-1BCB-14AD-BC36-2CEDEE9936A4"/>
+<colUsage columnID="2870898B-B85D-0508-AB38-A1FAC1648D31"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="E21EBC01-702E-7DF1-DCCD-7F1F0CC97E10" name="FK_DIS_ITM">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-09 07:41:04 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="2870898B-B85D-0508-AB38-A1FAC1648D31"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="F01C6532-3F75-DF71-D874-7D40C7F73AF0" name="FK_DIS_SOU">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-09 07:41:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="A2043BCD-1BCB-14AD-BC36-2CEDEE9936A4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

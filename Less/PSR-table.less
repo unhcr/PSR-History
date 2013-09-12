@@ -1,0 +1,136 @@
+// ======
+// Tables
+// ======
+
+@CellHorizontalPadding:     3px;
+@CellVerticalPadding:       3px;
+@TableBackground:           lighten(@BaseColour, 43%);
+@TableBackgroundAccent:     darken(@TableBackground, 5%);
+@TableBorder:               1px solid #aaa;  // Border around whole table
+@RowBorderMajor:            1px solid #aaa;  // Border between row sections (thead / tbody / tfoot)
+@RowBorderMinor:            1px solid #ddd;  // General border between rows
+@ColumnBorder:              1px solid #aaa;  // Vertical column divider border
+@InputBorder:               1px solid #ccc;  // Border around input fields
+@InputBorderRadius:         3px;
+@InputDisabledBackground:   #ddd;
+@InputFocusColour:          blue;
+
+table.standard-table {
+  width: 100%;
+  background-color: @TableBackground;
+  border: @TableBorder;
+  // table-layout: fixed;
+
+  &.narrow {
+    width: 70%;
+    margin: 0 auto;
+  }
+
+  th, td {
+    padding: @CellVerticalPadding @CellHorizontalPadding;
+    vertical-align: middle;
+  }
+  // th elements in thead sections should be centred
+  // th elements in tbody and tfoot sections should be right-aligned (left-aligned in RTL
+  //  context)
+  thead > tr > th {
+    text-align: center;
+  }
+  tbody, tfoot {
+    &> tr {
+      &> th {
+        text-align: right;
+      }
+      [dir="rtl"] &> th {
+        text-align: left;
+      }
+    }
+  }
+
+  // Horizontal dividers
+  th, td {
+    border-top: @RowBorderMinor;
+  }
+  // Constrasting border at top of tfoot and each tbody
+  tbody, tfoot {
+    tr:first-child {
+      th, td {
+        border-top: @RowBorderMajor;
+      }
+    }
+  }
+  // No cell border on first row of table, whether thead exists or not
+  caption, colgroup {
+    &+ thead, &+ tbody {
+      tr:first-child {
+        th, td {
+          border-top: 0;
+        }
+      }
+    }
+  }
+  thead:first-child, tbody:first-child {
+    tr:first-child {
+      th, td {
+        border-top: 0;
+      }
+    }
+  }
+
+  // Vertical dividers
+  td, th {
+    border-left: @ColumnBorder;
+
+    &:first-child {
+      border-left: none;
+    }
+
+    [dir="rtl"] & {
+      border-left: none;
+      border-right: @ColumnBorder;
+    }
+
+    [dir="rtl"] &:first-child {
+      border-right: none;
+    }
+  }
+
+  td.sub-table {
+    padding: 0 5px 5px;
+  }
+
+  .sub-table table {
+    margin-top: 5px;
+    background-color: @TableBackgroundAccent;
+  }
+
+  // Suppress vertical dividers (allowing specific divider styling for individual columns)
+  .no-vertical-dividers {
+    td, th {
+      border-left: none;
+      border-right: none;
+    }
+  }
+
+  // Force vertical dividers (useful in cases, particularly involving rowspans, where column borders
+  //  are erroneously suppressed)
+  td, th {
+    &.force-vertical-dividers {
+      border-left: @ColumnBorder !important;
+      border-right: @ColumnBorder !important;
+    }
+  }
+}
+
+table.framework-table > tbody > tr > td {
+  padding-top: 10px;
+}
+table.framework-table > tbody > tr:first-child > td {
+  padding-top: 0;
+}
+
+caption {
+  padding: 12px 0 5px;
+  font-size: 13px;
+  font-weight: bold;
+}

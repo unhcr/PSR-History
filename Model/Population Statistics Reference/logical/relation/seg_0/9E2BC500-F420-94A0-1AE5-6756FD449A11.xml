@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Age Range" id="9E2BC500-F420-94A0-1AE5-6756FD449A11" directorySegmentName="seg_0">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-18 14:36:26 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>3343CBAC-2CA6-2A37-8B10-1A3E55032850</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>4322327C-468C-22CC-2C1F-D48612BD13EC</targetEntity>
+<transferable>true</transferable>
+</Relation>

@@ -1,0 +1,162 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableView class="oracle.dbtools.crest.model.design.relational.TableView" id="5F00108B-1459-6FB1-CA1B-B84C239F71AB" directorySegmentName="seg_0" name="FOCUS_STATISTICS">
+<createdBy>Scott</createdBy>
+<createdTime>2013-03-25 10:59:05 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<userDefined>true</userDefined>
+<userDefinedSQL>SELECT STATSYEAR,&lt;br/&gt;  ASYLUM_COUNTRY_CODE,&lt;br/&gt;  MSRP_SITE_CODE,&lt;br/&gt;  PSR_LOCATION_CODE,&lt;br/&gt;  DISPLACEMENT_STATUS,&lt;br/&gt;  ORIGIN_CODE,&lt;br/&gt;  PPG_CODE,&lt;br/&gt;  SEX_CODE,&lt;br/&gt;  AGE_FROM,&lt;br/&gt;  AGE_TO,&lt;br/&gt;  VALUE&lt;br/&gt;FROM&lt;br/&gt;  (SELECT Extract(YEAR FROM STC.START_DATE) AS STATSYEAR,&lt;br/&gt;    LOCA1.CHAR_VALUE                        AS ASYLUM_COUNTRY_CODE,&lt;br/&gt;    LOCA2.CHAR_VALUE                        AS MSRP_SITE_CODE,&lt;br/&gt;    STC.LOC_ID_ASYLUM                       AS PSR_LOCATION_CODE,&lt;br/&gt;    DST.CODE                                AS DISPLACEMENT_STATUS,&lt;br/&gt;    LOCA3.CHAR_VALUE                        AS ORIGIN_CODE,&lt;br/&gt;    PPG.PPG_CODE,&lt;br/&gt;    STC.SEX_CODE,&lt;br/&gt;    AGR.AGE_FROM,&lt;br/&gt;    AGR.AGE_TO,&lt;br/&gt;    STC.VALUE&lt;br/&gt;  FROM&lt;br/&gt;    (SELECT T_STATISTICS.START_DATE,&lt;br/&gt;      T_STATISTICS.DST_ID,&lt;br/&gt;      T_STATISTICS.LOC_ID_ASYLUM_COUNTRY,&lt;br/&gt;      T_STATISTICS.LOC_ID_ASYLUM,&lt;br/&gt;      T_STATISTICS.LOC_ID_ORIGIN_COUNTRY,&lt;br/&gt;      T_STATISTICS.PPG_ID,&lt;br/&gt;      T_STATISTICS.SEX_CODE,&lt;br/&gt;      T_STATISTICS.AGR_ID,&lt;br/&gt;      SUM(T_STATISTICS.VALUE) AS VALUE&lt;br/&gt;    FROM T_STATISTICS&lt;br/&gt;    WHERE T_STATISTICS.STCT_CODE IN&lt;br/&gt;      (SELECT T_STATISTIC_TYPES_IN_GROUPS.STCT_CODE&lt;br/&gt;      FROM T_STATISTIC_TYPES_IN_GROUPS&lt;br/&gt;      WHERE T_STATISTIC_TYPES_IN_GROUPS.STTG_CODE = &apos;DEMOGR&apos;&lt;br/&gt;      )&lt;br/&gt;    GROUP BY T_STATISTICS.START_DATE,&lt;br/&gt;      T_STATISTICS.DST_ID,&lt;br/&gt;      T_STATISTICS.LOC_ID_ASYLUM_COUNTRY,&lt;br/&gt;      T_STATISTICS.LOC_ID_ASYLUM,&lt;br/&gt;      T_STATISTICS.LOC_ID_ORIGIN_COUNTRY,&lt;br/&gt;      T_STATISTICS.PPG_ID,&lt;br/&gt;      T_STATISTICS.SEX_CODE,&lt;br/&gt;      T_STATISTICS.AGR_ID&lt;br/&gt;    ) STC&lt;br/&gt;  INNER JOIN T_LOCATION_ATTRIBUTES LOCA1&lt;br/&gt;  ON LOCA1.LOC_ID      = STC.LOC_ID_ASYLUM_COUNTRY&lt;br/&gt;  AND LOCA1.LOCAT_CODE = &apos;ISO3166A3&apos;&lt;br/&gt;  LEFT OUTER JOIN T_LOCATION_ATTRIBUTES LOCA2&lt;br/&gt;  ON LOCA2.LOC_ID      = STC.LOC_ID_ASYLUM&lt;br/&gt;  AND LOCA2.LOCAT_CODE = &apos;MSRPLOC&apos;&lt;br/&gt;  INNER JOIN T_DISPLACEMENT_STATUSES DST&lt;br/&gt;  ON DST.ID = STC.DST_ID&lt;br/&gt;  LEFT OUTER JOIN T_LOCATION_ATTRIBUTES LOCA3&lt;br/&gt;  ON LOCA3.LOC_ID      = STC.LOC_ID_ORIGIN_COUNTRY&lt;br/&gt;  AND LOCA3.LOCAT_CODE = &apos;ISO3166A3&apos;&lt;br/&gt;  LEFT OUTER JOIN T_POPULATION_PLANNING_GROUPS PPG&lt;br/&gt;  ON PPG.ID = STC.PPG_ID&lt;br/&gt;  LEFT OUTER JOIN T_AGE_RANGES AGR&lt;br/&gt;  ON AGR.ID = STC.AGR_ID&lt;br/&gt;  )</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select STATSYEAR, ASYLUM_COUNTRY_CODE, MSRP_SITE_CODE, PSR_LOCATION_CODE, DISPLACEMENT_STATUS, ORIGIN_CODE, PPG_CODE, SEX_CODE, AGE_FROM, AGE_TO, VALUE From (Select Extract(Year From STC.START_DATE) As STATSYEAR, LOCA1.CHAR_VALUE As ASYLUM_COUNTRY_CODE, LOCA2.CHAR_VALUE As MSRP_SITE_CODE, STC.LOC_ID_ASYLUM As PSR_LOCATION_CODE, DST.CODE As DISPLACEMENT_STATUS, LOCA3.CHAR_VALUE As ORIGIN_CODE, PPG.PPG_CODE, STC.SEX_CODE, AGR.AGE_FROM, AGR.AGE_TO, STC.VALUE From (Select T_STATISTICS.START_DATE, T_STATISTICS.DST_ID, T_STATISTICS.LOC_ID_ASYLUM_COUNTRY, T_STATISTICS.LOC_ID_ASYLUM, T_STATISTICS.LOC_ID_ORIGIN_COUNTRY, T_STATISTICS.PPG_ID, T_STATISTICS.SEX_CODE, T_STATISTICS.AGR_ID, Sum(T_STATISTICS.VALUE) As VALUE From T_STATISTICS Where T_STATISTICS.STCT_CODE In (Select T_STATISTIC_TYPES_IN_GROUPS.STCT_CODE From T_STATISTIC_TYPES_IN_GROUPS Where T_STATISTIC_TYPES_IN_GROUPS.STTG_CODE = &apos;DEMOGR&apos;) Group By T_STATISTICS.START_DATE, T_STATISTICS.DST_ID, T_STATISTICS.LOC_ID_ASYLUM_COUNTRY, T_STATISTICS.LOC_ID_ASYLUM, T_STATISTICS.LOC_ID_ORIGIN_COUNTRY, T_STATISTICS.PPG_ID, T_STATISTICS.SEX_CODE, T_STATISTICS.AGR_ID) STC Inner Join T_LOCATION_ATTRIBUTES LOCA1 On LOCA1.LOC_ID = STC.LOC_ID_ASYLUM_COUNTRY And LOCA1.LOCAT_CODE = &apos;ISO3166A3&apos; Left Outer Join T_LOCATION_ATTRIBUTES LOCA2 On LOCA2.LOC_ID = STC.LOC_ID_ASYLUM And LOCA2.LOCAT_CODE = &apos;MSRPLOC&apos; Inner Join T_DISPLACEMENT_STATUSES DST On DST.ID = STC.DST_ID Left Outer Join T_LOCATION_ATTRIBUTES LOCA3 On LOCA3.LOC_ID = STC.LOC_ID_ORIGIN_COUNTRY And LOCA3.LOCAT_CODE = &apos;ISO3166A3&apos; Left Outer Join T_POPULATION_PLANNING_GROUPS PPG On PPG.ID = STC.PPG_ID Left Outer Join T_AGE_RANGES AGR On AGR.ID = STC.AGR_ID)&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select STATSYEAR, ASYLUM_COUNTRY_CODE, MSRP_SITE_CODE, PSR_LOCATION_CODE, DISPLACEMENT_STATUS, ORIGIN_CODE, PPG_CODE, SEX_CODE, AGE_FROM, AGE_TO, VALUE From (Select Extract(Year From STC.START_DATE) As STATSYEAR, LOCA1.CHAR_VALUE As ASYLUM_COUNTRY_CODE, LOCA2.CHAR_VALUE As MSRP_SITE_CODE, STC.LOC_ID_ASYLUM As PSR_LOCATION_CODE, DST.CODE As DISPLACEMENT_STATUS, LOCA3.CHAR_VALUE As ORIGIN_CODE, PPG.PPG_CODE, STC.SEX_CODE, AGR.AGE_FROM, AGR.AGE_TO, STC.VALUE From (Select T_STATISTICS.START_DATE, T_STATISTICS.DST_ID, T_STATISTICS.LOC_ID_ASYLUM_COUNTRY, T_STATISTICS.LOC_ID_ASYLUM, T_STATISTICS.LOC_ID_ORIGIN_COUNTRY, T_STATISTICS.PPG_ID, T_STATISTICS.SEX_CODE, T_STATISTICS.AGR_ID, Sum(T_STATISTICS.VALUE) As VALUE From T_STATISTICS Where T_STATISTICS.STCT_CODE In (Select T_STATISTIC_TYPES_IN_GROUPS.STCT_CODE From T_STATISTIC_TYPES_IN_GROUPS Where T_STATISTIC_TYPES_IN_GROUPS.STTG_CODE = &apos;DEMOGR&apos;) Group By T_STATISTICS.START_DATE, T_STATISTICS.DST_ID, T_STATISTICS.LOC_ID_ASYLUM_COUNTRY, T_STATISTICS.LOC_ID_ASYLUM, T_STATISTICS.LOC_ID_ORIGIN_COUNTRY, T_STATISTICS.PPG_ID, T_STATISTICS.SEX_CODE, T_STATISTICS.AGR_ID) STC Inner Join T_LOCATION_ATTRIBUTES LOCA1 On LOCA1.LOC_ID = STC.LOC_ID_ASYLUM_COUNTRY And LOCA1.LOCAT_CODE = &apos;ISO3166A3&apos; Left Outer Join T_LOCATION_ATTRIBUTES LOCA2 On LOCA2.LOC_ID = STC.LOC_ID_ASYLUM And LOCA2.LOCAT_CODE = &apos;MSRPLOC&apos; Inner Join T_DISPLACEMENT_STATUSES DST On DST.ID = STC.DST_ID Left Outer Join T_LOCATION_ATTRIBUTES LOCA3 On LOCA3.LOC_ID = STC.LOC_ID_ORIGIN_COUNTRY And LOCA3.LOCAT_CODE = &apos;ISO3166A3&apos; Left Outer Join T_POPULATION_PLANNING_GROUPS PPG On PPG.ID = STC.PPG_ID Left Outer Join T_AGE_RANGES AGR On AGR.ID = STC.AGR_ID)&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;(Select Extract(Year From STC.START_DATE) As STATSYEAR, LOCA1.CHAR_VALUE As ASYLUM_COUNTRY_CODE, LOCA2.CHAR_VALUE As MSRP_SITE_CODE, STC.LOC_ID_ASYLUM As PSR_LOCATION_CODE, DST.CODE As DISPLACEMENT_STATUS, LOCA3.CHAR_VALUE As ORIGIN_CODE, PPG.PPG_CODE, STC.SEX_CODE, AGR.AGE_FROM, AGR.AGE_TO, STC.VALUE From (Select T_STATISTICS.START_DATE, T_STATISTICS.DST_ID, T_STATISTICS.LOC_ID_ASYLUM_COUNTRY, T_STATISTICS.LOC_ID_ASYLUM, T_STATISTICS.LOC_ID_ORIGIN_COUNTRY, T_STATISTICS.PPG_ID, T_STATISTICS.SEX_CODE, T_STATISTICS.AGR_ID, Sum(T_STATISTICS.VALUE) As VALUE From T_STATISTICS Where T_STATISTICS.STCT_CODE In (Select T_STATISTIC_TYPES_IN_GROUPS.STCT_CODE From T_STATISTIC_TYPES_IN_GROUPS Where T_STATISTIC_TYPES_IN_GROUPS.STTG_CODE = &apos;DEMOGR&apos;) Group By T_STATISTICS.START_DATE, T_STATISTICS.DST_ID, T_STATISTICS.LOC_ID_ASYLUM_COUNTRY, T_STATISTICS.LOC_ID_ASYLUM, T_STATISTICS.LOC_ID_ORIGIN_COUNTRY, T_STATISTICS.PPG_ID, T_STATISTICS.SEX_CODE, T_STATISTICS.AGR_ID) STC Inner Join T_LOCATION_ATTRIBUTES LOCA1 On LOCA1.LOC_ID = STC.LOC_ID_ASYLUM_COUNTRY And LOCA1.LOCAT_CODE = &apos;ISO3166A3&apos; Left Outer Join T_LOCATION_ATTRIBUTES LOCA2 On LOCA2.LOC_ID = STC.LOC_ID_ASYLUM And LOCA2.LOCAT_CODE = &apos;MSRPLOC&apos; Inner Join T_DISPLACEMENT_STATUSES DST On DST.ID = STC.DST_ID Left Outer Join T_LOCATION_ATTRIBUTES LOCA3 On LOCA3.LOC_ID = STC.LOC_ID_ORIGIN_COUNTRY And LOCA3.LOCAT_CODE = &apos;ISO3166A3&apos; Left Outer Join T_POPULATION_PLANNING_GROUPS PPG On PPG.ID = STC.PPG_ID Left Outer Join T_AGE_RANGES AGR On AGR.ID = STC.AGR_ID)&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;243&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select Extract(Year From STC.START_DATE) As STATSYEAR, LOCA1.CHAR_VALUE As ASYLUM_COUNTRY_CODE, LOCA2.CHAR_VALUE As MSRP_SITE_CODE, STC.LOC_ID_ASYLUM As PSR_LOCATION_CODE, DST.CODE As DISPLACEMENT_STATUS, LOCA3.CHAR_VALUE As ORIGIN_CODE, PPG.PPG_CODE, STC.SEX_CODE, AGR.AGE_FROM, AGR.AGE_TO, STC.VALUE From (Select T_STATISTICS.START_DATE, T_STATISTICS.DST_ID, T_STATISTICS.LOC_ID_ASYLUM_COUNTRY, T_STATISTICS.LOC_ID_ASYLUM, T_STATISTICS.LOC_ID_ORIGIN_COUNTRY, T_STATISTICS.PPG_ID, T_STATISTICS.SEX_CODE, T_STATISTICS.AGR_ID, Sum(T_STATISTICS.VALUE) As VALUE From T_STATISTICS Where T_STATISTICS.STCT_CODE In (Select T_STATISTIC_TYPES_IN_GROUPS.STCT_CODE From T_STATISTIC_TYPES_IN_GROUPS Where T_STATISTIC_TYPES_IN_GROUPS.STTG_CODE = &apos;DEMOGR&apos;) Group By T_STATISTICS.START_DATE, T_STATISTICS.DST_ID, T_STATISTICS.LOC_ID_ASYLUM_COUNTRY, T_STATISTICS.LOC_ID_ASYLUM, T_STATISTICS.LOC_ID_ORIGIN_COUNTRY, T_STATISTICS.PPG_ID, T_STATISTICS.SEX_CODE, T_STATISTICS.AGR_ID) STC Inner Join T_LOCATION_ATTRIBUTES LOCA1 On LOCA1.LOC_ID = STC.LOC_ID_ASYLUM_COUNTRY And LOCA1.LOCAT_CODE = &apos;ISO3166A3&apos; Left Outer Join T_LOCATION_ATTRIBUTES LOCA2 On LOCA2.LOC_ID = STC.LOC_ID_ASYLUM And LOCA2.LOCAT_CODE = &apos;MSRPLOC&apos; Inner Join T_DISPLACEMENT_STATUSES DST On DST.ID = STC.DST_ID Left Outer Join T_LOCATION_ATTRIBUTES LOCA3 On LOCA3.LOC_ID = STC.LOC_ID_ORIGIN_COUNTRY And LOCA3.LOCAT_CODE = &apos;ISO3166A3&apos; Left Outer Join T_POPULATION_PLANNING_GROUPS PPG On PPG.ID = STC.PPG_ID Left Outer Join T_AGE_RANGES AGR On AGR.ID = STC.AGR_ID&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;(Select T_STATISTICS.START_DATE, T_STATISTICS.DST_ID, T_STATISTICS.LOC_ID_ASYLUM_COUNTRY, T_STATISTICS.LOC_ID_ASYLUM, T_STATISTICS.LOC_ID_ORIGIN_COUNTRY, T_STATISTICS.PPG_ID, T_STATISTICS.SEX_CODE, T_STATISTICS.AGR_ID, Sum(T_STATISTICS.VALUE) As VALUE From T_STATISTICS Where T_STATISTICS.STCT_CODE In (Select T_STATISTIC_TYPES_IN_GROUPS.STCT_CODE From T_STATISTIC_TYPES_IN_GROUPS Where T_STATISTIC_TYPES_IN_GROUPS.STTG_CODE = &apos;DEMOGR&apos;) Group By T_STATISTICS.START_DATE, T_STATISTICS.DST_ID, T_STATISTICS.LOC_ID_ASYLUM_COUNTRY, T_STATISTICS.LOC_ID_ASYLUM, T_STATISTICS.LOC_ID_ORIGIN_COUNTRY, T_STATISTICS.PPG_ID, T_STATISTICS.SEX_CODE, T_STATISTICS.AGR_ID) STC&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_LOCATION_ATTRIBUTES LOCA1&quot; X=&quot;240&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_LOCATION_ATTRIBUTES LOCA2&quot; X=&quot;50&quot; Y=&quot;85&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_DISPLACEMENT_STATUSES DST&quot; X=&quot;240&quot; Y=&quot;247&quot; Height=&quot;189&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_LOCATION_ATTRIBUTES LOCA3&quot; X=&quot;50&quot; Y=&quot;312&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_POPULATION_PLANNING_GROUPS PPG&quot; X=&quot;240&quot; Y=&quot;456&quot; Height=&quot;189&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_AGE_RANGES AGR&quot; X=&quot;50&quot; Y=&quot;539&quot; Height=&quot;153&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select T_STATISTICS.START_DATE, T_STATISTICS.DST_ID, T_STATISTICS.LOC_ID_ASYLUM_COUNTRY, T_STATISTICS.LOC_ID_ASYLUM, T_STATISTICS.LOC_ID_ORIGIN_COUNTRY, T_STATISTICS.PPG_ID, T_STATISTICS.SEX_CODE, T_STATISTICS.AGR_ID, Sum(T_STATISTICS.VALUE) As VALUE From T_STATISTICS Where T_STATISTICS.STCT_CODE In (Select T_STATISTIC_TYPES_IN_GROUPS.STCT_CODE From T_STATISTIC_TYPES_IN_GROUPS Where T_STATISTIC_TYPES_IN_GROUPS.STTG_CODE = &apos;DEMOGR&apos;) Group By T_STATISTICS.START_DATE, T_STATISTICS.DST_ID, T_STATISTICS.LOC_ID_ASYLUM_COUNTRY, T_STATISTICS.LOC_ID_ASYLUM, T_STATISTICS.LOC_ID_ORIGIN_COUNTRY, T_STATISTICS.PPG_ID, T_STATISTICS.SEX_CODE, T_STATISTICS.AGR_ID&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_STATISTICS&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;477&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select T_STATISTIC_TYPES_IN_GROUPS.STCT_CODE From T_STATISTIC_TYPES_IN_GROUPS Where T_STATISTIC_TYPES_IN_GROUPS.STTG_CODE = &apos;DEMOGR&apos;&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_STATISTIC_TYPES_IN_GROUPS&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;117&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<parsed>true</parsed>
+<viewElements>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="STATSYEAR" id="E1ABB098-512D-1B96-ADE6-5B88B97C1C15" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2013-03-25 14:41:26 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>STATSYEAR</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ASYLUM_COUNTRY_CODE" id="EE88D518-0FAE-96C2-BDC0-8E28DAA6C60F">
+<createdBy>Scott</createdBy>
+<createdTime>2013-06-13 08:06:46 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>ASYLUM_COUNTRY_CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="MSRP_SITE_CODE" id="6BFC61AF-2EF3-2802-AE05-95A2D7CB782B" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2013-03-25 14:41:26 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>MSRP_SITE_CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="PSR_LOCATION_CODE" id="D7272418-116B-30B5-F81C-0D50B414359A" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2013-03-25 14:41:26 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>PSR_LOCATION_CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="DISPLACEMENT_STATUS" id="C0CF7AD5-63CD-DD10-7EED-B5D4CAF7F875" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2013-03-25 14:41:26 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>DISPLACEMENT_STATUS</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ORIGIN_CODE" id="4FC017AB-4E96-7E0C-FD8A-9BDA6CC5EAED">
+<createdBy>Scott</createdBy>
+<createdTime>2013-06-13 08:06:46 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>ORIGIN_CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="PPG_CODE" id="A29FEFD6-CAF1-8262-024C-10E90C4BF55B" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2013-03-25 14:41:26 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>PPG_CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="SEX_CODE" id="7EA559D6-19A8-48C5-F3C9-B95C0F110DF8" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2013-03-25 14:41:26 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>SEX_CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="AGE_FROM" id="7980F43D-50F9-4934-93D8-3C3CF87E4F59" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2013-03-25 14:41:26 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>AGE_FROM</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="AGE_TO" id="6F2F91D2-DFD9-6624-9444-9F0369E49BF4" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2013-03-25 14:41:26 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>AGE_TO</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="VALUE" id="85729C28-FE9B-31F5-F480-8F539CC66156" directorySegmentName="seg_2">
+<createdBy>Scott</createdBy>
+<createdTime>2013-03-25 14:41:26 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>VALUE</expression>
+<reference>false</reference>
+</viewElement>
+</viewElements>
+<usedObjects>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="F5023194-12A8-C67F-AE7A-AB7A6EDDBE94">
+<container>true</container>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="DA0CA017-C04A-FF9B-5716-DE27A3255042">
+<container>true</container>
+<tableName>T_DISPLACEMENT_STATUSES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="111FDEB6-5314-720A-7F36-6001D05C2EA5">
+<container>true</container>
+<tableName>T_POPULATION_PLANNING_GROUPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="B838E2D6-8DA7-34FA-F224-654B9D64AA57">
+<container>true</container>
+<tableName>T_AGE_RANGES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="0DA3F6B4-8518-F552-7B4C-1ADAA9907CC6">
+<container>true</container>
+<tableName>T_STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="7FD42201-B423-AA54-74ED-F3AD5A365E39">
+<container>true</container>
+<tableName>T_STATISTIC_TYPES_IN_GROUPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="97461C8E-E88E-2C29-6540-88CDB441BE21">
+<columnName>VALUE</columnName>
+<tableName>T_STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="7F16941E-0450-0982-F034-DF334E5BB70B">
+<columnName>STCT_CODE</columnName>
+<tableName>T_STATISTICS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="86243398-ED02-CDE4-D949-C01F55A90CAD">
+<columnName>STCT_CODE</columnName>
+<tableName>T_STATISTIC_TYPES_IN_GROUPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C1194BB7-98A5-E8A2-7BBF-23C7847AE0F9">
+<columnName>STTG_CODE</columnName>
+<tableName>T_STATISTIC_TYPES_IN_GROUPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C97DB6BD-BEC9-4DE2-8C3F-D991D2145C46">
+<columnName>LOC_ID</columnName>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="19C09A45-B0DE-CB35-2642-931CB49AF250">
+<columnName>LOCAT_CODE</columnName>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="F5C73F48-6A40-DF48-E317-381D087E137E">
+<columnName>ID</columnName>
+<tableName>T_DISPLACEMENT_STATUSES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C7ACAFAE-78E9-4B29-A0F5-69822CBD910F">
+<columnName>ID</columnName>
+<tableName>T_POPULATION_PLANNING_GROUPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="E887FD2B-4164-C0ED-B1AC-5A298B0AAA7E">
+<columnName>ID</columnName>
+<tableName>T_AGE_RANGES</tableName>
+</UsedObject>
+</usedObjects>
+</TableView>

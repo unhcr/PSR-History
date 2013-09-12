@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Time Period Type" id="57063843-F920-6310-84A0-72456F543108" directorySegmentName="seg_0">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-26 10:34:06 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<engineerTo>
+<item key="FBD02A8D-CBD7-8148-58A8-4F649B4B646D" value="true"/>
+<item key="9DAABCA8-7401-FCAF-EBFA-C1F3D80F969E" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>72F54E1B-9BCF-C266-D451-DB0365C58B27</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>CE5AA5DB-B0E9-C652-FABB-46AC65DFADED</targetEntity>
+<transferable>true</transferable>
+</Relation>

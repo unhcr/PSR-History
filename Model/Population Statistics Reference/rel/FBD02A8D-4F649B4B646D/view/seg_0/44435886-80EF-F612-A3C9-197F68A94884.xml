@@ -1,0 +1,92 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableView class="oracle.dbtools.crest.model.design.relational.TableView" id="44435886-80EF-F612-A3C9-197F68A94884" directorySegmentName="seg_0" name="USER_LANGUAGE_PREFERENCES">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:44:07 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<userDefined>true</userDefined>
+<userDefinedSQL>SELECT ULP.USERID,&lt;br/&gt;  ULP.LANG_CODE,&lt;br/&gt;  ULP.PREF_SEQ,&lt;br/&gt;  ULP.VERSION_NBR&lt;br/&gt;FROM T_USER_LANGUAGE_PREFERENCES ULP</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select ULP.USERID, ULP.LANG_CODE, ULP.PREF_SEQ, ULP.VERSION_NBR From T_USER_LANGUAGE_PREFERENCES ULP&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select ULP.USERID, ULP.LANG_CODE, ULP.PREF_SEQ, ULP.VERSION_NBR From T_USER_LANGUAGE_PREFERENCES ULP&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_USER_LANGUAGE_PREFERENCES ULP&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;153&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<parsed>true</parsed>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+</fonts>
+<usedContainers>
+<container alias="ULP" containerID="E1BE2C4F-E65C-0B9B-3DA1-8AC96ADACB14"/>
+</usedContainers>
+<viewElements>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="USERID" id="C92B4AA1-43D9-67D0-02D3-3D20CE152F0B">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:44:38 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (30)</dataType>
+<reference>false</reference>
+<referencedColumn>05C90251-8F54-4954-A7AB-C3134EB08068</referencedColumn>
+<table>E1BE2C4F-E65C-0B9B-3DA1-8AC96ADACB14</table>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LANG_CODE" id="40C5F78D-724D-33E2-E7C7-487F1C183FBF">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:44:38 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (6)</dataType>
+<reference>false</reference>
+<referencedColumn>3FEE7FAE-C375-7441-91AA-E5D62A3A7883</referencedColumn>
+<table>E1BE2C4F-E65C-0B9B-3DA1-8AC96ADACB14</table>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="PREF_SEQ" id="D3DD358E-7EBC-A8BB-96BD-1320D2B54FB9">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:44:38 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>NUMBER (5)</dataType>
+<reference>false</reference>
+<referencedColumn>5D602486-5911-41A2-6928-E808C796104C</referencedColumn>
+<table>E1BE2C4F-E65C-0B9B-3DA1-8AC96ADACB14</table>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="VERSION_NBR" id="F77DEB44-3EEF-545F-9221-AAA7ABFC0D95">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:44:38 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>INTEGER</dataType>
+<reference>false</reference>
+<referencedColumn>BFF889E5-C7FF-A9D4-DA4C-722373C85267</referencedColumn>
+<table>E1BE2C4F-E65C-0B9B-3DA1-8AC96ADACB14</table>
+</viewElement>
+</viewElements>
+<usedObjects>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="E1BE2C4F-E65C-0B9B-3DA1-8AC96ADACB14">
+<container>true</container>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="05C90251-8F54-4954-A7AB-C3134EB08068">
+<columnName>USERID</columnName>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="3FEE7FAE-C375-7441-91AA-E5D62A3A7883">
+<columnName>LANG_CODE</columnName>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="5D602486-5911-41A2-6928-E808C796104C">
+<columnName>PREF_SEQ</columnName>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="BFF889E5-C7FF-A9D4-DA4C-722373C85267">
+<columnName>VERSION_NBR</columnName>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+</usedObjects>
+</TableView>

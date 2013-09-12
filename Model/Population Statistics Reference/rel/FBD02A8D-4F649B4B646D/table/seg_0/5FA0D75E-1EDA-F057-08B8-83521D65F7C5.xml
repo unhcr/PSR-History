@@ -1,0 +1,186 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="5FA0D75E-1EDA-F057-08B8-83521D65F7C5" directorySegmentName="seg_0" name="T_TEXT_TYPE_PROPERTIES">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 13:59:51 UTC</createdTime>
+<comment>Validity and characteristics of text types associated with particular tables</comment>
+<notes>Text of a given type cannot be associated with a given table unless a row for that combination (table/text type) exists in this table. The flags place constraints on how text of the given type is associated with rows in the table and how it is stored.</notes>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pkName>PK_TTXT</pkName>
+<abbreviation>TTP</abbreviation>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>PK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>FK Element</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>UK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Not Null</foType>
+<colorRGB>-65536</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Key</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+</fonts>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="TXTT_CODE" id="B1B69FB1-4C8B-8916-9A57-25802E9502CC">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 14:01:00 UTC</createdTime>
+<comment>Text type code</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<delegate>3E525A08-9A02-A435-0594-8D60BABD9DB4</delegate>
+<previousColumn>false</previousColumn>
+<associations>
+<colAssociation fkAssociation="2BC8B6EB-03D4-509B-BC55-B58E40CC5983" referredColumn="3E525A08-9A02-A435-0594-8D60BABD9DB4"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="TAB_ALIAS" id="1B2A132F-4219-41AA-236C-307391F58ED9">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 14:00:41 UTC</createdTime>
+<comment>Table alias code</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<delegate>975D9BA4-3CC1-7CF8-60DB-0A57EBEEA04C</delegate>
+<previousColumn>false</previousColumn>
+<associations>
+<colAssociation fkAssociation="ED99EFBB-D237-B03D-6E5B-B5545323DA7D" referredColumn="975D9BA4-3CC1-7CF8-60DB-0A57EBEEA04C"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="MANDATORY_FLAG" id="B85309EC-9030-920D-3547-209689C3874C">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 14:03:34 UTC</createdTime>
+<comment>Is a text item of this type mandatory for all rows of this table?</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_TTP_MANDATORY_FLAG</constraintName>
+<defaultValue>N</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>6841C73E-E27A-83E1-4728-25113B8D2A58</domain>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="MULTI_INSTANCE_FLAG" id="DB166CBD-47B0-AAAD-0311-A1EFD49AA3E2">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 14:05:21 UTC</createdTime>
+<comment>Can there be multiple instances of text values of this type for a row in this table?</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_TTP_MULTI_INSTANCE_FLAG</constraintName>
+<defaultValue>Y</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>6841C73E-E27A-83E1-4728-25113B8D2A58</domain>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="LONG_TEXT_FLAG" id="1C1CEEB4-25E2-2755-6FC3-552FE0FA4332">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-22 09:11:14 UTC</createdTime>
+<comment>Can text values of this type be longer than 1000 characters in this table (i.e. stored as CLOB)?</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_TTP_LONG_TEXT_FLAG</constraintName>
+<defaultValue>Y</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>6841C73E-E27A-83E1-4728-25113B8D2A58</domain>
+<usesDefaultValue>true</usesDefaultValue>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="E700DD52-486D-9EFD-65D8-9F3FC5F9B0BC">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 14:05:42 UTC</createdTime>
+<comment>General data item identifier of this text type property</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
+<associations>
+<colAssociation fkAssociation="68FF7B00-A027-EE8B-A12C-D4BE9A6E72A0" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="C3662060-82A1-01AA-D4ED-A35043D169D6">
+<createdBy>Scott</createdBy>
+<createdTime>2012-02-28 11:02:02 UTC</createdTime>
+<comment>Update version number of this text type property</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>1</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>C708458E-1701-E597-89A0-AB5975C13369</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="AE0C386F-19E3-EFEC-2D2A-06E3504FC3E3" name="PK_TTP">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 14:02:11 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="B1B69FB1-4C8B-8916-9A57-25802E9502CC"/>
+<colUsage columnID="1B2A132F-4219-41AA-236C-307391F58ED9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="977F7E33-18CD-7D81-B22E-09B501C0694B" name="UK_TTP_ITM_ID">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-08 08:54:12 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="E700DD52-486D-9EFD-65D8-9F3FC5F9B0BC"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="B0EB0036-1477-D9AA-87C2-8F1F4E41957C" name="FK_TTP_TAB">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 14:00:41 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="1B2A132F-4219-41AA-236C-307391F58ED9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="D29D91C3-A62B-AEF4-3464-0FAF0BAB1129" name="FK_TTP_TXTT">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 14:01:00 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="B1B69FB1-4C8B-8916-9A57-25802E9502CC"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="5EC74FA6-D1FF-823B-6673-8060F8BF5CF9" name="FK_TTP_ITM">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-05 14:05:59 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="E700DD52-486D-9EFD-65D8-9F3FC5F9B0BC"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

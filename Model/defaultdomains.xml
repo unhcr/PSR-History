@@ -1,0 +1,361 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<DomainFile class="oracle.dbtools.crest.model.design.DomainFileWrapper" fileName="defaultdomains">
+   <domains>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Variable Name" id="05F2A504-0687-B53F-A131-4CA7AB3606B9">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-09-05 13:32:55 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>25</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Update User Id" id="1B3AF57E-8DA8-A2E2-DAC5-0A66F68D2FBE">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-27 11:20:11 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>31</dataTypeSize>
+         <defaultValue>nvl(sys_context(&amp;apos;PSR&amp;apos;, &amp;apos;USERID&amp;apos;), &amp;apos;*&amp;apos; || user)</defaultValue>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="ASR Country Code" id="253FECEE-343C-8962-95FC-B5964C23F022">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:24 UTC</createdTime>
+         <comment>UNHCR ASR 3-character country code (partially aligned with ISO 3166-1 Alpha-3 country code)</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>253FECEE-343C-8962-95FC-B5964C23F022</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>3</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Parameter Name" id="298ED9B6-542B-5597-A622-9EEECB5CAE54">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-14 14:01:32 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>30</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Oracle Identifier" id="383B7890-E22E-BD7E-0EDF-6938FBD88467">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>Oracle table or view name</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>383B7890-E22E-BD7E-0EDF-6938FBD88467</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>30</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Flag" id="3B91463A-AACE-D95D-B376-EDAC835F2D90">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-09-05 13:27:09 UTC</createdTime>
+         <comment>Single-character flag value</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>1</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Sequence Number" id="4DEE2B98-924B-3C9C-5F42-8D1F2F4A8E54">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>General sequence number</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>4DEE2B98-924B-3C9C-5F42-8D1F2F4A8E54</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT011</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Date" id="5234FC77-3782-98DB-F6BB-1312EDFCC843">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>5234FC77-3782-98DB-F6BB-1312EDFCC843</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT007</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Count" id="63D589BF-9681-517D-9347-14CEE8D4D12B">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>Used for counting Persons of Concern</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>63D589BF-9681-517D-9347-14CEE8D4D12B</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT011</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Sex" id="66D61FA5-E6FC-8A0C-8A86-570E5077EE6C">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>Sex code</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>66D61FA5-E6FC-8A0C-8A86-570E5077EE6C</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>1</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <listOfValues>
+            <valueDef value="F" description="Female"/>
+            <valueDef value="M" description="Male"/>
+         </listOfValues>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Boolean" id="6841C73E-E27A-83E1-4728-25113B8D2A58">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>Yes / no</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>6841C73E-E27A-83E1-4728-25113B8D2A58</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>1</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <listOfValues>
+            <valueDef value="N" description="No"/>
+            <valueDef value="Y" description="Yes"/>
+         </listOfValues>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Code" id="70D4DB78-A0D4-8ECC-7713-712D57DFBB60">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>Code for internal use</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>10</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <checkConstraint>
+            <implementationDef dbType="Generic Constraint" definition="CODE = trim(upper(CODE))"/>
+         </checkConstraint>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Synthetic Identifier" id="7902D946-5C37-B380-3248-80191020E6EF">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>7902D946-5C37-B380-3248-80191020E6EF</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT011</logicalDatatype>
+         <checkConstraint>
+            <implementationDef dbType="Generic Constraint" definition="ID &amp;gt; 0"/>
+         </checkConstraint>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="General Text" id="83316272-3728-7FC3-B754-18D76E70A6DF">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>83316272-3728-7FC3-B754-18D76E70A6DF</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>1000</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Ordering Sequence" id="840F48B2-9E9B-88BD-9B9C-8728A6AABAE2">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>Sequence number to control ordering of items</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>840F48B2-9E9B-88BD-9B9C-8728A6AABAE2</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypePrecision>5</dataTypePrecision>
+         <dataTypeScale>0</dataTypeScale>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="ISO 3166-1 Alpha-3 Country Code" id="8A9C9816-0977-3A07-D461-D379AA619002">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>3-character country code</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>8A9C9816-0977-3A07-D461-D379AA619002</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>3</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="ISO 3166-1 Alpha-2 Country Code" id="9F1253F5-C3A0-38FA-1616-C8954522F3B7">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>2-character country code</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>9F1253F5-C3A0-38FA-1616-C8954522F3B7</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>2</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="User Id" id="A6485865-10BE-4B61-9F76-0E0B408FAB8E">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-14 14:00:27 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>30</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Name" id="B106D03C-3A53-31E0-002C-E6642CDF10F9">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>B106D03C-3A53-31E0-002C-E6642CDF10F9</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>500</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Long Text" id="B1D2422D-5A10-777C-FFE6-0885013D45D4">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>B1D2422D-5A10-777C-FFE6-0885013D45D4</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT028</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Age" id="B2776615-B740-D5D5-01EA-BC8A0DAC24D2">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>Age</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>B2776615-B740-D5D5-01EA-BC8A0DAC24D2</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypePrecision>3</dataTypePrecision>
+         <dataTypeScale>0</dataTypeScale>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="PPG Code" id="B5A68D1F-B108-2FE3-7D9C-3D1A7D886D64">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>Population Planning Group code</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>B5A68D1F-B108-2FE3-7D9C-3D1A7D886D64</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>5</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="ISO 3166-1 Numeric Country Code" id="B66B6EF9-59A7-F086-0420-F63A0EBE3691">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>Numeric country code</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>B66B6EF9-59A7-F086-0420-F63A0EBE3691</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>3</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Location Identifier" id="C2DB2BE5-AB16-8043-FD9B-177C536DC077">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>Synthetic location identifier, consisting of a 6-digit numeric code prefixed by a two check digits</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>C2DB2BE5-AB16-8043-FD9B-177C536DC077</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypePrecision>10</dataTypePrecision>
+         <dataTypeScale>0</dataTypeScale>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Version Number" id="C708458E-1701-E597-89A0-AB5975C13369">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-27 08:50:49 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <defaultValue>1</defaultValue>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT011</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Dimension Usage Flag" id="D77E9D6A-6ACF-58C6-5D34-F3F18744121F">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-09-27 06:43:16 UTC</createdTime>
+         <comment>Flag indicating whether usage of a given dimension is mandatory, optional or not allowed</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>1</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <listOfValues>
+            <valueDef value="M" description="Mandatory"/>
+            <valueDef value="N" description="Not allowed"/>
+            <valueDef value="O" description="Optional"/>
+         </listOfValues>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Unknown" id="DOM3000004">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:44:47 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT017</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Update Timestamp" id="E2B7E866-FAE8-A49C-207C-DA7D30D89715">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-27 08:51:50 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <defaultValue>systimestamp</defaultValue>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT047</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Data Type" id="F2A12E7B-C038-7C36-8F01-016AC24AA1FE">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-14 14:01:56 UTC</createdTime>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>1</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <listOfValues>
+            <valueDef value="C" description="Character"/>
+            <valueDef value="D" description="Date"/>
+            <valueDef value="N" description="Number"/>
+         </listOfValues>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Language Code" id="F6A9320E-05AC-2FB8-8934-BB7C80823755">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>ISO 639-1 (preferred), ISO 639-2 or ISO 639-3 language code (lower case), optionally followed by a hyphen and an ISO 3166-1 Alpha-2 country code (upper case) acting as a regional designator</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>F6A9320E-05AC-2FB8-8934-BB7C80823755</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>6</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Test Identifier" id="FCB66395-524C-4BFA-9291-8BCC7BEBD1BC">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-20 10:03:35 UTC</createdTime>
+         <comment>Identifier for unit test case</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>30</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+      </Domain>
+      <Domain class="oracle.dbtools.crest.model.design.Domain" name="Severity Code" id="FEBDC92D-536B-34BF-D3F1-3AA67D5E9D98">
+         <createdBy>Scott</createdBy>
+         <createdTime>2012-02-13 13:42:25 UTC</createdTime>
+         <comment>Severity of incident associated with a message (System error, Error, Warning, Information)</comment>
+         <ownerDesignName>System</ownerDesignName>
+         <importedID>FEBDC92D-536B-34BF-D3F1-3AA67D5E9D98</importedID>
+         <avTSortOrder>0</avTSortOrder>
+         <dataTypeSize>1</dataTypeSize>
+         <fileName>defaultdomains</fileName>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <listOfValues>
+            <valueDef value="E" description="Error"/>
+            <valueDef value="I" description="Information"/>
+            <valueDef value="S" description="System error"/>
+            <valueDef value="W" description="Warning"/>
+         </listOfValues>
+      </Domain>
+   </domains>
+</DomainFile>

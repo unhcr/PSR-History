@@ -1,0 +1,170 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="111FDEB6-5314-720A-7F36-6001D05C2EA5" directorySegmentName="seg_0" name="T_POPULATION_PLANNING_GROUPS">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-26 10:37:49 UTC</createdTime>
+<comment>Population planning groups</comment>
+<generatorID>8CA4B18B-F8B6-6D34-4FC4-B1DC05D55C86</generatorID>
+<notes>The PPG code and description are maintained authoritatively in MSRP and PSR should maintain synchronisation with those values</notes>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<abbreviation>PPG</abbreviation>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ID" id="C7ACAFAE-78E9-4B29-A0F5-69822CBD910F">
+<createdBy>Scott</createdBy>
+<createdTime>2012-04-10 10:59:52 UTC</createdTime>
+<comment>PPG identifier</comment>
+<notes>Auto-generated from sequence PPG_SEQ</notes>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PPG_ID</constraintName>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
+<autoIncrementColumn>true</autoIncrementColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementOrder>false</autoIncrementOrder>
+<autoIncrementSequenceName>PPG_SEQ</autoIncrementSequenceName>
+<autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PPG_CODE" id="EC16C434-99FC-E78F-3A4C-CFD4A39734EE">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-26 10:37:49 UTC</createdTime>
+<comment>PPG code</comment>
+<generatorID>94874183-80D5-A37E-E8CD-9E1B3F429036</generatorID>
+<notes>Should be maintained in sync with the authoritative value in MSRP</notes>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>B5A68D1F-B108-2FE3-7D9C-3D1A7D886D64</domain>
+<previousColumn>false</previousColumn>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="START_DATE" id="237EBB78-CACE-9153-E244-B59F2BAAA0B6">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-27 08:06:38 UTC</createdTime>
+<comment>Start date of effectivity of PPG</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="END_DATE" id="5DDE5114-D96D-8425-15D7-74E615C53AFF">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-27 08:06:38 UTC</createdTime>
+<comment>End date of effectivity of PPG</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="LOC_ID" id="A5BE83B8-6456-740D-6EDD-08147BBBA112">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-26 10:37:49 UTC</createdTime>
+<comment>Identifier of location (operation) responsible for the PPG</comment>
+<generatorID>9101A0F9-37DA-FB07-43C0-1BF9D542827D</generatorID>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>C2DB2BE5-AB16-8043-FD9B-177C536DC077</domain>
+<delegate>0F28E6F7-11A8-936D-4B0B-CA8DDCAB1812</delegate>
+<previousColumn>false</previousColumn>
+<associations>
+<colAssociation fkAssociation="4292730A-CF2A-BEAD-5500-0F04E7A29EA0" referredColumn="0F28E6F7-11A8-936D-4B0B-CA8DDCAB1812"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="PPGR_SEQ_NBR_MAX" id="0B9EC9AB-3C1D-62EB-83EC-8991713321FD">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-11 08:31:25 UTC</createdTime>
+<comment>Current maximum PPG rule sequence number for this PPG</comment>
+<notes>The value in this column is used to populate the T_PPG_RULES.SEQ_NBR column when creating a new PPG rule (and is then incremented)</notes>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>1</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>4DEE2B98-924B-3C9C-5F42-8D1F2F4A8E54</domain>
+<usesDefaultValue>true</usesDefaultValue>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="E7B7F7D0-A078-697A-B9FC-80B7C6FB5905">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-08 07:17:50 UTC</createdTime>
+<comment>General data item identifier of this PPG</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
+<associations>
+<colAssociation fkAssociation="12F507D9-B8C4-1894-94F1-387E6D8B6485" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="39167359-527B-BA5B-14A4-16B1FDD1F056">
+<createdBy>Scott</createdBy>
+<createdTime>2012-03-27 10:18:57 UTC</createdTime>
+<comment>Update version number of this PPG</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>1</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>C708458E-1701-E597-89A0-AB5975C13369</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="EA71D3EF-C6ED-5463-3FDD-29341E1DFE53" name="PK_PPG">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-26 10:37:49 UTC</createdTime>
+<generatorID>18257A5B-9F0C-78FD-1081-645E109BEE6A</generatorID>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="C7ACAFAE-78E9-4B29-A0F5-69822CBD910F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="E8A45289-F3BB-BD68-927F-FEBCA19DA02B" name="UK_PPG_ITM_ID">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-08 08:40:24 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="E7B7F7D0-A078-697A-B9FC-80B7C6FB5905"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="94D84691-B4D6-FF7A-BAA8-D5A381C5CF84" name="UK_PPG">
+<createdBy>Scott</createdBy>
+<createdTime>2012-04-10 10:59:52 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="EC16C434-99FC-E78F-3A4C-CFD4A39734EE"/>
+<colUsage columnID="237EBB78-CACE-9153-E244-B59F2BAAA0B6"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="5E77F635-1A44-F3A4-3E2C-BFBF6029B6B0" name="FK_PPG_LOC">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-26 10:37:49 UTC</createdTime>
+<generatorID>B094E1F6-2DDB-48D9-0E9C-B7C15D576849</generatorID>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="A5BE83B8-6456-740D-6EDD-08147BBBA112"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="7816B71A-EE24-9F3A-EC57-64342C286810" name="FK_PPG_ITM">
+<createdBy>Scott</createdBy>
+<createdTime>2011-12-08 07:18:05 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="E7B7F7D0-A078-697A-B9FC-80B7C6FB5905"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+<tableCheckConstraints>
+<tableCheckConstraint class="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint" name="CH_PPG_DATES" id="E59FE611-801D-22B5-F57E-43B4F6E58344" directorySegmentName="seg_0">
+<createdBy>Scott</createdBy>
+<createdTime>2011-10-27 08:34:02 UTC</createdTime>
+<ownerDesignName>Master Population Statistics</ownerDesignName>
+<rule>END_DATE &gt; START_DATE</rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
+</Table>

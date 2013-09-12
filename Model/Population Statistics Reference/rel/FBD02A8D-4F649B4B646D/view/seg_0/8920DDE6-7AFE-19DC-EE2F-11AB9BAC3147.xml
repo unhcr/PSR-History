@@ -1,0 +1,141 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableView class="oracle.dbtools.crest.model.design.relational.TableView" id="8920DDE6-7AFE-19DC-EE2F-11AB9BAC3147" directorySegmentName="seg_0" name="LOCATION_RELATIONSHIPS">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:51:37 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<userDefined>true</userDefined>
+<userDefinedSQL>SELECT LOCR.LOC_ID_FROM,&lt;br/&gt;  LOCR.LOC_ID_TO,&lt;br/&gt;  LOCR.LOCRT_CODE,&lt;br/&gt;  LOCR.START_DATE,&lt;br/&gt;  LOCR.END_DATE,&lt;br/&gt;  LOCR.ITM_ID,&lt;br/&gt;  LOCR.VERSION_NBR&lt;br/&gt;FROM T_LOCATION_RELATIONSHIPS LOCR</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select LOCR.LOC_ID_FROM, LOCR.LOC_ID_TO, LOCR.LOCRT_CODE, LOCR.START_DATE, LOCR.END_DATE, LOCR.ITM_ID, LOCR.VERSION_NBR From T_LOCATION_RELATIONSHIPS LOCR&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select LOCR.LOC_ID_FROM, LOCR.LOC_ID_TO, LOCR.LOCRT_CODE, LOCR.START_DATE, LOCR.END_DATE, LOCR.ITM_ID, LOCR.VERSION_NBR From T_LOCATION_RELATIONSHIPS LOCR&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_LOCATION_RELATIONSHIPS LOCR&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<parsed>true</parsed>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+</fonts>
+<usedContainers>
+<container alias="LOCR" containerID="5B700547-AABE-51F4-EB6B-25D46CF0A2E0"/>
+</usedContainers>
+<viewElements>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOC_ID_FROM" id="06367778-9062-0917-AE46-03A3689288A0">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:52:02 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>NUMBER (10)</dataType>
+<reference>false</reference>
+<referencedColumn>8B016EB7-DD2C-79D5-C1F4-4EB3CF8DF97B</referencedColumn>
+<table>5B700547-AABE-51F4-EB6B-25D46CF0A2E0</table>
+<tableAlias>LOCR</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOC_ID_TO" id="5484ABA9-8484-74FC-4582-C69DCA0D1254">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:52:02 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>NUMBER (10)</dataType>
+<reference>false</reference>
+<referencedColumn>D26295E8-75BA-CAFB-440B-63E67F9DE68A</referencedColumn>
+<table>5B700547-AABE-51F4-EB6B-25D46CF0A2E0</table>
+<tableAlias>LOCR</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="LOCRT_CODE" id="9A9379BD-1938-6A67-6DD4-D6940CF94633">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:52:02 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>VARCHAR2 (10)</dataType>
+<reference>false</reference>
+<referencedColumn>97E87BE5-5DA2-5C65-C77E-8CFDF296BE34</referencedColumn>
+<table>5B700547-AABE-51F4-EB6B-25D46CF0A2E0</table>
+<tableAlias>LOCR</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="START_DATE" id="DA5CF7DF-02FF-3BDA-7453-744B45194D6B">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:52:02 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>DATE</dataType>
+<reference>false</reference>
+<referencedColumn>C00BC483-40FF-B729-1375-BC9A9E00C708</referencedColumn>
+<table>5B700547-AABE-51F4-EB6B-25D46CF0A2E0</table>
+<tableAlias>LOCR</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="END_DATE" id="D2FFDE8C-CD54-E7AD-5834-7766E60CBE16">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:52:02 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>DATE</dataType>
+<reference>false</reference>
+<referencedColumn>1168665C-A6B4-BE45-41C3-819C2699B5D2</referencedColumn>
+<table>5B700547-AABE-51F4-EB6B-25D46CF0A2E0</table>
+<tableAlias>LOCR</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ITM_ID" id="05BF00A7-8D44-4241-4287-2FAA625A7037">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:52:02 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>INTEGER</dataType>
+<reference>false</reference>
+<referencedColumn>212C20B2-C0BF-BB1C-B63D-E8557F94E9D8</referencedColumn>
+<table>5B700547-AABE-51F4-EB6B-25D46CF0A2E0</table>
+<tableAlias>LOCR</tableAlias>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="VERSION_NBR" id="DB556FB8-2130-FC2B-2BA4-C77CFB0CE760">
+<createdBy>Scott</createdBy>
+<createdTime>2012-05-04 13:52:02 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<dataType>INTEGER</dataType>
+<reference>false</reference>
+<referencedColumn>F2051F1D-3F4F-FBB1-C2A2-1F33A6A88F54</referencedColumn>
+<table>5B700547-AABE-51F4-EB6B-25D46CF0A2E0</table>
+<tableAlias>LOCR</tableAlias>
+</viewElement>
+</viewElements>
+<usedObjects>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="5B700547-AABE-51F4-EB6B-25D46CF0A2E0">
+<container>true</container>
+<tableName>T_LOCATION_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="8B016EB7-DD2C-79D5-C1F4-4EB3CF8DF97B">
+<columnName>LOC_ID_FROM</columnName>
+<tableName>T_LOCATION_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="D26295E8-75BA-CAFB-440B-63E67F9DE68A">
+<columnName>LOC_ID_TO</columnName>
+<tableName>T_LOCATION_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="97E87BE5-5DA2-5C65-C77E-8CFDF296BE34">
+<columnName>LOCRT_CODE</columnName>
+<tableName>T_LOCATION_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C00BC483-40FF-B729-1375-BC9A9E00C708">
+<columnName>START_DATE</columnName>
+<tableName>T_LOCATION_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="1168665C-A6B4-BE45-41C3-819C2699B5D2">
+<columnName>END_DATE</columnName>
+<tableName>T_LOCATION_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="212C20B2-C0BF-BB1C-B63D-E8557F94E9D8">
+<columnName>ITM_ID</columnName>
+<tableName>T_LOCATION_RELATIONSHIPS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="F2051F1D-3F4F-FBB1-C2A2-1F33A6A88F54">
+<columnName>VERSION_NBR</columnName>
+<tableName>T_LOCATION_RELATIONSHIPS</tableName>
+</UsedObject>
+</usedObjects>
+</TableView>
