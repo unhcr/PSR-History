@@ -6,10 +6,6 @@ prompt Schema
 prompt ======
 @Schema
 
---prompt Views
---prompt =====
---@Views
-
 prompt Packages
 prompt ========
 @Packages
