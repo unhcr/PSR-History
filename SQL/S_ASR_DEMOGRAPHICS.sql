@@ -1166,14 +1166,7 @@ from
     select STATSYEAR, DISPLACEMENT_STATUS,
       COU_CODE_ASYLUM, LOCATION_NAME, NEW_LOCATION_NAME, COU_CODE_ORIGIN,
       decode(URBAN_RURAL_STATUS, 'Urban', 'U', URBAN_RURAL_STATUS) as URBAN_RURAL_STATUS,
-      ACCOMMODATION_TYPE,
-      case
-        when COU_CODE_ASYLUM = 'SRB' and
-          LOCATION_NAME = 'Kosovo (S/RES/1244 (1999)) : Dispersed in the country / territory'
-        then PPG_NAME || ' (Kosovo)'
-        else PPG_NAME
-      end as PPG_NAME,
-      BASIS,
+      ACCOMMODATION_TYPE, PPG_NAME, BASIS,
       F0, F5, F12, F18, F60, FOTHER, FTOTAL,
       M0, M5, M12, M18, M60, MOTHER, MTOTAL,
       TOTAL
