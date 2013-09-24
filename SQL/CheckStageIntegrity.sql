@@ -95,3 +95,60 @@ from
     from S_LOCATION_SUBDIVISIONS))
 group by COU_CODE_ASYLUM, LOCATION_NAME_EN, LOC_TYPE_DESCRIPTION_EN, ORIGINAL_LOCATION_NAME
 order by COU_CODE_ASYLUM, LOCATION_NAME_EN;
+
+prompt Duplicate PPGs
+prompt ==============
+
+select PPG_CODE, START_DATE, count(*)
+from S_PPGS
+group by PPG_CODE, START_DATE
+having count(*) > 1
+order by PPG_CODE, START_DATE;
+
+prompt Duplicate Country PPGs
+prompt ======================
+
+select COU_CODE, START_DATE, END_DATE, DESCRIPTION, LOCATION_NAME_EN, count(*)
+from S_COUNTRY_PPGS
+group by COU_CODE, START_DATE, END_DATE, DESCRIPTION, LOCATION_NAME_EN
+having count(*) > 1
+order by COU_CODE, START_DATE, END_DATE, DESCRIPTION, LOCATION_NAME_EN;
+
+prompt Ambiguous PPGs
+prompt ==============
+
+select COU_CODE, START_DATE, END_DATE, DESCRIPTION, LOCATION_NAME_EN, PPG_CODE
+from S_COUNTRY_PPGS CPG1
+where exists
+ (select null
+  from S_COUNTRY_PPGS CPG2
+  where CPG2.COU_CODE = CPG1.COU_CODE
+  and CPG2.DESCRIPTION = CPG1.DESCRIPTION
+  and (nvl(CPG2.LOCATION_NAME_EN, CPG1.LOCATION_NAME_EN) is null
+    or CPG2.LOCATION_NAME_EN = CPG1.LOCATION_NAME_EN)
+  and CPG2.START_DATE < CPG1.END_DATE
+  and CPG2.END_DATE > CPG1.START_DATE
+  and CPG2.rowid != CPG1.rowid);
+
+prompt Invalid PPG Names
+prompt =================
+
+select distinct COU_CODE_ASYLUM, upper(PPG_NAME)
+from S_ASR_DEMOGRAPHICS
+where PPG_NAME is not null
+minus
+select COU_CODE, DESCRIPTION
+from S_COUNTRY_PPGS;
+
+/*
+prompt Unused PPGs
+prompt ===========
+
+select PPG_CODE, START_DATE, END_DATE, DESCRIPTION
+from S_PPGS
+where DESCRIPTION not in
+ (select PPG_NAME
+  from S_ASR_DEMOGRAPHICS_CLEANED
+  where PPG_NAME is not null)
+order by substr(PPG_CODE, 2, 3), PPG_CODE;
+*/
