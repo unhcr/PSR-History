@@ -5,7 +5,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
 -- ========================================
 --
 -- ----------------------------------------
--- INSERT_PPG
+-- INSERT_PPG (1)
 -- ----------------------------------------
 --
   procedure INSERT_PPG
@@ -21,23 +21,28 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_PPG',
+     (sVersion || '-' || sComponent || '.INSERT_PPG-1',
       to_char(pnLOC_ID) || '~' || psPPG_CODE || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-  -- Check that the associated location is active for the whole of the given effective date range.
+  -- Check that the associated location is an operation and is active for the whole of the given
+  --  effective date range.
   --
     declare
-      sDummy varchar2(1);
+      sLOCT_CODE P_BASE.tsLOCT_CODE;
     begin
-      select 'x'
-      into sDummy
+      select LOCT_CODE
+      into sLOCT_CODE
       from T_LOCATIONS
       where ID = pnLOC_ID
       and START_DATE <= nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)
       and END_DATE >= nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
+    --
+      if sLOCT_CODE not in ('HCR-COP', 'HCR-ROF')
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'PPG location is not an operation');
+      end if;
     end;
   --
   -- Check for an existing PPG with the same code and overlapping effective date range.
@@ -77,6 +82,69 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
   end INSERT_PPG;
 --
 -- ----------------------------------------
+-- INSERT_PPG (2)
+-- ----------------------------------------
+--
+  procedure INSERT_PPG
+   (pnID out P_BASE.tnPPG_ID,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psDescription in P_BASE.tmsText,
+    psCountryCode in P_BASE.tmsCountryCode,
+    psPPG_CODE in P_BASE.tmsPPG_CODE,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null)
+  is
+    nLOC_ID P_BASE.tnLOC_ID;
+  begin
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sComponent || '.INSERT_PPG-2',
+      psCountryCode || '~' || psPPG_CODE || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
+  --
+  -- Check if there exists a country operation for the given country which is active for the whole
+  --  of the given effective date range, and create one if not.
+  --
+    begin
+      select ID
+      into nLOC_ID
+      from T_LOCATION_ATTRIBUTES LOCA
+      inner join T_LOCATIONS LOC
+        on LOC.ID = LOCA.LOC_ID
+        and LOC.LOCT_CODE = 'HCR-COP'
+        and LOC.START_DATE <= nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)
+        and LOC.END_DATE >= nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
+      where LOCA.LOCAT_CODE = 'HCRCD'
+      and LOCA.CHAR_VALUE = psCountryCode;
+    exception
+      when NO_DATA_FOUND
+      then
+        CREATE_COUNTRY_OPERATION(nLOC_ID, psCountryCode);
+      --
+        for rCOU in
+         (select LOC.ID, LOC.START_DATE, LOC.END_DATE
+          from T_LOCATION_ATTRIBUTES LOCA
+          inner join T_LOCATIONS LOC
+            on LOC.ID = LOCA.LOC_ID
+            and LOC.LOCT_CODE = 'COUNTRY'
+          where LOCA.LOCAT_CODE = 'ISO3166A3'
+          and LOCA.CHAR_VALUE = psCountryCode)
+        loop
+          P_LOCATION.INSERT_LOCATION_RELATIONSHIP
+           (nLOC_ID, rCOU.ID, 'HCRRESP', rCOU.START_DATE, rCOU.END_DATE);
+        end loop;
+    end;
+  --
+    INSERT_PPG(pnID, psLANG_CODE, psDescription, nLOC_ID, psPPG_CODE, pdSTART_DATE, pdEND_DATE);
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end INSERT_PPG;
+--
+-- ----------------------------------------
 -- UPDATE_PPG
 -- ----------------------------------------
 --
@@ -102,7 +170,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_PPG',
+     (sVersion || '-' || sComponent || '.UPDATE_PPG',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||to_char(pnLOC_ID) || '~' ||
         psPPG_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -208,7 +276,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCATION',
+     (sVersion || '-' || sComponent || '.SET_LOCATION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||to_char(pnLOC_ID) || '~' ||
         psPPG_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -245,7 +313,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     xPPG_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_SYSTEM_PARAMETER',
+     (sVersion || '-' || sComponent || '.DELETE_SYSTEM_PARAMETER',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -282,7 +350,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_PPG_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.SET_PPG_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -305,7 +373,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_PPG_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.REMOVE_PPG_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psLANG_CODE);
   --
@@ -334,7 +402,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     xPPG_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_PPG_TEXT',
+     (sVersion || '-' || sComponent || '.SET_PPG_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -379,7 +447,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     xPPG_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_PPG_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_PPG_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -407,21 +475,106 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     then P_UTILITY.TRACE_EXCEPTION;
   end REMOVE_PPG_TEXT;
 --
+-- ----------------------------------------
+-- CREATE_COUNTRY_OPERATION
+-- ----------------------------------------
+--
+  procedure CREATE_COUNTRY_OPERATION
+   (pnID out P_BASE.tnLOC_ID,
+    psCountryCode in P_BASE.tmsCountryCode)
+  is
+    dSTART_DATE P_BASE.tdDate;
+    dEND_DATE P_BASE.tdDate;
+    nLOC_ID_COUNTRY P_BASE.tnLOC_ID;
+    nLOC_ID_OPERATION P_BASE.tnLOC_ID;
+    nVERSION_NBR P_BASE.tnLOC_VERSION_NBR;
+  begin
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sComponent || '.CREATE_COUNTRY_OPERATION', psCountryCode);
+  --
+    begin
+      with Q_COU as
+       (select LOCA.CHAR_VALUE as COU_CODE, LOC.START_DATE, LOC.END_DATE, LOC.ID as LOC_ID
+        from T_LOCATION_ATTRIBUTES LOCA
+        inner join T_LOCATIONS LOC
+          on LOC.ID = LOCA.LOC_ID
+          and LOC.LOCT_CODE = 'COUNTRY'
+        where LOCA.LOCAT_CODE = 'ISO3166A3'
+        and LOCA.CHAR_VALUE = psCountryCode),
+      --
+      Q_CCOU (COU_CODE, START_DATE, END_DATE, LOC_ID) as
+       (select COU.COU_CODE, COU.START_DATE, COU.END_DATE, COU.LOC_ID
+        from Q_COU COU
+        where not exists
+         (select null
+          from Q_COU COU1
+          where COU1.COU_CODE = COU.COU_CODE
+          and COU1.END_DATE = COU.START_DATE)
+        union all
+        select CCOU.COU_CODE, CCOU.START_DATE, COU.END_DATE, COU.LOC_ID
+        from Q_CCOU CCOU
+        inner join Q_COU COU
+          on COU.COU_CODE = CCOU.COU_CODE
+          and COU.START_DATE = CCOU.END_DATE)
+      --
+      select START_DATE, END_DATE, LOC_ID
+      into dSTART_DATE, dEND_DATE, nLOC_ID_COUNTRY
+      from
+       (select COU_CODE, START_DATE, END_DATE, LOC_ID,
+          row_number() over (partition by COU_CODE, START_DATE order by END_DATE desc) as SEQ_NBR
+        from Q_CCOU)
+      where SEQ_NBR = 1;
+    exception
+      when NO_DATA_FOUND
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 4, 'No country with this code');
+    --
+      when TOO_MANY_ROWS
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 999, 'Multiple country instances with this code');
+    end;
+  --
+    for rCOU in
+     (select TXT.LANG_CODE, TXT.TEXT as NAME
+      from T_LOCATIONS LOC
+      inner join T_TEXT_ITEMS TXT
+        on TXT.ITM_ID = LOC.ITM_ID
+        and TXT.TXTT_CODE = 'NAME'
+        and TXT.SEQ_NBR = 1
+      where LOC.ID = nLOC_ID_COUNTRY)
+    loop
+      if nLOC_ID_OPERATION is null
+      then
+        P_LOCATION.INSERT_LOCATION
+         (nLOC_ID_OPERATION, rCOU.LANG_CODE, rCOU.NAME, 'HCR-COP', null, dSTART_DATE, dEND_DATE);
+      --
+        P_LOCATION.INSERT_LOCATION_ATTRIBUTE(nLOC_ID_OPERATION, 'HCRCD', psCountryCode);
+      --
+        nVERSION_NBR := 1;
+      else
+        P_LOCATION.SET_LOC_NAME(nLOC_ID_OPERATION, nVERSION_NBR, rCOU.LANG_CODE, rCOU.NAME);
+      end if;
+    end loop;
+  --
+    pnID := nLOC_ID_OPERATION;
+  --
+    P_UTILITY.TRACE_CONTEXT(to_char(pnID) || '~' || psCountryCode);
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end CREATE_COUNTRY_OPERATION;
+--
 -- =====================================
 -- Initialisation
 -- =====================================
 --
 begin
-  if sModule != $$PLSQL_UNIT
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
+  if sComponent != 'PPG'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
-  end if;
---
-  if sComponent != 'PPG'
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_POPULATION_PLANNING_GROUP;
