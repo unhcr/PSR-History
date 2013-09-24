@@ -19,7 +19,7 @@ create or replace package body P_AGE_PROFILE is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_AGE_PROFILE',
+     (sVersion || '-' || sComponent || '.INSERT_AGE_PROFILE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -52,7 +52,7 @@ create or replace package body P_AGE_PROFILE is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_AGE_PROFILE',
+     (sVersion || '-' || sComponent || '.UPDATE_AGE_PROFILE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) ||
         '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -99,7 +99,7 @@ create or replace package body P_AGE_PROFILE is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_AGE_PROFILE',
+     (sVersion || '-' || sComponent || '.SET_AGE_PROFILE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -135,7 +135,7 @@ create or replace package body P_AGE_PROFILE is
     xAGP_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_AGE_PROFILE',
+     (sVersion || '-' || sComponent || '.DELETE_AGE_PROFILE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -172,7 +172,7 @@ create or replace package body P_AGE_PROFILE is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_AGP_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.SET_AGP_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -195,7 +195,7 @@ create or replace package body P_AGE_PROFILE is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_AGP_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.REMOVE_AGP_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_AGP_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
@@ -223,7 +223,7 @@ create or replace package body P_AGE_PROFILE is
     xAGP_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_AGP_TEXT',
+     (sVersion || '-' || sComponent || '.SET_AGP_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
@@ -267,7 +267,7 @@ create or replace package body P_AGE_PROFILE is
     xAGP_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_AGP_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_AGP_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -311,7 +311,7 @@ create or replace package body P_AGE_PROFILE is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_AGE_RANGE',
+     (sVersion || '-' || sComponent || '.INSERT_AGE_RANGE',
       psAGP_CODE || '~' || to_char(pnAGE_FROM) || '~' || to_char(pnAGE_TO) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -348,7 +348,7 @@ create or replace package body P_AGE_PROFILE is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_AGE_RANGE',
+     (sVersion || '-' || sComponent || '.UPDATE_AGE_RANGE',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnAGE_FROM) || '~' || to_char(pnAGE_TO) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -436,7 +436,7 @@ create or replace package body P_AGE_PROFILE is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_AGE_RANGE',
+     (sVersion || '-' || sComponent || '.SET_AGE_RANGE',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psAGP_CODE || '~' || to_char(pnAGE_FROM) || '~' || to_char(pnAGE_TO) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -469,7 +469,7 @@ create or replace package body P_AGE_PROFILE is
     xAGR_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_AGE_RANGE',
+     (sVersion || '-' || sComponent || '.DELETE_AGE_RANGE',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -506,7 +506,7 @@ create or replace package body P_AGE_PROFILE is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_AGR_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.SET_AGR_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -529,7 +529,7 @@ create or replace package body P_AGE_PROFILE is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_AGR_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.REMOVE_AGR_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_AGR_TEXT(pnID, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
@@ -557,7 +557,7 @@ create or replace package body P_AGE_PROFILE is
     xAGR_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_AGR_TEXT',
+     (sVersion || '-' || sComponent || '.SET_AGR_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -602,7 +602,7 @@ create or replace package body P_AGE_PROFILE is
     xAGR_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_AGR_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_AGR_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -635,16 +635,12 @@ create or replace package body P_AGE_PROFILE is
 -- =====================================
 --
 begin
-  if sModule != $$PLSQL_UNIT
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
+  if sComponent != 'AGP'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
-  end if;
---
-  if sComponent != 'AGP'
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_AGE_PROFILE;

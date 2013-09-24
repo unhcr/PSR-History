@@ -22,7 +22,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_DISPLACEMENT_STATUS',
+     (sVersion || '-' || sComponent || '.INSERT_DISPLACEMENT_STATUS',
       '~' || psCODE || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -99,7 +99,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_DISPLACEMENT_STATUS',
+     (sVersion || '-' || sComponent || '.UPDATE_DISPLACEMENT_STATUS',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -201,7 +201,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_DISPLACEMENT_STATUS',
+     (sVersion || '-' || sComponent || '.SET_DISPLACEMENT_STATUS',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psCODE || '~' ||
         to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -250,7 +250,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     xDST_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_DISPLACEMENT_STATUS',
+     (sVersion || '-' || sComponent || '.DELETE_DISPLACEMENT_STATUS',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -287,7 +287,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_DST_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.SET_DST_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -310,7 +310,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_DST_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.REMOVE_DST_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_DST_TEXT(pnID, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
@@ -338,7 +338,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     xDST_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_DST_TEXT',
+     (sVersion || '-' || sComponent || '.SET_DST_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
@@ -383,7 +383,7 @@ create or replace package body P_DISPLACEMENT_STATUS is
     xDST_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_DST_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_DST_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -416,16 +416,12 @@ create or replace package body P_DISPLACEMENT_STATUS is
 -- =====================================
 --
 begin
-  if sModule != $$PLSQL_UNIT
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
+  if sComponent != 'DST'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
-  end if;
---
-  if sComponent != 'DST'
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_DISPLACEMENT_STATUS;

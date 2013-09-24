@@ -6,13 +6,12 @@ create or replace package P_ASR is
 --  Procedures for maintenance of statistics.
 --
 --  Change History:
---  23-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  18-Sep-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
-  sModule varchar2(30) := $$PLSQL_UNIT;
-  sVersion varchar2(10) := 'D0.1';
   sComponent varchar2(30) := 'ASR';
+  sVersion varchar2(10) := 'D0.1';
 --
 -- ========================================
 -- Program unit definitions

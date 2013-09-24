@@ -19,7 +19,7 @@ create or replace package body P_CODE is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_CODE_TYPE',
+     (sVersion || '-' || sComponent || '.INSERT_CODE_TYPE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -52,7 +52,7 @@ create or replace package body P_CODE is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_CODE_TYPE',
+     (sVersion || '-' || sComponent || '.UPDATE_CODE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) ||
         '~' || psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -99,7 +99,7 @@ create or replace package body P_CODE is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_CODE_TYPE',
+     (sVersion || '-' || sComponent || '.SET_CODE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -135,7 +135,7 @@ create or replace package body P_CODE is
     xCDET_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_CODE_TYPE',
+     (sVersion || '-' || sComponent || '.DELETE_CODE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -172,7 +172,7 @@ create or replace package body P_CODE is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_CDET_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.SET_CDET_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -195,7 +195,7 @@ create or replace package body P_CODE is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_CDET_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.REMOVE_CDET_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_CDET_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
@@ -223,7 +223,7 @@ create or replace package body P_CODE is
     xCDET_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_CDET_TEXT',
+     (sVersion || '-' || sComponent || '.SET_CDET_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) ||
         '~' || psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
   --
@@ -267,7 +267,7 @@ create or replace package body P_CODE is
     xCDET_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_CDET_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_CDET_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -311,7 +311,7 @@ create or replace package body P_CODE is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_CODE',
+     (sVersion || '-' || sComponent || '.INSERT_CODE',
       psCDET_CODE || '~' || psCODE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -368,7 +368,7 @@ create or replace package body P_CODE is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_CODE',
+     (sVersion || '-' || sComponent || '.UPDATE_CODE',
       psCDET_CODE || '~' || psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -417,7 +417,7 @@ create or replace package body P_CODE is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_CODE',
+     (sVersion || '-' || sComponent || '.SET_CODE',
       psCDET_CODE || '~' || psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -455,7 +455,7 @@ create or replace package body P_CODE is
     xCDE_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_CODE',
+     (sVersion || '-' || sComponent || '.DELETE_CODE',
       psCDET_CODE || '~' || psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -494,7 +494,7 @@ create or replace package body P_CODE is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_CDE_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.SET_CDE_DESCRIPTION',
       psCDET_CODE || '~' || psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -518,7 +518,7 @@ create or replace package body P_CODE is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_CDE_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.REMOVE_CDE_DESCRIPTION',
       psCDET_CODE || '~' || psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_CDE_TEXT(psCDET_CODE, psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
@@ -547,7 +547,7 @@ create or replace package body P_CODE is
     xCDE_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_CDE_TEXT',
+     (sVersion || '-' || sComponent || '.SET_CDE_TEXT',
       psCDET_CODE || '~' || psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
@@ -594,7 +594,7 @@ create or replace package body P_CODE is
     xCDE_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_CDE_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_CDE_TEXT',
       psCDET_CODE || '~' || psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -628,16 +628,12 @@ create or replace package body P_CODE is
 -- =====================================
 --
 begin
-  if sModule != $$PLSQL_UNIT
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
+  if sComponent != 'CDE'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
-  end if;
---
-  if sComponent != 'CDE'
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_CODE;

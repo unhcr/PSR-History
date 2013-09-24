@@ -6,13 +6,12 @@ create or replace package P_CONTEXT is
 --  Procedures for managing the PSR application context.
 --
 --  Change History:
---  16-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  18-Sep-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
-  sModule varchar2(30) := $$PLSQL_UNIT;
   sVersion varchar2(10) := 'D0.1';
-  sComponent varchar2(30) := 'CTXT';
+  sComponent varchar2(30) := 'CTX';
 --
 -- ----------------------------------------
 -- SET_USERID

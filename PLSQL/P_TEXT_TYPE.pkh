@@ -6,13 +6,12 @@ create or replace package P_TEXT_TYPE is
 --  Procedures for maintenance of text types.
 --
 --  Change History:
---  16-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  18-Sep-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
-  sModule varchar2(30) := $$PLSQL_UNIT;
+  sComponent varchar2(30) := 'TTP';
   sVersion varchar2(10) := 'D0.1';
-  sComponent varchar2(30) := 'TXTT';
 --
 -- ========================================
 -- Program unit definitions

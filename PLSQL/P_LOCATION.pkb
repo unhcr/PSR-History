@@ -42,7 +42,7 @@ create or replace package body P_LOCATION is
     xLOCR_ROWID2 rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_LOCATION_RELATIONSHIP1',
+     (sVersion || '-' || sComponent || '.INSERT_LOCATION_RELATIONSHIP1',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -220,7 +220,7 @@ create or replace package body P_LOCATION is
     xLOCR_ROWID2 rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_LOCATION_RELATIONSHIP1',
+     (sVersion || '-' || sComponent || '.UPDATE_LOCATION_RELATIONSHIP1',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR) || '~' || to_char(pdSTART_DATE_NEW, 'YYYY-MM-DD HH24:MI:SS') ||
@@ -358,7 +358,7 @@ create or replace package body P_LOCATION is
     xLOCR_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_LOCATION_RELATIONSHIP1',
+     (sVersion || '-' || sComponent || '.DELETE_LOCATION_RELATIONSHIP1',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR));
@@ -408,7 +408,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_LOCATION_TYPE',
+     (sVersion || '-' || sComponent || '.INSERT_LOCATION_TYPE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -441,7 +441,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_LOCATION_TYPE',
+     (sVersion || '-' || sComponent || '.UPDATE_LOCATION_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -488,7 +488,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCATION_TYPE',
+     (sVersion || '-' || sComponent || '.SET_LOCATION_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || to_char(pnDISPLAY_SEQ) || '~' ||
         psACTIVE_FLAG || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
@@ -524,7 +524,7 @@ create or replace package body P_LOCATION is
     xLOCT_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_LOCATION_TYPE',
+     (sVersion || '-' || sComponent || '.DELETE_LOCATION_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -561,7 +561,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCT_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.SET_LOCT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -584,7 +584,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOCT_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.REMOVE_LOCT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_LOCT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
@@ -612,7 +612,7 @@ create or replace package body P_LOCATION is
     xLOCT_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCT_TEXT',
+     (sVersion || '-' || sComponent || '.SET_LOCT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -657,7 +657,7 @@ create or replace package body P_LOCATION is
     xLOCT_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOCT_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_LOCT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -702,7 +702,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_LOCATION',
+     (sVersion || '-' || sComponent || '.INSERT_LOCATION',
       '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -808,7 +808,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_LOCATION',
+     (sVersion || '-' || sComponent || '.UPDATE_LOCATION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnLOCTV_ID) || '~' || psCountryCode || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -961,7 +961,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCATION',
+     (sVersion || '-' || sComponent || '.SET_LOCATION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLOCT_CODE || '~' ||
         to_char(pnLOCTV_ID) || '~' || psCountryCode || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -999,7 +999,7 @@ create or replace package body P_LOCATION is
     xLOC_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_LOCATION',
+     (sVersion || '-' || sComponent || '.DELETE_LOCATION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -1036,7 +1036,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOC_NAME',
+     (sVersion || '-' || sComponent || '.SET_LOC_NAME',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psName)) || ':' || psName);
   --
@@ -1059,7 +1059,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOC_NAME',
+     (sVersion || '-' || sComponent || '.REMOVE_LOC_NAME',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_LOC_TEXT(pnID, pnVERSION_NBR, 'NAME', 1, psLANG_CODE);
@@ -1087,7 +1087,7 @@ create or replace package body P_LOCATION is
     xLOC_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOC_TEXT',
+     (sVersion || '-' || sComponent || '.SET_LOC_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -1132,7 +1132,7 @@ create or replace package body P_LOCATION is
     xLOC_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOC_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_LOC_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -1176,7 +1176,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_LOCATION_ATTRIBUTE_TYPE',
+     (sVersion || '-' || sComponent || '.INSERT_LOCATION_ATTRIBUTE_TYPE',
       psCODE || '~' || psDATA_TYPE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -1212,7 +1212,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_LOCATION_ATTRIBUTE_TYPE',
+     (sVersion || '-' || sComponent || '.UPDATE_LOCATION_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDATA_TYPE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -1280,7 +1280,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCATION_ATTRIBUTE_TYPE',
+     (sVersion || '-' || sComponent || '.SET_LOCATION_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psDATA_TYPE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -1317,7 +1317,7 @@ create or replace package body P_LOCATION is
     xLOCAT_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_LOCATION_ATTRIBUTE_TYPE',
+     (sVersion || '-' || sComponent || '.DELETE_LOCATION_ATTRIBUTE_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -1354,7 +1354,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCAT_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.SET_LOCAT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -1377,7 +1377,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOCAT_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.REMOVE_LOCAT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_LOCAT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
@@ -1405,7 +1405,7 @@ create or replace package body P_LOCATION is
     xLOCAT_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCAT_TEXT',
+     (sVersion || '-' || sComponent || '.SET_LOCAT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -1450,7 +1450,7 @@ create or replace package body P_LOCATION is
     xLOCAT_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOCAT_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_LOCAT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -1493,7 +1493,7 @@ create or replace package body P_LOCATION is
     sACTIVE_FLAG P_BASE.tsLOCAT_ACTIVE_FLAG;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_LOCATION_ATTRIBUTE',
+     (sVersion || '-' || sComponent || '.INSERT_LOCATION_ATTRIBUTE',
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || psCHAR_VALUE || '~' ||
         to_char(pnNUM_VALUE) || '~' || to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
   --
@@ -1539,7 +1539,7 @@ create or replace package body P_LOCATION is
     xLOCA_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_LOCATION_ATTRIBUTE',
+     (sVersion || '-' || sComponent || '.UPDATE_LOCATION_ATTRIBUTE',
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
         to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -1615,7 +1615,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCATION_ATTRIBUTE',
+     (sVersion || '-' || sComponent || '.SET_LOCATION_ATTRIBUTE',
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psCHAR_VALUE || '~' || to_char(pnNUM_VALUE) || '~' ||
         to_char(pdDATE_VALUE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -1651,7 +1651,7 @@ create or replace package body P_LOCATION is
     xLOCA_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_LOCATION_ATTRIBUTE',
+     (sVersion || '-' || sComponent || '.DELETE_LOCATION_ATTRIBUTE',
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR));
   --
     if psLOCAT_CODE = gsCOUNTRY_LOCAT_CODE
@@ -1700,7 +1700,7 @@ create or replace package body P_LOCATION is
     xLOCA_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCA_TEXT',
+     (sVersion || '-' || sComponent || '.SET_LOCA_TEXT',
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -1748,7 +1748,7 @@ create or replace package body P_LOCATION is
     xLOCA_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOCA_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_LOCA_TEXT',
       to_char(pnLOC_ID) || '~' || psLOCAT_CODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -1792,7 +1792,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_LOC_RELATIONSHIP_TYPE',
+     (sVersion || '-' || sComponent || '.INSERT_LOC_RELATIONSHIP_TYPE',
       psCODE || '~' || to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -1825,7 +1825,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_LOC_RELATIONSHIP_TYPE',
+     (sVersion || '-' || sComponent || '.UPDATE_LOC_RELATIONSHIP_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -1872,7 +1872,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOC_RELATIONSHIP_TYPE',
+     (sVersion || '-' || sComponent || '.SET_LOC_RELATIONSHIP_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -1908,7 +1908,7 @@ create or replace package body P_LOCATION is
     xLOCRT_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_LOC_RELATIONSHIP_TYPE',
+     (sVersion || '-' || sComponent || '.DELETE_LOC_RELATIONSHIP_TYPE',
       psCODE || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -1945,7 +1945,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCRT_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.SET_LOCRT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -1968,7 +1968,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOCRT_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.REMOVE_LOCRT_DESCRIPTION',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_LOCRT_TEXT(psCODE, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
@@ -1996,7 +1996,7 @@ create or replace package body P_LOCATION is
     xLOCRT_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCRT_TEXT',
+     (sVersion || '-' || sComponent || '.SET_LOCRT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -2041,7 +2041,7 @@ create or replace package body P_LOCATION is
     xLOCRT_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOCRT_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_LOCRT_TEXT',
       psCODE || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -2082,7 +2082,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_LOCATION_RELATIONSHIP',
+     (sVersion || '-' || sComponent || '.INSERT_LOCATION_RELATIONSHIP',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -2116,7 +2116,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_LOCATION_RELATIONSHIP',
+     (sVersion || '-' || sComponent || '.UPDATE_LOCATION_RELATIONSHIP',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR) || '~' || to_char(pdSTART_DATE_NEW, 'YYYY-MM-DD HH24:MI:SS') ||
@@ -2151,7 +2151,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_LOCATION_RELATIONSHIP',
+     (sVersion || '-' || sComponent || '.DELETE_LOCATION_RELATIONSHIP',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR));
@@ -2182,7 +2182,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_LOCATION_WITHIN',
+     (sVersion || '-' || sComponent || '.INSERT_LOCATION_WITHIN',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS'));
@@ -2267,7 +2267,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_LOCATION_WITHIN',
+     (sVersion || '-' || sComponent || '.UPDATE_LOCATION_WITHIN',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pdSTART_DATE_NEW, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -2295,7 +2295,7 @@ create or replace package body P_LOCATION is
     dEND_DATE P_BASE.tdDate;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_LOCATION_WITHIN',
+     (sVersion || '-' || sComponent || '.DELETE_LOCATION_WITHIN',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || to_char(pnVERSION_NBR));
   --
@@ -2350,7 +2350,7 @@ create or replace package body P_LOCATION is
     xLOCR_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCR_TEXT',
+     (sVersion || '-' || sComponent || '.SET_LOCR_TEXT',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' ||
         psLOCRT_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
@@ -2403,7 +2403,7 @@ create or replace package body P_LOCATION is
     xLOCR_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOCR_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_LOCR_TEXT',
       to_char(pnLOC_ID_FROM) || '~' || to_char(pnLOC_ID_TO) || '~' || psLOCRT_CODE ||
         '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || to_char(pnVERSION_NBR) ||
         '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
@@ -2447,7 +2447,7 @@ create or replace package body P_LOCATION is
     sACTIVE_FLAG P_BASE.tsLOCRT_ACTIVE_FLAG;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_LOC_TYPE_RELATIONSHIP',
+     (sVersion || '-' || sComponent || '.INSERT_LOC_TYPE_RELATIONSHIP',
       psLOCT_CODE_FROM || '~' || psLOCT_CODE_TO || '~' || psLOCRT_CODE);
   --
     select ACTIVE_FLAG into sACTIVE_FLAG from T_LOCATION_RELATIONSHIP_TYPES where CODE = psLOCRT_CODE;
@@ -2480,7 +2480,7 @@ create or replace package body P_LOCATION is
     xLOCTR_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_LOC_TYPE_RELATIONSHIP',
+     (sVersion || '-' || sComponent || '.DELETE_LOC_TYPE_RELATIONSHIP',
       psLOCT_CODE_FROM || '~' || psLOCT_CODE_TO || '~' || psLOCRT_CODE);
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -2527,7 +2527,7 @@ create or replace package body P_LOCATION is
     xLOCTR_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCTR_TEXT',
+     (sVersion || '-' || sComponent || '.SET_LOCTR_TEXT',
       psLOCT_CODE_FROM || '~' || psLOCT_CODE_TO || '~' || psLOCRT_CODE || '~' ||
         to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psText)) || ':' || psText);
@@ -2577,7 +2577,7 @@ create or replace package body P_LOCATION is
     xLOCTR_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOCTR_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_LOCTR_TEXT',
       psLOCT_CODE_FROM || '~' || psLOCT_CODE_TO || '~' || psLOCRT_CODE || '~' ||
         to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
@@ -2626,7 +2626,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_LOCATION_TYPE_VARIANT',
+     (sVersion || '-' || sComponent || '.INSERT_LOCATION_TYPE_VARIANT',
       psLOCT_CODE || '~' || to_char(pnLOC_ID) || '~' || psLOCRT_CODE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -2665,7 +2665,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_LOCATION_TYPE_VARIANT',
+     (sVersion || '-' || sComponent || '.UPDATE_LOCATION_TYPE_VARIANT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
@@ -2715,7 +2715,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCATION_TYPE_VARIANT',
+     (sVersion || '-' || sComponent || '.SET_LOCATION_TYPE_VARIANT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psLOCT_CODE || '~' || to_char(pnLOC_ID) || '~' || psLOCRT_CODE || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
@@ -2752,7 +2752,7 @@ create or replace package body P_LOCATION is
     xLOCTV_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_LOCATION_TYPE_VARIANT',
+     (sVersion || '-' || sComponent || '.DELETE_LOCATION_TYPE_VARIANT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -2789,7 +2789,7 @@ create or replace package body P_LOCATION is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCTV_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.SET_LOCTV_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -2812,7 +2812,7 @@ create or replace package body P_LOCATION is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOCTV_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.REMOVE_LOCTV_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLANG_CODE);
   --
     REMOVE_LOCTV_TEXT(pnID, pnVERSION_NBR, 'DESCR', 1, psLANG_CODE);
@@ -2840,7 +2840,7 @@ create or replace package body P_LOCATION is
     xLOCTV_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCTV_TEXT',
+     (sVersion || '-' || sComponent || '.SET_LOCTV_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -2885,7 +2885,7 @@ create or replace package body P_LOCATION is
     xLOCTV_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_LOCTV_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_LOCTV_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psTXTT_CODE || '~' ||
         to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -2918,16 +2918,12 @@ create or replace package body P_LOCATION is
 -- =====================================
 --
 begin
-  if sModule != $$PLSQL_UNIT
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
+  if sComponent != 'LOC'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
-  end if;
---
-  if sComponent != 'LOC'
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
   select CHAR_VALUE
