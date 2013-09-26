@@ -24,8 +24,8 @@ create or replace package body P_DISPLACEMENT_STATUS is
     P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_DISPLACEMENT_STATUS',
       '~' || psCODE || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -63,8 +63,8 @@ create or replace package body P_DISPLACEMENT_STATUS is
   --
     P_UTILITY.TRACE_CONTEXT
      (to_char(pnID) || '~' || psCODE || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -101,8 +101,8 @@ create or replace package body P_DISPLACEMENT_STATUS is
     P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_DISPLACEMENT_STATUS',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -173,8 +173,8 @@ create or replace package body P_DISPLACEMENT_STATUS is
   --
     P_UTILITY.TRACE_CONTEXT
      (to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -203,8 +203,8 @@ create or replace package body P_DISPLACEMENT_STATUS is
     P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.SET_DISPLACEMENT_STATUS',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psCODE || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -226,8 +226,8 @@ create or replace package body P_DISPLACEMENT_STATUS is
   --
     P_UTILITY.TRACE_CONTEXT
      (to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psCODE || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
