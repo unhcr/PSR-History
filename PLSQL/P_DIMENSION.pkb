@@ -316,8 +316,8 @@ create or replace package body P_DIMENSION is
     P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.INSERT_DIMENSION_VALUE',
       '~' || psDIMT_CODE || '~' || psCODE || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -357,8 +357,8 @@ create or replace package body P_DIMENSION is
   --
     P_UTILITY.TRACE_CONTEXT
      (to_char(pnID) || '~' || psDIMT_CODE || '~' || psCODE || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -397,8 +397,8 @@ create or replace package body P_DIMENSION is
     P_UTILITY.START_MODULE
      (sVersion || '-' || sComponent || '.UPDATE_DIMENSION_VALUE',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psCODE || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -473,8 +473,8 @@ create or replace package body P_DIMENSION is
   --
     P_UTILITY.TRACE_CONTEXT
      (to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psCODE || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -505,8 +505,8 @@ create or replace package body P_DIMENSION is
      (sVersion || '-' || sComponent || '.SET_DIMENSION_VALUE',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psDIMT_CODE || '~' || psCODE || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -529,8 +529,8 @@ create or replace package body P_DIMENSION is
     P_UTILITY.TRACE_CONTEXT
      (to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psDIMT_CODE || '~' || psCODE || '~' ||
-        to_date(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_date(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pnDISPLAY_SEQ) || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
