@@ -5,10 +5,10 @@ create or replace package body P_ASR is
 -- ========================================
 --
 -- ----------------------------------------
--- INSERT_TABLE7AB
+-- INSERT_ASR_RETURNEES
 -- ----------------------------------------
 --
-  procedure INSERT_TABLE7AB
+  procedure INSERT_ASR_RETURNEES
    (pnASR_YEAR in P_BASE.tmnYear,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tmnLOC_ID,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tmnLOC_ID,
@@ -19,12 +19,12 @@ create or replace package body P_ASR is
     pnREFRTN_AH_VALUE in P_BASE.tnSTC_VALUE)
   is
     dSTART_DATE P_BASE.tdDate := to_date(to_char(pnASR_YEAR) || '-01-01', 'YYYY-MM-DD');
-    dEND_DATE P_BASE.tdDate := to_date(to_char(pnASR_YEAR+1) || '-01-01', 'YYYY-MM-DD');
+    dEND_DATE P_BASE.tdDate := to_date(to_char(pnASR_YEAR + 1) || '-01-01', 'YYYY-MM-DD');
     nSTG_ID P_BASE.tnSTG_ID;
     nSTC_ID P_BASE.tnSTC_ID;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.INSERT_TABLE7AB',
+     (sVersion || '-' || sComponent || '.INSERT_ASR_RETURNEES',
       to_char(pnASR_YEAR)  || '~' || to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' ||
         to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' || to_char(pnDST_ID) || '~' ||
         psSOURCE || '~' || psBASIS || '~' ||
@@ -42,10 +42,10 @@ create or replace package body P_ASR is
     then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 2, 'UNHCR-assisted value may not be greater than total value');
     end if;
   --
-  -- Create new population group representing this table 7A/B row.
+  -- Create new population group representing this returnee table row.
   --
     P_STATISTIC_GROUP.INSERT_STATISTIC_GROUP
-     (nSTG_ID, dSTART_DATE, dEND_DATE,
+     (nSTG_ID, dSTART_DATE, dEND_DATE, 'RETURNEE',
       pnDST_ID => pnDST_ID,
       pnLOC_ID_ASYLUM_COUNTRY => pnLOC_ID_ASYLUM_COUNTRY,
       pnLOC_ID_ORIGIN_COUNTRY => pnLOC_ID_ORIGIN_COUNTRY);
@@ -88,13 +88,13 @@ create or replace package body P_ASR is
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end INSERT_TABLE7AB;
+  end INSERT_ASR_RETURNEES;
 --
 -- ----------------------------------------
--- UPDATE_TABLE7AB
+-- UPDATE_ASR_RETURNEES
 -- ----------------------------------------
 --
-  procedure UPDATE_TABLE7AB
+  procedure UPDATE_ASR_RETURNEES
    (pnASR_YEAR in P_BASE.tmnYear,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tmnLOC_ID,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tmnLOC_ID,
@@ -117,11 +117,11 @@ create or replace package body P_ASR is
     nREFRTN_VERSION_NBR P_BASE.tnSTC_VERSION_NBR := pnREFRTN_VERSION_NBR;
     nREFRTN_AH_VERSION_NBR P_BASE.tnSTC_VERSION_NBR := pnREFRTN_AH_VERSION_NBR;
     dSTART_DATE P_BASE.tdDate := to_date(to_char(pnASR_YEAR) || '-01-01', 'YYYY-MM-DD');
-    dEND_DATE P_BASE.tdDate := to_date(to_char(pnASR_YEAR+1) || '-01-01', 'YYYY-MM-DD');
+    dEND_DATE P_BASE.tdDate := to_date(to_char(pnASR_YEAR + 1) || '-01-01', 'YYYY-MM-DD');
     nSTC_ID P_BASE.tnSTC_ID;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.UPDATE_TABLE7AB',
+     (sVersion || '-' || sComponent || '.UPDATE_ASR_RETURNEES',
       to_char(pnASR_YEAR) || '~' || to_char(pnLOC_ID_ORIGIN_COUNTRY) || '~' ||
         to_char(pnLOC_ID_ASYLUM_COUNTRY) || '~' || to_char(pnDST_ID) || '~' ||
         psSOURCE || '~' || psBASIS || '~' ||
@@ -205,13 +205,13 @@ create or replace package body P_ASR is
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end UPDATE_TABLE7AB;
+  end UPDATE_ASR_RETURNEES;
 --
 -- ----------------------------------------
--- DELETE_TABLE7AB
+-- DELETE_ASR_RETURNEES
 -- ----------------------------------------
 --
-  procedure DELETE_TABLE7AB
+  procedure DELETE_ASR_RETURNEES
    (pnSTG_ID_PRIMARY in P_BASE.tnSTG_ID,
     pnSTG_VERSION_NBR in P_BASE.tnSTG_VERSION_NBR,
     pnSTGA_VERSION_NBR_SOURCE in P_BASE.tnSTGA_VERSION_NBR,
@@ -228,7 +228,7 @@ create or replace package body P_ASR is
     nREFRTN_AH_VERSION_NBR P_BASE.tnSTC_VERSION_NBR := pnREFRTN_AH_VERSION_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sComponent || '.DELETE_TABLE7AB',
+     (sVersion || '-' || sComponent || '.DELETE_ASR_RETURNEES',
       to_char(pnSTG_ID_PRIMARY)  || '~' || to_char(pnSTG_VERSION_NBR) || '~' ||
         to_char(pnSTGA_VERSION_NBR_SOURCE) || '~' || to_char(pnSTGA_VERSION_NBR_BASIS) || '~' ||
         to_char(pnREFRTN_STC_ID) || '~' || to_char(pnREFRTN_VERSION_NBR) || '~' ||
@@ -265,7 +265,7 @@ create or replace package body P_ASR is
   exception
     when others
     then P_UTILITY.TRACE_EXCEPTION;
-  end DELETE_TABLE7AB;
+  end DELETE_ASR_RETURNEES;
 --
 -- =====================================
 -- Initialisation
