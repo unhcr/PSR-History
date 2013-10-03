@@ -14,21 +14,21 @@ prompt UNSD_REGION_TREE
 prompt ================
 @UNSD_REGION_TREE
 
-prompt ASR_POC_DETAILS
+prompt PSQ_POC_DETAILS
 prompt ===============
-@ASR_POC_DETAILS
+@PSQ_POC_DETAILS
 
-prompt ASR_POC_SUMMARY
+prompt PSQ_POC_SUMMARY
 prompt ===============
-@ASR_POC_SUMMARY
+@PSQ_POC_SUMMARY
 
-prompt ASR_DEMOGRAPHICS
+prompt PSQ_DEMOGRAPHICS
 prompt ================
-@ASR_DEMOGRAPHICS
+@PSQ_DEMOGRAPHICS
 
-prompt ASR_RSD
+prompt PSQ_RSD
 prompt =======
-@ASR_RSD
+@PSQ_RSD
 
 prompt PSQGrants
 prompt =========
