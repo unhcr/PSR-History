@@ -6,7 +6,7 @@ create or replace package P_CONTEXT is
 --  Procedures for managing the PSR application context.
 --
 --  Change History:
---  18-Sep-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  3-Oct-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -17,13 +17,29 @@ create or replace package P_CONTEXT is
 -- SET_USERID
 -- ----------------------------------------
 --
--- Create a new language record or update an existing one.
+-- Set the user id in the PSR application context.
 --
 -- Parameters:
---  psUSERID - The user ID to be set in the PSR application context.
+--  psUSERID - The user ID to be set.
 --
   procedure SET_USERID
    (psUSERID in P_BASE.tmsUSR_USERID);
+--
+-- ----------------------------------------
+-- CLEAR_USERID
+-- ----------------------------------------
+--
+-- Clear the user id in the PSR application context.
+--
+  procedure CLEAR_USERID;
+--
+-- ----------------------------------------
+-- CLEAR_CONTEXT
+-- ----------------------------------------
+--
+-- Clear the PSR application context.
+--
+  procedure CLEAR_CONTEXT;
 --
 end P_CONTEXT;
 /

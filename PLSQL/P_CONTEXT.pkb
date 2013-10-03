@@ -22,6 +22,40 @@ create or replace package body P_CONTEXT is
     then P_UTILITY.TRACE_EXCEPTION;
   end SET_USERID;
 --
+-- ----------------------------------------
+-- CLEAR_USERID
+-- ----------------------------------------
+--
+  procedure CLEAR_USERID
+  is
+  begin
+    P_UTILITY.START_MODULE(sVersion || '-' || sComponent || '.CLEAR_USERID');
+  --
+    dbms_session.clear_context('PSR', attribute => 'USERID');
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end CLEAR_USERID;
+--
+-- ----------------------------------------
+-- CLEAR_CONTEXT
+-- ----------------------------------------
+--
+  procedure CLEAR_CONTEXT
+  is
+  begin
+    P_UTILITY.START_MODULE(sVersion || '-' || sComponent || '.CLEAR_CONTEXT');
+  --
+    dbms_session.clear_context('PSR');
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end CLEAR_CONTEXT;
+--
 -- =====================================
 -- Initialisation
 -- =====================================
