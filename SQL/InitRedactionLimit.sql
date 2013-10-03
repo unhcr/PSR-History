@@ -4,10 +4,6 @@ declare
   nSTG_ID P_BASE.tnSTG_ID;
   iCount pls_integer := 0;
 begin
-  P_STATISTIC_GROUP.INSERT_STG_ATTRIBUTE_TYPE
-   ('REDACTLMT', 'N', 'en',
-    'Redaction limit (threshold below which small values are redacted from public reports)');
---
   P_STATISTIC_GROUP.INSERT_STATISTIC_GROUP(nSTG_ID, date '2012-01-01', date '2012-01-02');
   P_STATISTIC_GROUP.INSERT_STG_ATTRIBUTE(nSTG_ID, 'REDACTLMT', pnNUM_VALUE => 5);
 --
