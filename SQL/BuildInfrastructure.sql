@@ -18,6 +18,10 @@ prompt Context
 prompt =======
 @Context
 
+prompt ASRSchema
+prompt =========
+@ASRSchema
+
 prompt PSQSchema
 prompt =========
 @PSQSchema
