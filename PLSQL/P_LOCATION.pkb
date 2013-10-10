@@ -19,6 +19,28 @@ create or replace package body P_LOCATION is
 -- ========================================
 --
 -- ----------------------------------------
+-- CHECK_LOCATION_ID
+-- ----------------------------------------
+--
+  procedure CHECK_LOCATION_ID
+   (pnID in P_BASE.tmnLOC_ID)
+  is
+  begin
+    P_UTILITY.START_MODULE(sVersion || '-' || sComponent || '.CHECK_LOCATION_ID', to_char(pnID));
+  --
+    if trunc(pnID / 1e8) !=
+      gnLOC_ID_CHECK_INCREMENT -
+        mod(mod(pnID, 1e8) * gnLOC_ID_CHECK_MULTIPLIER, gnLOC_ID_CHECK_MODULUS)
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 19, 'Check digit failure in supplied location id');
+    end if;
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end CHECK_LOCATION_ID;
+--
+-- ----------------------------------------
 -- INSERT_LOCATION_RELATIONSHIP1
 -- ----------------------------------------
 --
@@ -748,10 +770,10 @@ create or replace package body P_LOCATION is
   --
     select LOC_SEQ.nextval into pnID from DUAL;
   --
-    pnID :=
-      mod(pnID * gnLOC_ID_MULTIPLIER + gnLOC_ID_INCREMENT, 1e8) +
-        (gnLOC_ID_CHECK_INCREMENT -
-          mod(pnID * gnLOC_ID_CHECK_MULTIPLIER, gnLOC_ID_CHECK_MODULUS)) * 1e8;
+    pnID := mod(pnID * gnLOC_ID_MULTIPLIER + gnLOC_ID_INCREMENT, 1e8) +
+      (gnLOC_ID_CHECK_INCREMENT -
+        mod(mod(pnID * gnLOC_ID_MULTIPLIER + gnLOC_ID_INCREMENT, 1e8) * gnLOC_ID_CHECK_MULTIPLIER,
+            gnLOC_ID_CHECK_MODULUS)) * 1e8;
   --
     P_UTILITY.TRACE_CONTEXT
      (to_char(pnID) || '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
@@ -779,6 +801,90 @@ create or replace package body P_LOCATION is
     when others
     then P_UTILITY.TRACE_EXCEPTION;
   end INSERT_LOCATION;
+--
+-- ----------------------------------------
+-- INSERT_LOCATION_WITH_ID
+-- ----------------------------------------
+--
+  procedure INSERT_LOCATION_WITH_ID
+   (pnID in P_BASE.tnLOC_ID,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psName in P_BASE.tmsText,
+    psLOCT_CODE in P_BASE.tmsLOCT_CODE,
+    psCountryCode in P_BASE.tsCountryCode := null,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null)
+  is
+    nITM_ID P_BASE.tnITM_ID;
+    nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
+  begin
+    P_UTILITY.START_MODULE
+     (sVersion || '-' || sComponent || '.INSERT_LOCATION_WITH_ID',
+      to_char(pnID) || '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
+        to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
+  --
+  -- Validate supplied location id.
+  --
+    CHECK_LOCATION_ID(pnID);
+  --
+  -- Special processing for countries.
+  --
+    if psLOCT_CODE = 'COUNTRY'
+    then
+      if psCountryCode is null
+      then
+        P_MESSAGE.DISPLAY_MESSAGE(sComponent, 8, 'Country code must be specified for new country');
+      else
+      --
+      -- Check for existing country with same country code and overlapping effective date range.
+      --
+        declare
+          sDummy varchar2(1);
+        begin
+          select 'x'
+          into sDummy
+          from T_LOCATION_ATTRIBUTES LOCA
+          inner join T_LOCATIONS LOC
+            on LOC.ID = LOCA.LOC_ID
+          where LOCA.CHAR_VALUE = psCountryCode
+          and LOCA.LOCAT_CODE = gsCOUNTRY_LOCAT_CODE
+          and LOC.START_DATE < nvl(pdEND_DATE, P_BASE.gdMAX_DATE)
+          and LOC.END_DATE > nvl(pdSTART_DATE, P_BASE.gdMIN_DATE);
+        --
+          raise TOO_MANY_ROWS;
+        exception
+          when NO_DATA_FOUND then null;
+        --
+          when TOO_MANY_ROWS
+          then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 9, 'Country with this code already exists');
+        end;
+      end if;
+    elsif psCountryCode is not null
+    then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 10, 'Country code can only be specified for countries');
+    end if;
+  --
+    P_TEXT.SET_TEXT(nITM_ID, 'LOC', 'NAME', nSEQ_NBR, psLANG_CODE, psName);
+  --
+    insert into T_LOCATIONS
+     (ID, LOCT_CODE,
+      START_DATE, END_DATE, ITM_ID)
+    values
+     (pnID, psLOCT_CODE,
+      nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE), nITM_ID);
+  --
+  -- Create location attribute for country code if necessary.
+  --
+    if psLOCT_CODE = 'COUNTRY'
+    then INSERT_LOCATION_ATTRIBUTE(pnID, gsCOUNTRY_LOCAT_CODE, psCountryCode);
+    end if;
+  --
+    P_UTILITY.END_MODULE;
+  exception
+    when others
+    then P_UTILITY.TRACE_EXCEPTION;
+  end INSERT_LOCATION_WITH_ID;
 --
 -- ----------------------------------------
 -- UPDATE_LOCATION

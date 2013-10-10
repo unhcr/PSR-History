@@ -227,6 +227,37 @@ create or replace package P_LOCATION is
     pdEND_DATE in P_BASE.tdDate := null);
 --
 -- ----------------------------------------
+-- INSERT_LOCATION_WITH_ID
+-- ----------------------------------------
+--
+-- Create a new location record supplying the location id to be assigned.
+--
+-- This is a special procedure to be used only on initial load of the database when preserving
+--  already assigned location ids.
+--
+-- Parameters:
+--  pnID - Location identifier to be assigned (mandatory).
+--  psLANG_CODE - Language code of the location name (mandatory).
+--  psName - Location name text (mandatory).
+--  psLOCT_CODE - Location type code (mandatory).
+--  psCountryCode - ISO 3166-1 alpha-3 country code (not allowed when the location type is not
+--    country; mandatory for a new location of type country).
+--  pdSTART_DATE - Effective start date of details of this location (optional, the absence of a
+--    start date, or a null value, indicates that the effectivity starts indefinitely far in the
+--    past).
+--  pdEND_DATE - Effective end date of details of this location (optional, the absence of an end
+--    date, or a null value, indicates that the effectivity extends indefinitely into the future).
+--
+  procedure INSERT_LOCATION_WITH_ID
+   (pnID in P_BASE.tnLOC_ID,
+    psLANG_CODE in P_BASE.tmsLANG_CODE,
+    psName in P_BASE.tmsText,
+    psLOCT_CODE in P_BASE.tmsLOCT_CODE,
+    psCountryCode in P_BASE.tsCountryCode := null,
+    pdSTART_DATE in P_BASE.tdDate := null,
+    pdEND_DATE in P_BASE.tdDate := null);
+--
+-- ----------------------------------------
 -- UPDATE_LOCATION
 -- ----------------------------------------
 --
