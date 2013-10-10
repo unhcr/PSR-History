@@ -26,6 +26,10 @@ prompt PSQSchema
 prompt =========
 @PSQSchema
 
+prompt ResetLOC_SEQ
+prompt ============
+@ResetLOC_SEQ
+
 prompt InitBase
 prompt ========
 @InitBase
