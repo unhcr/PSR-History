@@ -34,47 +34,16 @@ begin
       dbms_output.put_line
        ('Unsupported to location type: ' || rLOCR.LOCT_CODE_TO);
     else
-      case rLOCR.LOCT_CODE_FROM
-        when 'COUNTRY'
-        then
-          select LOC.ID
-          into nLOC_ID_FROM
-          from T_LOCATION_ATTRIBUTES LOCA
-          inner join T_LOCATIONS LOC
-            on LOC.ID = LOCA.LOC_ID
-          where LOCA.LOCAT_CODE = 'ISO3166A3'
-          and LOCA.CHAR_VALUE = rLOCR.LOC_CODE_FROM
-          and LOC.LOCT_CODE = 'COUNTRY'
-          and LOC.START_DATE = rLOCR.LOC_START_DATE_FROM;
-        when 'HCR-ROF'
-        then
-          select LOC.ID
-          into nLOC_ID_FROM
-          from T_LOCATION_ATTRIBUTES LOCA
-          inner join T_LOCATIONS LOC
-            on LOC.ID = LOCA.LOC_ID
-          where LOCA.LOCAT_CODE = 'HCRCD'
-          and LOCA.CHAR_VALUE = rLOCR.LOC_CODE_FROM
-          and LOC.LOCT_CODE = 'HCR-ROF'
-          and LOC.START_DATE = rLOCR.LOC_START_DATE_FROM;
-        when 'HCR-COP'
-        then
-          begin
-            select LOC.ID
-            into nLOC_ID_FROM
-            from T_LOCATION_ATTRIBUTES LOCA
-            inner join T_LOCATIONS LOC
-              on LOC.ID = LOCA.LOC_ID
-            where LOCA.LOCAT_CODE = 'HCRCD'
-            and LOCA.CHAR_VALUE = rLOCR.LOC_CODE_FROM
-            and LOC.LOCT_CODE = 'HCR-COP'
-            and LOC.START_DATE = rLOCR.LOC_START_DATE_FROM;
-          exception
-            when NO_DATA_FOUND
-            then P_POPULATION_PLANNING_GROUP.CREATE_COUNTRY_OPERATION
-                  (nLOC_ID_FROM, rLOCR.LOC_CODE_FROM);
-          end;
-      end case;
+      select LOC.ID
+      into nLOC_ID_FROM
+      from T_LOCATION_ATTRIBUTES LOCA
+      inner join T_LOCATIONS LOC
+        on LOC.ID = LOCA.LOC_ID
+      where LOCA.LOCAT_CODE =
+        case when rLOCR.LOCT_CODE_FROM = 'COUNTRY' then 'ISO3166A3' else 'HCRCD' end
+      and LOCA.CHAR_VALUE = rLOCR.LOC_CODE_FROM
+      and LOC.LOCT_CODE = rLOCR.LOCT_CODE_FROM
+      and LOC.START_DATE = rLOCR.LOC_START_DATE_FROM;
     --
       select LOC.ID
       into nLOC_ID_TO
