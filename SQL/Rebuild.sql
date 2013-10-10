@@ -1,3 +1,5 @@
+@@PreserveLocationIds
+
 @dropall
 @drop
 
