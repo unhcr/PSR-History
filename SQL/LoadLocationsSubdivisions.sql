@@ -21,17 +21,27 @@ begin
       LSD.COU_CODE_PREV,
       nvl(LSD.COU_START_DATE_PREV, P_BASE.MIN_DATE) as COU_START_DATE_PREV,
       COU.ID as COU_ID,
+      LID.ID,
       count(distinct LOCTV.ID) as LOCTV_COUNT,
       max(LOCTV.ID) as LOCTV_ID
     from S_LOCATION_SUBDIVISIONS LSD
     left outer join
-     (select LOC.ID, LOC.START_DATE, LOCA.CHAR_VALUE as UNHCR_COUNTRY_CODE
+     (select LOC.ID, LOC.START_DATE,
+        LOCA1.CHAR_VALUE as ISO_COUNTRY_CODE, LOCA2.CHAR_VALUE as UNHCR_COUNTRY_CODE
       from T_LOCATIONS LOC
-      inner join T_LOCATION_ATTRIBUTES LOCA
-        on LOCA.LOC_ID = LOC.ID
-        and LOCA.LOCAT_CODE = 'HCRCC') COU
+      inner join T_LOCATION_ATTRIBUTES LOCA1
+        on LOCA1.LOC_ID = LOC.ID
+        and LOCA1.LOCAT_CODE = 'ISO3166A3'
+      inner join T_LOCATION_ATTRIBUTES LOCA2
+        on LOCA2.LOC_ID = LOC.ID
+        and LOCA2.LOCAT_CODE = 'HCRCC') COU
       on COU.UNHCR_COUNTRY_CODE = LSD.COU_CODE
       and COU.START_DATE = nvl(LSD.COU_START_DATE, P_BASE.MIN_DATE)
+    left outer join S_LOCATION_IDS LID
+      on LID.LOCT_CODE = LSD.LOCT_CODE
+      and LID.NAME_EN = LSD.LOCATION_NAME_EN
+      and LID.ISO_COUNTRY_CODE = COU.ISO_COUNTRY_CODE
+      and nvl(LID.START_DATE, P_BASE.MIN_DATE) = COU.START_DATE
     left outer join
      (select LOCTV.ID, LOCTV.LOC_ID, LOCTV.LOCT_CODE, LOCTV.LOCRT_CODE, TXT.TEXT as DESCRIPTION
       from T_LOCATION_TYPE_VARIANTS LOCTV
@@ -57,7 +67,8 @@ begin
       LSD.LOCR_END_DATE,
       LSD.COU_CODE_PREV,
       LSD.COU_START_DATE_PREV,
-      COU.ID
+      COU.ID,
+      LID.ID
     order by COU_CODE_PREV nulls first, COU_START_DATE_PREV nulls first, COU_CODE, COU_START_DATE)
   loop
     P_UTILITY.TRACE_POINT('Trace1', rSDIV.COU_CODE || '~' ||
@@ -83,10 +94,18 @@ begin
       --  its attributes and location type variants along with its 'WITHIN' relationship to its
       --  country.
       --
-        P_LOCATION.INSERT_LOCATION
-         (nLOC_ID, 'en', rSDIV.LOCATION_NAME_EN, rSDIV.LOCT_CODE,
-          pdSTART_DATE => rSDIV.LOC_START_DATE, pdEND_DATE => rSDIV.LOC_END_DATE);
         iCount1 := iCount1 + 1;
+        if rSDIV.ID is null
+        then
+          P_LOCATION.INSERT_LOCATION
+           (nLOC_ID, 'en', rSDIV.LOCATION_NAME_EN, rSDIV.LOCT_CODE,
+            pdSTART_DATE => rSDIV.LOC_START_DATE, pdEND_DATE => rSDIV.LOC_END_DATE);
+        else
+          P_LOCATION.INSERT_LOCATION_WITH_ID
+           (rSDIV.ID, 'en', rSDIV.LOCATION_NAME_EN, rSDIV.LOCT_CODE,
+            pdSTART_DATE => rSDIV.LOC_START_DATE, pdEND_DATE => rSDIV.LOC_END_DATE);
+          nLOC_ID := rSDIV.ID;
+        end if;
       --
         if rSDIV.MSRP_CODE is not null
         then

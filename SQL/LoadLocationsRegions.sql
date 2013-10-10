@@ -36,15 +36,29 @@ declare
   end INSERT_LOCATION_WITHIN;
 begin
   for rLOC in
-   (select KEY, NAME_EN, LOCT_CODE, START_DATE, END_DATE, NAME_FR, UNSDNUM, HCRCD,
-      DISPLAYSEQ, RSKEY, NOTES
-    from S_LOCATION_REGIONS
-    order by KEY)
+   (select REG.KEY, REG.NAME_EN, REG.LOCT_CODE, REG.START_DATE, REG.END_DATE, REG.NAME_FR,
+      REG.UNSDNUM, REG.HCRCD, REG.DISPLAYSEQ, REG.RSKEY, REG.NOTES, LID.ID
+    from S_LOCATION_REGIONS REG
+    left outer join S_LOCATION_IDS LID
+      on LID.LOCT_CODE = REG.LOCT_CODE
+      and LID.NAME_EN = REG.NAME_EN
+      and nvl(LID.START_DATE, P_BASE.MIN_DATE) = nvl(REG.START_DATE, P_BASE.MIN_DATE)
+    order by REG.KEY)
   loop
     iCount := iCount + 1;
-    P_LOCATION.INSERT_LOCATION
-     (nLOC_ID, 'en', rLOC.NAME_EN, rLOC.LOCT_CODE,
-      pdSTART_DATE => rLOC.START_DATE, pdEND_DATE => rLOC.END_DATE);
+  --
+    if rLOC.ID is null
+    then
+      P_LOCATION.INSERT_LOCATION
+       (nLOC_ID, 'en', rLOC.NAME_EN, rLOC.LOCT_CODE,
+        pdSTART_DATE => rLOC.START_DATE, pdEND_DATE => rLOC.END_DATE);
+    else
+      P_LOCATION.INSERT_LOCATION_WITH_ID
+       (rLOC.ID, 'en', rLOC.NAME_EN, rLOC.LOCT_CODE,
+        pdSTART_DATE => rLOC.START_DATE, pdEND_DATE => rLOC.END_DATE);
+      nLOC_ID := rLOC.ID;
+    end if;
+  --
     anLOC_ID(rLOC.KEY) := nLOC_ID;
     nLOC_VERSION_NBR := 1;
   --
