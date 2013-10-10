@@ -6,7 +6,7 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 --  Procedures for maintenance of population planning groups (PPGs).
 --
 --  Change History:
---  18-Sep-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  19-Oct-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -18,10 +18,10 @@ create or replace package P_POPULATION_PLANNING_GROUP is
 -- ========================================
 --
 -- ----------------------------------------
--- INSERT_PPG (1)
+-- INSERT_PPG
 -- ----------------------------------------
 --
--- Create a new PPG associated with an existing operation (country or regional).
+-- Create a new PPG.
 --
 -- Parameters:
 --  pnID - New PPG identifier (returned).
@@ -39,33 +39,6 @@ create or replace package P_POPULATION_PLANNING_GROUP is
     psLANG_CODE in P_BASE.tmsLANG_CODE,
     psDescription in P_BASE.tmsText,
     pnLOC_ID in P_BASE.tmnLOC_ID,
-    psPPG_CODE in P_BASE.tmsPPG_CODE,
-    pdSTART_DATE in P_BASE.tdDate := null,
-    pdEND_DATE in P_BASE.tdDate := null);
---
--- ----------------------------------------
--- INSERT_PPG (2)
--- ----------------------------------------
---
--- Create a new PPG associated with a country operation, identified by its country code. If the
---  operation does not pre-exist it is created.
---
--- Parameters:
---  pnID - New PPG identifier (returned).
---  psLANG_CODE - Language code of the textual description (mandatory).
---  psDescription - Textual description of PPG (mandatory).
---  psCountryCode - ISO 3166-1 alpha-3 country code of operation of PPG (mandatory).
---  psPPG_CODE - PPG code (mandatory).
---  pdSTART_DATE - Effective start date of this PPG (optional, the absence of a start date, or a
---    null value, indicates that the effectivity starts indefinitely far in the past).
---  pdEND_DATE - Effective end date of this PPG (optional, the absence of an end date, or a null
---    value, indicates that the effectivity extends indefinitely into the future).
---
-  procedure INSERT_PPG
-   (pnID out P_BASE.tnPPG_ID,
-    psLANG_CODE in P_BASE.tmsLANG_CODE,
-    psDescription in P_BASE.tmsText,
-    psCountryCode in P_BASE.tmsCountryCode,
     psPPG_CODE in P_BASE.tmsPPG_CODE,
     pdSTART_DATE in P_BASE.tdDate := null,
     pdEND_DATE in P_BASE.tdDate := null);
@@ -238,24 +211,6 @@ create or replace package P_POPULATION_PLANNING_GROUP is
     psTXTT_CODE in P_BASE.tmsTXTT_CODE,
     pnSEQ_NBR in P_BASE.tnTXT_SEQ_NBR := null,
     psLANG_CODE in P_BASE.tsLANG_CODE := null);
---
--- ----------------------------------------
--- CREATE_COUNTRY_OPERATION
--- ----------------------------------------
---
--- Create a location to represent a country operation based on the details of the country with the
---  specified ISO country code. This routine fails if the given country code identifies a country
---  whose existence has any gaps in it; multiple instances of the country are allowed provided they
---  are contigous in time. The created operation takes its name(s) from the name(s) of the latest
---  instance of the country.
---
--- Parameters:
---  pnID - New location identifier (returned).
---  psCountryCode - ISO 3166-1 alpha-3 country code (mandatory).
---
-  procedure CREATE_COUNTRY_OPERATION
-   (pnID out P_BASE.tnLOC_ID,
-    psCountryCode in P_BASE.tmsCountryCode);
 --
 end P_POPULATION_PLANNING_GROUP;
 /
