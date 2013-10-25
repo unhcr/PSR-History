@@ -1,5 +1,6 @@
 create table S_LOCATION_IDS 
  (LOCT_CODE varchar2(10),
+  LOCTV_DESCRIPTION_EN varchar2(1000),
   NAME_EN varchar2(1000),
   ISO_COUNTRY_CODE varchar2(3),
   START_DATE date,
@@ -18,6 +19,7 @@ organization external
     lrtrim
     missing field values are null
      (LOCT_CODE char(4000),
+      LOCTV_DESCRIPTION_EN char(4000),
       NAME_EN char(4000),
       ISO_COUNTRY_CODE char(4000),
       START_DATE date "YYYY-MM-DD",
