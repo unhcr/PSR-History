@@ -48,12 +48,32 @@ order by COU_CODE, LOCATION_NAME, NEW_LOCATION_NAME;
 prompt Invalid location name corrections
 prompt =================================
 
-select COU_CODE, LOCATION_NAME, NEW_LOCATION_NAME, CORRECTED_LOCATION_NAME
-from S_LOCATION_NAME_CORRECTIONS
-where (COU_CODE, trim(regexp_replace(CORRECTED_LOCATION_NAME, ':.*$', ''))) not in
- (select COU_CODE, LOCATION_NAME_EN
-  from S_LOCATION_SUBDIVISIONS)
-order by COU_CODE, CORRECTED_LOCATION_NAME, LOCATION_NAME, NEW_LOCATION_NAME;
+select LNC.COU_CODE, LNC.LOCATION_NAME, LNC.NEW_LOCATION_NAME, LNC.CORRECTED_LOCATION_NAME
+from S_LOCATION_NAME_CORRECTIONS LNC
+where not exists
+ (select null
+  from S_LOCATION_SUBDIVISIONS LSB
+  where LSB.COU_CODE = LNC.COU_CODE
+  and LSB.LOCATION_NAME_EN = trim(regexp_replace(LNC.CORRECTED_LOCATION_NAME, ':.*$', ''))
+  and LSB.LOC_TYPE_DESCRIPTION_EN =
+      nvl(rtrim(ltrim(regexp_substr(LNC.CORRECTED_LOCATION_NAME, ':.*$'), ': ')),
+          LSB.LOC_TYPE_DESCRIPTION_EN))
+order by LNC.COU_CODE, LNC.CORRECTED_LOCATION_NAME, LNC.LOCATION_NAME, LNC.NEW_LOCATION_NAME;
+
+prompt Ambiguous location name corrections
+prompt ===================================
+
+select LNC.COU_CODE, LNC.LOCATION_NAME, LNC.NEW_LOCATION_NAME, LNC.CORRECTED_LOCATION_NAME
+from S_LOCATION_NAME_CORRECTIONS LNC
+where 0 <
+ (select count(*) - count(distinct nvl(COU_START_DATE, sysdate))
+  from S_LOCATION_SUBDIVISIONS LSB
+  where LSB.COU_CODE = LNC.COU_CODE
+  and LSB.LOCATION_NAME_EN = trim(regexp_replace(LNC.CORRECTED_LOCATION_NAME, ':.*$', ''))
+  and LSB.LOC_TYPE_DESCRIPTION_EN =
+      nvl(rtrim(ltrim(regexp_substr(LNC.CORRECTED_LOCATION_NAME, ':.*$'), ': ')),
+          LSB.LOC_TYPE_DESCRIPTION_EN))
+order by LNC.COU_CODE, LNC.CORRECTED_LOCATION_NAME, LNC.LOCATION_NAME, LNC.NEW_LOCATION_NAME;
 
 prompt Unused location name corrections
 prompt ================================
