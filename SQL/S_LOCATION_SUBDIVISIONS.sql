@@ -18,7 +18,7 @@ organization external
   default directory PSRDATA
   access parameters 
    (records delimited by '\r\n'
-    characterset WE8MSWIN1252
+    characterset UTF8
     badfile 'LOCATION_SUBDIVISIONS.bad'
     nodiscardfile
     logfile PSRLOG:'LOCATION_SUBDIVISIONS.log'
