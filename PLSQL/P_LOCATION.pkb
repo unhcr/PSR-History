@@ -718,7 +718,8 @@ create or replace package body P_LOCATION is
     psLOCT_CODE in P_BASE.tmsLOCT_CODE,
     psCountryCode in P_BASE.tsCountryCode := null,
     pdSTART_DATE in P_BASE.tdDate := null,
-    pdEND_DATE in P_BASE.tdDate := null)
+    pdEND_DATE in P_BASE.tdDate := null,
+    psACTIVE_FLAG in P_BASE.tmsLOC_ACTIVE_FLAG := 'Y')
   is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
@@ -727,7 +728,7 @@ create or replace package body P_LOCATION is
      (sVersion || '-' || sComponent || '.INSERT_LOCATION',
       '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
   --
   -- Special processing for countries.
@@ -785,10 +786,12 @@ create or replace package body P_LOCATION is
   --
     insert into T_LOCATIONS
      (ID, LOCT_CODE,
-      START_DATE, END_DATE, ITM_ID)
+      START_DATE, END_DATE, ACTIVE_FLAG,
+      ITM_ID)
     values
      (pnID, psLOCT_CODE,
-      nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE), nITM_ID);
+      nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE), psACTIVE_FLAG,
+      nITM_ID);
   --
   -- Create location attribute for country code if necessary.
   --
@@ -813,7 +816,8 @@ create or replace package body P_LOCATION is
     psLOCT_CODE in P_BASE.tmsLOCT_CODE,
     psCountryCode in P_BASE.tsCountryCode := null,
     pdSTART_DATE in P_BASE.tdDate := null,
-    pdEND_DATE in P_BASE.tdDate := null)
+    pdEND_DATE in P_BASE.tdDate := null,
+    psACTIVE_FLAG in P_BASE.tmsLOC_ACTIVE_FLAG := 'Y')
   is
     nITM_ID P_BASE.tnITM_ID;
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
@@ -822,7 +826,7 @@ create or replace package body P_LOCATION is
      (sVersion || '-' || sComponent || '.INSERT_LOCATION_WITH_ID',
       to_char(pnID) || '~' || psLOCT_CODE || '~' || psCountryCode || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
   --
   -- Validate supplied location id.
@@ -869,10 +873,12 @@ create or replace package body P_LOCATION is
   --
     insert into T_LOCATIONS
      (ID, LOCT_CODE,
-      START_DATE, END_DATE, ITM_ID)
+      START_DATE, END_DATE, ACTIVE_FLAG,
+      ITM_ID)
     values
      (pnID, psLOCT_CODE,
-      nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE), nITM_ID);
+      nvl(pdSTART_DATE, P_BASE.gdMIN_DATE), nvl(pdEND_DATE, P_BASE.gdMAX_DATE), psACTIVE_FLAG,
+      nITM_ID);
   --
   -- Create location attribute for country code if necessary.
   --
@@ -898,7 +904,8 @@ create or replace package body P_LOCATION is
     pnLOCTV_ID in P_BASE.tnLOCTV_ID := -1,
     psCountryCode in P_BASE.tsCountryCode := null,
     pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
-    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE)
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    psACTIVE_FLAG in P_BASE.tsLOC_ACTIVE_FLAG := null)
   is
     sLOCT_CODE P_BASE.tsLOCT_CODE;
     nLOCTV_ID P_BASE.tnLOCTV_ID;
@@ -918,7 +925,7 @@ create or replace package body P_LOCATION is
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         to_char(pnLOCTV_ID) || '~' || psCountryCode || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
   --
     select LOCT_CODE, LOCTV_ID, START_DATE, END_DATE, ITM_ID, VERSION_NBR, rowid
@@ -1037,6 +1044,7 @@ create or replace package body P_LOCATION is
       set LOCTV_ID = case when pnLOCTV_ID = -1 then LOCTV_ID else pnLOCTV_ID end,
         START_DATE = dSTART_DATE_NEW,
         END_DATE = dEND_DATE_NEW,
+        ACTIVE_FLAG = nvl(psACTIVE_FLAG, ACTIVE_FLAG),
         VERSION_NBR = VERSION_NBR + 1
       where rowid = xLOC_ROWID
       returning VERSION_NBR into pnVERSION_NBR;
@@ -1063,7 +1071,8 @@ create or replace package body P_LOCATION is
     pnLOCTV_ID in P_BASE.tnLOCTV_ID := -1,
     psCountryCode in P_BASE.tsCountryCode := null,
     pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
-    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE)
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    psACTIVE_FLAG in P_BASE.tsLOC_ACTIVE_FLAG := null)
   is
   begin
     P_UTILITY.START_MODULE
@@ -1071,19 +1080,20 @@ create or replace package body P_LOCATION is
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' || psLOCT_CODE || '~' ||
         to_char(pnLOCTV_ID) || '~' || psCountryCode || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
-        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
+        to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' || psACTIVE_FLAG || '~' ||
         psLANG_CODE || '~' || to_char(length(psName)) || ':' || psName);
   --
     if pnVERSION_NBR is null
     then
       INSERT_LOCATION(pnID, psLANG_CODE, psName, psLOCT_CODE, psCountryCode,
                       case when pdSTART_DATE = P_BASE.gdFALSE_DATE then null else pdSTART_DATE end,
-                      case when pdEND_DATE = P_BASE.gdFALSE_DATE then null else pdEND_DATE end);
+                      case when pdEND_DATE = P_BASE.gdFALSE_DATE then null else pdEND_DATE end,
+                      nvl(psACTIVE_FLAG, 'Y'));
     --
       pnVERSION_NBR := 1;
     else
       UPDATE_LOCATION(pnID, pnVERSION_NBR, psLANG_CODE, psName, pnLOCTV_ID, psCountryCode,
-                      pdSTART_DATE, pdEND_DATE);
+                      pdSTART_DATE, pdEND_DATE, psACTIVE_FLAG);
     end if;
   --
     P_UTILITY.END_MODULE;

@@ -7,7 +7,7 @@ create or replace package P_LOCATION is
 --   attribute types, relationships and relationship types.
 --
 --  Change History:
---  18-Sep-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  07-Nov-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -216,6 +216,8 @@ create or replace package P_LOCATION is
 --    past).
 --  pdEND_DATE - Effective end date of details of this location (optional, the absence of an end
 --    date, or a null value, indicates that the effectivity extends indefinitely into the future).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the location is currently available for use
+--    (optional: defaults to Y).
 --
   procedure INSERT_LOCATION
    (pnID out P_BASE.tnLOC_ID,
@@ -224,7 +226,8 @@ create or replace package P_LOCATION is
     psLOCT_CODE in P_BASE.tmsLOCT_CODE,
     psCountryCode in P_BASE.tsCountryCode := null,
     pdSTART_DATE in P_BASE.tdDate := null,
-    pdEND_DATE in P_BASE.tdDate := null);
+    pdEND_DATE in P_BASE.tdDate := null,
+    psACTIVE_FLAG in P_BASE.tmsLOC_ACTIVE_FLAG := 'Y');
 --
 -- ----------------------------------------
 -- INSERT_LOCATION_WITH_ID
@@ -247,6 +250,8 @@ create or replace package P_LOCATION is
 --    past).
 --  pdEND_DATE - Effective end date of details of this location (optional, the absence of an end
 --    date, or a null value, indicates that the effectivity extends indefinitely into the future).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the location is currently available for use
+--    (optional: defaults to Y).
 --
   procedure INSERT_LOCATION_WITH_ID
    (pnID in P_BASE.tnLOC_ID,
@@ -255,7 +260,8 @@ create or replace package P_LOCATION is
     psLOCT_CODE in P_BASE.tmsLOCT_CODE,
     psCountryCode in P_BASE.tsCountryCode := null,
     pdSTART_DATE in P_BASE.tdDate := null,
-    pdEND_DATE in P_BASE.tdDate := null);
+    pdEND_DATE in P_BASE.tdDate := null,
+    psACTIVE_FLAG in P_BASE.tmsLOC_ACTIVE_FLAG := 'Y');
 --
 -- ----------------------------------------
 -- UPDATE_LOCATION
@@ -281,6 +287,8 @@ create or replace package P_LOCATION is
 --  pdEND_DATE - Effective end date of details of this location (optional: if not specified, the
 --    existing end date is left unchanged; a null value indicates that the effectivity extends
 --    indefinitely into the future).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the location is currently available for use
+--    (optional: if not specified, the existing value is left unchanged).
 --
   procedure UPDATE_LOCATION
    (pnID in P_BASE.tmnLOC_ID,
@@ -290,7 +298,8 @@ create or replace package P_LOCATION is
     pnLOCTV_ID in P_BASE.tnLOCTV_ID := -1,
     psCountryCode in P_BASE.tsCountryCode := null,
     pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
-    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE);
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    psACTIVE_FLAG in P_BASE.tsLOC_ACTIVE_FLAG := null);
 --
 -- ----------------------------------------
 -- SET_LOCATION
@@ -326,6 +335,9 @@ create or replace package P_LOCATION is
 --    into the future; when updating an existing location, the absence of an end date leaves the
 --    existing date unchanged, and a null value indicates that the effectivity extends indefinitely
 --    into the future).
+--  psACTIVE_FLAG - Flag (Y/N) indicating whether the location is currently available for use
+--    (optional: defaults to Y when creating a new location; if not specified when updating an
+--     existing location, the existing value is left unchanged).
 --
   procedure SET_LOCATION
    (pnID in out P_BASE.tnLOC_ID,
@@ -336,7 +348,8 @@ create or replace package P_LOCATION is
     pnLOCTV_ID in P_BASE.tnLOCTV_ID := -1,
     psCountryCode in P_BASE.tsCountryCode := null,
     pdSTART_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
-    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE);
+    pdEND_DATE in P_BASE.tdDate := P_BASE.gdFALSE_DATE,
+    psACTIVE_FLAG in P_BASE.tsLOC_ACTIVE_FLAG := null);
 --
 -- ----------------------------------------
 -- DELETE_LOCATION
