@@ -11,7 +11,7 @@ begin
       count(*) over (partition by PPG.PPG_CODE, PPG.START_DATE, LOC1.ID) as LOC_COUNT_ROF,
       LOC2.ID as LOC_ID_COP,
       count(*) over (partition by PPG.PPG_CODE, PPG.START_DATE, LOC2.ID) as LOC_COUNT_COP
-    from STAGE.S_PPGS PPG
+    from S_PPGS PPG
     left outer join T_LOCATION_ATTRIBUTES LOCA1
       on LOCA1.CHAR_VALUE = PPG.OPERATION
       and LOCA1.LOCAT_CODE = 'HCRCD'

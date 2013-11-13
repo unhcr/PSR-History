@@ -1195,7 +1195,7 @@ select STATSYEAR, DST_CODE, COU_CODE_ASYLUM, LOCATION_NAME_EN, LOC_TYPE_DESCRIPT
 from
  (select STATSYEAR, DST_CODE, COU_CODE_ASYLUM, LOCATION_NAME_EN, LOC_TYPE_DESCRIPTION_EN,
     COU_CODE_ORIGIN, URBAN_RURAL_STATUS, ACMT_CODE, PPG_NAME,
-    STAGE.CHARAGG(BASIS) as BASIS,
+    CHARAGG(BASIS) as BASIS,
     round(sum(F0)) as F0, round(sum(F5)) as F5, round(sum(F12)) as F12, round(sum(F18)) as F18,
     round(sum(F60)) as F60, round(sum(FOTHER)) as FOTHER,
     round(sum(M0)) as M0, round(sum(M5)) as M5, round(sum(M12)) as M12, round(sum(M18)) as M18,

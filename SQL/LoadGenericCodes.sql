@@ -7,7 +7,7 @@ declare
 begin
   for rCDET in
    (select CODE, DESCRIPTION_EN, DISPLAY_SEQ, DESCRIPTION_FR, NOTES
-    from STAGE.S_CODE_TYPES)
+    from S_CODE_TYPES)
   loop
     iCount := iCount + 1;
   --
@@ -37,7 +37,7 @@ declare
 begin
   for rCDE in
    (select CDET_CODE, CODE, DESCRIPTION_EN, DISPLAY_SEQ, DESCRIPTION_FR, NOTES
-    from STAGE.S_CODES)
+    from S_CODES)
   loop
     iCount := iCount + 1;
   --

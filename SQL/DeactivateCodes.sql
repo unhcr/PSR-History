@@ -8,7 +8,7 @@ begin
   iCount := 0;
   for rDST in
    (select DST.ID as DST_ID, DST.VERSION_NBR
-    from STAGE.S_DISPLACEMENT_STATUSES STG
+    from S_DISPLACEMENT_STATUSES STG
     inner join DISPLACEMENT_STATUSES DST
       on DST.CODE = STG.CODE
     where STG.ACTIVE_FLAG = 'N')
@@ -25,7 +25,7 @@ begin
   iCount := 0;
   for rDIM in
    (select DIM.ID as DIM_ID, DIM.VERSION_NBR
-    from STAGE.S_DIMENSION_VALUES STG
+    from S_DIMENSION_VALUES STG
     inner join DIMENSION_VALUES DIM
       on DIM.DIMT_CODE = STG.DIMT_CODE
       and DIM.CODE = STG.CODE
@@ -43,7 +43,7 @@ begin
   iCount := 0;
   for rLOCTV in
    (select LOCTV.ID as LOCTV_ID, LOCTV.VERSION_NBR
-    from STAGE.S_LOCATION_TYPE_VARIANTS STG
+    from S_LOCATION_TYPE_VARIANTS STG
     inner join COUNTRIES COU
       on COU.UNHCR_COUNTRY_CODE = STG.HCRCC
     inner join
