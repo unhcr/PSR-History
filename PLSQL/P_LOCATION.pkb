@@ -3035,7 +3035,7 @@ create or replace package body P_LOCATION is
 --
 begin
   if sComponent != 'LOC'
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Component code mismatch');
   end if;
 --
   if sVersion != 'D0.1'

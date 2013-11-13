@@ -700,7 +700,7 @@ create or replace package body P_MESSAGE is
 --
 begin
   if sComponent != 'MSG'
-  then DISPLAY_MESSAGE('GEN', 3, 'Component name mismatch');
+  then DISPLAY_MESSAGE('GEN', 1, 'Component code mismatch');
   end if;
 --
   if sVersion != 'D0.1'
