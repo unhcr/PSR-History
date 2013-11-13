@@ -50,10 +50,6 @@ prompt InitParameters
 prompt ==============
 @InitParameters
 
-prompt InitUsers
-prompt =========
-@InitUsers
-
 prompt LoadGenericCodes
 prompt ================
 @LoadGenericCodes
@@ -117,3 +113,11 @@ prompt =========================
 prompt LoadPPGs
 prompt ========
 @@LoadPPGs
+
+prompt LoadRoles
+prompt =========
+@@LoadRoles
+
+prompt InitUsers
+prompt =========
+@InitUsers
