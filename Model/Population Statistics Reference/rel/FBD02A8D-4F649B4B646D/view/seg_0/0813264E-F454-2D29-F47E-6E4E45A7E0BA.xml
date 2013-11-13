@@ -4,24 +4,9 @@
 <createdTime>2012-03-21 10:19:40 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <userDefined>true</userDefined>
-<userDefinedSQL>SELECT ID,&lt;br/&gt;  NAME,&lt;br/&gt;  LANG_CODE,&lt;br/&gt;  LOCT_CODE,&lt;br/&gt;  LOCTV_ID,&lt;br/&gt;  START_DATE,&lt;br/&gt;  END_DATE,&lt;br/&gt;  ITM_ID,&lt;br/&gt;  VERSION_NBR&lt;br/&gt;FROM&lt;br/&gt;  (SELECT LOC.ID,&lt;br/&gt;    TXT.TEXT NAME,&lt;br/&gt;    TXT.LANG_CODE,&lt;br/&gt;    LOC.LOCT_CODE,&lt;br/&gt;    LOC.LOCTV_ID,&lt;br/&gt;    LOC.START_DATE,&lt;br/&gt;    LOC.END_DATE,&lt;br/&gt;    LOC.ITM_ID,&lt;br/&gt;    LOC.VERSION_NBR,&lt;br/&gt;    row_number() OVER (PARTITION BY LOC.ID ORDER BY LANG.ACTIVE_FLAG DESC, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK&lt;br/&gt;  FROM T_LOCATIONS LOC&lt;br/&gt;  INNER JOIN T_TEXT_ITEMS TXT&lt;br/&gt;  ON TXT.ITM_ID     = LOC.ITM_ID&lt;br/&gt;  AND TXT.TXTT_CODE = &apos;NAME&apos;&lt;br/&gt;  AND TXT.SEQ_NBR   = 1&lt;br/&gt;  INNER JOIN T_LANGUAGES LANG&lt;br/&gt;  ON LANG.CODE = TXT.LANG_CODE&lt;br/&gt;  LEFT OUTER JOIN T_USER_LANGUAGE_PREFERENCES ULP&lt;br/&gt;  ON ULP.LANG_CODE = TXT.LANG_CODE&lt;br/&gt;  AND ULP.USERID   = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)&lt;br/&gt;  )&lt;br/&gt;WHERE RANK = 1</userDefinedSQL>
-<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select ID, NAME, LANG_CODE, LOCT_CODE, LOCTV_ID, START_DATE, END_DATE, ITM_ID, VERSION_NBR From (Select LOC.ID, TXT.TEXT NAME, TXT.LANG_CODE, LOC.LOCT_CODE, LOC.LOCTV_ID, LOC.START_DATE, LOC.END_DATE, LOC.ITM_ID, LOC.VERSION_NBR, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)) Where RANK = 1&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select ID, NAME, LANG_CODE, LOCT_CODE, LOCTV_ID, START_DATE, END_DATE, ITM_ID, VERSION_NBR From (Select LOC.ID, TXT.TEXT NAME, TXT.LANG_CODE, LOC.LOCT_CODE, LOC.LOCTV_ID, LOC.START_DATE, LOC.END_DATE, LOC.ITM_ID, LOC.VERSION_NBR, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)) Where RANK = 1&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;(Select LOC.ID, TXT.TEXT NAME, TXT.LANG_CODE, LOC.LOCT_CODE, LOC.LOCTV_ID, LOC.START_DATE, LOC.END_DATE, LOC.ITM_ID, LOC.VERSION_NBR, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;))&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;225&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select LOC.ID, TXT.TEXT NAME, TXT.LANG_CODE, LOC.LOCT_CODE, LOC.LOCTV_ID, LOC.START_DATE, LOC.END_DATE, LOC.ITM_ID, LOC.VERSION_NBR, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_LOCATIONS LOC&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_TEXT_ITEMS TXT&quot; X=&quot;240&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_LANGUAGES LANG&quot; X=&quot;430&quot; Y=&quot;20&quot; Height=&quot;135&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_USER_LANGUAGE_PREFERENCES ULP&quot; X=&quot;620&quot; Y=&quot;20&quot; Height=&quot;153&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<userDefinedSQL>SELECT ID,&lt;br/&gt;  NAME,&lt;br/&gt;  LANG_CODE,&lt;br/&gt;  LOCT_CODE,&lt;br/&gt;  LOCTV_ID,&lt;br/&gt;  START_DATE,&lt;br/&gt;  END_DATE,&lt;br/&gt;  ACTIVE_FLAG,&lt;br/&gt;  ITM_ID,&lt;br/&gt;  VERSION_NBR&lt;br/&gt;FROM&lt;br/&gt;  (SELECT LOC.ID,&lt;br/&gt;    TXT.TEXT NAME,&lt;br/&gt;    TXT.LANG_CODE,&lt;br/&gt;    LOC.LOCT_CODE,&lt;br/&gt;    LOC.LOCTV_ID,&lt;br/&gt;    LOC.START_DATE,&lt;br/&gt;    LOC.END_DATE,&lt;br/&gt;    LOC.ACTIVE_FLAG,&lt;br/&gt;    LOC.ITM_ID,&lt;br/&gt;    LOC.VERSION_NBR,&lt;br/&gt;    row_number() OVER (PARTITION BY LOC.ID ORDER BY LANG.ACTIVE_FLAG DESC, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK&lt;br/&gt;  FROM T_LOCATIONS LOC&lt;br/&gt;  INNER JOIN T_TEXT_ITEMS TXT&lt;br/&gt;  ON TXT.ITM_ID     = LOC.ITM_ID&lt;br/&gt;  AND TXT.TXTT_CODE = &apos;NAME&apos;&lt;br/&gt;  AND TXT.SEQ_NBR   = 1&lt;br/&gt;  INNER JOIN T_LANGUAGES LANG&lt;br/&gt;  ON LANG.CODE = TXT.LANG_CODE&lt;br/&gt;  LEFT OUTER JOIN T_USER_LANGUAGE_PREFERENCES ULP&lt;br/&gt;  ON ULP.LANG_CODE = TXT.LANG_CODE&lt;br/&gt;  AND ULP.USERID   = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)&lt;br/&gt;  )&lt;br/&gt;WHERE RANK = 1</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;Select ID, NAME, LANG_CODE, LOCT_CODE, LOCTV_ID, START_DATE, END_DATE, ACTIVE_FLAG, ITM_ID, VERSION_NBR From (Select LOC.ID, TXT.TEXT NAME, TXT.LANG_CODE, LOC.LOCT_CODE, LOC.LOCTV_ID, LOC.START_DATE, LOC.END_DATE, LOC.ACTIVE_FLAG, LOC.ITM_ID, LOC.VERSION_NBR, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)) Where RANK = 1&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;Select ID, NAME, LANG_CODE, LOCT_CODE, LOCTV_ID, START_DATE, END_DATE, ACTIVE_FLAG, ITM_ID, VERSION_NBR From (Select LOC.ID, TXT.TEXT NAME, TXT.LANG_CODE, LOC.LOCT_CODE, LOC.LOCTV_ID, LOC.START_DATE, LOC.END_DATE, LOC.ACTIVE_FLAG, LOC.ITM_ID, LOC.VERSION_NBR, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)) Where RANK = 1&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;(Select LOC.ID, TXT.TEXT NAME, TXT.LANG_CODE, LOC.LOCT_CODE, LOC.LOCTV_ID, LOC.START_DATE, LOC.END_DATE, LOC.ACTIVE_FLAG, LOC.ITM_ID, LOC.VERSION_NBR, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;))&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;243&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select LOC.ID, TXT.TEXT NAME, TXT.LANG_CODE, LOC.LOCT_CODE, LOC.LOCTV_ID, LOC.START_DATE, LOC.END_DATE, LOC.ACTIVE_FLAG, LOC.ITM_ID, LOC.VERSION_NBR, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_LOCATIONS LOC&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;225&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_TEXT_ITEMS TXT&quot; X=&quot;240&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_LANGUAGES LANG&quot; X=&quot;240&quot; Y=&quot;247&quot; Height=&quot;135&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_USER_LANGUAGE_PREFERENCES ULP&quot; X=&quot;50&quot; Y=&quot;265&quot; Height=&quot;153&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
 <parsed>true</parsed>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-</fonts>
 <viewElements>
 <viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ID" id="05B725FE-E416-2F4D-297A-58343B2DF899">
 <createdBy>Scott</createdBy>
@@ -80,6 +65,14 @@
 <expression>END_DATE</expression>
 <reference>false</reference>
 </viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ACTIVE_FLAG" id="EB83C59E-D7A6-C4B3-95F4-175C540634CB">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-07 15:17:37 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>ACTIVE_FLAG</expression>
+<reference>false</reference>
+</viewElement>
 <viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="ITM_ID" id="96A8E122-56AA-398F-9562-27FEB41EC894">
 <createdBy>Scott</createdBy>
 <createdTime>2012-05-04 11:12:14 UTC</createdTime>
@@ -114,42 +107,6 @@
 <UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="E1BE2C4F-E65C-0B9B-3DA1-8AC96ADACB14">
 <container>true</container>
 <tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
-</UsedObject>
-<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="0F28E6F7-11A8-936D-4B0B-CA8DDCAB1812">
-<columnName>ID</columnName>
-<tableName>T_LOCATIONS</tableName>
-</UsedObject>
-<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="AB45B7A8-6535-BB9C-ADAB-8DAD4FB538C8">
-<columnName>TEXT</columnName>
-<tableName>T_TEXT_ITEMS</tableName>
-</UsedObject>
-<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="B5DA6C77-B602-95BE-01F7-6D6D96B396DE">
-<columnName>LANG_CODE</columnName>
-<tableName>T_TEXT_ITEMS</tableName>
-</UsedObject>
-<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C602828F-21FF-B91D-E7D9-A5B2A0309677">
-<columnName>LOCT_CODE</columnName>
-<tableName>T_LOCATIONS</tableName>
-</UsedObject>
-<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="4525FF34-3D98-7D49-3F48-FD4C3AF209AC">
-<columnName>LOCTV_ID</columnName>
-<tableName>T_LOCATIONS</tableName>
-</UsedObject>
-<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="1CE8B78C-E870-BB06-2552-71AFFFBB296B">
-<columnName>START_DATE</columnName>
-<tableName>T_LOCATIONS</tableName>
-</UsedObject>
-<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="BF781316-E97C-24CC-E871-54B40649EB34">
-<columnName>END_DATE</columnName>
-<tableName>T_LOCATIONS</tableName>
-</UsedObject>
-<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="B078AA41-DB69-7096-E5E7-2E49642A56C5">
-<columnName>ITM_ID</columnName>
-<tableName>T_LOCATIONS</tableName>
-</UsedObject>
-<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="E89C6B0C-827A-545C-3786-FEB8E64A845B">
-<columnName>VERSION_NBR</columnName>
-<tableName>T_LOCATIONS</tableName>
 </UsedObject>
 <UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="B200B4BA-A37C-8B70-CE3A-C874D115E603">
 <columnName>ACTIVE_FLAG</columnName>

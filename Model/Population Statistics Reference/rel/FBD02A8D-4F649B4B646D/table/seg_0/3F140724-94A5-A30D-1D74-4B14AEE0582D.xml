@@ -8,6 +8,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="COMP_CODE" id="2AE37A8A-EFF7-4EE1-EDBF-52554E98119E">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-19 09:07:17 UTC</createdTime>
+<comment>Code of component to which this message applies</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
@@ -21,6 +22,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="SEQ_NBR" id="8676BC9D-C344-EFFC-CF26-AEF3AA1747D6">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-19 09:08:01 UTC</createdTime>
+<comment>Sequence number of message within component</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_MSG_SEQ_NBR</constraintName>
 <useDomainConstraints>false</useDomainConstraints>
@@ -34,6 +36,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="SEVERITY" id="DF045376-5316-0494-50D2-B4EFC7DE7416">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-19 09:08:01 UTC</createdTime>
+<comment>Severity code: (S)ystem error, (E)rror, (W)arning, (I)nformation</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_MSG_SEVERITY</constraintName>
 <defaultValue>E</defaultValue>
@@ -45,10 +48,12 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="252EF824-B80E-1F82-47C3-1D55BD18E37B">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-19 09:08:01 UTC</createdTime>
+<comment>General data item identifier of this message</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
+<use>0</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="3043F1D4-E3F0-812C-16F9-D24C6ACB9C6E" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
@@ -57,6 +62,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="EFCB3606-625E-3CB1-B9F3-71185CE8DEFE">
 <createdBy>Scott</createdBy>
 <createdTime>2012-02-28 12:55:17 UTC</createdTime>
+<comment>Update version number of this message</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <defaultValue>1</defaultValue>
 <use>0</use>

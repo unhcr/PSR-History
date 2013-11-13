@@ -7,28 +7,33 @@
 <showLegend>true</showLegend>
 <showLabels>false</showLabels>
 <showRelAttributes>false</showRelAttributes>
-<showGrid>false</showGrid>
+<showGrid>true</showGrid>
 <diagramColor>-1</diagramColor>
-<legendPosX>510</legendPosX>
-<legendPosY>1159</legendPosY>
+<legendPosY>1079</legendPosY>
 <legendAttributes>56</legendAttributes>
 <display>false</display>
 <notation>1</notation>
 <objectViews>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="12C1FF7C-86A2-FD61-8AD5-DD24711E21DD" otype="View" vid="D435B140-9C73-5276-C532-A51668E5E246">
-<bounds x="510" y="31" width="211" height="1110"/>
+<bounds x="690" y="11" width="211" height="1110"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="3A1361CD-BEB2-D42F-CB5B-1CBCBE44B16D" otype="View" vid="A52D8729-67C1-B6DB-345F-01D10B3570BB">
-<bounds x="271" y="30" width="211" height="1151"/>
+<bounds x="461" y="10" width="211" height="1151"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="5B9967CD-713C-0013-FD41-F8A9A140C47E" otype="View" vid="FD7B108C-0C22-9BAA-8732-E4573112997C">
+<bounds x="10" y="240" width="201" height="281"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="B08CEC94-BFEA-85DD-C5BD-8DBA8FC4A8B5" otype="View" vid="16432282-2EB1-0891-44EF-A1AA1B963D31">
-<bounds x="30" y="30" width="211" height="261"/>
+<bounds x="230" y="10" width="211" height="271"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="DFCF15DB-6E00-1E8A-0EC1-BA63F3306DA0" otype="View" vid="BC56237E-465E-A7FD-B132-3591B568700B">
-<bounds x="31" y="319" width="211" height="261"/>
+<bounds x="231" y="300" width="211" height="271"/>
 </OView>
-<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="E2FBFD92-8C66-CACF-7766-38C7CCEED812" otype="View" vid="9A6419D7-FB02-2233-191A-47149F4E8A20">
-<bounds x="31" y="610" width="211" height="311"/>
+<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="E2FBFD92-8C66-CACF-7766-38C7CCEED812" otype="View" vid="544C759A-50F9-80E6-0FB1-3C9CF47C81B9">
+<bounds x="230" y="590" width="211" height="371"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="F12228B8-7BD2-8946-A101-7B18493A68F0" otype="View" vid="BB82CB76-CD59-2B37-52A4-2C7DD63C6A7A">
+<bounds x="10" y="10" width="201" height="211"/>
 </OView>
 </objectViews>
 </Diagram>

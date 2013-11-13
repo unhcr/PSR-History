@@ -3,47 +3,13 @@
 <createdBy>Scott</createdBy>
 <createdTime>2012-05-07 06:54:09 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>PK_PRM</pkName>
 <abbreviation>PRM</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
+<allowColumnReorder>false</allowColumnReorder>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ID" id="43258031-03B3-F515-1622-6137B2302B30">
 <createdBy>Scott</createdBy>
 <createdTime>2012-05-07 06:58:40 UTC</createdTime>
+<notes>Auto-generated from sequence PRM_SEQ</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_PRM_ID</constraintName>
 <use>0</use>
@@ -73,6 +39,28 @@
 <createdTime>2012-05-07 06:58:40 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_PRM_ANNOTATE_FLAG</constraintName>
+<defaultValue>Y</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>6841C73E-E27A-83E1-4728-25113B8D2A58</domain>
+<usesDefaultValue>true</usesDefaultValue>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="9E79AECB-2995-DC0A-25E3-8EB9E34AADAB">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-08 09:27:08 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>840F48B2-9E9B-88BD-9B9C-8728A6AABAE2</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ACTIVE_FLAG" id="FF09F959-144D-B39E-BCAB-1D0784ABA8D8">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-08 09:27:08 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_PRM_ACTIVE_FLAG</constraintName>
 <defaultValue>Y</defaultValue>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
