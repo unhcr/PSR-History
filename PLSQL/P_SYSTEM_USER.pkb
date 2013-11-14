@@ -1117,24 +1117,6 @@ create or replace package body P_SYSTEM_USER is
     then P_UTILITY.TRACE_EXCEPTION;
   end DELETE_USER_ROLE;
 --
--- ----------------------------------------
--- USER_LOGIN
--- ----------------------------------------
---
-  procedure USER_LOGIN
-   (psUSERID in P_BASE.tmsUSR_USERID)
-  is
-  begin
-    P_UTILITY.START_MODULE(sVersion || '-' || sComponent || '.USER_LOGIN', psUSERID);
-  --
-    P_CONTEXT.SET_USERID(psUSERID);
-  --
-    P_UTILITY.END_MODULE;
-  exception
-    when others
-    then P_UTILITY.TRACE_EXCEPTION;
-  end USER_LOGIN;
---
 -- =====================================
 -- Initialisation
 -- =====================================
