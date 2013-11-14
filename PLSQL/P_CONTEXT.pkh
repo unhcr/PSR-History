@@ -6,7 +6,7 @@ create or replace package P_CONTEXT is
 --  Procedures for managing the PSR application context.
 --
 --  Change History:
---  3-Oct-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  14-Nov-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
@@ -20,7 +20,7 @@ create or replace package P_CONTEXT is
 -- Set the user id in the PSR application context.
 --
 -- Parameters:
---  psUSERID - The user ID to be set.
+--  psUSERID - The user ID to be set (mandatory).
 --
   procedure SET_USERID
    (psUSERID in P_BASE.tmsUSR_USERID);
@@ -32,6 +32,40 @@ create or replace package P_CONTEXT is
 -- Clear the user id in the PSR application context.
 --
   procedure CLEAR_USERID;
+--
+-- ----------------------------------------
+-- SET_COUNTRY
+-- ----------------------------------------
+--
+-- Set the location id of the current country in the PSR application context.
+--
+-- Parameters:
+--  pnLOC_ID_COUNTRY - The country location id to be set (mandatory).
+--
+  procedure SET_COUNTRY
+   (pnLOC_ID_COUNTRY in P_BASE.tmnLOC_ID);
+--
+-- ----------------------------------------
+-- CLEAR_COUNTRY
+-- ----------------------------------------
+--
+-- Clear the country location id in the PSR application context.
+--
+  procedure CLEAR_COUNTRY;
+--
+-- ----------------------------------------
+-- SET_CONTEXT
+-- ----------------------------------------
+--
+-- Set the location id of the current country in the PSR application context.
+--
+-- Parameters:
+--  psUSERID - The user ID to be set (mandatory).
+--  pnLOC_ID_COUNTRY - The country location id to be set (optional).
+--
+  procedure SET_CONTEXT
+   (psUSERID in P_BASE.tmsUSR_USERID,
+    pnLOC_ID_COUNTRY in P_BASE.tnLOC_ID := null);
 --
 -- ----------------------------------------
 -- CLEAR_CONTEXT
