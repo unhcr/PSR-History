@@ -74,7 +74,7 @@ where 0 <
       nvl(rtrim(ltrim(regexp_substr(LNC.CORRECTED_LOCATION_NAME, ':.*$'), ': ')),
           LSB.LOC_TYPE_DESCRIPTION_EN))
 order by LNC.COU_CODE, LNC.CORRECTED_LOCATION_NAME, LNC.LOCATION_NAME, LNC.NEW_LOCATION_NAME;
-
+/*
 prompt Unused location name corrections
 prompt ================================
 
@@ -88,7 +88,7 @@ minus
   select COU_CODE_ASYLUM, replace(ORIGINAL_LOCATION_NAME, chr(10), '') as ORIGINAL_LOCATION_NAME,
     null as NEW_LOCATION_NAME
   from S_ASR_IDPS_CLEANED);
-
+*/
 prompt Missing location names or name corrections (Demographics)
 prompt =========================================================
 
