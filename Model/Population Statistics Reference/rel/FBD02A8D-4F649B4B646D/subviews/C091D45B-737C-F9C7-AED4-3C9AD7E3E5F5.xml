@@ -7,7 +7,7 @@
 <showLegend>true</showLegend>
 <showLabels>false</showLabels>
 <showRelAttributes>false</showRelAttributes>
-<showGrid>true</showGrid>
+<showGrid>false</showGrid>
 <diagramColor>-1</diagramColor>
 <legendPosX>1827</legendPosX>
 <legendPosY>12</legendPosY>

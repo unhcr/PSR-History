@@ -14,6 +14,9 @@
 <display>false</display>
 <notation>1</notation>
 <objectViews>
+<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="0D4DC4B1-29A7-6BE8-4420-72B14CF6048E" otype="View" vid="99374E0D-E74F-059E-BE0B-0A3AD0031F54">
+<bounds x="10" y="790" width="201" height="201"/>
+</OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="12C1FF7C-86A2-FD61-8AD5-DD24711E21DD" otype="View" vid="D435B140-9C73-5276-C532-A51668E5E246">
 <bounds x="690" y="11" width="211" height="1110"/>
 </OView>
@@ -21,7 +24,7 @@
 <bounds x="461" y="10" width="211" height="1151"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="5B9967CD-713C-0013-FD41-F8A9A140C47E" otype="View" vid="FD7B108C-0C22-9BAA-8732-E4573112997C">
-<bounds x="10" y="240" width="201" height="281"/>
+<bounds x="10" y="240" width="201" height="341"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="B08CEC94-BFEA-85DD-C5BD-8DBA8FC4A8B5" otype="View" vid="16432282-2EB1-0891-44EF-A1AA1B963D31">
 <bounds x="230" y="10" width="211" height="271"/>
@@ -34,6 +37,9 @@
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="F12228B8-7BD2-8946-A101-7B18493A68F0" otype="View" vid="BB82CB76-CD59-2B37-52A4-2C7DD63C6A7A">
 <bounds x="10" y="10" width="201" height="211"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.relational.TVView" oid="F528B1E3-CBB9-82A6-565C-3D03F82D600A" otype="View" vid="215F5B4A-077F-3761-BFF7-B39F70619BF8">
+<bounds x="10" y="600" width="201" height="171"/>
 </OView>
 </objectViews>
 </Diagram>
