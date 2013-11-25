@@ -1,0 +1,150 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableView class="oracle.dbtools.crest.model.design.relational.TableView" id="0D4DC4B1-29A7-6BE8-4420-72B14CF6048E" directorySegmentName="seg_0" name="CURR_USER_COUNTRIES">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-14 12:07:52 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<userDefined>true</userDefined>
+<userDefinedSQL>WITH Q_LOC AS&lt;br/&gt;  (SELECT ID,&lt;br/&gt;    NAME,&lt;br/&gt;    LANG_CODE,&lt;br/&gt;    ITM_ID&lt;br/&gt;  FROM&lt;br/&gt;    (SELECT LOC.ID,&lt;br/&gt;      TXT.TEXT AS NAME,&lt;br/&gt;      TXT.LANG_CODE,&lt;br/&gt;      LOC.ITM_ID,&lt;br/&gt;      row_number() OVER (PARTITION BY LOC.ID ORDER BY LANG.ACTIVE_FLAG DESC, NVL(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) AS RANK&lt;br/&gt;    FROM T_LOCATIONS LOC&lt;br/&gt;    INNER JOIN T_TEXT_ITEMS TXT&lt;br/&gt;    ON TXT.ITM_ID     = LOC.ITM_ID&lt;br/&gt;    AND TXT.TXTT_CODE = &apos;NAME&apos;&lt;br/&gt;    AND TXT.SEQ_NBR   = 1&lt;br/&gt;    INNER JOIN T_LANGUAGES LANG&lt;br/&gt;    ON LANG.CODE = TXT.LANG_CODE&lt;br/&gt;    LEFT OUTER JOIN T_USER_LANGUAGE_PREFERENCES ULP&lt;br/&gt;    ON ULP.LANG_CODE    = TXT.LANG_CODE&lt;br/&gt;    AND ULP.USERID      = SYS_CONTEXT(&apos;PSR&apos;, &apos;USERID&apos;)&lt;br/&gt;    WHERE LOC.LOCT_CODE = &apos;COUNTRY&apos;&lt;br/&gt;    AND LOC.START_DATE &lt;= SYSDATE&lt;br/&gt;    AND LOC.END_DATE    &gt; SYSDATE&lt;br/&gt;    )&lt;br/&gt;  WHERE RANK = 1&lt;br/&gt;  )&lt;br/&gt;SELECT COU_ID,&lt;br/&gt;  COU_NAME,&lt;br/&gt;  COU_LANG_CODE,&lt;br/&gt;  COU_ITM_ID,&lt;br/&gt;  COU_CODE&lt;br/&gt;FROM&lt;br/&gt;  (SELECT DISTINCT UIRC.LOC_ID           AS COU_ID,&lt;br/&gt;    COU.NAME                             AS COU_NAME,&lt;br/&gt;    COU.LANG_CODE                        AS COU_LANG_CODE,&lt;br/&gt;    COU.ITM_ID                           AS COU_ITM_ID,&lt;br/&gt;    CAST(LOCA.CHAR_VALUE AS VARCHAR2(3)) AS COU_CODE&lt;br/&gt;  FROM T_USERS_IN_ROLE_COUNTRIES UIRC&lt;br/&gt;  INNER JOIN Q_LOC COU&lt;br/&gt;  ON COU.ID = UIRC.LOC_ID&lt;br/&gt;  LEFT OUTER JOIN T_LOCATION_ATTRIBUTES LOCA&lt;br/&gt;  ON LOCA.LOC_ID      = COU.ID&lt;br/&gt;  AND LOCA.LOCAT_CODE = &apos;ISO3166A3&apos;&lt;br/&gt;  WHERE UIRC.USERID   = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)&lt;br/&gt;  UNION ALL&lt;br/&gt;  SELECT COU.ID                          AS COU_ID,&lt;br/&gt;    COU.NAME                             AS COU_NAME,&lt;br/&gt;    COU.LANG_CODE                        AS COU_LANG_CODE,&lt;br/&gt;    COU.ITM_ID                           AS COU_ITM_ID,&lt;br/&gt;    CAST(LOCA.CHAR_VALUE AS VARCHAR2(3)) AS COU_CODE&lt;br/&gt;  FROM Q_LOC COU&lt;br/&gt;  LEFT OUTER JOIN T_LOCATION_ATTRIBUTES LOCA&lt;br/&gt;  ON LOCA.LOC_ID      = COU.ID&lt;br/&gt;  AND LOCA.LOCAT_CODE = &apos;ISO3166A3&apos;&lt;br/&gt;  WHERE EXISTS&lt;br/&gt;    (SELECT NULL&lt;br/&gt;    FROM T_USERS_IN_ROLES&lt;br/&gt;    WHERE T_USERS_IN_ROLES.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)&lt;br/&gt;    )&lt;br/&gt;  )</userDefinedSQL>
+<layoutSQL>&lt;?xml version = &apos;1.0&apos; encoding = &apos;UTF-8&apos;?&gt;&lt;br&gt;&lt;ActiveQueryBuilderLayout&gt;&lt;SQL&gt;With Q_LOC As (Select ID, NAME, LANG_CODE, ITM_ID From (Select LOC.ID, TXT.TEXT As NAME, TXT.LANG_CODE, LOC.ITM_ID, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, nvl(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) As RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = SYS_CONTEXT(&apos;PSR&apos;, &apos;USERID&apos;) Where LOC.LOCT_CODE = &apos;COUNTRY&apos; And LOC.START_DATE &amp;amp;lt;= SysDate And LOC.END_DATE &gt; SysDate) Where RANK = 1) Select COU_ID, COU_NAME, COU_LANG_CODE, COU_ITM_ID, COU_CODE From (Select Distinct UIRC.LOC_ID As COU_ID, COU.NAME As COU_NAME, COU.LANG_CODE As COU_LANG_CODE, COU.ITM_ID As COU_ITM_ID, Cast(LOCA.CHAR_VALUE As VarChar2(3)) As COU_CODE From T_USERS_IN_ROLE_COUNTRIES UIRC Inner Join Q_LOC COU On COU.ID = UIRC.LOC_ID Left Outer Join T_LOCATION_ATTRIBUTES LOCA On LOCA.LOC_ID = COU.ID And LOCA.LOCAT_CODE = &apos;ISO3166A3&apos; Where UIRC.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;) Union All Select COU.ID As COU_ID, COU.NAME As COU_NAME, COU.LANG_CODE As COU_LANG_CODE, COU.ITM_ID As COU_ITM_ID, Cast(LOCA.CHAR_VALUE As VarChar2(3)) As COU_CODE From Q_LOC COU Left Outer Join T_LOCATION_ATTRIBUTES LOCA On LOCA.LOC_ID = COU.ID And LOCA.LOCAT_CODE = &apos;ISO3166A3&apos; Where Exists(Select Null From T_USERS_IN_ROLES Where T_USERS_IN_ROLES.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)))&lt;/SQL&gt;&lt;SubQueries&gt;&lt;SubQuery SQL=&quot;With Q_LOC As (Select ID, NAME, LANG_CODE, ITM_ID From (Select LOC.ID, TXT.TEXT As NAME, TXT.LANG_CODE, LOC.ITM_ID, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, nvl(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) As RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = SYS_CONTEXT(&apos;PSR&apos;, &apos;USERID&apos;) Where LOC.LOCT_CODE = &apos;COUNTRY&apos; And LOC.START_DATE &amp;amp;lt;= SysDate And LOC.END_DATE &gt; SysDate) Where RANK = 1) Select COU_ID, COU_NAME, COU_LANG_CODE, COU_ITM_ID, COU_CODE From (Select Distinct UIRC.LOC_ID As COU_ID, COU.NAME As COU_NAME, COU.LANG_CODE As COU_LANG_CODE, COU.ITM_ID As COU_ITM_ID, Cast(LOCA.CHAR_VALUE As VarChar2(3)) As COU_CODE From T_USERS_IN_ROLE_COUNTRIES UIRC Inner Join Q_LOC COU On COU.ID = UIRC.LOC_ID Left Outer Join T_LOCATION_ATTRIBUTES LOCA On LOCA.LOC_ID = COU.ID And LOCA.LOCAT_CODE = &apos;ISO3166A3&apos; Where UIRC.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;) Union All Select COU.ID As COU_ID, COU.NAME As COU_NAME, COU.LANG_CODE As COU_LANG_CODE, COU.ITM_ID As COU_ITM_ID, Cast(LOCA.CHAR_VALUE As VarChar2(3)) As COU_CODE From Q_LOC COU Left Outer Join T_LOCATION_ATTRIBUTES LOCA On LOCA.LOC_ID = COU.ID And LOCA.LOCAT_CODE = &apos;ISO3166A3&apos; Where Exists(Select Null From T_USERS_IN_ROLES Where T_USERS_IN_ROLES.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)))&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;(Select Distinct UIRC.LOC_ID As COU_ID, COU.NAME As COU_NAME, COU.LANG_CODE As COU_LANG_CODE, COU.ITM_ID As COU_ITM_ID, Cast(LOCA.CHAR_VALUE As VarChar2(3)) As COU_CODE From T_USERS_IN_ROLE_COUNTRIES UIRC Inner Join Q_LOC COU On COU.ID = UIRC.LOC_ID Left Outer Join T_LOCATION_ATTRIBUTES LOCA On LOCA.LOC_ID = COU.ID And LOCA.LOCAT_CODE = &apos;ISO3166A3&apos; Where UIRC.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;) Union All Select COU.ID As COU_ID, COU.NAME As COU_NAME, COU.LANG_CODE As COU_LANG_CODE, COU.ITM_ID As COU_ITM_ID, Cast(LOCA.CHAR_VALUE As VarChar2(3)) As COU_CODE From Q_LOC COU Left Outer Join T_LOCATION_ATTRIBUTES LOCA On LOCA.LOC_ID = COU.ID And LOCA.LOCAT_CODE = &apos;ISO3166A3&apos; Where Exists(Select Null From T_USERS_IN_ROLES Where T_USERS_IN_ROLES.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)))&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;135&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select ID, NAME, LANG_CODE, ITM_ID From (Select LOC.ID, TXT.TEXT As NAME, TXT.LANG_CODE, LOC.ITM_ID, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, nvl(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) As RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = SYS_CONTEXT(&apos;PSR&apos;, &apos;USERID&apos;) Where LOC.LOCT_CODE = &apos;COUNTRY&apos; And LOC.START_DATE &amp;amp;lt;= SysDate And LOC.END_DATE &gt; SysDate) Where RANK = 1&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;(Select LOC.ID, TXT.TEXT As NAME, TXT.LANG_CODE, LOC.ITM_ID, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, nvl(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) As RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = SYS_CONTEXT(&apos;PSR&apos;, &apos;USERID&apos;) Where LOC.LOCT_CODE = &apos;COUNTRY&apos; And LOC.START_DATE &amp;amp;lt;= SysDate And LOC.END_DATE &gt; SysDate)&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;135&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select LOC.ID, TXT.TEXT As NAME, TXT.LANG_CODE, LOC.ITM_ID, row_number() Over (Partition By LOC.ID Order By LANG.ACTIVE_FLAG Desc, nvl(ULP.PREF_SEQ, LANG.DISPLAY_SEQ + 1e5)) As RANK From T_LOCATIONS LOC Inner Join T_TEXT_ITEMS TXT On TXT.ITM_ID = LOC.ITM_ID And TXT.TXTT_CODE = &apos;NAME&apos; And TXT.SEQ_NBR = 1 Inner Join T_LANGUAGES LANG On LANG.CODE = TXT.LANG_CODE Left Outer Join T_USER_LANGUAGE_PREFERENCES ULP On ULP.LANG_CODE = TXT.LANG_CODE And ULP.USERID = SYS_CONTEXT(&apos;PSR&apos;, &apos;USERID&apos;) Where LOC.LOCT_CODE = &apos;COUNTRY&apos; And LOC.START_DATE &amp;amp;lt;= SysDate And LOC.END_DATE &gt; SysDate&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_LOCATIONS LOC&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;225&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_TEXT_ITEMS TXT&quot; X=&quot;240&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_LANGUAGES LANG&quot; X=&quot;240&quot; Y=&quot;247&quot; Height=&quot;135&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_USER_LANGUAGE_PREFERENCES ULP&quot; X=&quot;50&quot; Y=&quot;265&quot; Height=&quot;153&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select Distinct UIRC.LOC_ID As COU_ID, COU.NAME As COU_NAME, COU.LANG_CODE As COU_LANG_CODE, COU.ITM_ID As COU_ITM_ID, Cast(LOCA.CHAR_VALUE As VarChar2(3)) As COU_CODE From T_USERS_IN_ROLE_COUNTRIES UIRC Inner Join Q_LOC COU On COU.ID = UIRC.LOC_ID Left Outer Join T_LOCATION_ATTRIBUTES LOCA On LOCA.LOC_ID = COU.ID And LOCA.LOCAT_CODE = &apos;ISO3166A3&apos; Where UIRC.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;) Union All Select COU.ID As COU_ID, COU.NAME As COU_NAME, COU.LANG_CODE As COU_LANG_CODE, COU.ITM_ID As COU_ITM_ID, Cast(LOCA.CHAR_VALUE As VarChar2(3)) As COU_CODE From Q_LOC COU Left Outer Join T_LOCATION_ATTRIBUTES LOCA On LOCA.LOC_ID = COU.ID And LOCA.LOCAT_CODE = &apos;ISO3166A3&apos; Where Exists(Select Null From T_USERS_IN_ROLES Where T_USERS_IN_ROLES.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;))&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_USERS_IN_ROLE_COUNTRIES UIRC&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;135&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;Q_LOC COU&quot; X=&quot;240&quot; Y=&quot;20&quot; Height=&quot;117&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_LOCATION_ATTRIBUTES LOCA&quot; X=&quot;240&quot; Y=&quot;157&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;Q_LOC COU&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;117&quot; Width=&quot;140&quot;/&gt;&lt;DataSource SQL=&quot;T_LOCATION_ATTRIBUTES LOCA&quot; X=&quot;240&quot; Y=&quot;20&quot; Height=&quot;207&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;SubQuery SQL=&quot;Select Null From T_USERS_IN_ROLES Where T_USERS_IN_ROLES.USERID = sys_context(&apos;PSR&apos;, &apos;USERID&apos;)&quot;&gt;&lt;UnionSubQuery&gt;&lt;DataSource SQL=&quot;T_USERS_IN_ROLES&quot; X=&quot;50&quot; Y=&quot;20&quot; Height=&quot;117&quot; Width=&quot;140&quot;/&gt;&lt;/UnionSubQuery&gt;&lt;/SubQuery&gt;&lt;/SubQueries&gt;&lt;/ActiveQueryBuilderLayout&gt;</layoutSQL>
+<parsed>true</parsed>
+<viewElements>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="COU_ID" id="A9471986-F81C-2431-B562-3D448BCE11C6">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-14 12:17:15 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>COU_ID</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="COU_NAME" id="C4666163-A012-7857-04E9-1B94962CE8B5">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-14 12:17:15 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>COU_NAME</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="COU_LANG_CODE" id="983CA451-F155-31A1-B3F7-B4619BACC4F1">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-14 12:17:15 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>COU_LANG_CODE</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="COU_ITM_ID" id="016DF3B8-AB51-FC2E-0920-39ABBB004D3A">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-14 12:17:15 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>COU_ITM_ID</expression>
+<reference>false</reference>
+</viewElement>
+<viewElement class="oracle.dbtools.crest.model.design.relational.ColumnView" name="COU_CODE" id="2F3BE255-7BFF-3387-A08C-2AFF74CF8940">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-14 12:17:15 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<expression>COU_CODE</expression>
+<reference>false</reference>
+</viewElement>
+</viewElements>
+<usedObjects>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="49164849-FD4A-1E59-B6A7-60751B9DA251">
+<container>true</container>
+<tableName>T_LOCATIONS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="92A106D1-8714-73C2-6136-6CE5D0EBB7D5">
+<container>true</container>
+<tableName>T_LANGUAGES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="E1BE2C4F-E65C-0B9B-3DA1-8AC96ADACB14">
+<container>true</container>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="78488C28-C0AA-CD65-3198-228E9ED41FC0">
+<container>true</container>
+<tableName>T_USERS_IN_ROLE_COUNTRIES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C6EF9F7D-47DE-E234-EDC3-DE29E06A570D">
+<container>true</container>
+<tableName>T_TEXT_ITEMS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="F5023194-12A8-C67F-AE7A-AB7A6EDDBE94">
+<container>true</container>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="BC3B9C51-F18B-4B8B-98A7-8419DCE88E56">
+<container>true</container>
+<tableName>T_USERS_IN_ROLES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="B200B4BA-A37C-8B70-CE3A-C874D115E603">
+<columnName>ACTIVE_FLAG</columnName>
+<tableName>T_LANGUAGES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="5D602486-5911-41A2-6928-E808C796104C">
+<columnName>PREF_SEQ</columnName>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="7FEA94C8-B60A-1E4A-8275-3EF81EB341A1">
+<columnName>DISPLAY_SEQ</columnName>
+<tableName>T_LANGUAGES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="10A83935-5307-5C40-B6D9-49EE5C6BF752">
+<columnName>CHAR_VALUE</columnName>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C97DB6BD-BEC9-4DE2-8C3F-D991D2145C46">
+<columnName>LOC_ID</columnName>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="19C09A45-B0DE-CB35-2642-931CB49AF250">
+<columnName>LOCAT_CODE</columnName>
+<tableName>T_LOCATION_ATTRIBUTES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="7AFD3CAA-29FE-1906-9B03-C2FDBCDC63B4">
+<columnName>USERID</columnName>
+<tableName>T_USERS_IN_ROLE_COUNTRIES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="F61F92FB-79C7-3C94-C21D-EBDF54423FCC">
+<columnName>USERID</columnName>
+<tableName>T_USERS_IN_ROLES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="51D3FAE8-03BC-CA88-2E1C-F13FA7B605C3">
+<columnName>ITM_ID</columnName>
+<tableName>T_TEXT_ITEMS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="62976973-9CB7-22BF-8254-C402BE09D18B">
+<columnName>TXTT_CODE</columnName>
+<tableName>T_TEXT_ITEMS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C17D7429-4995-4DCF-7552-3DB5FE1408E1">
+<columnName>SEQ_NBR</columnName>
+<tableName>T_TEXT_ITEMS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="A16EEFAB-1230-4A27-2F9C-6AF0DCC10F03">
+<columnName>CODE</columnName>
+<tableName>T_LANGUAGES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="3FEE7FAE-C375-7441-91AA-E5D62A3A7883">
+<columnName>LANG_CODE</columnName>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="05C90251-8F54-4954-A7AB-C3134EB08068">
+<columnName>USERID</columnName>
+<tableName>T_USER_LANGUAGE_PREFERENCES</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="C602828F-21FF-B91D-E7D9-A5B2A0309677">
+<columnName>LOCT_CODE</columnName>
+<tableName>T_LOCATIONS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="1CE8B78C-E870-BB06-2552-71AFFFBB296B">
+<columnName>START_DATE</columnName>
+<tableName>T_LOCATIONS</tableName>
+</UsedObject>
+<UsedObject class="oracle.dbtools.crest.swingui.editor.viewbuilder.SQLNameHelper" id="BF781316-E97C-24CC-E871-54B40649EB34">
+<columnName>END_DATE</columnName>
+<tableName>T_LOCATIONS</tableName>
+</UsedObject>
+</usedObjects>
+</TableView>

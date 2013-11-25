@@ -3,43 +3,7 @@
 <createdBy>Scott</createdBy>
 <createdTime>2012-05-24 08:51:19 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>PK_TAI</pkName>
 <abbreviation>TAI</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ID" id="D3281FDE-7426-E0D4-6A05-5AD3251A26C4">
 <createdBy>Scott</createdBy>

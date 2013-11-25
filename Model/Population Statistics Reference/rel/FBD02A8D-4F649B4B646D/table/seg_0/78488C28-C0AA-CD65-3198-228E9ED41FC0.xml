@@ -1,0 +1,118 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="78488C28-C0AA-CD65-3198-228E9ED41FC0" directorySegmentName="seg_0" name="T_USERS_IN_ROLE_COUNTRIES">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 16:24:49 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<abbreviation>UIRC</abbreviation>
+<allowColumnReorder>false</allowColumnReorder>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="USERID" id="7AFD3CAA-29FE-1906-9B03-C2FDBCDC63B4">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 16:25:46 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>A6485865-10BE-4B61-9F76-0E0B408FAB8E</domain>
+<delegate>FCD89ED7-F05A-A63D-D312-5FAD8BAE8A11</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6FD2F8C9-98EB-3F69-01B6-97DF49294B7D" referredColumn="FCD89ED7-F05A-A63D-D312-5FAD8BAE8A11"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ROL_ID" id="FBF753A8-2775-E6CE-A4FD-0C83FDF8E8B2">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 16:26:10 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
+<delegate>0E7FEBED-63A7-DAF8-1A86-27EEE6F065B2</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="3D6E54A9-4B62-BFCB-7939-8F6E28FC6F49" referredColumn="0E7FEBED-63A7-DAF8-1A86-27EEE6F065B2"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="LOC_ID" id="0E427965-C413-8ACF-7FDC-DE039D0C5765">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 16:26:28 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>C2DB2BE5-AB16-8043-FD9B-177C536DC077</domain>
+<delegate>49670D5F-06B9-C6B2-C445-E008B31E39D7</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="3D6E54A9-4B62-BFCB-7939-8F6E28FC6F49" referredColumn="49670D5F-06B9-C6B2-C445-E008B31E39D7"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="UPDATE_TIMESTAMP" id="2D855E3E-569C-9EF0-B346-46BD344673FD">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 16:26:54 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>systimestamp</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<domain>E2B7E866-FAE8-A49C-207C-DA7D30D89715</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="UPDATE_USERID" id="23514A5F-9702-1BC6-618F-DAD22FD77CAF">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 16:27:18 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>nvl(sys_context(&apos;PSR&apos;, &apos;USERID&apos;), &apos;*&apos; || user)</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>1B3AF57E-8DA8-A2E2-DAC5-0A66F68D2FBE</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="0391FE4C-C5E9-BA89-2839-9041EA6258B7" name="PK_UIRC">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 16:25:46 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7AFD3CAA-29FE-1906-9B03-C2FDBCDC63B4"/>
+<colUsage columnID="FBF753A8-2775-E6CE-A4FD-0C83FDF8E8B2"/>
+<colUsage columnID="0E427965-C413-8ACF-7FDC-DE039D0C5765"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="220C4763-4F92-8A46-CA4A-66A03F6108F8" name="UK_UIRC">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 16:29:55 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FBF753A8-2775-E6CE-A4FD-0C83FDF8E8B2"/>
+<colUsage columnID="0E427965-C413-8ACF-7FDC-DE039D0C5765"/>
+<colUsage columnID="7AFD3CAA-29FE-1906-9B03-C2FDBCDC63B4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="8C98002D-E4C3-7894-42D3-455112852C4A" name="FK_UIRC_USR">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 16:27:52 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7AFD3CAA-29FE-1906-9B03-C2FDBCDC63B4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="A13B16EF-4B7D-1C2A-2E70-B02D97F94B30" name="FK_UIRC_RLC">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 16:28:20 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FBF753A8-2775-E6CE-A4FD-0C83FDF8E8B2"/>
+<colUsage columnID="0E427965-C413-8ACF-7FDC-DE039D0C5765"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

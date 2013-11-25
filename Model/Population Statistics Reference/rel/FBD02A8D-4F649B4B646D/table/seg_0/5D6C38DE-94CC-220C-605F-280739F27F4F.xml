@@ -3,52 +3,20 @@
 <createdBy>Scott</createdBy>
 <createdTime>2012-04-10 08:05:59 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>PK_DIMT</pkName>
 <abbreviation>DIMT</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="CODE" id="8633CDBB-79D3-9E30-0357-B6706911E68D">
 <createdBy>Scott</createdBy>
 <createdTime>2012-04-10 08:07:59 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_DIMT_CODE</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="CODE = trim(upper(CODE))"/>
+</checkConstraint>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="F15B3561-E25F-0775-1508-DFA716037457">
@@ -77,9 +45,8 @@
 <createdTime>2012-04-10 08:07:59 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>

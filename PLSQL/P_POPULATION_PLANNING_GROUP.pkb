@@ -21,23 +21,28 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.INSERT_PPG',
+     (sVersion || '-' || sComponent || '.INSERT_PPG-1',
       to_char(pnLOC_ID) || '~' || psPPG_CODE || '~' ||
         to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
-  -- Check that the associated location is active for the whole of the given effective date range.
+  -- Check that the associated location is an operation and is active for the whole of the given
+  --  effective date range.
   --
     declare
-      sDummy varchar2(1);
+      sLOCT_CODE P_BASE.tsLOCT_CODE;
     begin
-      select 'x'
-      into sDummy
+      select LOCT_CODE
+      into sLOCT_CODE
       from T_LOCATIONS
       where ID = pnLOC_ID
       and START_DATE <= nvl(pdSTART_DATE, P_BASE.gdMIN_DATE)
       and END_DATE >= nvl(pdEND_DATE, P_BASE.gdMAX_DATE);
+    --
+      if sLOCT_CODE not in ('HCR-COP', 'HCR-ROF')
+      then P_MESSAGE.DISPLAY_MESSAGE(sComponent, 3, 'PPG location is not an operation');
+      end if;
     end;
   --
   -- Check for an existing PPG with the same code and overlapping effective date range.
@@ -102,7 +107,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.UPDATE_PPG',
+     (sVersion || '-' || sComponent || '.UPDATE_PPG',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||to_char(pnLOC_ID) || '~' ||
         psPPG_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -208,7 +213,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_LOCATION',
+     (sVersion || '-' || sComponent || '.SET_LOCATION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||to_char(pnLOC_ID) || '~' ||
         psPPG_CODE || '~' || to_char(pdSTART_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
         to_char(pdEND_DATE, 'YYYY-MM-DD HH24:MI:SS') || '~' ||
@@ -245,7 +250,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     xPPG_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.DELETE_SYSTEM_PARAMETER',
+     (sVersion || '-' || sComponent || '.DELETE_SYSTEM_PARAMETER',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR));
   --
     select ITM_ID, VERSION_NBR, rowid
@@ -282,7 +287,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     nSEQ_NBR P_BASE.tnTXT_SEQ_NBR := 1;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_PPG_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.SET_PPG_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psLANG_CODE || '~' || to_char(length(psDescription)) || ':' || psDescription);
   --
@@ -305,7 +310,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
   is
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_PPG_DESCRIPTION',
+     (sVersion || '-' || sComponent || '.REMOVE_PPG_DESCRIPTION',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psLANG_CODE);
   --
@@ -334,7 +339,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     xPPG_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.SET_PPG_TEXT',
+     (sVersion || '-' || sComponent || '.SET_PPG_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE || '~' ||
         to_char(length(psText)) || ':' || psText);
@@ -379,7 +384,7 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
     xPPG_ROWID rowid;
   begin
     P_UTILITY.START_MODULE
-     (sVersion || '-' || sModule || '.REMOVE_PPG_TEXT',
+     (sVersion || '-' || sComponent || '.REMOVE_PPG_TEXT',
       to_char(pnID) || '~' || to_char(pnVERSION_NBR) || '~' ||
         psTXTT_CODE || '~' || to_char(pnSEQ_NBR) || '~' || psLANG_CODE);
   --
@@ -412,16 +417,12 @@ create or replace package body P_POPULATION_PLANNING_GROUP is
 -- =====================================
 --
 begin
-  if sModule != $$PLSQL_UNIT
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Module name mismatch');
+  if sComponent != 'PPG'
+  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 1, 'Component code mismatch');
   end if;
 --
   if sVersion != 'D0.1'
   then P_MESSAGE.DISPLAY_MESSAGE('GEN', 2, 'Module version mismatch');
-  end if;
---
-  if sComponent != 'PPG'
-  then P_MESSAGE.DISPLAY_MESSAGE('GEN', 3, 'Component code mismatch');
   end if;
 --
 end P_POPULATION_PLANNING_GROUP;

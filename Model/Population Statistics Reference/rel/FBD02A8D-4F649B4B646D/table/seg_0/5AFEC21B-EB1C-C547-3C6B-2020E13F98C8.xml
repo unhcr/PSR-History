@@ -3,52 +3,20 @@
 <createdBy>Scott</createdBy>
 <createdTime>2011-11-03 13:57:51 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>PK_</pkName>
 <abbreviation>LOCRT</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="CODE" id="C5D6D792-5887-F765-1E76-8AD5A2CBED91">
 <createdBy>Scott</createdBy>
 <createdTime>2011-11-03 13:58:40 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_LOCRT_CODE</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="CODE = trim(upper(CODE))"/>
+</checkConstraint>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="1D4A2300-3525-479B-D267-50EA497EF6FA">
 <createdBy>Scott</createdBy>
@@ -74,9 +42,8 @@
 <createdTime>2011-12-08 07:50:42 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
-<use>0</use>
+<use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
-<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="F5EACC90-C3CB-E613-AB07-DC708F56C768" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>

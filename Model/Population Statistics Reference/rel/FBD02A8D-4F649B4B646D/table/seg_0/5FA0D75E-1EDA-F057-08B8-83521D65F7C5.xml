@@ -5,55 +5,19 @@
 <comment>Validity and characteristics of text types associated with particular tables</comment>
 <notes>Text of a given type cannot be associated with a given table unless a row for that combination (table/text type) exists in this table. The flags place constraints on how text of the given type is associated with rows in the table and how it is stored.</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>PK_TTXT</pkName>
 <abbreviation>TTP</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="TXTT_CODE" id="B1B69FB1-4C8B-8916-9A57-25802E9502CC">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-05 14:01:00 UTC</createdTime>
 <comment>Text type code</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
 <delegate>3E525A08-9A02-A435-0594-8D60BABD9DB4</delegate>
 <previousColumn>false</previousColumn>
+<generateConstraintInDDL>NO</generateConstraintInDDL>
 <associations>
 <colAssociation fkAssociation="2BC8B6EB-03D4-509B-BC55-B58E40CC5983" referredColumn="3E525A08-9A02-A435-0594-8D60BABD9DB4"/>
 </associations>
@@ -67,10 +31,10 @@
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
-<delegate>975D9BA4-3CC1-7CF8-60DB-0A57EBEEA04C</delegate>
+<delegate>98F95E26-58F6-F4D0-CCC2-6E0C27544E95</delegate>
 <previousColumn>false</previousColumn>
 <associations>
-<colAssociation fkAssociation="ED99EFBB-D237-B03D-6E5B-B5545323DA7D" referredColumn="975D9BA4-3CC1-7CF8-60DB-0A57EBEEA04C"/>
+<colAssociation fkAssociation="ED99EFBB-D237-B03D-6E5B-B5545323DA7D" referredColumn="98F95E26-58F6-F4D0-CCC2-6E0C27544E95"/>
 </associations>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="MANDATORY_FLAG" id="B85309EC-9030-920D-3547-209689C3874C">

@@ -6,27 +6,26 @@ create or replace package P_ASR is
 --  Procedures for maintenance of statistics.
 --
 --  Change History:
---  23-Nov-2012 - Peter Scott (UNHCR) - Initial revision. (D0.1)
+--  3-Oct-2013 - Peter Scott (UNHCR) - Initial revision. (D0.1)
 --
 -- -------------------------------------------------------------------------------------------------
 --
-  sModule varchar2(30) := $$PLSQL_UNIT;
-  sVersion varchar2(10) := 'D0.1';
   sComponent varchar2(30) := 'ASR';
+  sVersion varchar2(10) := 'D0.1';
 --
 -- ========================================
 -- Program unit definitions
 -- ========================================
 --
 -- ----------------------------------------
--- INSERT_TABLE7AB
+-- INSERT_ASR_RETURNEES
 -- ----------------------------------------
 --
--- Create a new row in ASR table 7A/7B.
+-- Create a new row in ASR returnees table.
 --
 -- Parameters:
 --
-  procedure INSERT_TABLE7AB
+  procedure INSERT_ASR_RETURNEES
    (pnASR_YEAR in P_BASE.tmnYear,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tmnLOC_ID,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tmnLOC_ID,
@@ -37,14 +36,14 @@ create or replace package P_ASR is
     pnREFRTN_AH_VALUE in P_BASE.tnSTC_VALUE);
 --
 -- ----------------------------------------
--- UPDATE_TABLE7AB
+-- UPDATE_ASR_RETURNEES
 -- ----------------------------------------
 --
--- Update an existing row in ASR table 7A/7B.
+-- Update an existing row in ASR returnees table.
 --
 -- Parameters:
 --
-  procedure UPDATE_TABLE7AB
+  procedure UPDATE_ASR_RETURNEES
    (pnASR_YEAR in P_BASE.tmnYear,
     pnLOC_ID_ORIGIN_COUNTRY in P_BASE.tmnLOC_ID,
     pnLOC_ID_ASYLUM_COUNTRY in P_BASE.tmnLOC_ID,
@@ -63,14 +62,14 @@ create or replace package P_ASR is
     pnREFRTN_AH_VERSION_NBR in P_BASE.tnSTC_VERSION_NBR);
 --
 -- ----------------------------------------
--- DELETE_TABLE7AB
+-- DELETE_ASR_RETURNEES
 -- ----------------------------------------
 --
--- Delete a row in ASR table 7A/7B.
+-- Delete a row in ASR returnees table.
 --
 -- Parameters:
 --
-  procedure DELETE_TABLE7AB
+  procedure DELETE_ASR_RETURNEES
    (pnSTG_ID_PRIMARY in P_BASE.tnSTG_ID,
     pnSTG_VERSION_NBR in P_BASE.tnSTG_VERSION_NBR,
     pnSTGA_VERSION_NBR_SOURCE in P_BASE.tnSTGA_VERSION_NBR,

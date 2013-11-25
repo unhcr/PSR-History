@@ -4,43 +4,7 @@
 <createdTime>2011-12-05 09:49:44 UTC</createdTime>
 <comment>Header records for all text items of a particular type associated with a given general data item</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>PK_TXI</pkName>
 <abbreviation>TTH</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="43152BBD-BC61-AE6E-7993-B98FCD0DE7B2">
 <createdBy>Scott</createdBy>
@@ -64,7 +28,7 @@
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
-<delegate>3E525A08-9A02-A435-0594-8D60BABD9DB4</delegate>
+<delegate>B1B69FB1-4C8B-8916-9A57-25802E9502CC</delegate>
 <associations>
 <colAssociation fkAssociation="9DCAA887-7F0C-6639-9E91-4FE417F6CC5E" referredColumn="B1B69FB1-4C8B-8916-9A57-25802E9502CC"/>
 <colAssociation fkAssociation="B6D5389D-975A-0B32-F604-6A3DD7D164D3" referredColumn="3E525A08-9A02-A435-0594-8D60BABD9DB4"/>

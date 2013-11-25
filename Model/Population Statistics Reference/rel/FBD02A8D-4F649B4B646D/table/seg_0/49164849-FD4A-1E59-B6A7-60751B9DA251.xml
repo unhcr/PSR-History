@@ -4,44 +4,8 @@
 <createdTime>2011-10-26 10:37:49 UTC</createdTime>
 <generatorID>83DA5461-2D7B-4F73-F05A-94002E4B9857</generatorID>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>LOCATION UI</pkName>
 <typeID>2</typeID>
 <abbreviation>LOC</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ID" id="0F28E6F7-11A8-936D-4B0B-CA8DDCAB1812">
 <createdBy>Scott</createdBy>
@@ -112,13 +76,27 @@
 <logicalDatatype>LOGDT007</logicalDatatype>
 <domain>5234FC77-3782-98DB-F6BB-1312EDFCC843</domain>
 </Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ACTIVE_FLAG" id="42B8709A-F5C3-F16E-FAA9-8EE47E8ACA35">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-07 15:12:39 UTC</createdTime>
+<comment>Is this location currently active (Y/N)?</comment>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<constraintName>CH_LOC_ACTIVE_FLAG</constraintName>
+<defaultValue>Y</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>6841C73E-E27A-83E1-4728-25113B8D2A58</domain>
+<usesDefaultValue>true</usesDefaultValue>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="B078AA41-DB69-7096-E5E7-2E49642A56C5">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-08 07:38:59 UTC</createdTime>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
+<use>0</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="2BC385B9-2318-201B-1A8E-CA12E5DA19EC" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>

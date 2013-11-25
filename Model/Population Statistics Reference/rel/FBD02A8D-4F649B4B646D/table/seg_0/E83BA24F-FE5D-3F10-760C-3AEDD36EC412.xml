@@ -1,0 +1,102 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="E83BA24F-FE5D-3F10-760C-3AEDD36EC412" directorySegmentName="seg_0" name="T_ROLE_COUNTRIES">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 15:48:43 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<abbreviation>RLC</abbreviation>
+<allowColumnReorder>false</allowColumnReorder>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="ROL_ID" id="0E7FEBED-63A7-DAF8-1A86-27EEE6F065B2">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 15:51:01 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
+<delegate>E207D0BC-D739-E4BC-6FA3-2A98EFDB5F50</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="039815EA-BB50-2CCF-2782-4C4BF44323EF" referredColumn="E207D0BC-D739-E4BC-6FA3-2A98EFDB5F50"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="LOC_ID" id="49670D5F-06B9-C6B2-C445-E008B31E39D7">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 15:51:29 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>C2DB2BE5-AB16-8043-FD9B-177C536DC077</domain>
+<delegate>0F28E6F7-11A8-936D-4B0B-CA8DDCAB1812</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="5507A69D-5F2D-F786-D5E2-F164869E6CEB" referredColumn="0F28E6F7-11A8-936D-4B0B-CA8DDCAB1812"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="UPDATE_TIMESTAMP" id="36CD3581-5BB7-0EC6-69B1-BEFD9587029E">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 15:52:35 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>systimestamp</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<domain>E2B7E866-FAE8-A49C-207C-DA7D30D89715</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="UPDATE_USERID" id="A398FFFF-ED65-D13F-75DB-DCA7007D59E5">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 15:52:48 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<defaultValue>nvl(sys_context(&apos;PSR&apos;, &apos;USERID&apos;), &apos;*&apos; || user)</defaultValue>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>1B3AF57E-8DA8-A2E2-DAC5-0A66F68D2FBE</domain>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="3ED698A7-3869-83D7-2B7E-7314928CD207" name="PK_RLC">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 15:54:30 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0E7FEBED-63A7-DAF8-1A86-27EEE6F065B2"/>
+<colUsage columnID="49670D5F-06B9-C6B2-C445-E008B31E39D7"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="3F404D92-2825-88E9-6A01-7D92589CB7D1" name="UK_RLC">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 16:37:00 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="49670D5F-06B9-C6B2-C445-E008B31E39D7"/>
+<colUsage columnID="0E7FEBED-63A7-DAF8-1A86-27EEE6F065B2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="78842AF9-2D0B-0511-BEB8-C1CFA4C36190" name="FK_RLC_ROL">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 15:54:30 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0E7FEBED-63A7-DAF8-1A86-27EEE6F065B2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="8739D641-8ACE-748C-ED25-33AD04E513EC" name="FK_RLC_LOC">
+<createdBy>Scott</createdBy>
+<createdTime>2013-11-06 15:54:48 UTC</createdTime>
+<ownerDesignName>Population Statistics Reference</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="49670D5F-06B9-C6B2-C445-E008B31E39D7"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

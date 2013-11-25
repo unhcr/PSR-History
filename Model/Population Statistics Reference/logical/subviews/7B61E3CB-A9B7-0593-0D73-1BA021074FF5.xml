@@ -6,6 +6,7 @@
 <boxInbox>true</boxInbox>
 <showLegend>true</showLegend>
 <showLabels>false</showLabels>
+<showRelAttributes>false</showRelAttributes>
 <showGrid>false</showGrid>
 <diagramColor>-1</diagramColor>
 <legendPosX>952</legendPosX>

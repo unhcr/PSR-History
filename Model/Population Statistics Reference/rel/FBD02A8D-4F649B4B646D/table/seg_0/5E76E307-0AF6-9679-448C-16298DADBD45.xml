@@ -4,60 +4,28 @@
 <createdTime>2012-09-07 08:53:05 UTC</createdTime>
 <comment>Types of population group attributes</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<pkName>PK_LOCAT</pkName>
 <abbreviation>STGAT</abbreviation>
-<fonts>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Title</foType>
-<fontStyle>1</fontStyle>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Column</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Datatype</foType>
-<colorRGB>-16744448</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>PK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>FK Element</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>UK Element</foType>
-<colorRGB>-16776961</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Not Null</foType>
-<colorRGB>-65536</colorRGB>
-</FontObject>
-<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
-<foType>Key</foType>
-<colorRGB>-16777216</colorRGB>
-</FontObject>
-</fonts>
 <columns>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="CODE" id="33E0298A-B40F-9F49-8DDA-F461581DE28C">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 08:53:05 UTC</createdTime>
-<comment>Population group attribute type code</comment>
+<comment>Statistic group attribute type code</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<constraintName>CH_PGRAT_CODE</constraintName>
+<constraintName>CH_STGAT_CODE</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="CODE = trim(upper(CODE))"/>
+</checkConstraint>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DATA_TYPE" id="79F3A231-0678-C52F-34F1-44CE389B7E2B">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 08:53:05 UTC</createdTime>
 <comment>Data type of attribute (Character, Numeric or Date)</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<constraintName>CH_PGRAT_DATA_TYPE</constraintName>
+<constraintName>CH_STGAT_DATA_TYPE</constraintName>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>F2A12E7B-C038-7C36-8F01-016AC24AA1FE</domain>
@@ -66,7 +34,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="F835A659-6FAF-5DA8-1F0D-48F8F0377CDF">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 08:53:05 UTC</createdTime>
-<comment>Number controlling the sequence of display of population group attribute types</comment>
+<comment>Number controlling the sequence of display of statistic group attribute types</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -76,9 +44,9 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ACTIVE_FLAG" id="712F8049-A091-5C1B-E53F-C142664DF6A1">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 08:53:05 UTC</createdTime>
-<comment>Is this population group attribute type active (Y/N)?</comment>
+<comment>Is this statistic group attribute type active (Y/N)?</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
-<constraintName>CH_PGRAT_ACTIVE_FLAG</constraintName>
+<constraintName>CH_STGAT_ACTIVE_FLAG</constraintName>
 <defaultValue>Y</defaultValue>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -87,7 +55,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="9A0E74F5-F85A-F2CB-0E7C-8907DC1D3E96">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 08:53:05 UTC</createdTime>
-<comment>General data item identifier of this population group attribute type</comment>
+<comment>General data item identifier of this statistic group attribute type</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -100,7 +68,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="5678291A-57F2-A51F-4974-BF778EF1E9F2">
 <createdBy>Scott</createdBy>
 <createdTime>2012-09-07 08:53:05 UTC</createdTime>
-<comment>Update version number of population group attribute type</comment>
+<comment>Update version number of statistic group attribute type</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <defaultValue>1</defaultValue>
 <use>0</use>

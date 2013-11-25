@@ -11,6 +11,7 @@
 <createdBy>Scott</createdBy>
 <createdTime>2012-11-05 07:49:51 UTC</createdTime>
 <comment>Displacement status identifier</comment>
+<notes>Auto-generated from sequence DST_SEQ</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_DST_ID</constraintName>
 <use>0</use>
@@ -30,13 +31,18 @@
 <notes>Values are as follows. This is not likely to change substantially.&lt;br/&gt;  REF - Refugees&lt;br/&gt;  ROC - Persons in a refugee-like situation&lt;br/&gt;  ASY - Asylum-seekers&lt;br/&gt;  RET - Returned refugees (recorded by country of origin to which they are returning)&lt;br/&gt;  RPT - Repatriated refugees (recorded by country of asylum which they are leaving)&lt;br/&gt;  IDP - Internally displaced persons&lt;br/&gt;  IOC - Persons in an IDP-like situation&lt;br/&gt;  RDP - Persons returned from an IDP or IDP-like situation&lt;br/&gt;  STA - Stateless persons&lt;br/&gt;  OOC - Others of concern&lt;br/&gt;  RAS - Refugees and asylum seekers (recorded only in situations where a distinction has not been made)&lt;br/&gt;RPT is a code which has been introduced in PSR to make clear the distinction between returnees counted in the country they are leaving and the country they are returning to. In ASR, the same code is used for both. In general, the higher of the RET and the RPT values is reported.</notes>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_DST_CODE</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <domain>70D4DB78-A0D4-8ECC-7713-712D57DFBB60</domain>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="CODE = trim(upper(CODE))"/>
+</checkConstraint>
 </Column>
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="START_DATE" id="5778BBA0-20AE-F57B-D594-395FDF4F2A6A">
 <createdBy>Scott</createdBy>
 <createdTime>2012-11-05 07:50:38 UTC</createdTime>
+<comment>Effective start date for displacement status</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <use>0</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
@@ -46,6 +52,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="END_DATE" id="DDA84E8B-68A2-C7CB-C9BF-1C2A11549BC0">
 <createdBy>Scott</createdBy>
 <createdTime>2012-11-05 07:50:38 UTC</createdTime>
+<comment>Effective end date for displacement status</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <use>0</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
@@ -55,7 +62,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="DISPLAY_SEQ" id="096ED6B7-4763-9700-1A6F-366C615657BE">
 <createdBy>Scott</createdBy>
 <createdTime>2011-11-09 08:30:35 UTC</createdTime>
-<notes>Number controlling the sequence of display of displacement statuses</notes>
+<comment>Number controlling the sequence of display of displacement statuses</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -65,7 +72,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ACTIVE_FLAG" id="9A74398E-ED07-5011-8DAB-9A80614CE656">
 <createdBy>Scott</createdBy>
 <createdTime>2011-11-04 10:05:16 UTC</createdTime>
-<notes>Is this displacement status currently active (Y/N)?</notes>
+<comment>Is this displacement status currently active (Y/N)?</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <constraintName>CH_DST_ACTIVE_FLAG</constraintName>
 <defaultValue>Y</defaultValue>
@@ -76,11 +83,12 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ITM_ID" id="2358118F-DE2E-2C47-F319-27049B5D3BEA">
 <createdBy>Scott</createdBy>
 <createdTime>2011-12-08 07:16:50 UTC</createdTime>
-<notes>General data item identifier of this displacement status</notes>
+<comment>General data item identifier of this displacement status</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
+<use>0</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
+<domain>7902D946-5C37-B380-3248-80191020E6EF</domain>
 <delegate>2A6FD6C7-5546-B8AB-418B-2F3780605451</delegate>
 <associations>
 <colAssociation fkAssociation="C73008DF-E0B5-5D81-D3B1-1486B12E06DE" referredColumn="2A6FD6C7-5546-B8AB-418B-2F3780605451"/>
@@ -89,7 +97,7 @@
 <Column class="oracle.dbtools.crest.model.design.relational.Column" name="VERSION_NBR" id="1049AA95-A189-F081-579F-FCB9DA793083">
 <createdBy>Scott</createdBy>
 <createdTime>2012-03-27 10:18:27 UTC</createdTime>
-<notes>Update version number of this displacement status</notes>
+<comment>Update version number of this displacement status</comment>
 <ownerDesignName>Population Statistics Reference</ownerDesignName>
 <defaultValue>1</defaultValue>
 <use>0</use>

@@ -1,3 +1,4 @@
+execute dbms_mview.refresh('S_COUNTRY_PPGS');
 execute dbms_mview.refresh('S_ASR_REFUGEES');
 execute dbms_mview.refresh('S_ASR_DEMOGRAPHICS_CLEANED');
 execute dbms_mview.refresh('S_ASR_DEMOGRAPHICS');
